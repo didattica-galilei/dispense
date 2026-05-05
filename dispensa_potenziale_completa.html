@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Potenziale Elettrico — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro:wght@400&display=swap');
+
+:root{
+  --ink:#1a1a1e;--paper:#faf9f6;--accent:#b5351a;--accent2:#1a4b8c;
+  --muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surface2:#fff;
+  --green:#1a6b3a;--shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+
+/* ── COPERTINA ── */
+.cover{background:var(--ink);color:#fff;padding:80px 40px 60px;text-align:center;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.015) 40px,rgba(255,255,255,0.015) 41px)}
+.cover-eyebrow{font-family:'Source Sans 3',sans-serif;font-weight:600;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:20px}
+.cover h1{font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,64px);font-weight:700;line-height:1.1;margin-bottom:16px;letter-spacing:-1px}
+.cover h1 em{color:#d4956a;font-style:italic}
+.cover-sub{font-size:16px;color:rgba(255,255,255,0.55);font-weight:300;max-width:480px;margin:0 auto 40px}
+.cover-rule{width:60px;height:2px;background:var(--accent);margin:0 auto}
+
+/* ── LAYOUT ── */
+.page{max-width:820px;margin:0 auto;padding:60px 32px}
+@media(max-width:600px){.page{padding:40px 18px}}
+
+/* ── TIPOGRAFIA ── */
+h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);margin:52px 0 14px;padding-bottom:10px;border-bottom:1.5px solid var(--border)}
+h3{font-family:'Source Sans 3',sans-serif;font-weight:600;font-size:16px;color:var(--accent2);margin:24px 0 8px;text-transform:uppercase;letter-spacing:1px;font-size:12px}
+p{font-size:16px;margin-bottom:14px;color:#2a2a2e}
+ul,ol{margin:8px 0 16px 22px;font-size:16px}
+ul li,ol li{margin-bottom:7px;color:#2a2a2e}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* ── BOX ── */
+.box{border-radius:4px;padding:16px 20px;margin:20px 0;font-size:15px}
+.box-formula{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent2);text-align:center}
+.box-formula .f{font-family:'Playfair Display',serif;font-size:22px;color:var(--accent2);margin-bottom:6px;letter-spacing:0.5px}
+.box-formula .fd{font-size:12px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-note{background:#e8f0fa;border-left:3px solid var(--accent2);color:#1a3a6a}
+.box-warn{background:#fdf3ee;border-left:3px solid var(--accent);color:#6a1a0a}
+.box-ok{background:#e8f5ee;border-left:3px solid var(--green);color:#0a3a1a}
+
+/* ── TABELLA ── */
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th{background:var(--ink);color:#fff;padding:9px 13px;text-align:left;font-weight:400;font-family:'Source Sans 3',sans-serif;letter-spacing:0.5px;font-size:12px;text-transform:uppercase}
+td{padding:9px 13px;border-bottom:1px solid var(--border);color:#2a2a2e}
+tr:nth-child(even) td{background:var(--surface)}
+
+/* ── SEPARATORE ── */
+.sep{display:flex;align-items:center;gap:16px;margin:52px 0;color:var(--muted);font-size:12px;letter-spacing:2px;text-transform:uppercase}
+.sep::before,.sep::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── SIMULATORE WRAPPER ── */
+.sim-wrap{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:24px;margin:28px 0;box-shadow:var(--shadow)}
+.sim-head{font-family:'Playfair Display',serif;font-size:17px;color:var(--ink);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.sim-head::before{content:'';width:12px;height:12px;border-radius:50%;background:var(--accent);display:inline-block;flex-shrink:0}
+
+/* ── CONTROLLI CARICHE ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:7px;margin-bottom:12px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:9px 11px;font-family:'Source Sans 3',sans-serif}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.clabel{font-size:12px;font-weight:600;letter-spacing:0.5px}
+.card label{font-size:11px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:4px}
+.row{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;color:var(--muted)}
+.row input[type=number]{width:52px;padding:2px 5px;font-size:11px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink);font-family:'Source Code Pro',monospace}
+.row input[type=range]{flex:1;accent-color:var(--accent2)}
+.qval{font-size:11px;font-weight:600;min-width:26px;text-align:right;color:var(--ink);font-family:'Source Code Pro',monospace}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:11px;color:var(--muted);flex-wrap:wrap;font-family:'Source Sans 3',sans-serif}
+.toolbar input[type=range]{width:90px;accent-color:var(--accent2)}
+.tbtn{padding:3px 10px;border-radius:3px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:11px;cursor:pointer;font-family:'Source Sans 3',sans-serif;transition:background 0.15s}
+.tbtn:hover{background:var(--surface)}
+.tval{font-size:11px;font-weight:600;min-width:30px;color:var(--ink);font-family:'Source Code Pro',monospace}
+
+canvas{display:block;border:1px solid var(--border);border-radius:4px;cursor:grab;background:#fff}
+canvas:active{cursor:grabbing}
+.leg{display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--muted);flex-wrap:wrap;align-items:center;font-family:'Source Sans 3',sans-serif}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:3px;vertical-align:middle}
+
+/* ── FOOTER ── */
+footer{text-align:center;font-size:12px;color:var(--muted);margin-top:60px;padding:24px 0;border-top:1px solid var(--border);letter-spacing:1px;font-family:'Source Sans 3',sans-serif}
+</style>
+</head>
+<body>
+
+<!-- COPERTINA -->
+<div class="cover">
+  <div class="cover-eyebrow">Fisica II — Elettrostatica</div>
+  <h1>Il <em>Potenziale</em><br>Elettrico</h1>
+  <p class="cover-sub">Dispensa didattica con simulatori interattivi 2D e 3D</p>
+  <div class="cover-rule"></div>
+</div>
+
+<div class="page">
+
+<!-- ══════════════════════════════════════ -->
+<h2>1. Dal campo al potenziale</h2>
+
+<p>Il <strong>campo elettrico</strong> <strong>E</strong> descrive completamente l'interazione elettrostatica in termini vettoriali: in ogni punto dello spazio fornisce intensità e direzione della forza su una carica di prova unitaria. Tuttavia, per molte applicazioni risulta conveniente introdurre una grandezza <em>scalare</em> equivalente: il <strong>potenziale elettrico</strong> V.</p>
+
+<p>Il potenziale è definito come l'<strong>energia potenziale per unità di carica</strong>. Così come in meccanica classica si associa un'energia potenziale ad ogni configurazione di masse in un campo gravitazionale, in elettrostatica si associa un'energia potenziale a ogni configurazione di cariche nel campo elettrico.</p>
+
+<div class="box box-formula">
+  <div class="f">V = U / q₀</div>
+  <div class="fd">V [Volt = J/C] &nbsp;·&nbsp; U = energia potenziale [J] &nbsp;·&nbsp; q₀ = carica di prova [C]</div>
+</div>
+
+<p>L'unità di misura del potenziale nel Sistema Internazionale è il <strong>Volt</strong> (V = J/C). Il potenziale è una grandezza scalare: in ogni punto è un semplice numero reale, non un vettore. Questo lo rende molto più semplice da calcolare e da visualizzare rispetto al campo.</p>
+
+<div class="box box-note">
+  💡 <strong>Nota storica:</strong> il concetto di potenziale elettrico fu introdotto da George Green nel 1828 e sviluppato da Carl Friedrich Gauss. La sua utilità matematica è immensa: riduce un problema vettoriale a tre componenti a un problema scalare con una sola incognita.
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<h2>2. Potenziale di una carica puntiforme</h2>
+
+<p>Una carica puntiforme Q genera intorno a sé un campo elettrico radiale. Il potenziale elettrico nel punto P a distanza r dalla carica vale:</p>
+
+<div class="box box-formula">
+  <div class="f">V(r) = k · Q / r</div>
+  <div class="fd">k = 8,99 × 10⁹ N·m²/C² &nbsp;·&nbsp; Q = carica sorgente [C] &nbsp;·&nbsp; r = distanza [m]</div>
+</div>
+
+<h3>Proprietà fondamentali</h3>
+<ul>
+  <li>Se <em>Q &gt; 0</em>: il potenziale è <strong>positivo</strong> e decresce con la distanza.</li>
+  <li>Se <em>Q &lt; 0</em>: il potenziale è <strong>negativo</strong>, il suo valore assoluto decresce con la distanza.</li>
+  <li>Per <em>r → ∞</em>: V → 0. Si sceglie l'infinito come riferimento convenzionale (V = 0).</li>
+  <li>Per <em>r → 0</em>: V → ±∞. La carica puntiforme è una singolarità matematica.</li>
+  <li>Il potenziale dipende solo dalla distanza r, non dalla direzione: ha <strong>simmetria sferica</strong>.</li>
+</ul>
+
+<div class="box box-warn">
+  ⚠ <strong>Attenzione:</strong> a differenza del campo elettrico, il potenziale è uno scalare. Non ha componenti, non ha verso. Il segno dipende solo dal segno della carica sorgente.
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<h2>3. Principio di sovrapposizione</h2>
+
+<p>In presenza di N cariche puntiformi, il potenziale totale in un punto P è la <strong>somma algebrica</strong> dei contributi individuali:</p>
+
+<div class="box box-formula">
+  <div class="f">V<sub>tot</sub>(P) = k · Σᵢ Qᵢ / rᵢ</div>
+  <div class="fd">rᵢ = distanza della carica i-esima dal punto P</div>
+</div>
+
+<p>La natura scalare del potenziale rende questa somma estremamente semplice: si sommano numeri con segno, senza dover comporre vettori. Questo è il grande vantaggio pratico del potenziale rispetto al campo elettrico.</p>
+
+<div class="box box-ok">
+  ✔ <strong>Strategia di calcolo:</strong> in molti problemi conviene calcolare prima il potenziale scalare e poi ricavare il campo elettrico come gradiente negativo, piuttosto che calcolare direttamente il campo vettoriale componente per componente.
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<h2>4. Relazione tra E e V</h2>
+
+<p>Campo elettrico e potenziale sono legati da una relazione differenziale fondamentale: il campo è il <strong>gradiente negativo</strong> del potenziale.</p>
+
+<div class="box box-formula">
+  <div class="f">E = −∇V</div>
+  <div class="fd">Eₓ = −∂V/∂x &nbsp;·&nbsp; Eᵧ = −∂V/∂y &nbsp;·&nbsp; E_z = −∂V/∂z</div>
+</div>
+
+<p>Il significato fisico è profondo: il campo elettrico punta sempre verso la <strong>massima diminuzione del potenziale</strong>, con intensità proporzionale alla rapidità di tale variazione nello spazio. Una carica positiva libera si muove spontaneamente da alto a basso potenziale (come una massa che scende per gravità).</p>
+
+<h3>Lavoro del campo elettrico</h3>
+<p>Il campo elettrostatico è <strong>conservativo</strong>: il lavoro per spostare una carica q da A a B dipende solo dai valori del potenziale agli estremi, indipendentemente dal percorso.</p>
+
+<div class="box box-formula">
+  <div class="f">W<sub>A→B</sub> = q · (V<sub>A</sub> − V<sub>B</sub>)</div>
+  <div class="fd">Il lavoro è positivo se la carica si muove da alto a basso potenziale</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<h2>5. Linee equipotenziali</h2>
+
+<p>Una <strong>superficie equipotenziale</strong> è il luogo geometrico dei punti in cui V è costante. Nel piano bidimensionale, queste superfici si riducono a <strong>curve equipotenziali</strong>. Sono lo strumento grafico principale per visualizzare il potenziale.</p>
+
+<h3>Proprietà geometriche</h3>
+<ul>
+  <li>Le equipotenziali sono <strong>sempre perpendicolari</strong> alle linee di campo in ogni punto.</li>
+  <li>Le equipotenziali sono tanto più <strong>ravvicinate</strong> quanto più è intenso il campo (gradiente elevato).</li>
+  <li>Muoversi <em>lungo</em> una equipotenziale non richiede lavoro da parte del campo.</li>
+  <li>Attorno a una carica isolata le equipotenziali sono <strong>cerchi concentrici</strong> (sfere in 3D).</li>
+  <li>Le equipotenziali non hanno verso (V è scalare): non hanno frecce.</li>
+</ul>
+
+<table>
+  <tr><th>Configurazione</th><th>Forma equipotenziali</th><th>Andamento V</th></tr>
+  <tr><td>Carica + isolata</td><td>Cerchi concentrici, V &gt; 0 ovunque</td><td>kQ/r, decresce con r</td></tr>
+  <tr><td>Carica − isolata</td><td>Cerchi concentrici, V &lt; 0 ovunque</td><td>kQ/r &lt; 0, cresce (meno negativo) con r</td></tr>
+  <tr><td>Dipolo (+ e −)</td><td>Curve chiuse complesse; V = 0 sul piano mediano</td><td>Positivo lato +, negativo lato −</td></tr>
+  <tr><td>Due cariche + uguali</td><td>Curve simmetriche, sella al punto medio</td><td>V &gt; 0 ovunque, minimo locale al centro</td></tr>
+  <tr><td>Condensatore piano</td><td>Piani paralleli alle armature</td><td>Variazione lineare tra le armature</td></tr>
+</table>
+
+<!-- ══════════════════════════════════════ -->
+<div class="sep">Simulatori Interattivi</div>
+
+<h2>6. Simulatore 2D — Mappa del Potenziale</h2>
+
+<p>Il simulatore calcola V(x,y) analiticamente per ogni punto della griglia, sommando i contributi coulombiani delle cariche attive. Le curve equipotenziali sono estratte con l'algoritmo <em>Marching Squares</em>. Il colore di sfondo mostra la mappa continua del potenziale.</p>
+
+<div class="box box-note">
+  💡 <strong>Come usarlo:</strong> attiva le cariche, imposta x, y e il valore di q. Il cursore <em>Linee</em> controlla il numero di equipotenziali. Trascina il piano per spostarti, usa la rotella per lo zoom.
+</div>
+
+<!-- SIM 2D -->
+<div class="sim-wrap">
+  <div class="sim-head">Simulatore 2D — Piano xy</div>
+  <div class="cards" id="cc2d"></div>
+  <div class="toolbar">
+    <label>Zoom</label>
+    <button class="tbtn" id="zm2">−</button>
+    <input type="range" id="zoom2" min="0.5" max="5" step="0.1" value="1">
+    <button class="tbtn" id="zp2">+</button>
+    <span class="tval" id="zv2">1×</span>
+    <button class="tbtn" id="zr2">reset</button>
+    <label style="margin-left:8px">Linee</label>
+    <input type="range" id="nl2" min="10" max="60" step="5" value="35">
+    <span class="tval" id="nlv2">35</span>
+  </div>
+  <canvas id="cv2d"></canvas>
+  <div class="leg">
+    <span style="display:flex;align-items:center;gap:5px">
+      <span style="width:32px;height:4px;background:linear-gradient(to right,#2166ac,#74add1,#f7f7f7,#f4a582,#d6604d);display:inline-block;border-radius:2px"></span>
+      V basso (blu) → V alto (rosso)
+    </span>
+    <span>Trascina · Rotella = zoom</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<h2>7. Simulatore 3D — Superficie del Potenziale</h2>
+
+<p>Il piano xy ospita le cariche; l'asse verticale z rappresenta il valore del potenziale V(x,y). La superficie tridimensionale mostra intuitivamente come il potenziale "sale" vicino alle cariche positive e "scende" vicino alle negative. Il colore della superficie codifica lo stesso schema cromatico del simulatore 2D.</p>
+
+<div class="box box-note">
+  💡 <strong>Come usarlo:</strong> trascina per ruotare la vista, usa la rotella per lo zoom, Shift+trascina per traslare. Il cursore <em>Scala z</em> esagera o riduce l'altezza della superficie per evidenziare le variazioni. La <em>Risoluzione</em> controlla il dettaglio della mesh.
+</div>
+
+<!-- SIM 3D -->
+<div class="sim-wrap">
+  <div class="sim-head">Simulatore 3D — Superficie V(x,y)</div>
+  <div class="cards" id="cc3d"></div>
+  <div class="toolbar">
+    <label>Scala z</label>
+    <input type="range" id="zsc3" min="0.2" max="3" step="0.1" value="1">
+    <span class="tval" id="zsv3">1×</span>
+    <label style="margin-left:8px">Risoluzione</label>
+    <input type="range" id="res3" min="40" max="120" step="10" value="80">
+    <span class="tval" id="resv3">80</span>
+    <button class="tbtn" id="rcam3" style="margin-left:8px">reset vista</button>
+  </div>
+  <canvas id="cv3d"></canvas>
+  <div class="leg">Trascina per ruotare · Rotella per zoom · Shift+trascina per traslare</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<h2>8. Esercizi proposti</h2>
+<ol>
+  <li><strong>Carica isolata:</strong> attiva solo Q₁ = +1. Nel 2D osserva la simmetria circolare delle equipotenziali; nel 3D osserva la forma a "campana" della superficie. Cosa cambia con Q₁ = −1?</li>
+  <li><strong>Dipolo:</strong> imposta Q₁ = +1 in (2,0) e Q₂ = −1 in (−2,0). Identifica la curva V = 0 nel simulatore 2D: dove si trova? Conferma nel 3D che la superficie interseca il piano z = 0 lungo quella curva.</li>
+  <li><strong>Due cariche positive:</strong> Q₁ = Q₂ = +1. Trova il punto di sella nel 3D (il "collo di bottiglia" tra i due picchi). Come appare la equipotenziale corrispondente nel 2D?</li>
+  <li><strong>Asimmetria:</strong> imposta Q₁ = +2 e Q₂ = −1. Le equipotenziali sono simmetriche? Dove si trova la curva V = 0? Confronta con il caso Q₁ = +1, Q₂ = −1.</li>
+  <li><strong>Quattro cariche:</strong> disponi quattro cariche alternando i segni ai vertici di un quadrato. Come appare la superficie 3D? Riesci a identificare punti di sella e massimi/minimi locali?</li>
+  <li><strong>Densità delle equipotenziali:</strong> nel simulatore 2D, aumenta il numero di linee a 60. In quale zona del piano la densità è massima? Che cosa indica sull'intensità del campo E?</li>
+</ol>
+
+<!-- ══════════════════════════════════════ -->
+<h2>9. Metodo numerico</h2>
+<p>Il potenziale V(x,y) è calcolato analiticamente in ogni punto della griglia come somma dei contributi coulombiani. Per evitare la divergenza matematica in prossimità delle cariche, viene applicato un <strong>raggio minimo di smoothing</strong>: al di sotto di una certa distanza, il denominatore è fissato a un valore costante, ottenendo una superficie arrotondata invece di un picco infinito.</p>
+<p>Le curve equipotenziali 2D sono estratte con l'algoritmo <strong>Marching Squares</strong>: per ogni cella della griglia si individua se e dove la curva di livello V = costante interseca i bordi, e si traccia il segmento corrispondente. La mesh 3D è costruita triangolando la griglia e assegnando a ogni vertice il colore corrispondente al valore di V.</p>
+
+<footer>Dispensa didattica — Il Potenziale Elettrico · Fisica II</footer>
+</div><!-- fine .page -->
+
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ════════════════════════════════════
+// DATI CONDIVISI
+// ════════════════════════════════════
+const CQ2=[{x:2,y:0,q:1,on:true},{x:-2,y:0,q:-1,on:true},{x:0,y:0,q:1,on:false},{x:0,y:0,q:-1,on:false}];
+const CQ3=[{x:2,y:0,q:1,on:true},{x:-2,y:0,q:-1,on:true},{x:0,y:0,q:1,on:false},{x:0,y:0,q:-1,on:false}];
+const PC=['#e05252','#3a8f3a','#c47a00','#7a4fc4'],NC=['#4a90d9','#d4537e','#5daa9a','#888'],NM=['Q₁','Q₂','Q₃','Q₄'];
+
+function potColor(t){
+  const s=[[0,[33,102,172]],[0.25,[103,169,207]],[0.5,[247,247,247]],[0.75,[214,96,77]],[1,[178,24,43]]];
+  let i=0;for(let k=0;k<s.length-1;k++){if(t>=s[k][0])i=k;}
+  const[ta,ca]=s[i],[tb,cb]=s[i+1],f=(t-ta)/(tb-ta);
+  return[Math.round(ca[0]+(cb[0]-ca[0])*f),Math.round(ca[1]+(cb[1]-ca[1])*f),Math.round(ca[2]+(cb[2]-ca[2])*f)];
+}
+
+// ════════════════════════════════════
+// SIMULATORE 2D
+// ════════════════════════════════════
+(function(){
+  let zoom=1,panX=0,panY=0,drag=false,lx=0,ly=0,NL=35;
+  let WXf,WYf,S2,W2,H2;
+  const cv=document.getElementById('cv2d');
+
+  function buildUI2(){
+    const cc=document.getElementById('cc2d');cc.innerHTML='';
+    CQ2.forEach((c,i)=>{
+      const col=c.q>=0?PC[i]:NC[i],d=document.createElement('div');d.className='card';
+      d.innerHTML=`<div class="card-head"><span class="clabel" id="lb2${i}" style="color:${col}">${NM[i]} (${c.q>0?'+':''}${c.q})</span><label><input type="checkbox" id="on2${i}" ${c.on?'checked':''}> attiva</label></div><div class="row"><label>x</label><input type="number" id="cx2${i}" value="${c.x}" step="1" min="-7" max="7"><label>y</label><input type="number" id="cy2${i}" value="${c.y}" step="1" min="-7" max="7"></div><div class="row"><label>q</label><input type="range" id="cq2${i}" min="-3" max="3" step="1" value="${c.q}"><span class="qval" id="qv2${i}">${c.q>0?'+':''}${c.q}</span></div>`;
+      cc.appendChild(d);
+      document.getElementById('on2'+i).onchange=e=>{CQ2[i].on=e.target.checked;draw2()};
+      document.getElementById('cx2'+i).oninput=e=>{CQ2[i].x=+e.target.value||0;draw2()};
+      document.getElementById('cy2'+i).oninput=e=>{CQ2[i].y=+e.target.value||0;draw2()};
+      document.getElementById('cq2'+i).oninput=e=>{
+        CQ2[i].q=+e.target.value;
+        document.getElementById('qv2'+i).textContent=(CQ2[i].q>0?'+':'')+CQ2[i].q;
+        const nc=CQ2[i].q>=0?PC[i]:NC[i];
+        document.getElementById('lb2'+i).style.color=nc;
+        document.getElementById('lb2'+i).textContent=NM[i]+' ('+(CQ2[i].q>0?'+':'')+CQ2[i].q+')';
+        draw2();
+      };
+    });
+  }
+  const zs=document.getElementById('zoom2'),zv=document.getElementById('zv2');
+  zs.oninput=e=>{zoom=+e.target.value;zv.textContent=zoom.toFixed(1)+'×';draw2()};
+  document.getElementById('zm2').onclick=()=>{zoom=Math.max(0.5,+(zoom-0.2).toFixed(1));zs.value=zoom;zv.textContent=zoom.toFixed(1)+'×';draw2()};
+  document.getElementById('zp2').onclick=()=>{zoom=Math.min(5,+(zoom+0.2).toFixed(1));zs.value=zoom;zv.textContent=zoom.toFixed(1)+'×';draw2()};
+  document.getElementById('zr2').onclick=()=>{zoom=1;panX=0;panY=0;zs.value=1;zv.textContent='1×';draw2()};
+  document.getElementById('nl2').oninput=e=>{NL=+e.target.value;document.getElementById('nlv2').textContent=NL;draw2()};
+  cv.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY});
+  window.addEventListener('mousemove',e=>{if(!drag)return;panX+=(e.clientX-lx)/S2;panY-=(e.clientY-ly)/S2;lx=e.clientX;ly=e.clientY;draw2()});
+  window.addEventListener('mouseup',()=>drag=false);
+  cv.addEventListener('touchstart',e=>{drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY},{passive:true});
+  cv.addEventListener('touchmove',e=>{if(!drag)return;panX+=(e.touches[0].clientX-lx)/S2;panY-=(e.touches[0].clientY-ly)/S2;lx=e.touches[0].clientX;ly=e.touches[0].clientY;draw2()},{passive:true});
+  cv.addEventListener('touchend',()=>drag=false);
+  cv.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(0.5,Math.min(5,zoom*(e.deltaY<0?1.1:0.93)));zoom=Math.round(zoom*10)/10;zs.value=zoom;zv.textContent=zoom.toFixed(1)+'×';draw2()},{passive:false});
+
+  function Vpot2(px,py){
+    let v=0;CQ2.forEach(c=>{if(!c.on||c.q===0)return;const r=Math.sqrt((px-c.x)**2+(py-c.y)**2);if(r<0.05)return;v+=c.q/r});return v;
+  }
+  function isoSeg(cx,cy,gs,v00,v10,v11,v01,lv){
+    function interp(va,vb,xa,ya,xb,yb){const t=(lv-va)/(vb-va);return[xa+t*(xb-xa),ya+t*(yb-ya)];}
+    const ab=[v00>lv,v10>lv,v11>lv,v01>lv],edges=[];
+    if(ab[0]!==ab[1])edges.push(interp(v00,v10,cx,cy,cx+gs,cy));
+    if(ab[1]!==ab[2])edges.push(interp(v10,v11,cx+gs,cy,cx+gs,cy+gs));
+    if(ab[2]!==ab[3])edges.push(interp(v11,v01,cx+gs,cy+gs,cx,cy+gs));
+    if(ab[3]!==ab[0])edges.push(interp(v01,v00,cx,cy+gs,cx,cy));
+    if(edges.length===2)return[[edges[0][0],edges[0][1],edges[1][0],edges[1][1]]];
+    if(edges.length===4)return[[edges[0][0],edges[0][1],edges[1][0],edges[1][1]],[edges[2][0],edges[2][1],edges[3][0],edges[3][1]]];
+    return[];
+  }
+  function draw2(){
+    W2=cv.width;H2=cv.height;S2=(W2/20)*zoom;
+    WXf=x=>W2/2+(x+panX)*S2;WYf=y=>H2/2-(y+panY)*S2;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W2,H2);ctx.fillStyle='#fff';ctx.fillRect(0,0,W2,H2);
+    const act=CQ2.filter(c=>c.on&&c.q!==0);
+    if(act.length>0){
+      const RES=3,cols=Math.ceil(W2/RES),rows=Math.ceil(H2/RES);
+      const vals=new Float32Array((cols+1)*(rows+1));
+      const VCLAMP=10;let vmin=Infinity,vmax=-Infinity;
+      for(let r=0;r<=rows;r++){for(let c=0;c<=cols;c++){
+        const px=c*RES,py=r*RES,wx=(px-W2/2)/S2-panX,wy=(H2/2-py)/S2-panY;
+        let v=Vpot2(wx,wy);v=Math.max(-VCLAMP,Math.min(VCLAMP,v));
+        vals[r*(cols+1)+c]=v;if(v<vmin)vmin=v;if(v>vmax)vmax=v;
+      }}
+      const vrange=vmax-vmin||1;
+      const img=ctx.createImageData(cols*RES,rows*RES);
+      for(let r=0;r<rows;r++){for(let c=0;c<cols;c++){
+        const t=(vals[r*(cols+1)+c]-vmin)/vrange;
+        const[rr,gg,bb]=potColor(t);
+        for(let dy=0;dy<RES;dy++){for(let dx=0;dx<RES;dx++){
+          const idx=4*((r*RES+dy)*cols*RES+(c*RES+dx));
+          img.data[idx]=rr;img.data[idx+1]=gg;img.data[idx+2]=bb;img.data[idx+3]=200;
+        }}
+      }}
+      ctx.putImageData(img,0,0);
+      const GS=2,gc=Math.ceil(W2/GS)+1,gr=Math.ceil(H2/GS)+1;
+      const gv=new Float32Array(gc*gr);
+      for(let r=0;r<gr;r++){for(let c=0;c<gc;c++){
+        const px=c*GS,py=r*GS,wx=(px-W2/2)/S2-panX,wy=(H2/2-py)/S2-panY;
+        let v=Vpot2(wx,wy);v=Math.max(-VCLAMP,Math.min(VCLAMP,v));gv[r*gc+c]=v;
+      }}
+      const levels=[];for(let i=1;i<NL;i++)levels.push(vmin+i*(vrange/NL));
+      levels.forEach(level=>{
+        const t=(level-vmin)/vrange;
+        const[rr,gg,bb]=potColor(t);
+        const dk=0.38+0.25*Math.abs(t-0.5)*2;
+        ctx.strokeStyle=`rgb(${Math.round(rr*dk)},${Math.round(gg*dk)},${Math.round(bb*dk)})`;
+        ctx.lineWidth=t<0.15||t>0.85?1.6:t<0.25||t>0.75?1.3:1.0;
+        ctx.beginPath();
+        for(let r=0;r<gr-1;r++){for(let c=0;c<gc-1;c++){
+          const v00=gv[r*gc+c],v10=gv[r*gc+c+1],v01=gv[(r+1)*gc+c],v11=gv[(r+1)*gc+c+1];
+          isoSeg(c*GS,r*GS,GS,v00,v10,v11,v01,level).forEach(([x1,y1,x2,y2])=>{ctx.moveTo(x1,y1);ctx.lineTo(x2,y2)});
+        }}
+        ctx.stroke();
+        if(Math.round(t*NL)%5===2){
+          const lbl=(level>=0?'+':'')+level.toFixed(1);
+          const dr=Math.round(rr*dk),dg=Math.round(gg*dk),db=Math.round(bb*dk);
+          for(let r=3;r<gr-3;r+=6){
+            const v0=gv[r*gc+3],v1=gv[(r+1)*gc+3];
+            if((v0-level)*(v1-level)<0){
+              const f=(level-v0)/(v1-v0),py=r*GS+f*GS;
+              ctx.fillStyle=`rgb(${dr},${dg},${db})`;ctx.font='bold 9px monospace';ctx.textAlign='left';ctx.textBaseline='middle';
+              ctx.fillText(lbl,6,py);break;
+            }
+          }
+        }
+      });
+    }
+    const wW=W2/S2;let gs=1;if(wW>30)gs=5;else if(wW>15)gs=2;else if(wW<4)gs=0.5;
+    const x0=-W2/(2*S2)-panX,x1=W2/(2*S2)-panX,y0b=-H2/(2*S2)-panY,y1b=H2/(2*S2)-panY;
+    ctx.strokeStyle='rgba(0,0,0,0.08)';ctx.lineWidth=0.5;
+    for(let i=Math.floor(x0/gs)*gs;i<=x1+gs;i+=gs){ctx.beginPath();ctx.moveTo(WXf(i),0);ctx.lineTo(WXf(i),H2);ctx.stroke()}
+    for(let i=Math.floor(y0b/gs)*gs;i<=y1b+gs;i+=gs){ctx.beginPath();ctx.moveTo(0,WYf(i));ctx.lineTo(W2,WYf(i));ctx.stroke()}
+    ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,WYf(0));ctx.lineTo(W2,WYf(0));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(WXf(0),0);ctx.lineTo(WXf(0),H2);ctx.stroke();
+    ctx.fillStyle='rgba(0,0,0,0.3)';ctx.font='9px monospace';
+    for(let i=Math.floor(x0/gs)*gs;i<=x1+gs;i+=gs){if(Math.abs(i)<0.01)continue;ctx.textAlign='center';ctx.fillText(+i.toFixed(1),WXf(i),WYf(0)+11)}
+    for(let i=Math.floor(y0b/gs)*gs;i<=y1b+gs;i+=gs){if(Math.abs(i)<0.01)continue;ctx.textAlign='right';ctx.fillText(+i.toFixed(1),WXf(0)-3,WYf(i)+3)}
+    // simboli cariche
+    CQ2.forEach((c,i)=>{
+      if(!c.on||c.q===0)return;
+      const cx=WXf(c.x),cy=WYf(c.y);
+      ctx.beginPath();ctx.arc(cx,cy,8,0,2*Math.PI);
+      ctx.fillStyle=c.q>=0?PC[i]:NC[i];ctx.fill();
+      ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle='#fff';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(c.q>=0?'+':'−',cx,cy+1);
+    });
+  }
+  function resize2(){const w=cv.parentElement.clientWidth-48||560;cv.width=w;cv.height=Math.round(w*0.58);draw2()}
+  buildUI2();window.addEventListener('resize',resize2);setTimeout(resize2,80);
+})();
+
+// ════════════════════════════════════
+// SIMULATORE 3D
+// ════════════════════════════════════
+(function(){
+  let zScale=1,RES=80;
+  const canvas=document.getElementById('cv3d');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setClearColor(0xfaf9f6);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,2,0.1,1000);
+  scene.add(new THREE.AmbientLight(0xffffff,0.6));
+  const dl=new THREE.DirectionalLight(0xffffff,0.75);dl.position.set(12,20,12);scene.add(dl);
+  const dl2=new THREE.DirectionalLight(0xaaccff,0.25);dl2.position.set(-10,-10,-10);scene.add(dl2);
+  // assi
+  [[1,0,0,0xff4444],[0,0,1,0x44aa44],[0,1,0,0x4488ff]].forEach(([dx,dy,dz,col])=>{
+    const geo=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(dx*11,dy*11,dz*11)]);
+    scene.add(new THREE.Line(geo,new THREE.LineBasicMaterial({color:col})));
+  });
+  scene.add(new THREE.GridHelper(20,20,0xcccccc,0xe0e0e0));
+
+  let meshes=[];
+  function clearMeshes(){meshes.forEach(m=>{scene.remove(m);if(m.geometry)m.geometry.dispose();if(m.material)m.material.dispose()});meshes=[]}
+
+  function buildUI3(){
+    const cc=document.getElementById('cc3d');cc.innerHTML='';
+    CQ3.forEach((c,i)=>{
+      const col=c.q>=0?PC[i]:NC[i],d=document.createElement('div');d.className='card';
+      d.innerHTML=`<div class="card-head"><span class="clabel" id="lb3${i}" style="color:${col}">${NM[i]} (${c.q>0?'+':''}${c.q})</span><label><input type="checkbox" id="on3${i}" ${c.on?'checked':''}> attiva</label></div><div class="row"><label>x</label><input type="number" id="cx3${i}" value="${c.x}" step="1" min="-7" max="7"><label>y</label><input type="number" id="cy3${i}" value="${c.y}" step="1" min="-7" max="7"></div><div class="row"><label>q</label><input type="range" id="cq3${i}" min="-3" max="3" step="1" value="${c.q}"><span class="qval" id="qv3${i}">${c.q>0?'+':''}${c.q}</span></div>`;
+      cc.appendChild(d);
+      document.getElementById('on3'+i).onchange=e=>{CQ3[i].on=e.target.checked;rebuild3()};
+      document.getElementById('cx3'+i).oninput=e=>{CQ3[i].x=+e.target.value||0;rebuild3()};
+      document.getElementById('cy3'+i).oninput=e=>{CQ3[i].y=+e.target.value||0;rebuild3()};
+      document.getElementById('cq3'+i).oninput=e=>{
+        CQ3[i].q=+e.target.value;
+        document.getElementById('qv3'+i).textContent=(CQ3[i].q>0?'+':'')+CQ3[i].q;
+        const nc=CQ3[i].q>=0?PC[i]:NC[i];
+        document.getElementById('lb3'+i).style.color=nc;
+        document.getElementById('lb3'+i).textContent=NM[i]+' ('+(CQ3[i].q>0?'+':'')+CQ3[i].q+')';
+        rebuild3();
+      };
+    });
+  }
+  document.getElementById('zsc3').oninput=e=>{zScale=+e.target.value;document.getElementById('zsv3').textContent=zScale.toFixed(1)+'×';rebuild3()};
+  document.getElementById('res3').oninput=e=>{RES=+e.target.value;document.getElementById('resv3').textContent=RES;rebuild3()};
+
+  function VpotS(px,py){
+    let v=0;CQ3.forEach(c=>{if(!c.on||c.q===0)return;const r=Math.sqrt((px-c.x)**2+(py-c.y)**2);v+=c.q/Math.max(r,0.5)});return v;
+  }
+  function potColor3(t){
+    const[r,g,b]=potColor(t);return new THREE.Color(r/255,g/255,b/255);
+  }
+
+  function rebuild3(){
+    clearMeshes();
+    const N=RES,RANGE=9,step=2*RANGE/N,VCLAMP=5;
+    const vg=new Float32Array((N+1)*(N+1));
+    let vmin=Infinity,vmax=-Infinity;
+    for(let j=0;j<=N;j++){for(let i=0;i<=N;i++){
+      let v=VpotS(-RANGE+i*step,-RANGE+j*step);
+      v=Math.max(-VCLAMP,Math.min(VCLAMP,v));
+      vg[j*(N+1)+i]=v;if(v<vmin)vmin=v;if(v>vmax)vmax=v;
+    }}
+    const vrange=vmax-vmin||1;
+    const pos=new Float32Array((N+1)*(N+1)*3),col=new Float32Array((N+1)*(N+1)*3);
+    for(let j=0;j<=N;j++){for(let i=0;i<=N;i++){
+      const idx=j*(N+1)+i,wx=-RANGE+i*step,wy=-RANGE+j*step,v=vg[idx];
+      pos[idx*3]=wx;pos[idx*3+1]=v*zScale;pos[idx*3+2]=wy;
+      const c=potColor3((v-vmin)/vrange);col[idx*3]=c.r;col[idx*3+1]=c.g;col[idx*3+2]=c.b;
+    }}
+    const idxArr=[];
+    for(let j=0;j<N;j++)for(let i=0;i<N;i++){
+      const a=j*(N+1)+i,b=a+1,c=(j+1)*(N+1)+i,dd=c+1;idxArr.push(a,b,c,b,dd,c);
+    }
+    const geo=new THREE.BufferGeometry();
+    geo.setIndex(idxArr);
+    geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+    geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+    geo.computeVertexNormals();
+    const mat=new THREE.MeshPhongMaterial({vertexColors:true,side:THREE.DoubleSide,shininess:35,specular:new THREE.Color(0.2,0.2,0.2),transparent:true,opacity:0.94});
+    const mesh=new THREE.Mesh(geo,mat);scene.add(mesh);meshes.push(mesh);
+    const wf=new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({color:0x000000,wireframe:true,transparent:true,opacity:0.05}));
+    scene.add(wf);meshes.push(wf);
+  }
+
+  // orbita
+  let theta=0.6,phi=0.85,radius=32,tgX=0,tgY=0,isDown=false,lx=0,ly=0;
+  function updateCam(){camera.position.set(tgX+radius*Math.sin(phi)*Math.sin(theta),tgY+radius*Math.cos(phi),radius*Math.sin(phi)*Math.cos(theta));camera.lookAt(tgX,tgY,0)}
+  updateCam();
+  canvas.addEventListener('mousedown',e=>{isDown=true;lx=e.clientX;ly=e.clientY});
+  window.addEventListener('mouseup',()=>isDown=false);
+  window.addEventListener('mousemove',e=>{
+    if(!isDown)return;const dx=e.clientX-lx,dy=e.clientY-ly;lx=e.clientX;ly=e.clientY;
+    if(e.shiftKey){const r=new THREE.Vector3();r.crossVectors(camera.getWorldDirection(new THREE.Vector3()),camera.up).normalize();tgX-=r.x*dx*0.04;tgY+=dy*0.04;}
+    else{theta-=dx*0.008;phi=Math.max(0.05,Math.min(Math.PI-0.05,phi-dy*0.008));}
+    updateCam();
+  });
+  canvas.addEventListener('wheel',e=>{e.preventDefault();radius=Math.max(8,Math.min(80,radius*(e.deltaY>0?1.08:0.93)));updateCam()},{passive:false});
+  canvas.addEventListener('touchstart',e=>{isDown=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY},{passive:true});
+  canvas.addEventListener('touchmove',e=>{if(!isDown)return;const dx=e.touches[0].clientX-lx,dy=e.touches[0].clientY-ly;lx=e.touches[0].clientX;ly=e.touches[0].clientY;theta-=dx*0.008;phi=Math.max(0.05,Math.min(Math.PI-0.05,phi-dy*0.008));updateCam()},{passive:true});
+  canvas.addEventListener('touchend',()=>isDown=false);
+  document.getElementById('rcam3').onclick=()=>{theta=0.6;phi=0.85;radius=32;tgX=0;tgY=0;updateCam()};
+
+  function resize3(){
+    const w=canvas.parentElement.clientWidth-48||560,h=Math.round(w*0.65);
+    canvas.style.width=w+'px';canvas.style.height=h+'px';
+    renderer.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
+  }
+  function animate(){requestAnimationFrame(animate);renderer.render(scene,camera)}
+  buildUI3();resize3();rebuild3();animate();
+  window.addEventListener('resize',resize3);
+})();
+</script>
+</body>
+</html>
