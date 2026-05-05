@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geometria Analitica dello Spazio — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#0e6b6b;--accent2:#1a4b8c;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;--red:#b5351a;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:64px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,48px);font-weight:700;line-height:1.1;margin-bottom:10px}
+.hero h1 em{color:#5dcaa5;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.4);font-weight:300;max-width:520px;margin:0 auto 28px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 24px}
+.nav-inner{max-width:900px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:12px 13px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:900px;margin:0 auto;padding:48px 32px}
+@media(max-width:600px){.page{padding:28px 14px}.nav{padding:0 8px}.nav a{padding:10px 9px;font-size:10px}}
+.sec{margin-bottom:70px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px}
+h3{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin:18px 0 7px}
+p{font-size:15px;margin-bottom:11px;color:#2a2a2e}
+ul,ol{margin:6px 0 11px 22px;font-size:15px}
+li{margin-bottom:5px;color:#2a2a2e}
+strong{font-weight:600}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--accent2);text-align:center;padding:14px 18px;margin:13px 0;border-radius:0 3px 3px 0}
+.box-f .f{font-family:'Playfair Display',serif;font-size:19px;color:var(--accent2);margin-bottom:4px}
+.box-f .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:#e1f5ee;border-left:3px solid var(--accent);color:#0a3a2a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-w{background:#fdf3ee;border-left:3px solid var(--red);color:#5a1a0a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:13px 0}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:18px;margin:20px 0}
+.sim-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sim-title::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;align-items:center;font-size:12px;color:var(--muted)}
+.ctrl label{font-weight:600;min-width:16px}
+.ctrl input[type=number]{width:60px;padding:3px 5px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink);font-family:'Source Code Pro',monospace}
+.btn-go{padding:5px 14px;border-radius:3px;border:none;background:var(--accent);color:#fff;font-size:12px;cursor:pointer;font-weight:600;font-family:'Source Sans 3',sans-serif}
+.btn-go:hover{background:#094f4f}
+.btn-rst{padding:5px 12px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);font-size:12px;cursor:pointer}
+canvas{display:block;border:1px solid var(--border);border-radius:3px;cursor:grab;width:100%}
+canvas:active{cursor:grabbing}
+.eq-out{background:var(--ink);color:#fff;border-radius:4px;padding:12px 16px;margin-top:10px;font-family:'Source Code Pro',monospace;font-size:12px;line-height:1.9;min-height:44px;white-space:pre}
+.eq-out.empty{background:var(--surface);color:var(--muted);font-family:'Source Sans 3',sans-serif;font-style:italic;font-size:13px}
+.leg{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted);align-items:center}
+.ls{width:18px;height:3px;border-radius:1px;display:inline-block;margin-right:4px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;padding:22px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Matematica · Geometria Analitica dello Spazio</div>
+  <h1>Piani, Rette e<br><em>Vettori</em> nello Spazio</h1>
+  <p class="hero-sub">Equazioni di piani e rette, forme parametriche e ridotte, prodotto vettore — con 4 simulatori 3D interattivi</p>
+  <div class="rule"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#piani" class="active">Piani</a>
+    <a href="#rette">Rette</a>
+    <a href="#prodvett">Prodotto vettore</a>
+    <a href="#sim1">Sim 1 — Piano</a>
+    <a href="#sim2">Sim 2 — Piano per 3 punti</a>
+    <a href="#sim3">Sim 3 — Retta per 2 punti</a>
+    <a href="#sim4">Sim 4 — Prodotto vettore</a>
+    <a href="#esercizi">Esercizi</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<div class="sec" id="piani">
+  <h2>1. Il Piano nello Spazio</h2>
+  <p class="sec-sub">Equazione cartesiana, vettore normale e piano per tre punti</p>
+  <h3>Equazione cartesiana generale</h3>
+  <p>Un piano è determinato da un punto P₀=(x₀,y₀,z₀) e un <strong>vettore normale</strong> n=(a,b,c). L'equazione del piano è:</p>
+  <div class="box-f">
+    <div class="f">ax + by + cz + d = 0</div>
+    <div class="fd">d = −(ax₀+by₀+cz₀) &nbsp;·&nbsp; n=(a,b,c) è perpendicolare al piano</div>
+  </div>
+  <h3>Casi particolari</h3>
+  <ul>
+    <li><strong>b=0, c=0:</strong> piano ax+d=0, parallelo al piano yz</li>
+    <li><strong>a=0, c=0:</strong> piano by+d=0, parallelo al piano xz</li>
+    <li><strong>a=0, b=0:</strong> piano cz+d=0, parallelo al piano xy (orizzontale)</li>
+    <li><strong>d=0:</strong> il piano passa per l'origine</li>
+  </ul>
+  <h3>Piano per tre punti</h3>
+  <p>Dati tre punti non allineati A, B, C, il vettore normale è il prodotto vettore AB×AC:</p>
+  <div class="box-f">
+    <div class="f">n = AB × AC</div>
+    <div class="fd">AB = B−A &nbsp;·&nbsp; AC = C−A &nbsp;·&nbsp; n ⊥ piano ABC</div>
+  </div>
+  <h3>Distanza punto-piano</h3>
+  <div class="box-f">
+    <div class="f">d(P,π) = |ax₀+by₀+cz₀+d| / √(a²+b²+c²)</div>
+    <div class="fd">P=(x₀,y₀,z₀) &nbsp;·&nbsp; π: ax+by+cz+d=0</div>
+  </div>
+</div>
+
+<div class="sec" id="rette">
+  <h2>2. La Retta nello Spazio</h2>
+  <p class="sec-sub">Forma parametrica, equazioni ridotte e retta per due punti</p>
+  <h3>Forma parametrica</h3>
+  <p>Una retta è determinata da un punto P₀=(x₀,y₀,z₀) e un <strong>vettore direttore</strong> v=(l,m,n):</p>
+  <div class="box-f">
+    <div class="f">x=x₀+lt &nbsp;&nbsp; y=y₀+mt &nbsp;&nbsp; z=z₀+nt &nbsp;&nbsp; t∈ℝ</div>
+    <div class="fd">t = parametro reale &nbsp;·&nbsp; v=(l,m,n) = vettore direttore</div>
+  </div>
+  <h3>Forma ridotta (equazioni simmetriche)</h3>
+  <p>Se l, m, n sono tutti diversi da zero, si elimina il parametro t:</p>
+  <div class="box-f">
+    <div class="f">(x−x₀)/l = (y−y₀)/m = (z−z₀)/n</div>
+    <div class="fd">Valida solo se l,m,n ≠ 0 — se uno è zero, quella coordinata è fissa</div>
+  </div>
+  <div class="box-w">⚠ Se m=0, la forma ridotta diventa: (x−x₀)/l = (z−z₀)/n con y=y₀.</div>
+  <h3>Retta per due punti A e B</h3>
+  <div class="box-f">
+    <div class="f">(x−a₁)/(b₁−a₁) = (y−a₂)/(b₂−a₂) = (z−a₃)/(b₃−a₃)</div>
+    <div class="fd">A=(a₁,a₂,a₃) &nbsp;·&nbsp; B=(b₁,b₂,b₃) &nbsp;·&nbsp; v = B−A</div>
+  </div>
+</div>
+
+<div class="sec" id="prodvett">
+  <h2>3. Il Prodotto Vettore</h2>
+  <p class="sec-sub">Definizione, proprietà e applicazioni geometriche</p>
+  <p>Il <strong>prodotto vettore</strong> u×v di u=(u₁,u₂,u₃) e v=(v₁,v₂,v₃) è un vettore perpendicolare a entrambi:</p>
+  <div class="box-f">
+    <div class="f">u×v = (u₂v₃−u₃v₂, u₃v₁−u₁v₃, u₁v₂−u₂v₁)</div>
+    <div class="fd">|u×v| = |u||v|sinθ = area del parallelogramma</div>
+  </div>
+  <h3>Proprietà</h3>
+  <ul>
+    <li><strong>Anticommutatività:</strong> u×v = −(v×u)</li>
+    <li><strong>Perpendicolarità:</strong> (u×v)·u = 0 e (u×v)·v = 0</li>
+    <li><strong>u×v = 0</strong> se e solo se u e v sono paralleli</li>
+    <li><strong>Area triangolo:</strong> S = ½|AB×AC|</li>
+  </ul>
+  <div class="box-n">💡 <strong>Regola della mano destra:</strong> le dita da u verso v, il pollice indica la direzione di u×v.</div>
+</div>
+
+<!-- SIM 1 -->
+<div class="sec" id="sim1">
+  <h2>4. Simulatore 1 — Piano dai Coefficienti</h2>
+  <p class="sec-sub">Inserisci a, b, c, d e visualizza ax+by+cz+d=0 con il vettore normale</p>
+  <div class="sim-wrap">
+    <div class="sim-title">Piano ax + by + cz + d = 0</div>
+    <div class="ctrl">
+      <label>a</label><input type="number" id="s1a" value="1" step="0.5">
+      <label>b</label><input type="number" id="s1b" value="1" step="0.5">
+      <label>c</label><input type="number" id="s1c" value="1" step="0.5">
+      <label>d</label><input type="number" id="s1d" value="-3" step="0.5">
+      <button class="btn-go" onclick="S1.build()">▶ Visualizza</button>
+      <button class="btn-rst" onclick="S1.reset()">Reset</button>
+    </div>
+    <canvas id="c1" style="height:340px"></canvas>
+    <div class="eq-out empty" id="o1">Clicca ▶ Visualizza</div>
+    <div class="leg">
+      <span><span class="ls" style="background:#2d6bb5"></span>Piano</span>
+      <span><span class="ls" style="background:#b5351a"></span>Vettore normale n</span>
+      <span style="font-size:10px">Trascina · Rotella = zoom</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2 -->
+<div class="sec" id="sim2">
+  <h2>5. Simulatore 2 — Piano per Tre Punti</h2>
+  <p class="sec-sub">Inserisci A, B, C — calcola n=AB×AC e l'equazione del piano</p>
+  <div class="sim-wrap">
+    <div class="sim-title">Piano per A, B, C con vettore normale n=AB×AC</div>
+    <div class="ctrl">
+      <label style="color:#e05252">A</label>
+      <label>x</label><input type="number" id="s2ax" value="3" step="0.5">
+      <label>y</label><input type="number" id="s2ay" value="0" step="0.5">
+      <label>z</label><input type="number" id="s2az" value="0" step="0.5">
+    </div>
+    <div class="ctrl">
+      <label style="color:#3a8f3a">B</label>
+      <label>x</label><input type="number" id="s2bx" value="0" step="0.5">
+      <label>y</label><input type="number" id="s2by" value="3" step="0.5">
+      <label>z</label><input type="number" id="s2bz" value="0" step="0.5">
+    </div>
+    <div class="ctrl">
+      <label style="color:#c47a00">C</label>
+      <label>x</label><input type="number" id="s2cx" value="0" step="0.5">
+      <label>y</label><input type="number" id="s2cy" value="0" step="0.5">
+      <label>z</label><input type="number" id="s2cz" value="3" step="0.5">
+      <button class="btn-go" onclick="S2.build()">▶ Visualizza</button>
+      <button class="btn-rst" onclick="S2.reset()">Reset</button>
+    </div>
+    <canvas id="c2" style="height:360px"></canvas>
+    <div class="eq-out empty" id="o2">Clicca ▶ Visualizza</div>
+    <div class="leg">
+      <span><span class="ls" style="background:#0e6b6b"></span>Piano</span>
+      <span><span class="ls" style="background:#b5351a"></span>n=AB×AC</span>
+      <span><span class="ls" style="background:#ffa500"></span>Triangolo ABC</span>
+      <span style="font-size:10px">Trascina · Rotella = zoom</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 3 -->
+<div class="sec" id="sim3">
+  <h2>6. Simulatore 3 — Retta per Due Punti</h2>
+  <p class="sec-sub">Inserisci A e B — visualizza la retta con il vettore direttore v=B−A</p>
+  <div class="sim-wrap">
+    <div class="sim-title">Retta passante per A e B</div>
+    <div class="ctrl">
+      <label style="color:#e05252">A</label>
+      <label>x</label><input type="number" id="s3ax" value="1" step="0.5">
+      <label>y</label><input type="number" id="s3ay" value="0" step="0.5">
+      <label>z</label><input type="number" id="s3az" value="0" step="0.5">
+    </div>
+    <div class="ctrl">
+      <label style="color:#3a8f3a">B</label>
+      <label>x</label><input type="number" id="s3bx" value="3" step="0.5">
+      <label>y</label><input type="number" id="s3by" value="2" step="0.5">
+      <label>z</label><input type="number" id="s3bz" value="4" step="0.5">
+      <button class="btn-go" onclick="S3.build()">▶ Visualizza</button>
+      <button class="btn-rst" onclick="S3.reset()">Reset</button>
+    </div>
+    <canvas id="c3" style="height:340px"></canvas>
+    <div class="eq-out empty" id="o3">Clicca ▶ Visualizza</div>
+    <div class="leg">
+      <span><span class="ls" style="background:#b5351a"></span>Retta</span>
+      <span><span class="ls" style="background:#1a6b3a"></span>v=B−A (direttore)</span>
+      <span style="font-size:10px">Trascina · Rotella = zoom</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 4 -->
+<div class="sec" id="sim4">
+  <h2>7. Simulatore 4 — Prodotto Vettore u×v</h2>
+  <p class="sec-sub">Inserisci u e v — visualizza il prodotto vettore e il parallelogramma</p>
+  <div class="sim-wrap">
+    <div class="sim-title">Prodotto vettore u × v</div>
+    <div class="ctrl">
+      <label style="color:#1a4b8c;font-weight:700">u</label>
+      <label>x</label><input type="number" id="s4ux" value="2" step="0.5">
+      <label>y</label><input type="number" id="s4uy" value="1" step="0.5">
+      <label>z</label><input type="number" id="s4uz" value="0" step="0.5">
+    </div>
+    <div class="ctrl">
+      <label style="color:#b5351a;font-weight:700">v</label>
+      <label>x</label><input type="number" id="s4vx" value="0" step="0.5">
+      <label>y</label><input type="number" id="s4vy" value="2" step="0.5">
+      <label>z</label><input type="number" id="s4vz" value="1" step="0.5">
+      <button class="btn-go" onclick="S4.build()">▶ Calcola</button>
+      <button class="btn-rst" onclick="S4.reset()">Reset</button>
+    </div>
+    <canvas id="c4" style="height:360px"></canvas>
+    <div class="eq-out empty" id="o4">Clicca ▶ Calcola</div>
+    <div class="leg">
+      <span><span class="ls" style="background:#1a4b8c"></span>u</span>
+      <span><span class="ls" style="background:#b5351a"></span>v</span>
+      <span><span class="ls" style="background:#1a6b3a"></span>u×v</span>
+      <span><span class="ls" style="background:rgba(26,75,140,0.25);border:1px solid #1a4b8c"></span>Parallelogramma</span>
+      <span style="font-size:10px">Trascina · Rotella = zoom</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 5 -->
+<div class="sec" id="sim5">
+  <h2>8. Simulatore 5 — Posizione Reciproca di Due Rette</h2>
+  <p class="sec-sub">Rette r₁ per A,B e r₂ per C,D — incidenti, parallele o sghembe</p>
+  <p>Dato A, B, C, D il simulatore costruisce le rette r₁ (per A e B) e r₂ (per C e D) e determina automaticamente la loro posizione reciproca:</p>
+  <ul>
+    <li><strong>Incidenti:</strong> si intersecano in un punto P — visualizza il punto</li>
+    <li><strong>Parallele:</strong> stessa direzione ma non coincidenti — visualizza il piano che le contiene</li>
+    <li><strong>Sghembe:</strong> non parallele e non incidenti — visualizza il segmento di distanza minima Q₁Q₂</li>
+  </ul>
+  <div class="box-n">
+    💡 Il simulatore si apre in una pagina dedicata con visualizzazione 3D interattiva, pulsanti per caricare esempi di rette incidenti, parallele e sghembe, e il calcolo completo delle equazioni.
+  </div>
+  <div style="margin-top:16px">
+    <a href="rette_spazio.html" target="_blank" style="display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;text-decoration:none;padding:12px 24px;border-radius:4px;font-size:14px;font-weight:600;font-family:'Source Sans 3',sans-serif;transition:background 0.15s" onmouseover="this.style.background='#094f4f'" onmouseout="this.style.background='var(--accent)'">
+      &#9654; Apri Simulatore — Rette nello Spazio
+    </a>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>9. Esercizi Proposti</h2>
+  <p class="sec-sub">Piani, rette e prodotto vettore nello spazio</p>
+  <ol>
+    <li><strong>Piano:</strong> nel Sim 1 imposta a=2, b=−1, c=3, d=−6. Trova un punto del piano ponendo x=y=0. Verifica che soddisfi l'equazione.</li>
+    <li><strong>Piano per tre punti:</strong> con A=(3,0,0), B=(0,3,0), C=(0,0,3) l'equazione del piano deve essere x+y+z=3. Verifica con il Sim 2.</li>
+    <li><strong>Retta:</strong> A=(0,0,0) e B=(2,3,1). Scrivi le equazioni parametriche. Quale punto ha x=4? Verifica con il Sim 3.</li>
+    <li><strong>Prodotto vettore:</strong> con u=(1,0,0) e v=(0,1,0) calcola u×v. Cosa ottieni? Prova u=(1,1,0) e v=(1,−1,0).</li>
+    <li><strong>Area triangolo:</strong> A=(2,0,0), B=(0,3,0), C=(0,0,4). Calcola ½|AB×AC| con il Sim 4.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri · Matematica · Geometria Analitica dello Spazio</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ═══════════════════ LIBRERIA COMUNE ═══════════════════
+function makeScene3(){
+  const s=new THREE.Scene();
+  s.add(new THREE.AmbientLight(0xffffff,0.9));
+  const dl=new THREE.DirectionalLight(0xffffff,0.35);dl.position.set(5,8,5);s.add(dl);
+  return s;
+}
+function makeRenderer3(canvas){
+  const r=new THREE.WebGLRenderer({canvas,antialias:true});
+  r.setClearColor(0xfafafa);r.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  return r;
+}
+function resizeR(r,canvas,camera,h){
+  const w=Math.max(canvas.parentElement.clientWidth-36,300);
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  r.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix();
+}
+function baseScene(scene){
+  scene.add(new THREE.GridHelper(12,12,0xcccccc,0xe8e8e8));
+  [[5,0,0,0xff4444],[0,5,0,0x44aa44],[0,0,5,0x4488ff]].forEach(([x,y,z,col])=>{
+    const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),new THREE.Vector3(x,y,z)]);
+    scene.add(new THREE.Line(g,new THREE.LineBasicMaterial({color:col})));
+  });
+}
+function makeOrbit(canvas,camera,rad0,th0,ph0){
+  let drag=false,lx=0,ly=0,th=th0||0.7,ph=ph0||1.1,rad=rad0||12;
+  function upd(){camera.position.set(rad*Math.sin(ph)*Math.sin(th),rad*Math.cos(ph),rad*Math.sin(ph)*Math.cos(th));camera.lookAt(0,0,0);}
+  canvas.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{if(!drag)return;th-=(e.clientX-lx)*0.012;ph=Math.max(0.05,Math.min(Math.PI-0.05,ph-(e.clientY-ly)*0.012));lx=e.clientX;ly=e.clientY;upd();});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();rad=Math.max(3,Math.min(40,rad*(e.deltaY>0?1.08:0.93)));upd();},{passive:false});
+  canvas.addEventListener('touchstart',e=>{drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY},{passive:true});
+  canvas.addEventListener('touchmove',e=>{if(!drag)return;th-=(e.touches[0].clientX-lx)*0.012;ph=Math.max(0.05,Math.min(Math.PI-0.05,ph-(e.touches[0].clientY-ly)*0.012));lx=e.touches[0].clientX;ly=e.touches[0].clientY;upd();},{passive:true});
+  canvas.addEventListener('touchend',()=>drag=false);
+  upd();
+}
+function V3(x,y,z){return new THREE.Vector3(x,y,z);}
+function cross3(u,v){return new THREE.Vector3(u.y*v.z-u.z*v.y,u.z*v.x-u.x*v.z,u.x*v.y-u.y*v.x);}
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt(v){return Number(v.toFixed(3)).toString();}
+
+function addArrow3(scene,origin,dir,len,color,objs){
+  if(len<0.001)return;
+  const dn=dir.clone().normalize();
+  const end=origin.clone().addScaledVector(dn,len);
+  const g=new THREE.BufferGeometry().setFromPoints([origin,end]);
+  const l=new THREE.Line(g,new THREE.LineBasicMaterial({color}));scene.add(l);objs.push(l);
+  const cH=Math.min(len*0.2,0.5),cR=cH*0.35;
+  const cg=new THREE.ConeGeometry(cR,cH,10);
+  const cone=new THREE.Mesh(cg,new THREE.MeshPhongMaterial({color}));
+  cone.position.copy(end.clone().addScaledVector(dn,-cH/2));
+  cone.quaternion.setFromUnitVectors(V3(0,1,0),dn);
+  scene.add(cone);objs.push(cone);
+}
+function addSph3(scene,pos,r,color,objs){
+  const m=new THREE.Mesh(new THREE.SphereGeometry(r,12,12),new THREE.MeshPhongMaterial({color}));
+  m.position.copy(pos);scene.add(m);objs.push(m);
+}
+function addLbl3(scene,pos,text,color,objs){
+  const c=document.createElement('canvas');c.width=144;c.height=52;
+  const ctx=c.getContext('2d');
+  ctx.font='bold 24px Arial';ctx.fillStyle=color||'#333';
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,72,26);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));
+  sp.position.copy(pos);sp.scale.set(0.7,0.26,1);scene.add(sp);objs.push(sp);
+}
+function addPlane3(scene,center,normal,size,color,opacity,objs){
+  const n=normal.clone().normalize();
+  const arb=Math.abs(n.x)<0.9?V3(1,0,0):V3(0,1,0);
+  const right=new THREE.Vector3().crossVectors(n,arb).normalize();
+  const up=new THREE.Vector3().crossVectors(right,n).normalize();
+  const h=size/2;
+  const v0=center.clone().addScaledVector(right,-h).addScaledVector(up,-h);
+  const v1=center.clone().addScaledVector(right, h).addScaledVector(up,-h);
+  const v2=center.clone().addScaledVector(right, h).addScaledVector(up, h);
+  const v3=center.clone().addScaledVector(right,-h).addScaledVector(up, h);
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(new Float32Array([
+    v0.x,v0.y,v0.z,v1.x,v1.y,v1.z,v2.x,v2.y,v2.z,
+    v0.x,v0.y,v0.z,v2.x,v2.y,v2.z,v3.x,v3.y,v3.z
+  ]),3));
+  geo.computeVertexNormals();
+  const pm=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color,transparent:true,opacity,side:THREE.DoubleSide}));
+  scene.add(pm);objs.push(pm);
+  const bl=new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([v0,v1,v2,v3,v0]),
+    new THREE.LineBasicMaterial({color,linewidth:2})
+  );
+  scene.add(bl);objs.push(bl);
+}
+
+// ═══════════════════ SIM 1 ═══════════════════
+const S1=(function(){
+  const canvas=document.getElementById('c1');
+  const renderer=makeRenderer3(canvas);
+  const scene=makeScene3();const camera=new THREE.PerspectiveCamera(45,2,0.1,300);
+  baseScene(scene);makeOrbit(canvas,camera,12,0.7,1.1);
+  let objs=[];
+  function clr(){objs.forEach(o=>scene.remove(o));objs=[];}
+  function animate(){requestAnimationFrame(animate);renderer.render(scene,camera);}
+  resizeR(renderer,canvas,camera,340);animate();
+  window.addEventListener('resize',()=>resizeR(renderer,canvas,camera,340));
+
+  return{
+    build(){
+      clr();
+      const a=rf('s1a'),b=rf('s1b'),cv=rf('s1c'),d=rf('s1d');
+      if(a===0&&b===0&&cv===0){document.getElementById('o1').className='eq-out empty';document.getElementById('o1').textContent='⚠ a, b, c non possono essere tutti zero.';return;}
+      const n2=a*a+b*b+cv*cv,t=-d/n2;
+      const center=V3(a*t,b*t,cv*t);
+      const normal=V3(a,b,cv);
+      addPlane3(scene,center,normal,9,0x2d6bb5,0.3,objs);
+      addArrow3(scene,center,normal,2.5,0xb5351a,objs);
+      addLbl3(scene,center.clone().addScaledVector(normal.clone().normalize(),3),'n','#b5351a',objs);
+      addLbl3(scene,V3(5.5,0,0),'x','#ff4444',objs);
+      addLbl3(scene,V3(0,5.5,0),'y','#44aa44',objs);
+      addLbl3(scene,V3(0,0,5.5),'z','#4488ff',objs);
+      const o=document.getElementById('o1');o.className='eq-out';
+      o.textContent=`Piano: ${fmt(a)}x + ${fmt(b)}y + ${fmt(cv)}z + ${fmt(d)} = 0\nNormale: n=(${fmt(a)},${fmt(b)},${fmt(cv)})  |n|=${fmt(Math.sqrt(n2))}\nPunto più vicino all'origine: (${fmt(center.x)},${fmt(center.y)},${fmt(center.z)})`;
+    },
+    reset(){clr();['s1a','s1b','s1c','s1d'].forEach((id,i)=>document.getElementById(id).value=[1,1,1,-3][i]);const o=document.getElementById('o1');o.className='eq-out empty';o.textContent='Clicca ▶ Visualizza';}
+  };
+})();
+
+// ═══════════════════ SIM 2 ═══════════════════
+const S2=(function(){
+  const canvas=document.getElementById('c2');
+  const renderer=makeRenderer3(canvas);
+  const scene=makeScene3();const camera=new THREE.PerspectiveCamera(45,2,0.1,300);
+  baseScene(scene);makeOrbit(canvas,camera,12,0.6,1.05);
+  let objs=[];
+  function clr(){objs.forEach(o=>scene.remove(o));objs=[];}
+  function animate(){requestAnimationFrame(animate);renderer.render(scene,camera);}
+  resizeR(renderer,canvas,camera,360);animate();
+  window.addEventListener('resize',()=>resizeR(renderer,canvas,camera,360));
+
+  return{
+    build(){
+      clr();
+      const A=V3(rf('s2ax'),rf('s2ay'),rf('s2az'));
+      const B=V3(rf('s2bx'),rf('s2by'),rf('s2bz'));
+      const C=V3(rf('s2cx'),rf('s2cy'),rf('s2cz'));
+      const AB=new THREE.Vector3().subVectors(B,A);
+      const AC=new THREE.Vector3().subVectors(C,A);
+      const nRaw=cross3(AB,AC);
+      if(nRaw.length()<1e-9){const o=document.getElementById('o2');o.className='eq-out empty';o.textContent='⚠ I tre punti sono collineari.';return;}
+      const normal=nRaw.clone().normalize();
+      const center=V3((A.x+B.x+C.x)/3,(A.y+B.y+C.y)/3,(A.z+B.z+C.z)/3);
+      addPlane3(scene,center,normal,9,0x0e6b6b,0.25,objs);
+      // Triangolo ABC
+      const triPts=[A,B,C,A];
+      const tl=new THREE.Line(new THREE.BufferGeometry().setFromPoints(triPts),new THREE.LineBasicMaterial({color:0xffa500,linewidth:2}));
+      scene.add(tl);objs.push(tl);
+      const tg=new THREE.BufferGeometry();
+      tg.setAttribute('position',new THREE.BufferAttribute(new Float32Array([A.x,A.y,A.z,B.x,B.y,B.z,C.x,C.y,C.z]),3));
+      tg.setIndex([0,1,2]);tg.computeVertexNormals();
+      const tm=new THREE.Mesh(tg,new THREE.MeshPhongMaterial({color:0xffa500,transparent:true,opacity:0.35,side:THREE.DoubleSide}));
+      scene.add(tm);objs.push(tm);
+      // Vettore normale
+      addArrow3(scene,center,nRaw,Math.min(3,nRaw.length()*0.5)||2,0xb5351a,objs);
+      // Sfere e etichette
+      addSph3(scene,A,0.13,0xe05252,objs);addSph3(scene,B,0.13,0x3a8f3a,objs);addSph3(scene,C,0.13,0xc47a00,objs);
+      addLbl3(scene,A.clone().add(V3(0,0.3,0)),'A','#e05252',objs);
+      addLbl3(scene,B.clone().add(V3(0,0.3,0)),'B','#3a8f3a',objs);
+      addLbl3(scene,C.clone().add(V3(0,0.3,0)),'C','#c47a00',objs);
+      addLbl3(scene,center.clone().addScaledVector(normal,2.5),'n','#b5351a',objs);
+      addLbl3(scene,V3(5.5,0,0),'x','#ff4444',objs);addLbl3(scene,V3(0,5.5,0),'y','#44aa44',objs);addLbl3(scene,V3(0,0,5.5),'z','#4488ff',objs);
+      const aa=nRaw.x,bb=nRaw.y,cc=nRaw.z,dd=-(aa*A.x+bb*A.y+cc*A.z);
+      const o=document.getElementById('o2');o.className='eq-out';
+      o.textContent=`AB=(${fmt(AB.x)},${fmt(AB.y)},${fmt(AB.z)})  AC=(${fmt(AC.x)},${fmt(AC.y)},${fmt(AC.z)})\nn=AB×AC=(${fmt(aa)},${fmt(bb)},${fmt(cc)})\nPiano: ${fmt(aa)}x + ${fmt(bb)}y + ${fmt(cc)}z + ${fmt(dd)} = 0\nArea triangolo ABC = ½|n| = ${fmt(nRaw.length()/2)}`;
+    },
+    reset(){clr();const def={s2ax:3,s2ay:0,s2az:0,s2bx:0,s2by:3,s2bz:0,s2cx:0,s2cy:0,s2cz:3};Object.entries(def).forEach(([id,v])=>document.getElementById(id).value=v);const o=document.getElementById('o2');o.className='eq-out empty';o.textContent='Clicca ▶ Visualizza';}
+  };
+})();
+
+// ═══════════════════ SIM 3 ═══════════════════
+const S3=(function(){
+  const canvas=document.getElementById('c3');
+  const renderer=makeRenderer3(canvas);
+  const scene=makeScene3();const camera=new THREE.PerspectiveCamera(45,2,0.1,300);
+  baseScene(scene);makeOrbit(canvas,camera,11,0.7,1.1);
+  let objs=[];
+  function clr(){objs.forEach(o=>scene.remove(o));objs=[];}
+  function animate(){requestAnimationFrame(animate);renderer.render(scene,camera);}
+  resizeR(renderer,canvas,camera,340);animate();
+  window.addEventListener('resize',()=>resizeR(renderer,canvas,camera,340));
+
+  return{
+    build(){
+      clr();
+      const A=V3(rf('s3ax'),rf('s3ay'),rf('s3az'));
+      const B=V3(rf('s3bx'),rf('s3by'),rf('s3bz'));
+      const dir=new THREE.Vector3().subVectors(B,A);
+      if(dir.length()<1e-9){const o=document.getElementById('o3');o.className='eq-out empty';o.textContent='⚠ A e B coincidono.';return;}
+      const dn=dir.clone().normalize();
+      const ext=6;
+      const rS=A.clone().addScaledVector(dn,-ext);
+      const rE=A.clone().addScaledVector(dn,ext+dir.length());
+      const rl=new THREE.Line(new THREE.BufferGeometry().setFromPoints([rS,rE]),new THREE.LineBasicMaterial({color:0xb5351a,linewidth:2}));
+      scene.add(rl);objs.push(rl);
+      addArrow3(scene,A,dir,dir.length(),0x1a6b3a,objs);
+      addSph3(scene,A,0.13,0xe05252,objs);addSph3(scene,B,0.13,0x3a8f3a,objs);
+      addLbl3(scene,A.clone().add(V3(0,0.3,0)),'A','#e05252',objs);
+      addLbl3(scene,B.clone().add(V3(0,0.3,0)),'B','#3a8f3a',objs);
+      addLbl3(scene,A.clone().addScaledVector(dn,dir.length()/2).add(V3(0,0.35,0)),'v','#1a6b3a',objs);
+      addLbl3(scene,V3(5.5,0,0),'x','#ff4444',objs);addLbl3(scene,V3(0,5.5,0),'y','#44aa44',objs);addLbl3(scene,V3(0,0,5.5),'z','#4488ff',objs);
+      const l=dir.x,m=dir.y,n=dir.z,x0=A.x,y0=A.y,z0=A.z;
+      // forma ridotta
+      const parts=[],zeros=[];
+      const sg=v=>v<0?`${fmt(v)}`:`+${fmt(v)}`;
+      if(Math.abs(l)>1e-9) parts.push(`(x${x0!==0?sg(-x0):''})/`+fmt(l)); else zeros.push(`x=${fmt(x0)}`);
+      if(Math.abs(m)>1e-9) parts.push(`(y${y0!==0?sg(-y0):''})/`+fmt(m)); else zeros.push(`y=${fmt(y0)}`);
+      if(Math.abs(n)>1e-9) parts.push(`(z${z0!==0?sg(-z0):''})/`+fmt(n)); else zeros.push(`z=${fmt(z0)}`);
+      const ridotta=parts.join(' = ')+(zeros.length?'  con '+zeros.join(', '):'');
+      const o=document.getElementById('o3');o.className='eq-out';
+      o.textContent=`A=(${fmt(x0)},${fmt(y0)},${fmt(z0)})  v=B-A=(${fmt(l)},${fmt(m)},${fmt(n)})\n\nParametrica:\n  x=${fmt(x0)}+(${fmt(l)})t\n  y=${fmt(y0)}+(${fmt(m)})t\n  z=${fmt(z0)}+(${fmt(n)})t\n\nForma ridotta:\n  ${ridotta}`;
+    },
+    reset(){clr();const def={s3ax:1,s3ay:0,s3az:0,s3bx:3,s3by:2,s3bz:4};Object.entries(def).forEach(([id,v])=>document.getElementById(id).value=v);const o=document.getElementById('o3');o.className='eq-out empty';o.textContent='Clicca ▶ Visualizza';}
+  };
+})();
+
+// ═══════════════════ SIM 4 ═══════════════════
+const S4=(function(){
+  const canvas=document.getElementById('c4');
+  const renderer=makeRenderer3(canvas);
+  const scene=makeScene3();const camera=new THREE.PerspectiveCamera(45,2,0.1,300);
+  baseScene(scene);makeOrbit(canvas,camera,11,0.6,1.05);
+  let objs=[];
+  function clr(){objs.forEach(o=>scene.remove(o));objs=[];}
+  function animate(){requestAnimationFrame(animate);renderer.render(scene,camera);}
+  resizeR(renderer,canvas,camera,360);animate();
+  window.addEventListener('resize',()=>resizeR(renderer,canvas,camera,360));
+
+  return{
+    build(){
+      clr();
+      const u=V3(rf('s4ux'),rf('s4uy'),rf('s4uz'));
+      const v=V3(rf('s4vx'),rf('s4vy'),rf('s4vz'));
+      const w=cross3(u,v);
+      const O=V3(0,0,0);
+      // Parallelogramma
+      const corner=u.clone().add(v);
+      const pgPts=[O.clone(),u.clone(),corner.clone(),v.clone(),O.clone()];
+      const pl=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pgPts),new THREE.LineBasicMaterial({color:0x8888ff}));
+      scene.add(pl);objs.push(pl);
+      // Faccia parallelogramma
+      const pgGeo=new THREE.BufferGeometry();
+      pgGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array([0,0,0,u.x,u.y,u.z,corner.x,corner.y,corner.z,0,0,0,corner.x,corner.y,corner.z,v.x,v.y,v.z]),3));
+      pgGeo.computeVertexNormals();
+      const pgM=new THREE.Mesh(pgGeo,new THREE.MeshPhongMaterial({color:0x8888cc,transparent:true,opacity:0.22,side:THREE.DoubleSide}));
+      scene.add(pgM);objs.push(pgM);
+      // Vettori
+      if(u.length()>0.01) addArrow3(scene,O,u,u.length(),0x1a4b8c,objs);
+      if(v.length()>0.01) addArrow3(scene,O,v,v.length(),0xb5351a,objs);
+      if(w.length()>0.01) addArrow3(scene,O,w,w.length(),0x1a6b3a,objs);
+      // Etichette
+      if(u.length()>0.1) addLbl3(scene,u.clone().multiplyScalar(0.6).add(V3(0,0.25,0)),'u','#1a4b8c',objs);
+      if(v.length()>0.1) addLbl3(scene,v.clone().multiplyScalar(0.6).add(V3(0,0.25,0)),'v','#b5351a',objs);
+      if(w.length()>0.1) addLbl3(scene,w.clone().multiplyScalar(0.6).add(V3(0.2,0,0)),'u×v','#1a6b3a',objs);
+      addLbl3(scene,V3(5.5,0,0),'x','#ff4444',objs);addLbl3(scene,V3(0,5.5,0),'y','#44aa44',objs);addLbl3(scene,V3(0,0,5.5),'z','#4488ff',objs);
+      const cosT=u.length()>1e-9&&v.length()>1e-9?Math.max(-1,Math.min(1,u.dot(v)/(u.length()*v.length()))):0;
+      const theta=Math.acos(cosT)*180/Math.PI;
+      const o=document.getElementById('o4');o.className='eq-out';
+      o.textContent=`u=(${fmt(u.x)},${fmt(u.y)},${fmt(u.z)})  |u|=${fmt(u.length())}\nv=(${fmt(v.x)},${fmt(v.y)},${fmt(v.z)})  |v|=${fmt(v.length())}\n\nu×v=(${fmt(w.x)},${fmt(w.y)},${fmt(w.z)})\n|u×v|=${fmt(w.length())}  (area parallelogramma)\nAngolo θ=${fmt(theta)}°\n`+(w.length()<1e-9?'⚠ u×v=0: vettori paralleli':'Verifica: |u||v|sinθ='+fmt(u.length()*v.length()*Math.sin(theta*Math.PI/180)));
+    },
+    reset(){clr();const def={s4ux:2,s4uy:1,s4uz:0,s4vx:0,s4vy:2,s4vz:1};Object.entries(def).forEach(([id,v])=>document.getElementById(id).value=v);const o=document.getElementById('o4');o.className='eq-out empty';o.textContent='Clicca ▶ Calcola';}
+  };
+})();
+
+
+// avvio automatico
+S1.build();S2.build();S3.build();S4.build();
+
+// nav
+const secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur=s.id;});navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));},{passive:true});
+</script>
+</body>
+</html>
