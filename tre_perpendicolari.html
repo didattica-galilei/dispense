@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teorema delle Tre Perpendicolari — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#2d1a8c;--accent2:#0e6b6b;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;--red:#b5351a;--green:#1a6b3a;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:64px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,48px);font-weight:700;line-height:1.1;margin-bottom:10px}
+.hero h1 em{color:#b4a8f0;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.4);font-weight:300;max-width:500px;margin:0 auto 28px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 28px}
+.nav-inner{max-width:880px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:13px 14px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:880px;margin:0 auto;padding:48px 32px}
+@media(max-width:600px){.page{padding:28px 14px}.nav{padding:0 8px}.nav a{padding:11px 10px;font-size:10px}}
+.sec{margin-bottom:72px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px}
+h3{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin:18px 0 7px}
+p{font-size:15px;margin-bottom:11px;color:#2a2a2e}
+ul,ol{margin:6px 0 11px 22px;font-size:15px}
+li{margin-bottom:5px;color:#2a2a2e}
+strong{font-weight:600}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--accent);text-align:center;padding:14px 18px;margin:13px 0;border-radius:0 3px 3px 0}
+.box-f .f{font-family:'Playfair Display',serif;font-size:19px;color:var(--accent);margin-bottom:4px}
+.box-f .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:#eae8fa;border-left:3px solid var(--accent);color:#1a0a5a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-w{background:#fdf3ee;border-left:3px solid var(--red);color:#5a1a0a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-eg{background:var(--surface);border-left:3px solid var(--muted);color:#2a2820;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:18px;margin:20px 0}
+.sim-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sim-title::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.pts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:7px;margin-bottom:12px}
+.pt-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:9px 11px}
+.pt-head{font-size:12px;font-weight:600;margin-bottom:7px}
+.pt-row{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;color:var(--muted)}
+.pt-row label{min-width:18px;font-weight:600}
+.pt-row input[type=number]{width:62px;padding:2px 4px;font-size:11px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink);font-family:'Source Code Pro',monospace}
+.ctrl-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;font-size:12px;color:var(--muted)}
+.ctrl-row label{font-weight:600}
+.tbtn{padding:4px 11px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);font-size:11px;cursor:pointer}
+.tbtn:hover{background:var(--surface)}
+.tbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.canvas3d{display:block;border:1px solid var(--border);border-radius:3px;cursor:grab;width:100%}
+.canvas3d:active{cursor:grabbing}
+.leg3d{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted);align-items:center}
+.leg3d-item{display:flex;align-items:center;gap:5px}
+.lsq{width:18px;height:3px;border-radius:1px;display:inline-block}
+.info-panel{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:12px 14px;margin-top:10px;font-size:12px;font-family:'Source Code Pro',monospace;color:var(--ink);line-height:1.8;white-space:pre}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;padding:22px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Matematica · Geometria dello Spazio · Liceo Scientifico</div>
+  <h1>Teorema delle<br><em>Tre Perpendicolari</em></h1>
+  <p class="hero-sub">Dalla definizione al simulatore 3D interattivo con piramide e altezze delle facce</p>
+  <div class="rule"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#definizioni" class="active">Definizioni</a>
+    <a href="#teorema">Il teorema</a>
+    <a href="#dimostrazione">Dimostrazione</a>
+    <a href="#applicazioni">Applicazioni</a>
+    <a href="#visualizzatore">Visualizzatore 3D</a>
+    <a href="#piramide">Simulatore piramide</a>
+    <a href="#esercizi">Esercizi</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<div class="sec" id="definizioni">
+  <h2>1. Definizioni Preliminari</h2>
+  <p class="sec-sub">Rette e piani nello spazio, perpendicolarità e proiezioni</p>
+  <h3>Retta perpendicolare a un piano</h3>
+  <p>Una retta <strong>r</strong> è <strong>perpendicolare a un piano α</strong> se è perpendicolare a ogni retta di α passante per il punto di incontro. È sufficiente che sia perpendicolare a <em>due</em> rette del piano incidenti in quel punto.</p>
+  <h3>Proiezione ortogonale su un piano</h3>
+  <p>La <strong>proiezione ortogonale</strong> di un punto P su un piano α è il piede H della perpendicolare abbassata da P su α. La proiezione di un segmento PA è il segmento HA che congiunge le proiezioni dei suoi estremi.</p>
+  <h3>Retta obliqua a un piano</h3>
+  <p>Una retta che incontra il piano senza essere perpendicolare ad esso è detta <strong>obliqua</strong>. La sua proiezione sul piano è la retta passante per il piede della perpendicolare e per il punto d'incontro con il piano.</p>
+  <div class="box-n">💡 Se PH ⊥ α e A è un punto del piano, il segmento PA è una <strong>retta obliqua</strong> al piano e HA è la sua <strong>proiezione</strong> su α.</div>
+</div>
+
+<div class="sec" id="teorema">
+  <h2>2. Il Teorema delle Tre Perpendicolari</h2>
+  <p class="sec-sub">Enunciato diretto e reciproco</p>
+  <p>Siano: α un piano, P un punto esterno, H il piede della perpendicolare da P ad α, r una retta contenuta in α, A il piede della perpendicolare da H alla retta r.</p>
+  <h3>Enunciato diretto</h3>
+  <div class="box-f">
+    <div class="f">PH ⊥ α &nbsp; e &nbsp; HA ⊥ r &nbsp; ⟹ &nbsp; PA ⊥ r</div>
+    <div class="fd">Se la proiezione HA è perpendicolare a r, allora anche la retta obliqua PA è perpendicolare a r</div>
+  </div>
+  <h3>Enunciato reciproco</h3>
+  <div class="box-f">
+    <div class="f">PH ⊥ α &nbsp; e &nbsp; PA ⊥ r &nbsp; ⟹ &nbsp; HA ⊥ r</div>
+    <div class="fd">Se la retta obliqua PA è perpendicolare a r, allora anche la proiezione HA è perpendicolare a r</div>
+  </div>
+  <h3>Le "tre" perpendicolari</h3>
+  <ol>
+    <li><strong>PH ⊥ α</strong> — sempre fissa come ipotesi</li>
+    <li><strong>HA ⊥ r</strong> — la proiezione è perp. a r</li>
+    <li><strong>PA ⊥ r</strong> — la retta obliqua è perp. a r</li>
+  </ol>
+  <p>Il teorema afferma: fissata la prima, la seconda e la terza sono <strong>equivalenti</strong> (ciascuna implica l'altra).</p>
+  <div class="box-w">⚠ <strong>Attenzione:</strong> r è una retta nel piano α che <em>non</em> passa necessariamente per H. A è il <em>piede della perpendicolare</em> da H alla retta r, cioè il punto di r più vicino a H.</div>
+</div>
+
+<div class="sec" id="dimostrazione">
+  <h2>3. Dimostrazione</h2>
+  <p class="sec-sub">Dimostrazione del teorema reciproco (da PA ⊥ r si ricava HA ⊥ r)</p>
+  <p><strong>Ipotesi:</strong> PH ⊥ α, r ⊂ α, A ∈ r, PA ⊥ r.</p>
+  <p><strong>Tesi:</strong> HA ⊥ r.</p>
+  <ol>
+    <li>Poiché PH ⊥ α e r ⊂ α, si ha <strong>PH ⊥ r</strong> (retta perp. al piano → perp. a ogni retta del piano).</li>
+    <li>Per ipotesi <strong>PA ⊥ r</strong>.</li>
+    <li>La retta r è perpendicolare a PH e a PA: due rette incidenti in A giacenti nel piano PHA.</li>
+    <li>Quindi r è perpendicolare all'intero piano PHA.</li>
+    <li>Poiché HA è contenuta nel piano PHA, si conclude <strong>HA ⊥ r</strong>. □</li>
+  </ol>
+  <div class="box-eg"><strong>Chiave della dimostrazione:</strong> PH, PA e HA sono tre segmenti complanari (stanno tutti nel piano PHA). Poiché r ⊥ PH e r ⊥ PA, r è perpendicolare all'intero piano PHA, quindi r ⊥ HA.</div>
+</div>
+
+<div class="sec" id="applicazioni">
+  <h2>4. Applicazioni — Altezze delle Facce di una Piramide</h2>
+  <p class="sec-sub">Come trovare l'altezza di una faccia laterale usando il teorema</p>
+  <p>Sia data una piramide con base poligonale sul piano α e vertice V. H è il piede della perpendicolare da V al piano della base.</p>
+  <h3>Procedura</h3>
+  <ol>
+    <li>Si abbassa da V la <strong>perpendicolare VH</strong> al piano base (VH ⊥ α).</li>
+    <li>Per un lato AB della base, si traccia da H la <strong>perpendicolare HK</strong> ad AB (K è il piede su AB).</li>
+    <li>Per il teorema delle tre perpendicolari (reciproco): <strong>VK ⊥ AB</strong>.</li>
+    <li>Quindi VK è l'<strong>altezza della faccia laterale VAB</strong> relativa alla base AB.</li>
+  </ol>
+  <div class="box-f">
+    <div class="f">VK = √(VH² + HK²)</div>
+    <div class="fd">Teorema di Pitagora in VHK (rettangolo in H, poiché VH ⊥ α e HK ⊂ α)</div>
+  </div>
+  <div class="box-n">💡 <strong>Piramide retta:</strong> se H coincide con il centro della base, HK è l'apotema della base e VK è l'apotema della piramide. Tutte le facce hanno la stessa altezza.</div>
+</div>
+
+<!-- VISUALIZZATORE TEOREMA -->
+<div class="sec" id="visualizzatore">
+  <h2>5. Visualizzatore 3D — Teorema delle Tre Perpendicolari</h2>
+  <p class="sec-sub">Configurazione corretta: r non passa per H, A è il piede della perp. da H a r</p>
+  <p>Il visualizzatore mostra la configurazione esatta del teorema. La retta <strong>r</strong> (ciano) è nel piano e <strong>non passa per H</strong>. Il punto <strong>A</strong> è il piede della perpendicolare da H ad r. Per costruzione <strong>HA ⊥ r</strong>. Il teorema afferma che anche <strong>PA ⊥ r</strong>.</p>
+
+  <div class="sim-wrap">
+    <div class="sim-title">Visualizzatore — Teorema delle Tre Perpendicolari</div>
+    <div class="ctrl-row">
+      <label>Altezza P (z)</label>
+      <input type="range" id="pz" min="1" max="5" step="0.5" value="3" style="width:90px;accent-color:var(--accent)">
+      <span style="font-family:monospace;font-size:11px;font-weight:600;min-width:28px" id="pzv">3</span>
+      <label style="margin-left:10px">Angolo retta r</label>
+      <input type="range" id="rang" min="0" max="170" step="5" value="40" style="width:90px;accent-color:var(--accent)">
+      <span style="font-family:monospace;font-size:11px;font-weight:600;min-width:28px" id="rangv">40°</span>
+      <label style="margin-left:10px">Dist. r da H</label>
+      <input type="range" id="rdist" min="0.5" max="3.5" step="0.5" value="2" style="width:80px;accent-color:var(--accent)">
+      <span style="font-family:monospace;font-size:11px;font-weight:600;min-width:28px" id="rdistv">2</span>
+    </div>
+    <canvas id="cv3d_teo" class="canvas3d" style="height:400px"></canvas>
+    <div class="leg3d">
+      <div class="leg3d-item"><span class="lsq" style="background:#5a3ab7"></span>PH (perp. al piano)</div>
+      <div class="leg3d-item"><span class="lsq" style="background:#b5351a"></span>PA (retta obliqua)</div>
+      <div class="leg3d-item"><span class="lsq" style="background:#1a6b3a"></span>HA (proiezione)</div>
+      <div class="leg3d-item"><span class="lsq" style="background:#0e6b6b"></span>r (nel piano, non passa per H)</div>
+      <div class="leg3d-item"><span style="font-size:10px">Trascina · Rotella = zoom</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIMULATORE PIRAMIDE -->
+<div class="sec" id="piramide">
+  <h2>6. Simulatore — Piramide con Tre Perpendicolari</h2>
+  <p class="sec-sub">Base sul piano xy, vertice V con coordinata z. Per ogni faccia: VH (viola), HK (verde), VK (rosso)</p>
+
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Piramide e Tre Perpendicolari</div>
+    <div class="ctrl-row">
+      <label>Tipo base</label>
+      <button class="tbtn active" id="btn3" onclick="setBase(3)">Triangolare</button>
+      <button class="tbtn" id="btn4" onclick="setBase(4)">Quadrangolare</button>
+      <button class="tbtn" style="margin-left:8px" onclick="resetPyr()">Reset</button>
+    </div>
+    <div class="ctrl-row">
+      <label>Mostra</label>
+      <button class="tbtn active" id="togP" onclick="tog('P')">VH perp.</button>
+      <button class="tbtn active" id="togK" onclick="tog('K')">HK perp.</button>
+      <button class="tbtn active" id="togA" onclick="tog('A')">VK altezze</button>
+      <button class="tbtn active" id="togB" onclick="tog('B')">Piano base</button>
+    </div>
+
+    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:6px">Vertici base (coordinate x, y nel piano)</div>
+    <div class="pts-grid" id="baseGrid"></div>
+
+    <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:10px 0 6px">Vertice V</div>
+    <div class="pts-grid" id="apexGrid"></div>
+
+    <canvas id="cv3d_pyr" class="canvas3d" style="height:480px;margin-top:10px"></canvas>
+    <div class="leg3d" style="margin-top:8px">
+      <div class="leg3d-item"><span class="lsq" style="background:#5a3ab7"></span>VH (perp. a piano base)</div>
+      <div class="leg3d-item"><span class="lsq" style="background:#1a6b3a"></span>HK (perp. al lato)</div>
+      <div class="leg3d-item"><span class="lsq" style="background:#b5351a"></span>VK (altezza faccia)</div>
+      <div class="leg3d-item"><span class="lsq" style="background:#aaa"></span>Spigoli piramide</div>
+    </div>
+    <div class="info-panel" id="infoPanel">Configura la piramide per vedere i calcoli.</div>
+  </div>
+</div>
+
+<div class="sec" id="esercizi">
+  <h2>7. Esercizi Proposti</h2>
+  <p class="sec-sub">Applicazioni del teorema delle tre perpendicolari</p>
+  <ol>
+    <li><strong>Verifica numerica:</strong> imposta V=(0,0,4), base triangolare A=(3,0), B=(0,3), C=(−3,0). Calcola manualmente VK per la faccia VAB (trova H, poi K, poi VK=√(VH²+HK²)) e confronta col valore del simulatore.</li>
+    <li><strong>Piramide retta:</strong> base quadrata con A=(2,2), B=(−2,2), C=(−2,−2), D=(2,−2) e V=(0,0,5). Osserva che H coincide con il centro della base. Le altezze delle facce sono uguali? Perché?</li>
+    <li><strong>Teorema diretto:</strong> dato che HA ⊥ AB (la proiezione di V sul piano è equidistante dagli spigoli della base), dimostra usando il teorema diretto che VA ⊥ AB.</li>
+    <li><strong>Angolo diedro:</strong> l'angolo tra una faccia laterale e la base è l'angolo VKH (rettangolo in H). Calcola arctan(VH/HK) per la faccia VAB della piramide dell'esercizio 1.</li>
+    <li><strong>Piramide obliqua:</strong> sposta V fuori dall'asse (es. V=(2,0,4)). Le altezze VK delle facce sono ancora uguali? Cambia anche il punto H? Osserva nel simulatore.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri · Matematica · Geometria dello Spazio · Liceo Scientifico</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+// UTILITÀ
+// ═══════════════════════════════════════
+const v3=(x,y,z)=>new THREE.Vector3(x,y,z);
+
+function footOnLine(P,A,B){
+  // piede della perp. da P alla retta AB
+  const AB=new THREE.Vector3().subVectors(B,A);
+  const AP=new THREE.Vector3().subVectors(P,A);
+  const t=AP.dot(AB)/AB.dot(AB);
+  return new THREE.Vector3().addVectors(A,AB.clone().multiplyScalar(t));
+}
+
+function dist(A,B){return A.distanceTo(B);}
+
+function addLine(scene,A,B,color,lw){
+  const g=new THREE.BufferGeometry().setFromPoints([A,B]);
+  const m=new THREE.LineBasicMaterial({color,linewidth:lw||1});
+  const l=new THREE.Line(g,m);scene.add(l);return l;
+}
+
+function addSphere(scene,pos,r,color){
+  const m=new THREE.Mesh(new THREE.SphereGeometry(r,12,12),new THREE.MeshPhongMaterial({color}));
+  m.position.copy(pos);scene.add(m);return m;
+}
+
+function addRightAngle(scene,corner,d1,d2,color,s){
+  s=s||0.1;
+  const p1=corner.clone().addScaledVector(d1.clone().normalize(),s);
+  const p2=corner.clone().addScaledVector(d1.clone().normalize(),s).addScaledVector(d2.clone().normalize(),s);
+  const p3=corner.clone().addScaledVector(d2.clone().normalize(),s);
+  const g=new THREE.BufferGeometry().setFromPoints([p1,p2,p3]);
+  scene.add(new THREE.Line(g,new THREE.LineBasicMaterial({color})));
+}
+
+function addLabel(scene,pos,text,color){
+  const c=document.createElement('canvas');c.width=128;c.height=48;
+  const ctx=c.getContext('2d');
+  ctx.font='bold 22px Arial';ctx.fillStyle=color||'#333';
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,64,24);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));
+  sp.position.copy(pos);sp.scale.set(0.65,0.24,1);scene.add(sp);return sp;
+}
+
+function setupCamera(canvas,camera){
+  let drag=false,lx=0,ly=0,th=0.5,ph=1.1,rad=11;
+  function upd(){camera.position.set(rad*Math.sin(ph)*Math.sin(th),rad*Math.cos(ph),rad*Math.sin(ph)*Math.cos(th));camera.lookAt(0,0,0);}
+  canvas.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{if(!drag)return;th-=(e.clientX-lx)*0.01;ph=Math.max(0.05,Math.min(Math.PI-0.05,ph-(e.clientY-ly)*0.01));lx=e.clientX;ly=e.clientY;upd();});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();rad=Math.max(4,Math.min(35,rad*(e.deltaY>0?1.08:0.93)));upd();},{passive:false});
+  canvas.addEventListener('touchstart',e=>{drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY},{passive:true});
+  canvas.addEventListener('touchmove',e=>{if(!drag)return;th-=(e.touches[0].clientX-lx)*0.01;ph=Math.max(0.05,Math.min(Math.PI-0.05,ph-(e.touches[0].clientY-ly)*0.01));lx=e.touches[0].clientX;ly=e.touches[0].clientY;upd();},{passive:true});
+  canvas.addEventListener('touchend',()=>drag=false);
+  upd();
+  return{setRad:r=>{rad=r;upd();},setAngles:(t,p)=>{th=t;ph=p;upd();}};
+}
+
+// ═══════════════════════════════════════
+// VISUALIZZATORE TEOREMA
+// ═══════════════════════════════════════
+(function(){
+  const canvas=document.getElementById('cv3d_teo');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setClearColor(0xfefefe);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,2,0.1,200);
+  scene.add(new THREE.AmbientLight(0xffffff,0.9));
+
+  // griglia fissa
+  scene.add(new THREE.GridHelper(10,10,0xcccccc,0xe8e8e8));
+
+  // Piano semitrasparente fisso
+  const planeMesh=new THREE.Mesh(new THREE.PlaneGeometry(10,10),new THREE.MeshBasicMaterial({color:0xeeeeff,transparent:true,opacity:0.15,side:THREE.DoubleSide}));
+  planeMesh.rotation.x=-Math.PI/2;scene.add(planeMesh);
+
+  let objs=[];
+  function clr(){objs.forEach(o=>scene.remove(o));objs=[];}
+  function add(o){scene.add(o);objs.push(o);return o;}
+
+  function rebuild(){
+    clr();
+    const pzVal=+document.getElementById('pz').value;
+    const angRad=+document.getElementById('rang').value*Math.PI/180;
+    const rDist=+document.getElementById('rdist').value;
+
+    // H = piede della perpendicolare di P sul piano (origine del piano)
+    const H=v3(0,0,0);
+    // P = punto sopra H
+    const P=v3(0,pzVal,0);
+
+    // Direzione della retta r nel piano (piano xz in Three.js = piano xy della geometria)
+    const rDir=v3(Math.cos(angRad),0,Math.sin(angRad)).normalize();
+    // Vettore perpendicolare a r nel piano
+    const rPerp=v3(-rDir.z,0,rDir.x).normalize();
+
+    // Punto di riferimento della retta r: spostato da H di rDist nella direzione perp a r
+    // In questo modo H NON sta su r, e la distanza di H da r è rDist
+    const rRef=v3(rPerp.x*rDist, 0, rPerp.z*rDist);
+
+    // Estremi della retta r (passa per rRef con direzione rDir)
+    const rStart=v3(rRef.x-rDir.x*4.5, 0, rRef.z-rDir.z*4.5);
+    const rEnd=v3(rRef.x+rDir.x*4.5,   0, rRef.z+rDir.z*4.5);
+
+    // A = piede della perpendicolare da H alla retta r
+    // = proiezione di H sulla retta r
+    const A=footOnLine(H,rStart,rEnd);
+
+    // Verifica: HA ⊥ r per costruzione ✓
+    // Teorema: PA ⊥ r (da dimostrare / da vedere nel visualizzatore)
+
+    // Segmento PH — viola — perpendicolare al piano
+    add(addLine(scene,P,H,0x5a3ab7,2));
+
+    // Segmento PA — rosso — retta obliqua (per il teorema: PA ⊥ r)
+    add(addLine(scene,P,A,0xb5351a,2));
+
+    // Segmento HA — verde — proiezione (HA ⊥ r per costruzione)
+    add(addLine(scene,H,A,0x1a6b3a,2));
+
+    // Retta r — ciano
+    add(addLine(scene,rStart,rEnd,0x0e6b6b,2));
+
+    // Linea tratteggiata H → rRef (distanza di H da r, a scopo illustrativo)
+    // opzionale: mostra distanza
+    add(addLine(scene,H,A,0xaaaaaa,1));
+
+    // Angolo retto in H tra PH e piano (simbolo)
+    add(addRightAngle(scene,H,v3(1,0,0),v3(0,1,0),0x5a3ab7,0.13));
+
+    // Angolo retto in A tra HA e r (HA ⊥ r — costruzione + tesi)
+    const HAdir=new THREE.Vector3().subVectors(H,A).normalize();
+    add(addRightAngle(scene,A,rDir,HAdir,0x1a6b3a,0.11));
+
+    // Angolo retto in A tra PA e r (PA ⊥ r — conseguenza del teorema)
+    const PAdir=new THREE.Vector3().subVectors(P,A).normalize();
+    add(addRightAngle(scene,A,rDir,PAdir,0xb5351a,0.11));
+
+    // Sfere
+    add(addSphere(scene,P,0.1,0x5a3ab7));
+    add(addSphere(scene,H,0.09,0x5a3ab7));
+    add(addSphere(scene,A,0.09,0xb5351a));
+
+    // Etichette
+    add(addLabel(scene,v3(P.x-0.3,P.y+0.22,P.z),'P','#5a3ab7'));
+    add(addLabel(scene,v3(H.x-0.3,H.y+0.18,H.z),'H','#5a3ab7'));
+    add(addLabel(scene,v3(A.x+0.25,A.y+0.18,A.z),'A','#b5351a'));
+    add(addLabel(scene,v3(rEnd.x+0.15,rEnd.y+0.18,rEnd.z),'r','#0e6b6b'));
+    // etichette segmenti
+    add(addLabel(scene,v3((P.x+H.x)/2-0.35,(P.y+H.y)/2,(P.z+H.z)/2),'PH','#5a3ab7'));
+    add(addLabel(scene,v3((P.x+A.x)/2+0.25,(P.y+A.y)/2+0.1,(P.z+A.z)/2),'PA','#b5351a'));
+    add(addLabel(scene,v3((H.x+A.x)/2,(H.y+A.y)/2-0.25,(H.z+A.z)/2),'HA','#1a6b3a'));
+  }
+
+  document.getElementById('pz').oninput=e=>{document.getElementById('pzv').textContent=e.target.value;rebuild();};
+  document.getElementById('rang').oninput=e=>{document.getElementById('rangv').textContent=e.target.value+'°';rebuild();};
+  document.getElementById('rdist').oninput=e=>{document.getElementById('rdistv').textContent=e.target.value;rebuild();};
+
+  const cam=setupCamera(canvas,camera);
+  cam.setAngles(0.6,1.1);cam.setRad(10);
+
+  function resize(){
+    const w=Math.max(canvas.parentElement.clientWidth-36,300);
+    canvas.style.width=w+'px';canvas.style.height='400px';
+    renderer.setSize(w,400);camera.aspect=w/400;camera.updateProjectionMatrix();
+  }
+  function animate(){requestAnimationFrame(animate);renderer.render(scene,camera);}
+  rebuild();resize();animate();
+  window.addEventListener('resize',resize);
+})();
+
+// ═══════════════════════════════════════
+// SIMULATORE PIRAMIDE
+// ═══════════════════════════════════════
+(function(){
+  const canvas=document.getElementById('cv3d_pyr');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setClearColor(0xfefefe);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,2,0.1,300);
+  scene.add(new THREE.AmbientLight(0xffffff,0.75));
+  const dl=new THREE.DirectionalLight(0xffffff,0.5);dl.position.set(6,10,6);scene.add(dl);
+
+  let nBase=3;
+  let sP=true,sK=true,sA=true,sB=true;
+  let dyn=[];
+
+  const NAMES=['A','B','C','D'];
+  const BCOLORS=[0xe05252,0x3a8f3a,0xc47a00,0x7a4fc4];
+  const BCOLS=['#e05252','#3a8f3a','#c47a00','#7a4fc4'];
+
+  const DEF3={base:[{x:3,y:0},{x:-1.5,y:2.6},{x:-1.5,y:-2.6}],apex:{x:0,y:0,z:4}};
+  const DEF4={base:[{x:2.5,y:2.5},{x:-2.5,y:2.5},{x:-2.5,y:-2.5},{x:2.5,y:-2.5}],apex:{x:0,y:0,z:4}};
+
+  function buildUI(n){
+    const def=n===3?DEF3:DEF4;
+    // base
+    const bg=document.getElementById('baseGrid');bg.innerHTML='';
+    for(let i=0;i<n;i++){
+      const d=document.createElement('div');d.className='pt-card';
+      d.innerHTML=`<div class="pt-head" style="color:${BCOLS[i]}">${NAMES[i]}</div>
+      <div class="pt-row"><label>x</label><input type="number" id="bx${i}" value="${def.base[i].x}" step="0.5"></div>
+      <div class="pt-row"><label>y</label><input type="number" id="by${i}" value="${def.base[i].y}" step="0.5"></div>`;
+      bg.appendChild(d);
+      document.getElementById('bx'+i).oninput=rebuildPyr;
+      document.getElementById('by'+i).oninput=rebuildPyr;
+    }
+    // vertice
+    const ag=document.getElementById('apexGrid');ag.innerHTML='';
+    const d=document.createElement('div');d.className='pt-card';
+    d.innerHTML=`<div class="pt-head" style="color:#1a4b8c">V (vertice)</div>
+    <div class="pt-row"><label>x</label><input type="number" id="vx" value="${def.apex.x}" step="0.5"></div>
+    <div class="pt-row"><label>y</label><input type="number" id="vy" value="${def.apex.y}" step="0.5"></div>
+    <div class="pt-row"><label>z</label><input type="number" id="vz" value="${def.apex.z}" step="0.5"></div>`;
+    ag.appendChild(d);
+    ['vx','vy','vz'].forEach(id=>document.getElementById(id).oninput=rebuildPyr);
+  }
+
+  window.setBase=function(n){
+    nBase=n;
+    document.getElementById('btn3').classList.toggle('active',n===3);
+    document.getElementById('btn4').classList.toggle('active',n===4);
+    buildUI(n);rebuildPyr();
+  };
+  window.resetPyr=function(){buildUI(nBase);rebuildPyr();};
+  window.tog=function(t){
+    if(t==='P'){sP=!sP;document.getElementById('togP').classList.toggle('active',sP);}
+    if(t==='K'){sK=!sK;document.getElementById('togK').classList.toggle('active',sK);}
+    if(t==='A'){sA=!sA;document.getElementById('togA').classList.toggle('active',sA);}
+    if(t==='B'){sB=!sB;document.getElementById('togB').classList.toggle('active',sB);}
+    rebuildPyr();
+  };
+
+  function clr(){dyn.forEach(o=>scene.remove(o));dyn=[];}
+  function da(o){scene.add(o);dyn.push(o);return o;}
+  function dl2(A,B,col,lw){return da(addLine(scene,A,B,col,lw));}
+  function ds(pos,r,col){return da(addSphere(scene,pos,r,col));}
+
+  function rebuildPyr(){
+    clr();
+
+    // Leggo dati — la base sta nel piano XY (Three.js: x,z), z=0 → y=0 in Three
+    // In Three.js il "piano base" è y=0, con x=x_utente, z=y_utente
+    const n=nBase;
+    const base=[];
+    for(let i=0;i<n;i++){
+      const bx=parseFloat(document.getElementById('bx'+i).value)||0;
+      const by=parseFloat(document.getElementById('by'+i).value)||0;
+      base.push(v3(bx,0,by)); // y_utente → z in Three
+    }
+    const vx=parseFloat(document.getElementById('vx').value)||0;
+    const vy=parseFloat(document.getElementById('vy').value)||0;
+    const vz=parseFloat(document.getElementById('vz').value)||4;
+    const V=v3(vx,vz,vy); // z_utente → y in Three (altezza)
+
+    // H = proiezione di V sul piano base (y=0)
+    const H=v3(V.x,0,V.z);
+    const VHlen=dist(V,H);
+
+    // Griglia e piano base
+    da(new THREE.GridHelper(16,16,0xcccccc,0xeeeeee));
+    if(sB){
+      const pm=new THREE.Mesh(new THREE.PlaneGeometry(16,16),new THREE.MeshBasicMaterial({color:0xe8e8ff,transparent:true,opacity:0.13,side:THREE.DoubleSide}));
+      pm.rotation.x=-Math.PI/2;da(pm);
+    }
+
+    // Spigoli base
+    for(let i=0;i<n;i++) dl2(base[i],base[(i+1)%n],0x888888,2);
+    // Spigoli laterali
+    for(let i=0;i<n;i++) dl2(base[i],V,0xbbbbbb,1);
+    // Facce laterali semitrasparenti
+    const hsl=[0.62,0.55,0.48,0.41];
+    for(let i=0;i<n;i++){
+      const A=base[i],B=base[(i+1)%n];
+      const g=new THREE.BufferGeometry();
+      g.setAttribute('position',new THREE.BufferAttribute(new Float32Array([A.x,A.y,A.z,B.x,B.y,B.z,V.x,V.y,V.z]),3));
+      g.setIndex([0,1,2]);g.computeVertexNormals();
+      da(new THREE.Mesh(g,new THREE.MeshPhongMaterial({color:new THREE.Color().setHSL(hsl[i%4],0.3,0.75),transparent:true,opacity:0.2,side:THREE.DoubleSide})));
+    }
+
+    // VH — viola
+    if(sP){
+      dl2(V,H,0x5a3ab7,2);
+      ds(H,0.09,0x5a3ab7);
+    }
+
+    // Per ogni faccia: HK e VK
+    let info=`Piramide ${n===3?'triangolare':'quadrangolare'}\n`;
+    info+=`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+    info+=`VH = ${VHlen.toFixed(3)} m  (altezza della piramide)\n\n`;
+
+    for(let i=0;i<n;i++){
+      const Ai=base[i],Bi=base[(i+1)%n];
+      // K = piede della perpendicolare da H al lato A_iB_i
+      const K=footOnLine(H,Ai,Bi);
+      const HKlen=dist(H,K);
+      const VKlen=dist(V,K);
+
+      // HK — verde
+      if(sK) dl2(H,K,0x1a6b3a,2);
+      // VK — rosso (altezza della faccia)
+      if(sA) dl2(V,K,0xb5351a,2);
+
+      // Marcatore angolo retto in K (HK ⊥ lato e VK ⊥ lato)
+      if(sK||sA){
+        const lDir=new THREE.Vector3().subVectors(Bi,Ai).normalize();
+        const kHDir=new THREE.Vector3().subVectors(H,K).normalize();
+        da(addRightAngle(scene,K,lDir,kHDir,0x1a6b3a,0.09));
+        ds(K,0.07,0xb5351a);
+      }
+
+      info+=`Faccia ${NAMES[i]}${NAMES[(i+1)%n]}V:\n`;
+      info+=`  HK = ${HKlen.toFixed(3)} m\n`;
+      info+=`  VK = √(VH²+HK²) = ${VKlen.toFixed(3)} m  ← altezza della faccia\n\n`;
+    }
+    info+=`Per il T3P: VK ⊥ lato per ogni faccia.`;
+
+    // Etichette base
+    base.forEach((p,i)=>{da(addLabel(scene,v3(p.x,0.22,p.z),NAMES[i],BCOLS[i]));ds(p,0.11,BCOLORS[i]);});
+    da(addLabel(scene,v3(V.x,V.y+0.28,V.z),'V','#1a4b8c'));
+    ds(V,0.13,0x1a4b8c);
+    if(sP) da(addLabel(scene,v3(H.x-0.32,H.y+0.18,H.z),'H','#5a3ab7'));
+
+    document.getElementById('infoPanel').textContent=info;
+  }
+
+  const cam=setupCamera(canvas,camera);
+  cam.setAngles(0.5,1.05);cam.setRad(16);
+
+  function resize(){
+    const w=Math.max(canvas.parentElement.clientWidth-36,300);
+    canvas.style.width=w+'px';canvas.style.height='480px';
+    renderer.setSize(w,480);camera.aspect=w/480;camera.updateProjectionMatrix();
+  }
+  function animate(){requestAnimationFrame(animate);renderer.render(scene,camera);}
+  buildUI(3);rebuildPyr();resize();animate();
+  window.addEventListener('resize',resize);
+})();
+
+// nav attiva
+const secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur=s.id;});navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));},{passive:true});
+</script>
+</body>
+</html>
