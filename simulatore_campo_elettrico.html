@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Il Campo Elettrico — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#b5351a;--accent2:#1a4b8c;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:64px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,50px);font-weight:700;line-height:1.1;margin-bottom:10px}
+.hero h1 em{color:#d4956a;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.42);font-weight:300;max-width:480px;margin:0 auto 28px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 32px}
+.nav-inner{max-width:860px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:13px 15px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:860px;margin:0 auto;padding:48px 32px}
+@media(max-width:600px){.page{padding:28px 14px}.nav{padding:0 10px}}
+.sec{margin-bottom:68px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px}
+h3{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin:18px 0 7px}
+p{font-size:15px;margin-bottom:11px;color:#2a2a2e}
+ul{margin:6px 0 11px 22px;font-size:15px}
+li{margin-bottom:5px;color:#2a2a2e}
+strong{font-weight:600}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--accent2);text-align:center;padding:14px 18px;margin:13px 0;border-radius:3px}
+.box-f .f{font-family:'Playfair Display',serif;font-size:19px;color:var(--accent2);margin-bottom:4px}
+.box-f .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:#e8f0fa;border-left:3px solid var(--accent2);color:#0a2a5a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-w{background:#fdf3ee;border-left:3px solid var(--accent);color:#5a1a0a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:18px;margin:20px 0}
+.sim-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sim-title::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:7px;margin-bottom:10px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:9px 11px;font-family:'Source Sans 3',sans-serif}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.clabel{font-size:12px;font-weight:600}
+.card label{font-size:11px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:3px}
+.row{display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;color:var(--muted)}
+.row label{min-width:20px;font-weight:600}
+.row input[type=number]{width:58px;padding:2px 4px;font-size:11px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink)}
+.row input[type=range]{flex:1;accent-color:var(--accent2)}
+.qval{font-size:11px;font-weight:600;min-width:24px;text-align:right;color:var(--ink);font-family:'Source Code Pro',monospace}
+.row select{font-size:10px;padding:2px 4px;border:1px solid var(--border);border-radius:3px;background:#fff}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;font-size:12px;color:var(--muted)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:90px;accent-color:var(--accent2)}
+.val{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:32px;color:var(--ink)}
+.tbtn{padding:3px 10px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);font-size:11px;cursor:pointer}
+.tbtn:hover{background:var(--surface)}
+.btn-calc{padding:5px 14px;border-radius:3px;border:none;background:var(--accent2);color:#fff;font-size:12px;cursor:pointer;font-weight:600;font-family:'Source Sans 3',sans-serif}
+.btn-calc:hover{background:#0f3060}
+.btn-rst{padding:5px 12px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif}
+.prow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;background:var(--surface);border-radius:4px;margin-bottom:10px;font-size:12px;color:var(--muted)}
+.prow label{font-weight:600}
+.prow input[type=number]{width:78px;padding:3px 6px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink);font-family:'Source Code Pro',monospace}
+.prow select{font-size:11px;padding:3px 5px;border:1px solid var(--border);border-radius:3px;background:#fff}
+.result{background:var(--ink);color:#fff;border-radius:4px;padding:14px 16px;margin-bottom:10px;min-height:80px}
+.result.empty{background:var(--surface);color:var(--muted);display:flex;align-items:center;font-size:13px;font-style:italic;min-height:60px}
+.res-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:10px}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px}
+.ri{background:rgba(255,255,255,0.06);border-radius:3px;padding:8px 10px}
+.rl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:3px}
+.rv{font-family:'Source Code Pro',monospace;font-size:14px;color:#fff}
+.rv.hi{color:#7aaddf;font-size:18px}
+.rv.di{color:#a8d8a8;font-size:12px;font-family:'Source Sans 3',sans-serif}
+.ctbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.ctbl th{background:var(--ink);color:#fff;padding:5px 8px;text-align:left;font-size:10px;text-transform:uppercase;font-weight:400;letter-spacing:0.5px}
+.ctbl td{padding:5px 8px;border-bottom:1px solid var(--border);font-family:'Source Code Pro',monospace;font-size:11px}
+.ctbl tr:nth-child(even) td{background:var(--surface)}
+.ctbl .tot td{background:var(--ink);color:#fff;font-weight:600}
+canvas{display:block;border:1px solid var(--border);border-radius:3px;background:#fff;width:100%}
+.leg{display:flex;gap:12px;margin-top:7px;font-size:11px;color:var(--muted);flex-wrap:wrap;align-items:center}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:48px;padding:20px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="eyebrow">Fisica II — Elettrostatica</div>
+  <h1>Il Campo<br><em>Elettrico</em></h1>
+  <p class="hero-sub">Simulatore delle linee di campo e calcolatore numerico con unità reali</p>
+  <div class="rule"></div>
+</div>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#teoria" class="active">Teoria</a>
+    <a href="#simulatore">Linee di campo</a>
+    <a href="#calcolatore">Calcolatore E</a>
+    <a href="#esercizi">Esercizi</a>
+  </div>
+</nav>
+<div class="page">
+
+<div class="sec" id="teoria">
+  <h2>1. Introduzione</h2>
+  <p class="sec-sub">Definizione e Legge di Coulomb</p>
+  <p>Il <strong>campo elettrico</strong> è una grandezza vettoriale definita in ogni punto dello spazio in presenza di cariche elettriche. Una carica sorgente modifica lo spazio circostante; una carica di prova immersa in quel campo subisce una forza proporzionale al campo stesso.</p>
+  <div class="box-f">
+    <div class="f">E = k · Q / r²</div>
+    <div class="fd">k = 8,99 × 10⁹ N·m²/C² &nbsp;·&nbsp; r = distanza &nbsp;·&nbsp; Q = carica sorgente</div>
+  </div>
+  <p>In presenza di più cariche vale il <strong>principio di sovrapposizione</strong>: il campo totale è la somma vettoriale dei contributi di ciascuna carica.</p>
+  <h3>Linee di campo — proprietà</h3>
+  <ul>
+    <li>Partono sempre dalle cariche <strong>positive</strong> (o dall'infinito).</li>
+    <li>Arrivano sempre alle cariche <strong>negative</strong> (o all'infinito).</li>
+    <li>Non si incrociano mai.</li>
+    <li>La densità indica l'intensità del campo.</li>
+  </ul>
+  <div class="box-w">⚠ Da una carica negativa non possono mai partire linee di campo.</div>
+</div>
+
+<div class="sec" id="simulatore">
+  <h2>2. Simulatore — Linee di Campo</h2>
+  <p class="sec-sub">Visualizzazione qualitativa per fino a 4 cariche adimensionali</p>
+  <div class="box-n">💡 Attiva le cariche, imposta x, y e q. Usa rotella e trascina per navigare.</div>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Linee di Campo Elettrico</div>
+    <div class="cards" id="cc_sim"></div>
+    <div class="ctrl">
+      <label>Zoom</label>
+      <button class="tbtn" id="zm">−</button>
+      <input type="range" id="zoom" min="0.5" max="5" step="0.1" value="1">
+      <button class="tbtn" id="zp">+</button>
+      <span class="val" id="zv">1×</span>
+      <button class="tbtn" id="zr">reset</button>
+    </div>
+    <canvas id="cv_sim" style="height:300px"></canvas>
+    <div class="leg">
+      <span><span class="dot" style="background:#e05252"></span>Carica +</span>
+      <span><span class="dot" style="background:#4a90d9"></span>Carica −</span>
+      <span style="font-size:10px">Trascina · Rotella = zoom</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="calcolatore">
+  <h2>3. Calcolatore — Campo in un Punto P</h2>
+  <p class="sec-sub">Calcolo numerico con unità reali (mC, µC, nC, pC · m, cm, mm)</p>
+  <p>Inserisci le cariche con coordinate reali e il punto P. Il calcolatore fornisce modulo, componenti, angolo e contributi individuali di ciascuna carica.</p>
+  <div class="sim-wrap">
+    <div class="sim-title">Calcolatore — E nel punto P</div>
+    <h3>Cariche sorgente</h3>
+    <div class="cards" id="cc_calc"></div>
+    <h3>Punto P</h3>
+    <div class="prow">
+      <label>x<sub>P</sub></label>
+      <input type="number" id="px" value="0" step="0.1">
+      <select id="pxu"><option value="1">m</option><option value="0.01">cm</option><option value="0.001">mm</option></select>
+      <label>y<sub>P</sub></label>
+      <input type="number" id="py" value="1" step="0.1">
+      <select id="pyu"><option value="1">m</option><option value="0.01">cm</option><option value="0.001">mm</option></select>
+      <button class="btn-calc" id="calcBtn">▶ Calcola</button>
+      <button class="btn-rst" id="rstBtn">Reset</button>
+    </div>
+    <div class="result empty" id="result">Inserisci le cariche e il punto P, poi clicca ▶ Calcola</div>
+    <canvas id="cv_calc" style="height:260px;margin-top:10px"></canvas>
+    <div id="ctWrap" style="display:none;margin-top:10px">
+      <h3>Contributi individuali</h3>
+      <table class="ctbl" id="ctbl"></table>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="esercizi">
+  <h2>4. Esercizi Proposti</h2>
+  <p class="sec-sub">Con il simulatore delle linee di campo</p>
+  <ul>
+    <li>Inserisci una sola carica positiva: osserva la simmetria radiale.</li>
+    <li>Dipolo (Q₁=+1, Q₂=−1): individua le linee che collegano le due cariche.</li>
+    <li>Due cariche positive uguali: dove si trova il punto di equilibrio?</li>
+    <li>Tre cariche (due+ e una−): quante linee arrivano alla negativa?</li>
+  </ul>
+  <p class="sec-sub" style="margin-top:18px">Con il calcolatore numerico</p>
+  <ul>
+    <li>Q₁=+1µC in (0,0) e Q₂=−1µC in (1m,0): calcola E in (0.5m, 0.5m). Qual è l'angolo?</li>
+    <li>Q=+2µC in (0,0): calcola E a 10cm, 50cm e 1m. Verifica che E ∝ 1/r².</li>
+    <li>Quattro cariche +1nC ai vertici di un quadrato di lato 1m: qual è E al centro?</li>
+  </ul>
+</div>
+
+<footer>Didattica Pierri · Fisica II · Il Campo Elettrico</footer>
+</div>
+
+<script>
+// ── COSTANTI ──────────────────────────────────────
+const K=8.9875e9;
+const QU={'mC':1e-3,'µC':1e-6,'nC':1e-9,'pC':1e-12};
+const XU={'m':1,'cm':0.01,'mm':0.001};
+const PC=['#e05252','#3a8f3a','#c47a00','#7a4fc4'];
+const NC=['#4a90d9','#d4537e','#5daa9a','#888'];
+const NM=['Q₁','Q₂','Q₃','Q₄'];
+
+// ── SIMULATORE LINEE ─────────────────────────────
+const SIM=[{x:2,y:0,q:1,on:true},{x:-2,y:0,q:-1,on:true},{x:0,y:0,q:1,on:false},{x:0,y:0,q:-1,on:false}];
+let zoom=1,panX=0,panY=0,drag=false,lx=0,ly=0;
+
+function buildSimUI(){
+  const cc=document.getElementById('cc_sim');cc.innerHTML='';
+  SIM.forEach((c,i)=>{
+    const col=c.q>=0?PC[i]:NC[i];
+    const d=document.createElement('div');d.className='card';
+    d.innerHTML=`<div class="card-head"><span class="clabel" id="slb${i}" style="color:${col}">${NM[i]} (${c.q>0?'+':''}${c.q})</span><label><input type="checkbox" id="son${i}" ${c.on?'checked':''}> attiva</label></div><div class="row"><label>x</label><input type="number" id="scx${i}" value="${c.x}" step="1" min="-7" max="7"><label>y</label><input type="number" id="scy${i}" value="${c.y}" step="1" min="-7" max="7"></div><div class="row"><label>q</label><input type="range" id="scq${i}" min="-3" max="3" step="1" value="${c.q}"><span class="qval" id="sqv${i}">${c.q>0?'+':''}${c.q}</span></div>`;
+    cc.appendChild(d);
+    document.getElementById('son'+i).onchange=e=>{SIM[i].on=e.target.checked;drawSim()};
+    document.getElementById('scx'+i).oninput=e=>{SIM[i].x=+e.target.value||0;drawSim()};
+    document.getElementById('scy'+i).oninput=e=>{SIM[i].y=+e.target.value||0;drawSim()};
+    document.getElementById('scq'+i).oninput=e=>{
+      SIM[i].q=+e.target.value;
+      document.getElementById('sqv'+i).textContent=(SIM[i].q>0?'+':'')+SIM[i].q;
+      const nc=SIM[i].q>=0?PC[i]:NC[i];
+      document.getElementById('slb'+i).style.color=nc;
+      document.getElementById('slb'+i).textContent=NM[i]+' ('+(SIM[i].q>0?'+':'')+SIM[i].q+')';
+      drawSim();
+    };
+  });
+}
+
+const zs=document.getElementById('zoom'),zv=document.getElementById('zv');
+zs.oninput=e=>{zoom=+e.target.value;zv.textContent=zoom.toFixed(1)+'×';drawSim()};
+document.getElementById('zm').onclick=()=>{zoom=Math.max(0.5,+(zoom-0.2).toFixed(1));zs.value=zoom;zv.textContent=zoom.toFixed(1)+'×';drawSim()};
+document.getElementById('zp').onclick=()=>{zoom=Math.min(5,+(zoom+0.2).toFixed(1));zs.value=zoom;zv.textContent=zoom.toFixed(1)+'×';drawSim()};
+document.getElementById('zr').onclick=()=>{zoom=1;panX=0;panY=0;zs.value=1;zv.textContent='1×';drawSim()};
+const cvs=document.getElementById('cv_sim');
+cvs.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY});
+window.addEventListener('mousemove',e=>{if(!drag)return;const S=(cvs.width/20)*zoom;panX+=(e.clientX-lx)/S;panY-=(e.clientY-ly)/S;lx=e.clientX;ly=e.clientY;drawSim()});
+window.addEventListener('mouseup',()=>drag=false);
+cvs.addEventListener('touchstart',e=>{drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY},{passive:true});
+cvs.addEventListener('touchmove',e=>{if(!drag)return;const S=(cvs.width/20)*zoom;panX+=(e.touches[0].clientX-lx)/S;panY-=(e.touches[0].clientY-ly)/S;lx=e.touches[0].clientX;ly=e.touches[0].clientY;drawSim()},{passive:true});
+cvs.addEventListener('touchend',()=>drag=false);
+cvs.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(0.5,Math.min(5,zoom*(e.deltaY<0?1.1:0.93)));zoom=Math.round(zoom*10)/10;zs.value=zoom;zv.textContent=zoom.toFixed(1)+'×';drawSim()},{passive:false});
+
+function Esim(px,py){let ex=0,ey=0;SIM.forEach(c=>{if(!c.on||c.q===0)return;const dx=px-c.x,dy=py-c.y,r2=dx*dx+dy*dy;if(r2<1e-4)return;const f=c.q/(r2*Math.sqrt(r2));ex+=f*dx;ey+=f*dy});return[ex,ey];}
+function integLine(x0,y0,dir){const pts=[[x0,y0]];let x=x0,y=y0;for(let s=0;s<3000;s++){const[ex,ey]=Esim(x,y);const mag=Math.sqrt(ex*ex+ey*ey);if(mag<1e-9)break;x+=dir*(ex/mag)*0.02;y+=dir*(ey/mag)*0.02;pts.push([x,y]);if(Math.abs(x)>25||Math.abs(y)>25)break;let stop=false;SIM.forEach(ch=>{if(ch.on&&ch.q!==0&&(x-ch.x)**2+(y-ch.y)**2<0.018)stop=true});if(stop)break;}return pts;}
+function arrowAt(ctx,pts,idx,col){if(idx<=0||idx>=pts.length)return;const[x1,y1]=pts[idx-1],[x2,y2]=pts[idx];const W=cvs.width,H=cvs.height,S=(W/20)*zoom;const WXf=x=>W/2+(x+panX)*S,WYf=y=>H/2-(y+panY)*S;const ax=WXf(x2),ay=WYf(y2),bx=WXf(x1),by=WYf(y1),dx=ax-bx,dy=ay-by,l=Math.sqrt(dx*dx+dy*dy);if(l<0.5)return;const nx=dx/l,ny=dy/l,as=6;ctx.beginPath();ctx.moveTo(ax-nx*as-ny*as*0.5,ay-ny*as+nx*as*0.5);ctx.lineTo(ax,ay);ctx.lineTo(ax-nx*as+ny*as*0.5,ay-ny*as-nx*as*0.5);ctx.strokeStyle=col;ctx.lineWidth=1.4;ctx.stroke();}
+
+function drawSim(){
+  const W=cvs.width,H=cvs.height,S=(W/20)*zoom;
+  const WXf=x=>W/2+(x+panX)*S,WYf=y=>H/2-(y+panY)*S;
+  const ctx=cvs.getContext('2d');ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  const wW=W/S;let gs=1;if(wW>30)gs=5;else if(wW>15)gs=2;else if(wW<4)gs=0.5;
+  const x0=-W/(2*S)-panX,x1=W/(2*S)-panX,y0b=-H/(2*S)-panY,y1b=H/(2*S)-panY;
+  ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.5;
+  for(let i=Math.floor(x0/gs)*gs;i<=x1+gs;i+=gs){ctx.beginPath();ctx.moveTo(WXf(i),0);ctx.lineTo(WXf(i),H);ctx.stroke()}
+  for(let i=Math.floor(y0b/gs)*gs;i<=y1b+gs;i+=gs){ctx.beginPath();ctx.moveTo(0,WYf(i));ctx.lineTo(W,WYf(i));ctx.stroke()}
+  ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,WYf(0));ctx.lineTo(W,WYf(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(WXf(0),0);ctx.lineTo(WXf(0),H);ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,0.3)';ctx.font='9px monospace';
+  for(let i=Math.floor(x0/gs)*gs;i<=x1+gs;i+=gs){if(Math.abs(i)<0.01)continue;ctx.textAlign='center';ctx.fillText(+i.toFixed(1),WXf(i),WYf(0)+11)}
+  for(let i=Math.floor(y0b/gs)*gs;i<=y1b+gs;i+=gs){if(Math.abs(i)<0.01)continue;ctx.textAlign='right';ctx.fillText(+i.toFixed(1),WXf(0)-3,WYf(i)+3)}
+  const active=SIM.filter(c=>c.on&&c.q!==0);
+  if(active.length>0){
+    const pos=active.filter(c=>c.q>0),neg=active.filter(c=>c.q<0);
+    if(pos.length>0){
+      pos.forEach(c=>{const ci=SIM.indexOf(c),col=PC[ci],n=Math.round(24*Math.abs(c.q));
+        for(let k=0;k<n;k++){const a=2*Math.PI*k/n,pts=integLine(c.x+0.18*Math.cos(a),c.y+0.18*Math.sin(a),1);
+          ctx.beginPath();pts.forEach((p,j)=>j?ctx.lineTo(WXf(p[0]),WYf(p[1])):ctx.moveTo(WXf(p[0]),WYf(p[1])));ctx.strokeStyle=col;ctx.lineWidth=1.4;ctx.stroke();arrowAt(ctx,pts,Math.floor(pts.length/2),col);}
+      });
+    } else {
+      neg.forEach(c=>{const ci=SIM.indexOf(c),col=NC[ci],n=Math.round(24*Math.abs(c.q));
+        for(let k=0;k<n;k++){const a=2*Math.PI*k/n,pts=integLine(c.x+0.18*Math.cos(a),c.y+0.18*Math.sin(a),-1).reverse();
+          ctx.beginPath();pts.forEach((p,j)=>j?ctx.lineTo(WXf(p[0]),WYf(p[1])):ctx.moveTo(WXf(p[0]),WYf(p[1])));ctx.strokeStyle=col;ctx.lineWidth=1.4;ctx.stroke();arrowAt(ctx,pts,Math.floor(pts.length/2),col);}
+      });
+    }
+  }
+  SIM.forEach((c,i)=>{if(!c.on)return;const cx=WXf(c.x),cy=WYf(c.y);ctx.beginPath();ctx.arc(cx,cy,9,0,2*Math.PI);ctx.fillStyle=c.q>=0?PC[i]:NC[i];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 13px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(c.q>=0?'+':'−',cx,cy+1);ctx.textBaseline='alphabetic';});
+}
+
+// ── CALCOLATORE ──────────────────────────────────
+const CALC=[
+  {q:1, uq:'µC', x:0, ux:'m', y:0, uy:'m', on:true},
+  {q:-1,uq:'µC', x:1, ux:'m', y:0, uy:'m', on:true},
+  {q:0, uq:'µC', x:0, ux:'m', y:1, uy:'m', on:false},
+  {q:0, uq:'µC', x:0, ux:'m', y:0, uy:'m', on:false}
+];
+
+function buildCalcUI(){
+  const cc=document.getElementById('cc_calc');cc.innerHTML='';
+  CALC.forEach((c,i)=>{
+    const col=c.q>=0?PC[i]:NC[i];
+    const d=document.createElement('div');d.className='card';
+    d.innerHTML=`<div class="card-head"><span class="clabel" id="clb${i}" style="color:${col}">${NM[i]}</span><label><input type="checkbox" id="con${i}" ${c.on?'checked':''}> attiva</label></div>
+    <div class="row"><label>q</label><input type="number" id="cq${i}" value="${c.q}" step="0.1"><select id="cuq${i}"><option ${c.uq==='mC'?'selected':''}>mC</option><option ${c.uq==='µC'?'selected':''}>µC</option><option ${c.uq==='nC'?'selected':''}>nC</option><option ${c.uq==='pC'?'selected':''}>pC</option></select></div>
+    <div class="row"><label>x</label><input type="number" id="cx${i}" value="${c.x}" step="0.1"><select id="cux${i}"><option ${c.ux==='m'?'selected':''}>m</option><option ${c.ux==='cm'?'selected':''}>cm</option><option ${c.ux==='mm'?'selected':''}>mm</option></select></div>
+    <div class="row"><label>y</label><input type="number" id="cy${i}" value="${c.y}" step="0.1"><select id="cuy${i}"><option ${c.uy==='m'?'selected':''}>m</option><option ${c.uy==='cm'?'selected':''}>cm</option><option ${c.uy==='mm'?'selected':''}>mm</option></select></div>`;
+    cc.appendChild(d);
+    document.getElementById('con'+i).onchange=e=>{CALC[i].on=e.target.checked;};
+    document.getElementById('cq'+i).oninput=e=>{CALC[i].q=parseFloat(e.target.value)||0;const nc=CALC[i].q>=0?PC[i]:NC[i];document.getElementById('clb'+i).style.color=nc;};
+    document.getElementById('cuq'+i).onchange=e=>{CALC[i].uq=e.target.value;};
+    document.getElementById('cx'+i).oninput=e=>{CALC[i].x=parseFloat(e.target.value)||0;};
+    document.getElementById('cux'+i).onchange=e=>{CALC[i].ux=e.target.value;};
+    document.getElementById('cy'+i).oninput=e=>{CALC[i].y=parseFloat(e.target.value)||0;};
+    document.getElementById('cuy'+i).onchange=e=>{CALC[i].uy=e.target.value;};
+  });
+}
+
+function getSI(i){
+  return{
+    q:(parseFloat(document.getElementById('cq'+i).value)||0)*QU[document.getElementById('cuq'+i).value],
+    x:(parseFloat(document.getElementById('cx'+i).value)||0)*XU[document.getElementById('cux'+i).value],
+    y:(parseFloat(document.getElementById('cy'+i).value)||0)*XU[document.getElementById('cuy'+i).value],
+    on:document.getElementById('con'+i).checked,
+    col:(parseFloat(document.getElementById('cq'+i).value)||0)>=0?PC[i]:NC[i],
+    name:NM[i],
+    qval:parseFloat(document.getElementById('cq'+i).value)||0,
+    qustr:document.getElementById('cuq'+i).value
+  };
+}
+
+function fmtE(v){if(!isFinite(v)||isNaN(v))return'—';const a=Math.abs(v);if(a===0)return'0 N/C';if(a>=1e6)return(v/1e6).toFixed(3)+' MN/C';if(a>=1e3)return(v/1e3).toFixed(3)+' kN/C';if(a>=1)return v.toFixed(3)+' N/C';if(a>=1e-3)return(v*1e3).toFixed(3)+' mN/C';return v.toExponential(3)+' N/C';}
+
+function calculate(){
+  const pxv=(parseFloat(document.getElementById('px').value)||0)*parseFloat(document.getElementById('pxu').value);
+  const pyv=(parseFloat(document.getElementById('py').value)||0)*parseFloat(document.getElementById('pyu').value);
+  const pxStr=document.getElementById('px').value+' '+document.getElementById('pxu').options[document.getElementById('pxu').selectedIndex].text;
+  const pyStr=document.getElementById('py').value+' '+document.getElementById('pyu').options[document.getElementById('pyu').selectedIndex].text;
+  const active=[];
+  for(let i=0;i<4;i++){const s=getSI(i);if(s.on&&s.q!==0)active.push({...s,idx:i});}
+  if(!active.length){setErr('Nessuna carica attiva.');return;}
+  let Ex=0,Ey=0;const contribs=[];
+  for(const c of active){
+    const dx=pxv-c.x,dy=pyv-c.y,r2=dx*dx+dy*dy,r=Math.sqrt(r2);
+    if(r<1e-12){setErr('⚠ Il punto P coincide con '+c.name+' — campo infinito.');return;}
+    const Emag=K*Math.abs(c.q)/r2;const sign=c.q>0?1:-1;
+    const ex=sign*Emag*dx/r,ey=sign*Emag*dy/r;
+    Ex+=ex;Ey+=ey;
+    contribs.push({name:c.name,col:c.col,r,ex,ey,Emag:K*c.q/r2,qval:c.qval,qustr:c.qustr});
+  }
+  const Etot=Math.sqrt(Ex*Ex+Ey*Ey);
+  const theta=((Math.atan2(Ey,Ex)*180/Math.PI)%360+360)%360;
+  const dirs=['→ Est','↗ Nord-Est','↑ Nord','↖ Nord-Ovest','← Ovest','↙ Sud-Ovest','↓ Sud','↘ Sud-Est'];
+  const dir=dirs[Math.round(theta/45)%8];
+  const res=document.getElementById('result');
+  res.className='result';
+  res.innerHTML=`<div class="res-title">E in P = (${pxStr}, ${pyStr})</div><div class="rgrid"><div class="ri"><div class="rl">Modulo |E|</div><div class="rv hi">${fmtE(Etot)}</div></div><div class="ri"><div class="rl">Ex</div><div class="rv">${fmtE(Ex)}</div></div><div class="ri"><div class="rl">Ey</div><div class="rv">${fmtE(Ey)}</div></div><div class="ri"><div class="rl">Angolo θ</div><div class="rv">${theta.toFixed(2)}°</div></div><div class="ri"><div class="rl">Direzione</div><div class="rv di">${dir}</div></div><div class="ri"><div class="rl">Scient.</div><div class="rv" style="font-size:11px">${Etot.toExponential(3)} N/C</div></div></div>`;
+  const cw=document.getElementById('ctWrap'),ct=document.getElementById('ctbl');
+  cw.style.display='block';
+  let rows=contribs.map(c=>`<tr><td style="color:${c.col};font-weight:bold">${c.name}</td><td>${c.qval} ${c.qustr}</td><td>${c.r.toExponential(3)} m</td><td>${fmtE(Math.abs(c.Emag))}</td><td>${fmtE(c.ex)}</td><td>${fmtE(c.ey)}</td></tr>`).join('');
+  rows+=`<tr class="tot"><td colspan="4">Totale</td><td>${fmtE(Ex)}</td><td>${fmtE(Ey)}</td></tr>`;
+  ct.innerHTML=`<tr><th>Carica</th><th>Q</th><th>r</th><th>|Ei|</th><th>Eix</th><th>Eiy</th></tr>`+rows;
+  drawCalc(pxv,pyv,Ex,Ey,Etot,active,contribs);
+}
+
+function setErr(msg){const r=document.getElementById('result');r.className='result empty';r.innerHTML=msg;document.getElementById('ctWrap').style.display='none';}
+
+function drawCalc(px,py,Ex,Ey,Etot,active,contribs){
+  const cvc=document.getElementById('cv_calc');
+  const W=cvc.parentElement.clientWidth-36||520;cvc.width=W;cvc.height=260;
+  const ctx=cvc.getContext('2d');ctx.clearRect(0,0,W,260);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,260);
+  const allX=[px,...active.map(c=>c.x)],allY=[py,...active.map(c=>c.y)];
+  let xmin=Math.min(...allX),xmax=Math.max(...allX),ymin=Math.min(...allY),ymax=Math.max(...allY);
+  const span=Math.max(xmax-xmin,ymax-ymin)||1,pad=span*0.45;
+  xmin-=pad;xmax+=pad;ymin-=pad;ymax+=pad;
+  const pl=48,pr=10,pt=14,pb=30;
+  const scX=(W-pl-pr)/(xmax-xmin),scY=(260-pt-pb)/(ymax-ymin),sc=Math.min(scX,scY);
+  const ox=W/2-(xmin+xmax)/2*sc,oy=260/2+(ymin+ymax)/2*sc;
+  const wx=x=>ox+x*sc,wy=y=>oy-y*sc;
+  function ns(s){const r=s/5,m=Math.pow(10,Math.floor(Math.log10(r||1))),n=r/m;return(n<2?1:n<5?2:5)*m;}
+  const gs=ns(xmax-xmin);
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  for(let x=Math.ceil(xmin/gs)*gs;x<=xmax+gs;x+=gs){ctx.beginPath();ctx.moveTo(wx(x),pt);ctx.lineTo(wx(x),260-pb);ctx.stroke();}
+  for(let y=Math.ceil(ymin/gs)*gs;y<=ymax+gs;y+=gs){ctx.beginPath();ctx.moveTo(pl,wy(y));ctx.lineTo(W-pr,wy(y));ctx.stroke();}
+  ctx.strokeStyle='rgba(0,0,0,0.14)';ctx.lineWidth=0.8;
+  if(ymin<=0&&ymax>=0){ctx.beginPath();ctx.moveTo(pl,wy(0));ctx.lineTo(W-pr,wy(0));ctx.stroke();}
+  if(xmin<=0&&xmax>=0){ctx.beginPath();ctx.moveTo(wx(0),pt);ctx.lineTo(wx(0),260-pb);ctx.stroke();}
+  ctx.fillStyle='rgba(0,0,0,0.28)';ctx.font='9px monospace';ctx.textAlign='center';
+  for(let x=Math.ceil(xmin/gs)*gs;x<=xmax+gs;x+=gs){const l=Math.abs(x)<gs*0.01?'0':x>=1?x.toFixed(2)+'m':(x*100).toFixed(1)+'cm';ctx.fillText(l,wx(x),260-pb+10);}
+  ctx.textAlign='right';
+  for(let y=Math.ceil(ymin/gs)*gs;y<=ymax+gs;y+=gs){if(Math.abs(y)<gs*0.01)continue;const l=y>=1?y.toFixed(2)+'m':(y*100).toFixed(1)+'cm';ctx.fillText(l,pl-3,wy(y)+3);}
+  contribs.forEach(c=>{const len=Math.sqrt(c.ex*c.ex+c.ey*c.ey);if(len<1e-12)return;const al=Math.min(W,260)*0.09,nx=c.ex/len,ny=c.ey/len;ctx.strokeStyle=c.col+'77';ctx.lineWidth=1;ctx.setLineDash([3,2]);ctx.beginPath();ctx.moveTo(wx(px),wy(py));ctx.lineTo(wx(px)+nx*al,wy(py)-ny*al);ctx.stroke();ctx.setLineDash([]);});
+  if(Etot>0){
+    const al=Math.min(W,260)*0.16,nx=Ex/Etot,ny=Ey/Etot;
+    const x1=wx(px),y1=wy(py),x2=x1+nx*al,y2=y1-ny*al;
+    ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    const as=7;ctx.beginPath();ctx.moveTo(x2-nx*as+ny*as*0.4,y2+ny*as+nx*as*0.4);ctx.lineTo(x2,y2);ctx.moveTo(x2-nx*as-ny*as*0.4,y2+ny*as-nx*as*0.4);ctx.lineTo(x2,y2);ctx.stroke();
+    ctx.fillStyle='#1a4b8c';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    const th=((Math.atan2(Ey,Ex)*180/Math.PI)%360+360)%360;
+    ctx.fillText('E  θ='+th.toFixed(1)+'°',x2+5,y2-2);
+  }
+  active.forEach(c=>{ctx.beginPath();ctx.arc(wx(c.x),wy(c.y),8,0,2*Math.PI);ctx.fillStyle=c.col;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(c.q>0?'+':'−',wx(c.x),wy(c.y)+1);ctx.textBaseline='alphabetic';ctx.fillStyle=c.col;ctx.font='10px monospace';ctx.textAlign='left';ctx.fillText(c.name,wx(c.x)+10,wy(c.y)-5);});
+  ctx.beginPath();ctx.arc(wx(px),wy(py),5,0,2*Math.PI);ctx.fillStyle='#1a4b8c';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle='#1a4b8c';ctx.font='bold 11px monospace';ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillText('P',wx(px)+7,wy(py)-3);
+}
+
+document.getElementById('calcBtn').onclick=calculate;
+document.getElementById('rstBtn').onclick=()=>{
+  CALC.forEach((c,i)=>{c.q=i===0?1:i===1?-1:0;c.uq='µC';c.x=i===1?1:0;c.ux='m';c.y=0;c.uy='m';c.on=i<2;});
+  buildCalcUI();
+  document.getElementById('px').value=0;document.getElementById('py').value=1;
+  document.getElementById('pxu').value=1;document.getElementById('pyu').value=1;
+  setErr('Inserisci le cariche e il punto P, poi clicca ▶ Calcola');
+  const cvc=document.getElementById('cv_calc');const ctx=cvc.getContext('2d');ctx.clearRect(0,0,cvc.width,cvc.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cvc.width,cvc.height);
+};
+
+// nav attiva
+const secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur=s.id;});navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));},{passive:true});
+
+function resize(){
+  const w=cvs.parentElement.clientWidth-36||520;
+  cvs.width=Math.max(w,300);cvs.height=300;
+  drawSim();
+}
+buildSimUI();
+buildCalcUI();
+window.addEventListener('resize',resize);
+setTimeout(resize,60);
+</script>
+</body>
+</html>
