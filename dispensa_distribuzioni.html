@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distribuzioni di Carica — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{
+  --ink:#1a1a1e;--paper:#faf9f6;--accent:#b5351a;--accent2:#1a4b8c;
+  --muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;
+  --green:#1a6b3a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:72px 32px 52px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:16px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,54px);font-weight:700;line-height:1.1;margin-bottom:12px}
+.hero h1 em{color:#d4956a;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.45);font-weight:300;max-width:500px;margin:0 auto 32px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 32px}
+.nav-inner{max-width:820px;margin:0 auto;display:flex;gap:0;overflow-x:auto}
+.nav a{display:block;padding:14px 18px;font-size:12px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:820px;margin:0 auto;padding:56px 32px}
+@media(max-width:600px){.page{padding:36px 16px}.nav{padding:0 16px}.nav a{padding:12px 12px;font-size:11px}}
+.section{margin-bottom:80px;scroll-margin-top:52px}
+h2{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:6px;color:var(--ink)}
+.section-sub{font-size:13px;color:var(--muted);margin-bottom:20px;font-style:italic;border-bottom:1px solid var(--border);padding-bottom:14px}
+h3{font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin:22px 0 7px}
+p{font-size:15px;margin-bottom:12px;color:#2a2a2e}
+ul{margin:8px 0 14px 22px;font-size:15px}
+li{margin-bottom:6px;color:#2a2a2e}
+strong{font-weight:600}
+.box{border-radius:3px;padding:14px 18px;margin:16px 0;font-size:14px;line-height:1.6}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--accent2);text-align:center}
+.box-f .f{font-family:'Playfair Display',serif;font-size:20px;color:var(--accent2);margin-bottom:5px}
+.box-f .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:#e8f0fa;border-left:3px solid var(--accent2);color:#1a3a6a}
+.box-w{background:#fdf3ee;border-left:3px solid var(--accent);color:#6a1a0a}
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:20px;margin:24px 0}
+.sim-title{font-size:13px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sim-title::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px;align-items:center;font-size:12px;color:var(--muted)}
+.ctrl label{font-weight:600;min-width:24px}
+.ctrl input[type=range]{width:110px;accent-color:var(--accent2)}
+.ctrl .val{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:40px;color:var(--ink)}
+.tbtn{padding:3px 10px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);font-size:11px;cursor:pointer}
+.tbtn:hover{background:var(--surface)}
+canvas{display:block;border:1px solid var(--border);border-radius:3px;width:100%}
+.leg{display:flex;gap:12px;margin-top:8px;font-size:11px;color:var(--muted);flex-wrap:wrap;align-items:center}
+.leg-grad{width:80px;height:5px;border-radius:2px;display:inline-block}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:60px;padding:24px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Fisica II — Elettrostatica</div>
+  <h1>Distribuzioni di<br><em>Carica</em></h1>
+  <p class="hero-sub">Campo elettrico generato da distribuzioni estese: piano, retta, sfera e conduttore irregolare</p>
+  <div class="rule"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#piano" class="active">Piano infinito</a>
+    <a href="#retta">Retta infinita</a>
+    <a href="#sfera">Sfera carica</a>
+    <a href="#conduttore">Conduttore irregolare</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- 1. PIANO -->
+<div class="section" id="piano">
+  <h2>1. Piano infinito uniformemente carico</h2>
+  <p class="section-sub">Distribuzione superficiale di carica σ [C/m²]</p>
+  <p>Un piano infinito con densità superficiale di carica <strong>σ</strong> genera un campo elettrico <strong>uniforme</strong>, perpendicolare al piano, con intensità costante indipendentemente dalla distanza.</p>
+  <div class="box box-f">
+    <div class="f">E = σ / (2ε₀)</div>
+    <div class="fd">Il campo è uguale a qualsiasi distanza dal piano</div>
+  </div>
+  <h3>Condensatore piano</h3>
+  <p>Due piani paralleli con cariche opposte +σ e −σ: i campi si <strong>sommano</strong> nella regione interna (E = σ/ε₀) e si <strong>cancellano esattamente</strong> all'esterno (E = 0). È la base del condensatore piano.</p>
+  <div class="box box-n">
+    💡 <strong>Legge di Gauss:</strong> con una superficie cilindrica con basi parallele al piano, solo le basi contribuiscono al flusso: Φ = E·2A = σA/ε₀, da cui E = σ/(2ε₀).
+  </div>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Piano carico (sezione verticale)</div>
+    <div class="ctrl">
+      <label>σ</label>
+      <input type="range" id="ps" min="0.5" max="3" step="0.5" value="1">
+      <span class="val" id="psv">1</span>
+      <label style="margin-left:12px">Modalità</label>
+      <select id="pmode" style="font-size:11px;padding:2px 6px;border:1px solid var(--border);border-radius:3px;background:#fff">
+        <option value="1">Piano singolo (+σ)</option>
+        <option value="2">Condensatore (+σ / −σ)</option>
+      </select>
+      <button class="tbtn" id="pr">reset</button>
+    </div>
+    <canvas id="cvpiano"></canvas>
+    <div class="leg">
+      <span style="display:flex;align-items:center;gap:5px">
+        <span class="leg-grad" style="background:linear-gradient(to right,#fff,#fdcc8a,#e34a33,#b30000)"></span> |E| basso→alto
+      </span>
+      <span>↑↓ verso del campo</span>
+    </div>
+  </div>
+</div>
+
+<!-- 2. RETTA -->
+<div class="section" id="retta">
+  <h2>2. Retta infinita uniformemente carica</h2>
+  <p class="section-sub">Distribuzione lineare di carica λ [C/m]</p>
+  <p>Una retta infinita con densità lineare <strong>λ</strong> genera un campo radiale che decade come <strong>1/r</strong> dalla retta.</p>
+  <div class="box box-f">
+    <div class="f">E = λ / (2πε₀ r)</div>
+    <div class="fd">r = distanza perpendicolare dalla retta</div>
+  </div>
+  <ul>
+    <li>Il campo è <strong>radiale</strong> nel piano perpendicolare alla retta.</li>
+    <li>Decade come <strong>1/r</strong> (più lento del 1/r² della carica puntiforme).</li>
+    <li>Le superfici equipotenziali sono <strong>cilindri coassiali</strong>.</li>
+  </ul>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Retta carica (sezione trasversale)</div>
+    <div class="ctrl">
+      <label>λ</label>
+      <input type="range" id="ls" min="-3" max="3" step="0.5" value="1">
+      <span class="val" id="lsv">+1</span>
+      <label style="margin-left:12px">Configurazione</label>
+      <select id="lmode" style="font-size:11px;padding:2px 6px;border:1px solid var(--border);border-radius:3px;background:#fff">
+        <option value="1">Una sola retta</option>
+        <option value="2">Due rette opposte (±λ)</option>
+        <option value="3">Due rette uguali (+λ +λ)</option>
+      </select>
+      <button class="tbtn" id="lr">reset</button>
+    </div>
+    <canvas id="cvretta"></canvas>
+    <div class="leg">
+      <span style="display:flex;align-items:center;gap:5px">
+        <span class="leg-grad" style="background:linear-gradient(to right,#fff,#a8d5e8,#2477b3,#08306b)"></span> |E| basso→alto
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- 3. SFERA -->
+<div class="section" id="sfera">
+  <h2>3. Sfera superficialmente carica</h2>
+  <p class="section-sub">Carica totale Q distribuita sulla superficie di una sfera di raggio R</p>
+  <p>All'esterno il campo è identico a quello di una carica puntiforme Q al centro. All'interno è <strong>esattamente zero</strong>.</p>
+  <div class="box box-f">
+    <div class="f">E = kQ/r² (r &gt; R) &nbsp;&nbsp;·&nbsp;&nbsp; E = 0 (r &lt; R)</div>
+    <div class="fd">Teorema del guscio sferico di Newton-Gauss</div>
+  </div>
+  <div class="box box-w">
+    ⚠ Alla superficie c'è una discontinuità: ΔE = σ/ε₀. Il campo passa da 0 (interno) a kQ/R² (esterno) in modo brusco.
+  </div>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Sfera carica (sezione)</div>
+    <div class="ctrl">
+      <label>Q</label>
+      <input type="range" id="sq" min="-3" max="3" step="0.5" value="1">
+      <span class="val" id="sqv">+1</span>
+      <label style="margin-left:12px">R</label>
+      <input type="range" id="sr" min="0.5" max="3" step="0.25" value="1.5">
+      <span class="val" id="srv">1.5</span>
+      <button class="tbtn" id="sreset">reset</button>
+    </div>
+    <canvas id="cvsfera"></canvas>
+    <div class="leg">
+      <span style="display:flex;align-items:center;gap:5px">
+        <span class="leg-grad" style="background:linear-gradient(to right,#fff,#fdcc8a,#e34a33,#b30000)"></span> |E| basso→alto
+      </span>
+      <span style="color:#1a4b8c">■ interno: E = 0</span>
+    </div>
+  </div>
+</div>
+
+<!-- 4. CONDUTTORE -->
+<div class="section" id="conduttore">
+  <h2>4. Conduttore di forma irregolare</h2>
+  <p class="section-sub">Effetto punta: concentrazione del campo nelle zone a alta curvatura</p>
+  <p>Le cariche si distribuiscono sulla superficie del conduttore con densità <strong>proporzionale alla curvatura locale</strong>. Nelle punte σ è molto elevata → campo intensissimo (effetto punta). Nelle zone piatte σ è bassa → campo debole.</p>
+  <div class="box box-f">
+    <div class="f">E_sup = σ_loc / ε₀ &nbsp;&nbsp;·&nbsp;&nbsp; σ_loc ∝ curvatura</div>
+    <div class="fd">Il campo è perpendicolare alla superficie e proporzionale alla densità locale</div>
+  </div>
+  <ul>
+    <li><strong>Interno:</strong> E = 0 (il conduttore è una gabbia di Faraday).</li>
+    <li><strong>Superficie:</strong> E perpendicolare, intensità variabile con la curvatura.</li>
+    <li><strong>Effetto punta:</strong> campo intensissimo nelle punte → ionizzazione dell'aria → <em>effetto corona</em> o fulminazione.</li>
+    <li>Il conduttore è un'equipotenziale: V = costante su tutta la superficie.</li>
+  </ul>
+  <div class="box box-n">
+    💡 <strong>Parafulmine:</strong> la punta metallica concentra il campo fino alla ionizzazione dell'aria, creando un percorso conduttore preferenziale che guida la scarica in modo controllato verso terra.
+  </div>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Conduttore irregolare (effetto punta)</div>
+    <div class="ctrl">
+      <label>Q</label>
+      <input type="range" id="cq" min="0.5" max="3" step="0.5" value="1">
+      <span class="val" id="cqv">+1</span>
+      <label style="margin-left:12px">Forma</label>
+      <select id="cshape" style="font-size:11px;padding:2px 6px;border:1px solid var(--border);border-radius:3px;background:#fff">
+        <option value="drop">Goccia (una punta)</option>
+        <option value="pear">Ellisse + punta</option>
+        <option value="lightning">Due punte opposte</option>
+      </select>
+      <button class="tbtn" id="creset">reset</button>
+    </div>
+    <canvas id="cvcond"></canvas>
+    <div class="leg">
+      <span style="display:flex;align-items:center;gap:5px">
+        <span class="leg-grad" style="background:linear-gradient(to right,#fff,#c7e9c0,#41ab5d,#00441b)"></span> |E| basso→alto
+      </span>
+      <span style="color:#b5351a;font-weight:600">★ effetto punta = zona verde scuro</span>
+    </div>
+  </div>
+</div>
+
+<footer>Didattica Pierri · Fisica II · Distribuzioni di Carica</footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// UTILITÀ
+// ═══════════════════════════════════════════
+function resizeCanvas(cv){
+  const w=cv.parentElement.clientWidth-40;
+  cv.width=Math.max(w,200);
+  cv.height=Math.round(cv.width*0.56);
+}
+
+function interp4(stops,t){
+  t=Math.max(0,Math.min(1,t));
+  let i=0;for(let k=0;k<stops.length-1;k++){if(t>=stops[k][0])i=k;}
+  const a=stops[i],b=stops[i+1],f=(t-a[0])/(b[0]-a[0]);
+  return[Math.round(a[1]+(b[1]-a[1])*f),Math.round(a[2]+(b[2]-a[2])*f),Math.round(a[3]+(b[3]-a[3])*f)];
+}
+function eColorRed(t){return interp4([[0,255,255,255],[0.3,253,204,138],[0.65,227,74,51],[1,179,0,0]],t)}
+function eColorBlue(t){return interp4([[0,255,255,255],[0.3,166,206,227],[0.65,33,113,181],[1,8,48,107]],t)}
+function eColorGreen(t){return interp4([[0,255,255,255],[0.3,199,233,192],[0.65,65,171,93],[1,0,68,27]],t)}
+
+function paintHeatmap(ctx,W,H,Efn,colorFn,clamp){
+  const RES=3,cols=Math.ceil(W/RES)+1,rows=Math.ceil(H/RES)+1;
+  const mods=new Float32Array(cols*rows);
+  let mx=0;
+  for(let r=0;r<rows;r++){for(let c=0;c<cols;c++){
+    const[ex,ey]=Efn((c*RES-W/2)/30,(H/2-r*RES)/30);
+    const m=Math.sqrt(ex*ex+ey*ey);
+    mods[r*cols+c]=m;if(m>mx)mx=m;
+  }}
+  if(mx<1e-9)return;
+  if(clamp)mx=clamp;
+  const img=ctx.createImageData(Math.min(cols*RES,W),Math.min(rows*RES,H));
+  const IW=img.width,IH=img.height;
+  for(let r=0;r<rows&&r*RES<IH;r++){for(let c=0;c<cols&&c*RES<IW;c++){
+    const t=Math.min(1,Math.pow(mods[r*cols+c]/mx,0.55));
+    const[rr,gg,bb]=colorFn(t);
+    for(let dy=0;dy<RES&&r*RES+dy<IH;dy++){for(let dx=0;dx<RES&&c*RES+dx<IW;dx++){
+      const idx=4*((r*RES+dy)*IW+(c*RES+dx));
+      img.data[idx]=rr;img.data[idx+1]=gg;img.data[idx+2]=bb;img.data[idx+3]=225;
+    }}
+  }}
+  ctx.putImageData(img,0,0);
+}
+
+function drawGrid(ctx,W,H,S){
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  for(let i=-12;i<=12;i++){
+    ctx.beginPath();ctx.moveTo(W/2+i*S,0);ctx.lineTo(W/2+i*S,H);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,H/2-i*S);ctx.lineTo(W,H/2-i*S);ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(W/2,0);ctx.lineTo(W/2,H);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.stroke();
+}
+
+function drawArrows(ctx,W,H,Efn,step,S,skipFn){
+  for(let px=step/2;px<W;px+=step){for(let py=step/2;py<H;py+=step){
+    const wx=(px-W/2)/S,wy=(H/2-py)/S;
+    if(skipFn&&skipFn(wx,wy))continue;
+    const[ex,ey]=Efn(wx,wy);
+    const mag=Math.sqrt(ex*ex+ey*ey);if(mag<1e-9)continue;
+    const nx=ex/mag,ny=ey/mag;
+    const len=step*0.36;
+    const x1=px-nx*len*0.45,y1=py+ny*len*0.45;
+    const x2=px+nx*len*0.55,y2=py-ny*len*0.55;
+    const as=Math.min(len*0.38,5);
+    ctx.strokeStyle='rgba(20,20,20,0.6)';ctx.lineWidth=1.1;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x2-nx*as+ny*as*0.4,y2+ny*as+nx*as*0.4);ctx.lineTo(x2,y2);
+    ctx.moveTo(x2-nx*as-ny*as*0.4,y2+ny*as-nx*as*0.4);ctx.lineTo(x2,y2);
+    ctx.stroke();
+  }}
+}
+
+// ═══════════════════════════════════════════
+// 1. PIANO INFINITO — FISICAMENTE CORRETTO
+// ═══════════════════════════════════════════
+(function(){
+  const cv=document.getElementById('cvpiano');
+  let sigma=1,mode=1;
+  const D=2.8; // distanza armature in unità mondo (S=30px/unità)
+
+  document.getElementById('ps').oninput=e=>{sigma=+e.target.value;document.getElementById('psv').textContent=sigma;draw()};
+  document.getElementById('pmode').onchange=e=>{mode=+e.target.value;draw()};
+  document.getElementById('pr').onclick=()=>{sigma=1;mode=1;document.getElementById('ps').value=1;document.getElementById('psv').textContent='1';document.getElementById('pmode').value='1';draw()};
+
+  // Campo fisico esatto del condensatore / piano singolo
+  // Piano singolo a y=0: E_y = +sigma/2 per y>0, -sigma/2 per y<0
+  // Condensatore: piano +sigma a y=+D, piano -sigma a y=-D
+  //   Tra i piani (-D < y < +D): E si sommano → E_y = -sigma (verso basso, da + a -)
+  //   Fuori (|y| > D): E si cancellano esattamente → E_y = 0
+  function Efield(wx,wy){
+    if(mode===1){
+      // piano singolo in y=0
+      return[0, wy>0 ? sigma*0.5 : -sigma*0.5];
+    } else {
+      // condensatore: armatura + in y=+D, armatura - in y=-D
+      // contributo piano + (y=+D, carica +sigma): sopra → +, sotto → -
+      const E_plus = wy > D ? sigma*0.5 : -sigma*0.5;
+      // contributo piano - (y=-D, carica -sigma): sopra → -, sotto → +
+      const E_minus = wy > -D ? -sigma*0.5 : sigma*0.5;
+      return[0, E_plus + E_minus];
+      // Verifica:
+      // y > D:  E_plus=+s/2, E_minus=-s/2  → somma=0 ✓ (fuori sopra)
+      // -D<y<D: E_plus=-s/2, E_minus=-s/2  → somma=-s ✓ (dentro, verso basso da + a -)
+      // y < -D: E_plus=-s/2, E_minus=+s/2  → somma=0 ✓ (fuori sotto)
+    }
+  }
+
+  function draw(){
+    resizeCanvas(cv);
+    const W=cv.width,H=cv.height,S=30;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    paintHeatmap(ctx,W,H,(wx,wy)=>Efield(wx,wy),eColorRed, sigma*1.1);
+    drawGrid(ctx,W,H,S);
+
+    if(mode===1){
+      // piano singolo
+      const py=H/2;
+      ctx.strokeStyle='rgba(160,40,10,0.9)';ctx.lineWidth=2.5;
+      ctx.setLineDash([]);
+      ctx.beginPath();ctx.moveTo(0,py);ctx.lineTo(W,py);ctx.stroke();
+      ctx.fillStyle='rgba(160,40,10,0.85)';ctx.font='bold 11px monospace';
+      ctx.textAlign='left';ctx.fillText('+σ = '+sigma,8,py-6);
+    } else {
+      // condensatore
+      const pyP=H/2-D*S, pyN=H/2+D*S;
+      ctx.lineWidth=2.5;ctx.setLineDash([]);
+      ctx.strokeStyle='rgba(160,40,10,0.9)';
+      ctx.beginPath();ctx.moveTo(0,pyP);ctx.lineTo(W,pyP);ctx.stroke();
+      ctx.strokeStyle='rgba(20,60,140,0.9)';
+      ctx.beginPath();ctx.moveTo(0,pyN);ctx.lineTo(W,pyN);ctx.stroke();
+      ctx.fillStyle='rgba(160,40,10,0.85)';ctx.font='bold 11px monospace';
+      ctx.textAlign='left';ctx.fillText('+σ = +'+sigma,8,pyP-6);
+      ctx.fillStyle='rgba(20,60,140,0.85)';
+      ctx.fillText('−σ = −'+sigma,8,pyN-6);
+      // etichette zone
+      ctx.fillStyle='rgba(0,0,0,0.25)';ctx.font='10px monospace';ctx.textAlign='right';
+      ctx.fillText('E = 0',W-6,pyP-16);
+      ctx.fillText('E = σ/ε₀',W-6,(pyP+pyN)/2);
+      ctx.fillText('E = 0',W-6,pyN+18);
+    }
+
+    drawArrows(ctx,W,H,Efield,36,S);
+  }
+  resizeCanvas(cv);draw();
+  window.addEventListener('resize',()=>{resizeCanvas(cv);draw()});
+})();
+
+// ═══════════════════════════════════════════
+// 2. RETTA INFINITA
+// ═══════════════════════════════════════════
+(function(){
+  const cv=document.getElementById('cvretta');
+  let lambda=1,mode=1;
+  const SEP=3;
+
+  document.getElementById('ls').oninput=e=>{lambda=+e.target.value;document.getElementById('lsv').textContent=(lambda>0?'+':'')+lambda;draw()};
+  document.getElementById('lmode').onchange=e=>{mode=+e.target.value;draw()};
+  document.getElementById('lr').onclick=()=>{lambda=1;mode=1;document.getElementById('ls').value=1;document.getElementById('lsv').textContent='+1';document.getElementById('lmode').value='1';draw()};
+
+  function Eline(wx,wy,cx,cy,lam){
+    const dx=wx-cx,dy=wy-cy,r2=dx*dx+dy*dy;
+    if(r2<0.04)return[0,0];
+    const f=lam/r2;return[f*dx,f*dy];
+  }
+  function Efield(wx,wy){
+    if(mode===1)return Eline(wx,wy,0,0,lambda);
+    if(mode===2){const[a,b]=Eline(wx,wy,-SEP/2,0,lambda);const[c,d]=Eline(wx,wy,SEP/2,0,-lambda);return[a+c,b+d];}
+    const[a,b]=Eline(wx,wy,-SEP/2,0,lambda);const[c,d]=Eline(wx,wy,SEP/2,0,lambda);return[a+c,b+d];
+  }
+
+  function draw(){
+    resizeCanvas(cv);
+    const W=cv.width,H=cv.height,S=30;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    paintHeatmap(ctx,W,H,Efield,eColorBlue,null);
+    drawGrid(ctx,W,H,S);
+    function wire(cx,cy,lam){
+      const px=W/2+cx*S,py=H/2-cy*S;
+      ctx.beginPath();ctx.arc(px,py,8,0,2*Math.PI);
+      ctx.fillStyle=lam>0?'#b5351a':'#1a4b8c';ctx.fill();
+      ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle='#fff';ctx.font='bold 13px Arial';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(lam>0?'+':'−',px,py+1);
+    }
+    if(mode===1)wire(0,0,lambda);
+    else{wire(-SEP/2,0,lambda);wire(SEP/2,0,mode===2?-lambda:lambda);}
+    drawArrows(ctx,W,H,Efield,38,S,(wx,wy)=>{
+      if(mode===1)return wx*wx+wy*wy<0.3;
+      return(wx+SEP/2)**2+wy*wy<0.3||(wx-SEP/2)**2+wy*wy<0.3;
+    });
+  }
+  resizeCanvas(cv);draw();
+  window.addEventListener('resize',()=>{resizeCanvas(cv);draw()});
+})();
+
+// ═══════════════════════════════════════════
+// 3. SFERA
+// ═══════════════════════════════════════════
+(function(){
+  const cv=document.getElementById('cvsfera');
+  let Q=1,R=1.5;
+  document.getElementById('sq').oninput=e=>{Q=+e.target.value;document.getElementById('sqv').textContent=(Q>0?'+':'')+Q;draw()};
+  document.getElementById('sr').oninput=e=>{R=+e.target.value;document.getElementById('srv').textContent=R;draw()};
+  document.getElementById('sreset').onclick=()=>{Q=1;R=1.5;document.getElementById('sq').value=1;document.getElementById('sqv').textContent='+1';document.getElementById('sr').value=1.5;document.getElementById('srv').textContent='1.5';draw()};
+
+  function Efield(wx,wy){
+    const r=Math.sqrt(wx*wx+wy*wy);
+    if(r<=R)return[0,0];
+    const f=Q/(r*r*r);return[f*wx,f*wy];
+  }
+  function draw(){
+    resizeCanvas(cv);
+    const W=cv.width,H=cv.height,S=30;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    paintHeatmap(ctx,W,H,Efield,eColorRed,null);
+    // interno
+    ctx.save();ctx.beginPath();ctx.arc(W/2,H/2,R*S,0,2*Math.PI);
+    ctx.fillStyle='rgba(180,210,255,0.55)';ctx.fill();ctx.restore();
+    drawGrid(ctx,W,H,S);
+    ctx.beginPath();ctx.arc(W/2,H/2,R*S,0,2*Math.PI);
+    ctx.strokeStyle=Q>0?'rgba(160,40,10,0.9)':'rgba(20,60,140,0.9)';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='rgba(30,75,140,0.6)';ctx.font='10px monospace';ctx.textAlign='left';
+    ctx.fillText('R = '+R,W/2+R*S+5,H/2-4);
+    ctx.fillStyle='rgba(30,75,140,0.5)';ctx.textAlign='center';ctx.fillText('E = 0',W/2,H/2+3);
+    drawArrows(ctx,W,H,Efield,36,S,(wx,wy)=>wx*wx+wy*wy<=(R+0.15)**2);
+  }
+  resizeCanvas(cv);draw();
+  window.addEventListener('resize',()=>{resizeCanvas(cv);draw()});
+})();
+
+// ═══════════════════════════════════════════
+// 4. CONDUTTORE IRREGOLARE — EFFETTO PUNTA
+// ═══════════════════════════════════════════
+(function(){
+  const cv=document.getElementById('cvcond');
+  let Qtot=1,shape='drop';
+  document.getElementById('cq').oninput=e=>{Qtot=+e.target.value;document.getElementById('cqv').textContent='+'+Qtot;draw()};
+  document.getElementById('cshape').onchange=e=>{shape=e.target.value;draw()};
+  document.getElementById('creset').onclick=()=>{Qtot=1;shape='drop';document.getElementById('cq').value=1;document.getElementById('cqv').textContent='+1';document.getElementById('cshape').value='drop';draw()};
+
+  // ── Modello fisico corretto per effetto punta ──
+  // Le cariche vengono distribuite LUNGO IL CONTORNO della forma
+  // con densità PROPORZIONALE ALLA CURVATURA LOCALE.
+  // Usiamo molti punti di carica: nelle zone a alta curvatura (punte)
+  // mettiamo cariche molto ravvicinate e con peso molto maggiore.
+  // Questo produce automaticamente un campo più intenso vicino alle punte.
+
+  function getContourCharges(sh,Q){
+    // Genera array di {x,y,q} lungo il contorno della forma
+    // con q proporzionale alla curvatura locale stimata
+    const pts=[];
+
+    if(sh==='drop'){
+      // Forma: corpo ellittico da angolo PI a 2PI (semicerchio basso-alto)
+      // + collo + punta acuta a destra
+      // Corpo: ellisse centro (-0.5,0), semiassi (1.3, 1.0)
+      // Punta: x da 0.8 a 2.2, y≈0
+      const N=80;
+      for(let k=0;k<N;k++){
+        const t=k/N;
+        let x,y,curv;
+        if(t<0.72){
+          // corpo ellittico: angolo da 0 a 2π*0.72 (lato sinistro, arrotondato)
+          const a=Math.PI*2*t;
+          x=-0.4+1.35*Math.cos(a);
+          y=1.05*Math.sin(a);
+          // curvatura ellisse: bassa
+          curv=0.3+0.15*Math.abs(Math.sin(a));
+        } else {
+          // zona punta destra: t da 0.72 a 1.0
+          const s=(t-0.72)/0.28; // 0→1
+          // curva che va dal bordo destro dell'ellisse (x≈0.95,y≈0) alla punta (x=2.3,y=0)
+          // e ritorna (sopra e sotto)
+          const angle=Math.PI*(1-s); // da PI a 0
+          x=0.95+1.35*Math.pow(1-s,0.6)*Math.cos(angle)*(1-s);
+          x=0.95+s*1.35; // semplificato: x cresce linearmente
+          y=0.28*(1-s)*Math.sin(Math.PI*s*2)*Math.sign(Math.sin(Math.PI*k/N*2));
+          // curvatura molto alta nella punta
+          curv=0.5+4.0*Math.pow(s,2.5);
+        }
+        pts.push({x,y,curv});
+      }
+    } else if(sh==='pear'){
+      // Ellisse grande + punta destra aguzzo
+      const N=90;
+      for(let k=0;k<N;k++){
+        const t=k/N;
+        const a=2*Math.PI*t;
+        // forma superellisse schiacciata con punta destra
+        // x = cos(a) con esponente asimmetrico
+        const cosA=Math.cos(a),sinA=Math.sin(a);
+        // per il lato destro (cosA>0) usiamo esponente che crea punta
+        let rx,ry,curv;
+        if(cosA>=0){
+          // lato destro: punta
+          rx=1.8*Math.pow(cosA,0.45); // esponente <1 crea punta
+          ry=1.0;
+          curv=0.6+3.5*Math.pow(cosA,3); // curvatura sale verso la punta
+        } else {
+          rx=1.0*cosA; // lato sinistro arrotondato
+          ry=1.0;
+          curv=0.4;
+        }
+        pts.push({x:rx,y:ry*sinA,curv});
+      }
+    } else {
+      // due punte: forma a mandorla verticale con punte su e giù
+      const N=80;
+      for(let k=0;k<N;k++){
+        const t=k/N;
+        const a=2*Math.PI*t;
+        const cosA=Math.cos(a),sinA=Math.sin(a);
+        let x,y,curv;
+        // punta in alto (sinA>0) e in basso (sinA<0)
+        const ry=1.6*Math.pow(Math.abs(sinA),0.4)*Math.sign(sinA);
+        const rx=0.7*cosA;
+        x=rx;y=ry;
+        // curvatura alta nelle punte (|sinA|≈1)
+        curv=0.4+4.0*Math.pow(Math.abs(sinA),3);
+        pts.push({x,y,curv});
+      }
+    }
+
+    // Normalizza i pesi in modo che la somma delle q = Q
+    const wSum=pts.reduce((s,p)=>s+p.curv,0);
+    return pts.map(p=>({x:p.x,y:p.y,q:Q*p.curv/wSum}));
+  }
+
+  function Efield(wx,wy,charges){
+    let ex=0,ey=0;
+    charges.forEach(c=>{
+      const dx=wx-c.x,dy=wy-c.y,r2=dx*dx+dy*dy;
+      if(r2<0.015)return;
+      const f=c.q/(r2*Math.sqrt(r2));
+      ex+=f*dx;ey+=f*dy;
+    });
+    return[ex,ey];
+  }
+
+  // Test interno alla forma (raster scan)
+  // Usiamo un canvas ausiliario per rasterizzare la forma
+  function makeInsideTest(sh,W,H,S){
+    const offscreen=document.createElement('canvas');
+    offscreen.width=W;offscreen.height=H;
+    const ctx=offscreen.getContext('2d');
+    ctx.fillStyle='#000';
+    ctx.beginPath();
+    drawShape(ctx,sh,W,H,S);
+    ctx.fill();
+    const id=ctx.getImageData(0,0,W,H);
+    return function(wx,wy){
+      const px=Math.round(wx*S+W/2),py=Math.round(H/2-wy*S);
+      if(px<0||px>=W||py<0||py>=H)return false;
+      return id.data[(py*W+px)*4]>0;
+    };
+  }
+
+  function drawShape(ctx,sh,W,H,S){
+    ctx.save();ctx.translate(W/2,H/2);ctx.scale(S,-S);
+    if(sh==='drop'){
+      ctx.beginPath();
+      ctx.ellipse(-0.4,0,1.35,1.05,0,0,2*Math.PI);
+      ctx.closePath();
+      // aggiunge triangolo punta destra
+      ctx.moveTo(0.85,0.25);ctx.lineTo(2.2,0);ctx.lineTo(0.85,-0.25);ctx.closePath();
+    } else if(sh==='pear'){
+      ctx.beginPath();
+      // disegna con path cubici
+      ctx.moveTo(1.8,0);
+      for(let i=1;i<=60;i++){
+        const a=2*Math.PI*i/60,cosA=Math.cos(a),sinA=Math.sin(a);
+        const rx=cosA>=0?1.8*Math.pow(cosA,0.45):cosA;
+        ctx.lineTo(rx,sinA);
+      }
+      ctx.closePath();
+    } else {
+      // due punte
+      ctx.beginPath();
+      ctx.moveTo(0,1.75);
+      for(let i=1;i<=80;i++){
+        const a=2*Math.PI*i/80,cosA=Math.cos(a),sinA=Math.sin(a);
+        const ry=1.6*Math.pow(Math.abs(sinA),0.4)*Math.sign(sinA);
+        ctx.lineTo(0.7*cosA,ry);
+      }
+      ctx.closePath();
+    }
+    ctx.restore();
+  }
+
+  function draw(){
+    resizeCanvas(cv);
+    const W=cv.width,H=cv.height,S=32;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+
+    const charges=getContourCharges(shape,Qtot);
+    const insideTest=makeInsideTest(shape,W,H,S);
+
+    paintHeatmap(ctx,W,H,(wx,wy)=>{
+      if(insideTest(wx,wy))return[0,0];
+      return Efield(wx,wy,charges);
+    },eColorGreen,null);
+
+    drawGrid(ctx,W,H,S);
+
+    // disegna contorno conduttore
+    ctx.strokeStyle='rgba(120,40,10,0.85)';ctx.lineWidth=2;
+    ctx.fillStyle='rgba(180,210,255,0.45)';
+    ctx.beginPath();
+    drawShape(ctx,shape,W,H,S);
+    ctx.fill();ctx.stroke();
+
+    // etichetta interno
+    ctx.fillStyle='rgba(30,60,130,0.45)';ctx.font='10px monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('E = 0',W/2-0.3*S,H/2);
+
+    // etichetta effetto punta
+    let tipX=0,tipY=0;
+    if(shape==='drop'){tipX=2.1;tipY=0;}
+    else if(shape==='pear'){tipX=1.75;tipY=0;}
+    else{tipX=0;tipY=1.65;}
+    const tpx=W/2+tipX*S,tpy=H/2-tipY*S;
+    ctx.beginPath();ctx.arc(tpx,tpy,5,0,2*Math.PI);
+    ctx.fillStyle='rgba(200,30,10,0.8)';ctx.fill();
+    ctx.fillStyle='rgba(180,20,10,0.9)';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    ctx.fillText('★ effetto punta',tpx+8,tpy);
+
+    drawArrows(ctx,W,H,(wx,wy)=>{
+      if(insideTest(wx,wy))return[0,0];
+      return Efield(wx,wy,charges);
+    },36,S,(wx,wy)=>insideTest(wx,wy));
+  }
+  resizeCanvas(cv);draw();
+  window.addEventListener('resize',()=>{resizeCanvas(cv);draw()});
+})();
+
+// NAV attiva
+const sections=document.querySelectorAll('.section');
+const navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id});
+  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+</script>
+</body>
+</html>
