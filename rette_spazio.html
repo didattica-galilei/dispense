@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Posizione Reciproca di Due Rette</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#faf9f6;padding:20px}
+h2{font-family:Georgia,serif;font-size:20px;margin-bottom:6px;color:#1a1a1e}
+.sub{font-size:13px;color:#888;margin-bottom:16px;font-style:italic}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;align-items:center;font-size:13px}
+.ctrl label{font-weight:bold;min-width:14px}
+.ctrl input{width:60px;padding:3px 5px;font-size:12px;border:1px solid #ccc;border-radius:3px;font-family:monospace}
+.btn-go{padding:5px 14px;background:#0e6b6b;color:#fff;border:none;border-radius:3px;cursor:pointer;font-weight:bold;font-size:13px}
+.btn{padding:4px 10px;background:#fff;color:#555;border:1px solid #ccc;border-radius:3px;cursor:pointer;font-size:12px}
+canvas{display:block;border:1px solid #ccc;border-radius:4px;background:#fff;cursor:grab;margin-bottom:8px}
+canvas:active{cursor:grabbing}
+.result{background:#1a1a2e;color:#fff;border-radius:4px;padding:12px 16px;font-family:monospace;font-size:13px;white-space:pre;min-height:40px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:#666;margin-top:6px}
+.ls{display:inline-block;width:18px;height:3px;border-radius:1px;vertical-align:middle;margin-right:4px}
+</style>
+</head>
+<body>
+<h2>Posizione Reciproca di Due Rette</h2>
+<p class="sub">r₁ per A,B &nbsp;·&nbsp; r₂ per C,D &nbsp;·&nbsp; Incidenti / Parallele / Sghembe</p>
+
+<div class="ctrl">
+  <span style="color:#e05252;font-weight:bold">A</span>
+  <label>x</label><input id="ax" type="number" value="0" step="0.5">
+  <label>y</label><input id="ay" type="number" value="0" step="0.5">
+  <label>z</label><input id="az" type="number" value="0" step="0.5">
+  &nbsp;
+  <span style="color:#c47a00;font-weight:bold">B</span>
+  <label>x</label><input id="bx" type="number" value="2" step="0.5">
+  <label>y</label><input id="by" type="number" value="1" step="0.5">
+  <label>z</label><input id="bz" type="number" value="0" step="0.5">
+</div>
+<div class="ctrl">
+  <span style="color:#1a4b8c;font-weight:bold">C</span>
+  <label>x</label><input id="cx" type="number" value="0" step="0.5">
+  <label>y</label><input id="cy" type="number" value="2" step="0.5">
+  <label>z</label><input id="cz" type="number" value="1" step="0.5">
+  &nbsp;
+  <span style="color:#5a1a8c;font-weight:bold">D</span>
+  <label>x</label><input id="dx" type="number" value="2" step="0.5">
+  <label>y</label><input id="dy" type="number" value="3" step="0.5">
+  <label>z</label><input id="dz" type="number" value="1" step="0.5">
+  <button class="btn-go" onclick="build()">▶ Analizza</button>
+</div>
+<div class="ctrl">
+  <span style="color:#888;font-size:12px">Esempi:</span>
+  <button class="btn" onclick="preset('incid')">Incidenti</button>
+  <button class="btn" onclick="preset('paral')">Parallele</button>
+  <button class="btn" onclick="preset('sghembe')">Sghembe</button>
+</div>
+
+<canvas id="cv"></canvas>
+<div class="result" id="res">Clicca ▶ Analizza</div>
+<div class="leg">
+  <span><span class="ls" style="background:#e05252"></span>r₁ (A→B)</span>
+  <span><span class="ls" style="background:#1a4b8c"></span>r₂ (C→D)</span>
+  <span><span class="ls" style="background:#1a6b3a"></span>Punto P / Segmento dist. / Piano</span>
+  <span style="font-size:11px;color:#aaa">Trascina · Rotella = zoom</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── setup canvas con dimensioni corrette ──
+const cv = document.getElementById('cv');
+function setCanvasSize(){
+  const w = Math.min(window.innerWidth - 40, 860);
+  cv.style.width  = w + 'px';
+  cv.style.height = Math.round(w * 0.56) + 'px';
+}
+setCanvasSize();
+
+const renderer = new THREE.WebGLRenderer({canvas:cv, antialias:true});
+renderer.setClearColor(0xfafafa);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 300);
+scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+scene.add(new THREE.GridHelper(14, 14, 0xcccccc, 0xe8e8e8));
+
+// Assi fissi
+[[5,0,0,0xff4444],[0,5,0,0x44aa44],[0,0,5,0x4488ff]].forEach(([x,y,z,c])=>{
+  scene.add(new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(x,y,z)]),
+    new THREE.LineBasicMaterial({color:c})
+  ));
+});
+
+// Ridimensionamento
+function onResize(){
+  setCanvasSize();
+  const w = parseInt(cv.style.width);
+  const h = parseInt(cv.style.height);
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', onResize);
+onResize();
+
+// Orbit
+let drag=false, lx=0, ly=0, th=0.6, ph=1.1, rad=14;
+function updCam(){
+  camera.position.set(
+    rad*Math.sin(ph)*Math.sin(th),
+    rad*Math.cos(ph),
+    rad*Math.sin(ph)*Math.cos(th)
+  );
+  camera.lookAt(0,0,0);
+}
+updCam();
+cv.addEventListener('mousedown', e=>{drag=true; lx=e.clientX; ly=e.clientY;});
+window.addEventListener('mouseup', ()=>drag=false);
+window.addEventListener('mousemove', e=>{
+  if(!drag) return;
+  th -= (e.clientX-lx)*0.012;
+  ph = Math.max(0.05, Math.min(Math.PI-0.05, ph-(e.clientY-ly)*0.012));
+  lx=e.clientX; ly=e.clientY; updCam();
+});
+cv.addEventListener('wheel', e=>{
+  e.preventDefault();
+  rad = Math.max(4, Math.min(40, rad*(e.deltaY>0?1.08:0.93)));
+  updCam();
+}, {passive:false});
+cv.addEventListener('touchstart', e=>{drag=true; lx=e.touches[0].clientX; ly=e.touches[0].clientY;}, {passive:true});
+cv.addEventListener('touchmove', e=>{
+  if(!drag) return;
+  th -= (e.touches[0].clientX-lx)*0.012;
+  ph = Math.max(0.05, Math.min(Math.PI-0.05, ph-(e.touches[0].clientY-ly)*0.012));
+  lx=e.touches[0].clientX; ly=e.touches[0].clientY; updCam();
+}, {passive:true});
+cv.addEventListener('touchend', ()=>drag=false);
+
+// Oggetti dinamici
+let objs = [];
+function clr(){ objs.forEach(o=>scene.remove(o)); objs=[]; }
+function add(o){ scene.add(o); objs.push(o); }
+
+// Utility
+const V3 = (x,y,z) => new THREE.Vector3(x,y,z);
+const fmt = v => Number(v.toFixed(4)).toString();
+const rf  = id => parseFloat(document.getElementById(id).value) || 0;
+const cross3 = (u,v) => new THREE.Vector3(
+  u.y*v.z - u.z*v.y,
+  u.z*v.x - u.x*v.z,
+  u.x*v.y - u.y*v.x
+);
+
+function addLine(A,B,color){
+  add(new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints([A,B]),
+    new THREE.LineBasicMaterial({color, linewidth:2})
+  ));
+}
+function addSphere(pos, r, color){
+  const m = new THREE.Mesh(
+    new THREE.SphereGeometry(r,12,12),
+    new THREE.MeshPhongMaterial({color})
+  );
+  m.position.copy(pos); add(m);
+}
+function addLabel(pos, text, color){
+  const c = document.createElement('canvas');
+  c.width=128; c.height=48;
+  const ctx = c.getContext('2d');
+  ctx.font='bold 22px Arial';
+  ctx.fillStyle = color||'#333';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(text, 64, 24);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: new THREE.CanvasTexture(c),
+    transparent:true, depthTest:false
+  }));
+  sp.position.copy(pos); sp.scale.set(0.65,0.24,1); add(sp);
+}
+function addArrow(origin, dir, len, color){
+  const dn = dir.clone().normalize();
+  const end = origin.clone().addScaledVector(dn, len);
+  addLine(origin, end, color);
+  const cH = Math.min(len*0.2, 0.5), cR = cH*0.35;
+  const cone = new THREE.Mesh(
+    new THREE.ConeGeometry(cR, cH, 10),
+    new THREE.MeshPhongMaterial({color})
+  );
+  cone.position.copy(end.clone().addScaledVector(dn, -cH/2));
+  cone.quaternion.setFromUnitVectors(V3(0,1,0), dn);
+  add(cone);
+}
+function addPlane(center, normal, size, color, opacity){
+  const n = normal.clone().normalize();
+  const arb = Math.abs(n.x)<0.9 ? V3(1,0,0) : V3(0,1,0);
+  const right = new THREE.Vector3().crossVectors(n,arb).normalize();
+  const up    = new THREE.Vector3().crossVectors(right,n).normalize();
+  const h = size/2;
+  const v0=center.clone().addScaledVector(right,-h).addScaledVector(up,-h);
+  const v1=center.clone().addScaledVector(right, h).addScaledVector(up,-h);
+  const v2=center.clone().addScaledVector(right, h).addScaledVector(up, h);
+  const v3=center.clone().addScaledVector(right,-h).addScaledVector(up, h);
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
+    v0.x,v0.y,v0.z, v1.x,v1.y,v1.z, v2.x,v2.y,v2.z,
+    v0.x,v0.y,v0.z, v2.x,v2.y,v2.z, v3.x,v3.y,v3.z
+  ]),3));
+  geo.computeVertexNormals();
+  add(new THREE.Mesh(geo, new THREE.MeshPhongMaterial({color,transparent:true,opacity,side:THREE.DoubleSide})));
+  add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([v0,v1,v2,v3,v0]),
+    new THREE.LineBasicMaterial({color, linewidth:1.5})));
+}
+
+// Punti più vicini tra due rette
+function closestPoints(P1,d1,P2,d2){
+  const w0 = new THREE.Vector3().subVectors(P1,P2);
+  const a=d1.dot(d1), b=d1.dot(d2), c=d2.dot(d2);
+  const de=d1.dot(w0), e=d2.dot(w0);
+  const denom = a*c - b*b;
+  let t, s;
+  if(Math.abs(denom)<1e-10){ t=0; s=(b>c)?de/b:e/c; }
+  else { t=(b*e-c*de)/denom; s=(a*e-b*de)/denom; }
+  const Q1=P1.clone().addScaledVector(d1,t);
+  const Q2=P2.clone().addScaledVector(d2,s);
+  return {Q1, Q2, dist:Q1.distanceTo(Q2)};
+}
+
+function build(){
+  clr();
+  const A=V3(rf('ax'),rf('ay'),rf('az'));
+  const B=V3(rf('bx'),rf('by'),rf('bz'));
+  const C=V3(rf('cx'),rf('cy'),rf('cz'));
+  const D=V3(rf('dx'),rf('dy'),rf('dz'));
+  const d1=new THREE.Vector3().subVectors(B,A);
+  const d2=new THREE.Vector3().subVectors(D,C);
+  const res=document.getElementById('res');
+
+  if(d1.length()<1e-9||d2.length()<1e-9){
+    res.textContent='⚠ Due punti coincidono — retta non definita.'; return;
+  }
+  const d1n=d1.clone().normalize();
+  const d2n=d2.clone().normalize();
+
+  // Disegna r1 e r2 estese
+  const EXT=8;
+  addLine(A.clone().addScaledVector(d1n,-EXT), A.clone().addScaledVector(d1n,EXT+d1.length()), 0xe05252);
+  addLine(C.clone().addScaledVector(d2n,-EXT), C.clone().addScaledVector(d2n,EXT+d2.length()), 0x1a4b8c);
+
+  // Punti ABCD
+  [[A,'A','#e05252',0xe05252],[B,'B','#c47a00',0xc47a00],
+   [C,'C','#1a4b8c',0x1a4b8c],[D,'D','#5a1a8c',0x5a1a8c]].forEach(([p,l,css,hex])=>{
+    addSphere(p, 0.1, hex);
+    addLabel(p.clone().add(V3(0,0.3,0)), l, css);
+  });
+  addLabel(V3(5.5,0,0),'x','#ff4444');
+  addLabel(V3(0,5.5,0),'y','#44aa44');
+  addLabel(V3(0,0,5.5),'z','#4488ff');
+
+  const crossDir = cross3(d1,d2);
+  const crossLen = crossDir.length();
+
+  if(crossLen < 1e-9){
+    // Parallele o coincidenti
+    const AC=new THREE.Vector3().subVectors(C,A);
+    const acCross=cross3(AC,d1n);
+    if(acCross.length()<1e-9){
+      res.textContent='Le rette sono COINCIDENTI (stessa retta).';
+    } else {
+      // Piano che le contiene
+      const planeNorm=cross3(d1,AC);
+      const center=new THREE.Vector3().addVectors(A,C).multiplyScalar(0.5);
+      addPlane(center,planeNorm,12,0x1a6b3a,0.22);
+      addArrow(center,planeNorm,2.5,0x1a6b3a);
+      const pn=planeNorm.clone().normalize();
+      const dd=-(pn.x*A.x+pn.y*A.y+pn.z*A.z);
+      const dist=AC.clone().sub(d1n.clone().multiplyScalar(AC.dot(d1n))).length();
+      res.textContent=
+        `Le rette sono PARALLELE\n\n`+
+        `Distanza: ${fmt(dist)}\n\n`+
+        `Piano contenente r1 e r2:\n`+
+        `${fmt(pn.x)}x + ${fmt(pn.y)}y + ${fmt(pn.z)}z + ${fmt(dd)} = 0\n\n`+
+        `Vettore normale al piano: (${fmt(pn.x)}, ${fmt(pn.y)}, ${fmt(pn.z)})`;
+    }
+  } else {
+    // Non parallele: incidenti o sghembe?
+    const {Q1,Q2,dist}=closestPoints(A,d1,C,d2);
+    if(dist<1e-5){
+      const P=Q1.clone().add(Q2).multiplyScalar(0.5);
+      addSphere(P,0.22,0x1a6b3a);
+      addLabel(P.clone().add(V3(0,0.4,0)),'P','#1a6b3a');
+      res.textContent=
+        `Le rette sono INCIDENTI\n\n`+
+        `Punto di intersezione:\nP = (${fmt(P.x)}, ${fmt(P.y)}, ${fmt(P.z)})`;
+    } else {
+      addLine(Q1,Q2,0x1a6b3a);
+      addSphere(Q1,0.14,0x1a6b3a); addSphere(Q2,0.14,0x1a6b3a);
+      addLabel(Q1.clone().add(V3(0,0.32,0)),'Q1','#1a6b3a');
+      addLabel(Q2.clone().add(V3(0,0.32,0)),'Q2','#1a6b3a');
+      const segN=new THREE.Vector3().subVectors(Q2,Q1).normalize();
+      const ok1=Math.abs(segN.dot(d1n))<0.01;
+      const ok2=Math.abs(segN.dot(d2n))<0.01;
+      res.textContent=
+        `Le rette sono SGHEMBE\n\n`+
+        `Distanza minima: ${fmt(dist)}\n`+
+        `Q1 su r1 = (${fmt(Q1.x)}, ${fmt(Q1.y)}, ${fmt(Q1.z)})\n`+
+        `Q2 su r2 = (${fmt(Q2.x)}, ${fmt(Q2.y)}, ${fmt(Q2.z)})\n`+
+        `Q1Q2 ⊥ r1: ${ok1?'✓':'✗'}  Q1Q2 ⊥ r2: ${ok2?'✓':'✗'}`;
+    }
+  }
+}
+
+const PRESETS={
+  incid:  {ax:0,ay:0,az:0, bx:2,by:2,bz:0, cx:0,cy:2,cz:0, dx:2,dy:0,dz:0},
+  paral:  {ax:0,ay:0,az:0, bx:2,by:1,bz:0, cx:0,cy:2,cz:0, dx:2,dy:3,dz:0},
+  sghembe:{ax:0,ay:0,az:0, bx:2,by:1,bz:0, cx:0,cy:2,cz:-1, dx:2,dy:3,dz:1}
+};
+function preset(type){
+  Object.entries(PRESETS[type]).forEach(([id,v])=>document.getElementById(id).value=v);
+  build();
+}
+
+preset('sghembe');
+
+function animate(){requestAnimationFrame(animate);renderer.render(scene,camera);}
+animate();
+</script>
+</body>
+</html>
