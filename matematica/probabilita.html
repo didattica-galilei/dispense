@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probabilità — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{
+  --ink:#1a1a1e;--paper:#faf9f6;--accent:#1a6b3a;--accent2:#0e6b6b;
+  --muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;
+  --red:#b5351a;--blue:#1a4b8c;--purple:#5a1a8c;--amber:#8c5e1a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.8;font-weight:300}
+
+.hero{background:var(--ink);color:#fff;padding:72px 32px 52px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:16px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(30px,5vw,52px);font-weight:700;line-height:1.1;margin-bottom:12px}
+.hero h1 em{color:#a8d8a8;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.45);font-weight:300;max-width:520px;margin:0 auto 32px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 24px}
+.nav-inner{max-width:880px;margin:0 auto;display:flex;overflow-x:auto;gap:0}
+.nav a{display:block;padding:13px 14px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+.page{max-width:880px;margin:0 auto;padding:52px 32px}
+@media(max-width:600px){.page{padding:32px 16px}.nav{padding:0 8px}.nav a{padding:11px 10px;font-size:10px}}
+
+.sec{margin-bottom:80px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:25px;font-weight:700;margin-bottom:5px;color:var(--ink)}
+.sec-sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:20px}
+h3{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin:24px 0 8px}
+p{font-size:15px;margin-bottom:13px;color:#2a2a2e}
+ul,ol{margin:6px 0 13px 22px;font-size:15px}
+li{margin-bottom:6px;color:#2a2a2e}
+strong{font-weight:600}em{font-style:italic}
+
+.box{border-radius:3px;padding:14px 18px;margin:15px 0;font-size:14px;line-height:1.7}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--blue);text-align:center;padding:16px 20px}
+.box-f .f{font-family:'Playfair Display',serif;font-size:21px;color:var(--blue);margin-bottom:5px;letter-spacing:0.3px}
+.box-f .fd{font-size:12px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:#e8f5ee;border-left:3px solid var(--accent);color:#0a3a1a}
+.box-w{background:#fdf3ee;border-left:3px solid var(--red);color:#5a1a0a}
+.box-eg{background:#f0ede6;border-left:3px solid var(--amber);color:#3a2a0a;font-size:14px}
+.box-eg strong{color:var(--amber)}
+
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14px}
+th{background:var(--ink);color:#fff;padding:8px 13px;text-align:left;font-weight:400;font-size:11px;letter-spacing:0.5px;text-transform:uppercase}
+td{padding:8px 13px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:nth-child(even) td{background:var(--surface)}
+td:first-child{font-weight:600;white-space:nowrap}
+
+/* SIMULATORI */
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:20px;margin:22px 0}
+.sim-title{font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sim-title::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;align-items:center;font-size:12px;color:var(--muted)}
+.ctrl label{font-weight:600;white-space:nowrap}
+.ctrl input[type=range]{width:100px;accent-color:var(--accent)}
+.ctrl select{font-size:11px;padding:3px 7px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink)}
+.val{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:38px;color:var(--ink)}
+.btn{padding:5px 14px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--ink);font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;transition:background 0.15s}
+.btn:hover{background:var(--surface)}
+.btn-go{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-go:hover{background:#0f4a28}
+.btn-red{background:var(--red);color:#fff;border-color:var(--red)}
+.btn-red:hover{background:#8c2510}
+canvas{display:block;border:1px solid var(--border);border-radius:3px;background:#fff;width:100%}
+.result-box{background:var(--surface);border-radius:3px;padding:10px 14px;margin-top:10px;font-size:13px;font-family:'Source Code Pro',monospace;min-height:36px;color:var(--ink);line-height:1.8}
+.stat-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.stat{background:var(--surface);border-radius:3px;padding:5px 11px;font-size:12px;font-family:'Source Code Pro',monospace;color:var(--ink)}
+.stat span{color:var(--muted);font-family:'Source Sans 3',sans-serif;font-size:11px;margin-right:3px}
+
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:60px;padding:24px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Matematica · Liceo &amp; Università</div>
+  <h1>Calcolo delle<br><em>Probabilità</em></h1>
+  <p class="hero-sub">Dal calcolo combinatorio alla probabilità condizionata e al teorema di Bayes, con simulatori interattivi</p>
+  <div class="rule"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#combinatorio" class="active">Combinatorio</a>
+    <a href="#classica">Prob. classica</a>
+    <a href="#somma">Teorema somma</a>
+    <a href="#dipendenti">Dipendenza</a>
+    <a href="#condizionata">Prob. condizionata</a>
+    <a href="#bayes">Bayes</a>
+    <a href="#simulatori">Simulatori</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 1. CALCOLO COMBINATORIO -->
+<!-- ══════════════════════════════════════════ -->
+<div class="sec" id="combinatorio">
+  <h2>1. Calcolo Combinatorio</h2>
+  <p class="sec-sub">Permutazioni, disposizioni e combinazioni</p>
+
+  <p>Il <strong>calcolo combinatorio</strong> studia il numero di modi in cui si possono raggruppare o ordinare elementi di un insieme. È il fondamento del calcolo delle probabilità in contesti discreti.</p>
+
+  <h3>Fattoriale</h3>
+  <p>Il <strong>fattoriale</strong> di n è il prodotto di tutti gli interi positivi da 1 a n:</p>
+  <div class="box box-f">
+    <div class="f">n! = n · (n−1) · (n−2) · … · 2 · 1</div>
+    <div class="fd">Convenzione: 0! = 1 &nbsp;·&nbsp; Esempio: 5! = 5·4·3·2·1 = 120</div>
+  </div>
+
+  <h3>Permutazioni semplici</h3>
+  <p>Le <strong>permutazioni</strong> di n oggetti distinti sono tutti i modi di <em>ordinare</em> n oggetti. Si usano quando si vogliono disporre <strong>tutti</strong> gli elementi di un insieme in file diverse.</p>
+  <div class="box box-f">
+    <div class="f">Pₙ = n!</div>
+    <div class="fd">n = numero di oggetti distinti</div>
+  </div>
+  <div class="box box-eg">
+    <strong>Esempio:</strong> in quanti modi si possono disporre 4 libri su uno scaffale? P₄ = 4! = 24 modi.
+  </div>
+
+  <h3>Permutazioni con ripetizione</h3>
+  <p>Se tra gli n oggetti ci sono gruppi di oggetti <em>identici</em> (n₁ uguali del primo tipo, n₂ del secondo, ecc.):</p>
+  <div class="box box-f">
+    <div class="f">Pₙ(n₁,n₂,…) = n! / (n₁! · n₂! · … )</div>
+    <div class="fd">Esempio: anagrammi di MAMMA → 5!/(3!·1!·1!) = 20</div>
+  </div>
+
+  <h3>Disposizioni semplici</h3>
+  <p>Le <strong>disposizioni semplici</strong> di n oggetti presi k alla volta sono tutti i modi di scegliere e <em>ordinare</em> k oggetti da un insieme di n, <strong>senza ripetizione</strong>.</p>
+  <div class="box box-f">
+    <div class="f">D(n,k) = n! / (n−k)!</div>
+    <div class="fd">n = oggetti totali &nbsp;·&nbsp; k = oggetti scelti &nbsp;·&nbsp; l'ordine conta</div>
+  </div>
+  <div class="box box-eg">
+    <strong>Esempio:</strong> in quanti modi si può assegnare il 1°, 2° e 3° posto tra 10 atleti? D(10,3) = 10!/7! = 720.
+  </div>
+
+  <h3>Disposizioni con ripetizione</h3>
+  <p>Se ogni elemento può essere scelto più volte (con ripetizione):</p>
+  <div class="box box-f">
+    <div class="f">Dᵣ(n,k) = nᵏ</div>
+    <div class="fd">Esempio: PIN di 4 cifre (da 0 a 9) → 10⁴ = 10.000 combinazioni possibili</div>
+  </div>
+
+  <h3>Combinazioni semplici</h3>
+  <p>Le <strong>combinazioni semplici</strong> di n oggetti presi k alla volta sono tutti i modi di scegliere k oggetti da n, <strong>senza ripetizione e senza considerare l'ordine</strong>.</p>
+  <div class="box box-f">
+    <div class="f">C(n,k) = n! / [k! · (n−k)!] = <sup>n</sup>C<sub>k</sub></div>
+    <div class="fd">Si legge "n su k" — l'ordine NON conta</div>
+  </div>
+  <div class="box box-eg">
+    <strong>Esempio:</strong> in quanti modi si possono scegliere 3 carte da un mazzo di 52? C(52,3) = 52!/(3!·49!) = 22.100.
+  </div>
+
+  <table>
+    <tr><th>Nome</th><th>Formula</th><th>Ordine?</th><th>Ripetizioni?</th></tr>
+    <tr><td>Permutazioni</td><td>n!</td><td>Sì</td><td>No</td></tr>
+    <tr><td>Disposizioni semplici</td><td>n!/(n−k)!</td><td>Sì</td><td>No</td></tr>
+    <tr><td>Disposizioni con rip.</td><td>nᵏ</td><td>Sì</td><td>Sì</td></tr>
+    <tr><td>Combinazioni semplici</td><td>n!/[k!(n−k)!]</td><td>No</td><td>No</td></tr>
+  </table>
+
+  <!-- Calcolatore combinatorio -->
+  <div class="sim-wrap">
+    <div class="sim-title">Calcolatore — Formule combinatorie</div>
+    <div class="ctrl">
+      <label>n</label>
+      <input type="range" id="cn" min="1" max="30" step="1" value="10">
+      <span class="val" id="cnv">10</span>
+      <label>k</label>
+      <input type="range" id="ck" min="0" max="30" step="1" value="3">
+      <span class="val" id="ckv">3</span>
+    </div>
+    <div class="result-box" id="combResult"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 2. PROBABILITÀ CLASSICA -->
+<!-- ══════════════════════════════════════════ -->
+<div class="sec" id="classica">
+  <h2>2. Probabilità Classica</h2>
+  <p class="sec-sub">Definizione di Laplace e spazio campionario</p>
+
+  <p>La <strong>probabilità classica</strong> (definizione di Laplace) si applica quando tutti gli esiti elementari sono <em>egualmente possibili</em>. Lo <strong>spazio campionario</strong> Ω è l'insieme di tutti i possibili risultati di un esperimento aleatorio.</p>
+
+  <div class="box box-f">
+    <div class="f">P(A) = |A| / |Ω| = casi favorevoli / casi totali</div>
+    <div class="fd">0 ≤ P(A) ≤ 1 &nbsp;·&nbsp; P(Ω) = 1 &nbsp;·&nbsp; P(∅) = 0</div>
+  </div>
+
+  <h3>Proprietà fondamentali</h3>
+  <ul>
+    <li><strong>Non negatività:</strong> P(A) ≥ 0 per ogni evento A</li>
+    <li><strong>Normalizzazione:</strong> P(Ω) = 1 (evento certo)</li>
+    <li><strong>Evento impossibile:</strong> P(∅) = 0</li>
+    <li><strong>Evento complementare:</strong> P(Aᶜ) = 1 − P(A)</li>
+  </ul>
+
+  <div class="box box-eg">
+    <strong>Esempi classici:</strong><br>
+    • Dado: Ω = {1,2,3,4,5,6}, P(numero pari) = 3/6 = 1/2<br>
+    • Moneta: Ω = {T, C}, P(testa) = 1/2<br>
+    • Mazzo di 52 carte: P(asso) = 4/52 = 1/13 ≈ 7.7%<br>
+    • Mazzo di 52 carte: P(cuori) = 13/52 = 1/4 = 25%
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 3. TEOREMA DELLA SOMMA -->
+<!-- ══════════════════════════════════════════ -->
+<div class="sec" id="somma">
+  <h2>3. Teorema della Somma</h2>
+  <p class="sec-sub">Unione di eventi compatibili e incompatibili</p>
+
+  <h3>Eventi incompatibili (disgiunti)</h3>
+  <p>Due eventi A e B sono <strong>incompatibili</strong> (o disgiunti) se non possono verificarsi simultaneamente: A ∩ B = ∅.</p>
+  <div class="box box-f">
+    <div class="f">P(A ∪ B) = P(A) + P(B)</div>
+    <div class="fd">Valido solo se A ∩ B = ∅ (eventi mutualmente esclusivi)</div>
+  </div>
+  <div class="box box-eg">
+    <strong>Esempio:</strong> lanciando un dado, A = "esce 1", B = "esce 2". Sono incompatibili.<br>
+    P(A ∪ B) = 1/6 + 1/6 = 2/6 = 1/3.
+  </div>
+
+  <h3>Eventi compatibili</h3>
+  <p>Due eventi A e B sono <strong>compatibili</strong> se possono verificarsi contemporaneamente: A ∩ B ≠ ∅. In questo caso bisogna sottrarre la probabilità dell'intersezione per non contarla due volte.</p>
+  <div class="box box-f">
+    <div class="f">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</div>
+    <div class="fd">Formula generale — vale sempre, anche per eventi incompatibili</div>
+  </div>
+  <div class="box box-eg">
+    <strong>Esempio:</strong> da un mazzo di 52 carte, A = "carta di cuori", B = "figura (J, Q, K)".<br>
+    P(A) = 13/52, P(B) = 12/52, P(A ∩ B) = 3/52 (figure di cuori).<br>
+    P(A ∪ B) = 13/52 + 12/52 − 3/52 = 22/52 ≈ 42.3%.
+  </div>
+  <div class="box box-n">
+    💡 <strong>Generalizzazione:</strong> per tre eventi: P(A∪B∪C) = P(A)+P(B)+P(C) − P(A∩B) − P(A∩C) − P(B∩C) + P(A∩B∩C). È il <em>principio di inclusione-esclusione</em>.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 4. EVENTI DIPENDENTI E INDIPENDENTI -->
+<!-- ══════════════════════════════════════════ -->
+<div class="sec" id="dipendenti">
+  <h2>4. Eventi Dipendenti e Indipendenti</h2>
+  <p class="sec-sub">Probabilità del prodotto logico (intersezione)</p>
+
+  <h3>Eventi indipendenti</h3>
+  <p>Due eventi A e B sono <strong>indipendenti</strong> se il verificarsi dell'uno non influenza la probabilità dell'altro. Il <strong>teorema della moltiplicazione</strong> per eventi indipendenti è:</p>
+  <div class="box box-f">
+    <div class="f">P(A ∩ B) = P(A) · P(B)</div>
+    <div class="fd">Condizione necessaria e sufficiente per l'indipendenza</div>
+  </div>
+  <div class="box box-eg">
+    <strong>Esempio:</strong> lanciare due dadi. A = "primo dado mostra 6", B = "secondo dado mostra 6".<br>
+    P(A ∩ B) = 1/6 · 1/6 = 1/36 ≈ 2.8%.
+  </div>
+
+  <h3>Eventi dipendenti</h3>
+  <p>Due eventi sono <strong>dipendenti</strong> se il verificarsi dell'uno modifica la probabilità dell'altro. Si usa la probabilità condizionata (sezione successiva):</p>
+  <div class="box box-f">
+    <div class="f">P(A ∩ B) = P(A) · P(B|A) = P(B) · P(A|B)</div>
+    <div class="fd">P(B|A) = probabilità di B sapendo che A si è verificato</div>
+  </div>
+  <div class="box box-eg">
+    <strong>Esempio:</strong> da un mazzo di 52 carte, si estraggono due carte <em>senza rimpiazzo</em>.<br>
+    A = "prima carta è un asso", B = "seconda carta è un asso".<br>
+    P(A) = 4/52. Sapendo che A è accaduto: P(B|A) = 3/51.<br>
+    P(A ∩ B) = 4/52 · 3/51 = 12/2652 ≈ 0.45%.
+  </div>
+
+  <div class="box box-w">
+    ⚠ <strong>Attenzione:</strong> incompatibilità ≠ indipendenza. Due eventi incompatibili (A∩B=∅) con P(A)>0 e P(B)>0 sono sempre <em>dipendenti</em>: sapere che A è accaduto rende B impossibile.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 5. PROBABILITÀ CONDIZIONATA -->
+<!-- ══════════════════════════════════════════ -->
+<div class="sec" id="condizionata">
+  <h2>5. Probabilità Condizionata</h2>
+  <p class="sec-sub">La probabilità di un evento dato un altro evento</p>
+
+  <p>La <strong>probabilità condizionata</strong> P(A|B) è la probabilità che si verifichi A, sapendo che B si è già verificato. È come "restringere" lo spazio campionario a B.</p>
+  <div class="box box-f">
+    <div class="f">P(A|B) = P(A ∩ B) / P(B)</div>
+    <div class="fd">Definita solo se P(B) &gt; 0</div>
+  </div>
+
+  <h3>Interpretazione geometrica</h3>
+  <p>Se sappiamo che B è accaduto, il nuovo spazio campionario diventa B. La probabilità condizionata è la frazione di B che contiene anche A.</p>
+
+  <div class="box box-eg">
+    <strong>Esempio 1 — Dadi:</strong> lanciamo un dado. Sappiamo che è uscito un numero ≥ 4 (evento B). Qual è la probabilità che sia pari (evento A)?<br>
+    B = {4,5,6}, A = {2,4,6}, A∩B = {4,6}.<br>
+    P(A|B) = P(A∩B)/P(B) = (2/6)/(3/6) = 2/3.
+  </div>
+  <div class="box box-eg">
+    <strong>Esempio 2 — Malattia:</strong> un test per una malattia è positivo nel 99% dei malati e nel 5% dei sani. La malattia colpisce l'1% della popolazione.<br>
+    Questo esempio è ripreso nel Teorema di Bayes qui sotto.
+  </div>
+
+  <h3>Formula delle probabilità totali</h3>
+  <p>Se B₁, B₂, …, Bₙ sono eventi che formano una <strong>partizione</strong> di Ω (mutuamente esclusivi ed esaustivi), allora per qualsiasi evento A:</p>
+  <div class="box box-f">
+    <div class="f">P(A) = Σᵢ P(A|Bᵢ) · P(Bᵢ)</div>
+    <div class="fd">Formula delle probabilità totali — decompone P(A) secondo le "cause"</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 6. TEOREMA DI BAYES -->
+<!-- ══════════════════════════════════════════ -->
+<div class="sec" id="bayes">
+  <h2>6. Teorema di Bayes</h2>
+  <p class="sec-sub">Aggiornare le probabilità alla luce di nuove evidenze</p>
+
+  <p>Il <strong>Teorema di Bayes</strong> permette di "invertire" la probabilità condizionata: dato che si è osservato A, qual è la probabilità che la causa fosse B?</p>
+  <div class="box box-f">
+    <div class="f">P(B|A) = P(A|B) · P(B) / P(A)</div>
+    <div class="fd">P(B) = probabilità a priori &nbsp;·&nbsp; P(B|A) = probabilità a posteriori</div>
+  </div>
+
+  <p>Con la formula delle probabilità totali al denominatore:</p>
+  <div class="box box-f">
+    <div class="f">P(Bᵢ|A) = P(A|Bᵢ)·P(Bᵢ) / Σⱼ P(A|Bⱼ)·P(Bⱼ)</div>
+    <div class="fd">Forma completa del Teorema di Bayes</div>
+  </div>
+
+  <h3>Esempio classico: test diagnostico</h3>
+  <div class="box box-eg">
+    <strong>Dati:</strong><br>
+    • P(M) = 0.01 — prevalenza della malattia nell'1% della popolazione<br>
+    • P(+|M) = 0.99 — sensibilità: il test è positivo nel 99% dei malati<br>
+    • P(+|Mᶜ) = 0.05 — tasso falsi positivi: positivo nel 5% dei sani<br><br>
+    <strong>Domanda:</strong> se il test è positivo, qual è la probabilità di essere malati?<br><br>
+    P(+) = P(+|M)·P(M) + P(+|Mᶜ)·P(Mᶜ) = 0.99·0.01 + 0.05·0.99 = 0.0099 + 0.0495 = 0.0594<br><br>
+    P(M|+) = P(+|M)·P(M)/P(+) = 0.0099/0.0594 ≈ <strong>16.7%</strong><br><br>
+    Nonostante il test sia accurato al 99%, un risultato positivo indica malattia solo nel 16.7% dei casi, perché la malattia è rara!
+  </div>
+
+  <div class="box box-n">
+    💡 <strong>Paradosso di Bayes:</strong> quando una malattia è molto rara, anche un test molto preciso produce molti <em>falsi positivi</em>. Questo è il motivo per cui gli screening di massa richiedono test di conferma.
+  </div>
+
+  <!-- Simulatore Bayes -->
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Teorema di Bayes: test diagnostico</div>
+    <div class="ctrl">
+      <label>Prevalenza P(M)</label>
+      <input type="range" id="bPrev" min="0.001" max="0.3" step="0.001" value="0.01">
+      <span class="val" id="bPrevV">1.0%</span>
+      <label>Sensibilità P(+|M)</label>
+      <input type="range" id="bSens" min="0.5" max="1" step="0.01" value="0.99">
+      <span class="val" id="bSensV">99%</span>
+      <label>Falsi pos. P(+|sano)</label>
+      <input type="range" id="bFP" min="0.001" max="0.3" step="0.001" value="0.05">
+      <span class="val" id="bFPV">5.0%</span>
+    </div>
+    <canvas id="cvbayes" style="height:220px"></canvas>
+    <div class="stat-row" id="bayesStats"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- 7. SIMULATORI -->
+<!-- ══════════════════════════════════════════ -->
+<div class="sec" id="simulatori">
+  <h2>7. Simulatori Interattivi</h2>
+  <p class="sec-sub">Lanci di moneta, dado e estrazione da un mazzo di carte</p>
+
+  <!-- MONETA -->
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore 1 — Lanci di moneta</div>
+    <div class="ctrl">
+      <label>Prob. testa p</label>
+      <input type="range" id="coinP" min="0.1" max="0.9" step="0.05" value="0.5">
+      <span class="val" id="coinPv">0.50</span>
+      <label>Lanci</label>
+      <input type="range" id="coinN" min="10" max="5000" step="10" value="100">
+      <span class="val" id="coinNv">100</span>
+      <button class="btn btn-go" id="coinRun">▶ Lancia</button>
+      <button class="btn" id="coinReset">Reset</button>
+    </div>
+    <canvas id="cvcoin" style="height:240px"></canvas>
+    <div class="stat-row" id="coinStats"></div>
+  </div>
+
+  <!-- DADO -->
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore 2 — Lancio di dadi</div>
+    <div class="ctrl">
+      <label>Tipo dado</label>
+      <select id="dieType">
+        <option value="6">Dado a 6 facce</option>
+        <option value="8">Dado a 8 facce</option>
+        <option value="10">Dado a 10 facce</option>
+        <option value="12">Dado a 12 facce</option>
+        <option value="20">Dado a 20 facce</option>
+      </select>
+      <label>Dadi</label>
+      <select id="dieCount">
+        <option value="1">1 dado</option>
+        <option value="2">2 dadi (somma)</option>
+        <option value="3">3 dadi (somma)</option>
+      </select>
+      <label>Lanci</label>
+      <input type="range" id="dieN" min="10" max="5000" step="10" value="200">
+      <span class="val" id="dieNv">200</span>
+      <button class="btn btn-go" id="dieRun">▶ Lancia</button>
+      <button class="btn" id="dieReset">Reset</button>
+    </div>
+    <canvas id="cvdie" style="height:260px"></canvas>
+    <div class="stat-row" id="dieStats"></div>
+  </div>
+
+  <!-- CARTE -->
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore 3 — Estrazione da mazzo di carte (52 carte)</div>
+    <div class="ctrl">
+      <label>Estrazioni per giro</label>
+      <select id="cardDraw">
+        <option value="1">1 carta</option>
+        <option value="2">2 carte</option>
+        <option value="5">5 carte (mano poker)</option>
+      </select>
+      <label>Rimpiazzo</label>
+      <select id="cardReplace">
+        <option value="yes">Con rimpiazzo</option>
+        <option value="no">Senza rimpiazzo</option>
+      </select>
+      <label>Giri</label>
+      <input type="range" id="cardN" min="10" max="2000" step="10" value="500">
+      <span class="val" id="cardNv">500</span>
+      <button class="btn btn-go" id="cardRun">▶ Estrai</button>
+      <button class="btn" id="cardReset">Reset</button>
+    </div>
+    <canvas id="cvcard" style="height:260px"></canvas>
+    <div class="stat-row" id="cardStats"></div>
+  </div>
+</div>
+
+<footer>Didattica Pierri · Matematica · Probabilità</footer>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// UTILITÀ
+// ══════════════════════════════════════
+function fact(n){if(n<=1)return 1;let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function bigFact(n){if(n>20)return Infinity;return fact(n);}
+function comb(n,k){if(k<0||k>n)return 0;if(k===0||k===n)return 1;k=Math.min(k,n-k);let r=1;for(let i=0;i<k;i++)r=r*(n-i)/(i+1);return Math.round(r);}
+function disp(n,k){if(k<0||k>n)return 0;let r=1;for(let i=0;i<k;i++)r*=(n-i);return r;}
+function dispR(n,k){return Math.pow(n,k);}
+function perm(n){return fact(n);}
+
+function setupCanvas(cv){
+  const w=cv.parentElement.clientWidth-40;
+  cv.width=Math.max(w,300);
+  cv.height=parseInt(cv.style.height)||260;
+  return cv.getContext('2d');
+}
+
+const C={green:'#1a6b3a',teal:'#0e6b6b',blue:'#1a4b8c',red:'#b5351a',
+         amber:'#8c5e1a',purple:'#5a1a8c',gray:'#6b6860',
+         lg:'rgba(26,107,58,0.15)',lb:'rgba(26,75,140,0.15)',
+         lr:'rgba(181,53,26,0.15)'};
+
+function showStats(id,obj){
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=Object.entries(obj).map(([k,v])=>`<div class="stat"><span>${k}</span>${v}</div>`).join('');
+}
+
+// ══════════════════════════════════════
+// CALCOLATORE COMBINATORIO
+// ══════════════════════════════════════
+(function(){
+  const cnEl=document.getElementById('cn'),ckEl=document.getElementById('ck');
+  const cnvEl=document.getElementById('cnv'),ckvEl=document.getElementById('ckv');
+  const res=document.getElementById('combResult');
+  function upd(){
+    let n=+cnEl.value,k=+ckEl.value;
+    if(k>n){ckEl.value=n;k=n;}
+    cnvEl.textContent=n;ckvEl.textContent=k;
+    const Pn=n<=12?perm(n)+'':n+'! (grande)';
+    const Dnk=n<=20?disp(n,k)+'':disp(n,k)+'';
+    const DRnk=dispR(n,k);
+    const Cnk=comb(n,k);
+    res.innerHTML=
+      `<b>n = ${n}, k = ${k}</b><br>`+
+      `Permutazioni Pₙ = n! = <b>${n<=12?fact(n):n+'! troppo grande'}</b><br>`+
+      `Disposizioni semplici D(${n},${k}) = ${n}!/${n-k}! = <b>${disp(n,k).toLocaleString()}</b><br>`+
+      `Disposizioni con ripetiz. Dᵣ(${n},${k}) = ${n}ᵏ = <b>${DRnk.toLocaleString()}</b><br>`+
+      `Combinazioni semplici C(${n},${k}) = ${n}!/[${k}!·${n-k}!] = <b>${Cnk.toLocaleString()}</b>`;
+  }
+  cnEl.oninput=upd;ckEl.oninput=upd;
+  upd();
+})();
+
+// ══════════════════════════════════════
+// BAYES
+// ══════════════════════════════════════
+(function(){
+  const cv=document.getElementById('cvbayes');
+  function upd(){
+    const prev=+document.getElementById('bPrev').value;
+    const sens=+document.getElementById('bSens').value;
+    const fp=+document.getElementById('bFP').value;
+    document.getElementById('bPrevV').textContent=(prev*100).toFixed(1)+'%';
+    document.getElementById('bSensV').textContent=(sens*100).toFixed(0)+'%';
+    document.getElementById('bFPV').textContent=(fp*100).toFixed(1)+'%';
+    draw(prev,sens,fp);
+  }
+  document.getElementById('bPrev').oninput=upd;
+  document.getElementById('bSens').oninput=upd;
+  document.getElementById('bFP').oninput=upd;
+
+  function draw(prev,sens,fp){
+    const ctx=setupCanvas(cv);const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    // Calcola
+    const pPos=sens*prev+fp*(1-prev);
+    const pMgivenPos=sens*prev/pPos;
+    const pMgivenNeg=(1-sens)*prev/((1-sens)*prev+(1-fp)*(1-prev));
+    // Visualizzazione a 1000 persone
+    const N=1000;
+    const malati=Math.round(prev*N);
+    const sani=N-malati;
+    const VP=Math.round(sens*malati);  // veri positivi
+    const FN=malati-VP;                // falsi negativi
+    const FP=Math.round(fp*sani);      // falsi positivi
+    const VN=sani-FP;                  // veri negativi
+    const pl=16,pr=16,pt=30,pb=50;
+    const W2=(W-pl-pr)/2-8;
+    const bH=H-pt-pb;
+    // colonne: malati | sani
+    function drawCol(x,total,pos,neg,colPos,colNeg,label){
+      const hPos=bH*pos/Math.max(total,1);
+      const hNeg=bH*neg/Math.max(total,1);
+      ctx.fillStyle=colPos;ctx.fillRect(x,pt+bH-hPos,W2,hPos);
+      ctx.strokeStyle=colPos.replace('0.7','1');ctx.lineWidth=1;ctx.strokeRect(x,pt+bH-hPos,W2,hPos);
+      ctx.fillStyle=colNeg;ctx.fillRect(x,pt+bH-hPos-hNeg,W2,hNeg);
+      ctx.strokeStyle=colNeg.replace('0.7','1');ctx.strokeRect(x,pt+bH-hPos-hNeg,W2,hNeg);
+      ctx.fillStyle='rgba(0,0,0,0.5)';ctx.font='10px monospace';ctx.textAlign='center';
+      ctx.fillText(label+' ('+total+')',x+W2/2,H-pb+14);
+      ctx.fillText('Test+ : '+pos,x+W2/2,H-pb+26);
+      ctx.fillText('Test− : '+neg,x+W2/2,H-pb+38);
+    }
+    drawCol(pl,malati,VP,FN,'rgba(181,53,26,0.7)','rgba(181,53,26,0.2)','Malati');
+    drawCol(pl+W2+16,sani,FP,VN,'rgba(26,75,140,0.5)','rgba(26,107,58,0.3)','Sani');
+    // titolo
+    ctx.fillStyle=C.gray;ctx.font='10px monospace';ctx.textAlign='center';
+    ctx.fillText('Simulazione su '+N+' persone',W/2,14);
+    // legenda
+    ctx.fillStyle=C.red;ctx.fillRect(pl,H-12,10,8);
+    ctx.fillStyle=C.gray;ctx.font='9px sans-serif';ctx.textAlign='left';ctx.fillText('Test+',pl+12,H-5);
+    ctx.fillStyle='rgba(181,53,26,0.2)';ctx.fillRect(pl+50,H-12,10,8);
+    ctx.fillStyle=C.gray;ctx.fillText('Test−',pl+62,H-5);
+    showStats('bayesStats',{
+      'P(malato|test+)':(pMgivenPos*100).toFixed(1)+'%',
+      'P(malato|test−)':(pMgivenNeg*100).toFixed(1)+'%',
+      'Veri positivi':VP,'Falsi positivi':FP,
+      'Veri negativi':VN,'Falsi negativi':FN
+    });
+  }
+  upd();
+  window.addEventListener('resize',upd);
+})();
+
+// ══════════════════════════════════════
+// SIMULATORE MONETA
+// ══════════════════════════════════════
+(function(){
+  const cv=document.getElementById('cvcoin');
+  let heads=0,tails=0,total=0;
+  // dati per grafico convergenza
+  let history=[];
+
+  document.getElementById('coinP').oninput=e=>document.getElementById('coinPv').textContent=(+e.target.value).toFixed(2);
+  document.getElementById('coinN').oninput=e=>document.getElementById('coinNv').textContent=e.target.value;
+  document.getElementById('coinReset').onclick=()=>{heads=0;tails=0;total=0;history=[];draw();};
+
+  document.getElementById('coinRun').onclick=()=>{
+    const p=+document.getElementById('coinP').value;
+    const n=+document.getElementById('coinN').value;
+    for(let i=0;i<n;i++){
+      if(Math.random()<p)heads++;else tails++;
+      total++;
+      if(i%Math.max(1,Math.floor(n/100))===0)history.push(heads/total);
+    }
+    history.push(heads/total);
+    draw();
+  };
+
+  function draw(){
+    const ctx=setupCanvas(cv);const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    if(!total){
+      ctx.fillStyle=C.gray;ctx.font='14px sans-serif';ctx.textAlign='center';
+      ctx.fillText('Clicca ▶ Lancia per iniziare',W/2,H/2);
+      showStats('coinStats',{});return;
+    }
+    const p=+document.getElementById('coinP').value;
+    const pl=54,pr=16,pt=24,pb=36;
+    // grafico convergenza freq testa
+    const sy=y=>H-pb-(y-0)/(1-0)*(H-pt-pb);
+    const sx=i=>pl+i/(history.length-1||1)*(W-pl-pr);
+    // banda teorica
+    ctx.fillStyle='rgba(26,107,58,0.08)';
+    ctx.fillRect(pl,sy(p+0.05),W-pl-pr,sy(p-0.05)-sy(p+0.05));
+    // linea p teorica
+    ctx.strokeStyle=C.red;ctx.lineWidth=1.5;ctx.setLineDash([5,3]);
+    ctx.beginPath();ctx.moveTo(pl,sy(p));ctx.lineTo(W-pr,sy(p));ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=C.red;ctx.font='9px monospace';ctx.textAlign='right';
+    ctx.fillText('p = '+p.toFixed(2),W-pr,sy(p)-3);
+    // curva freq osservata
+    ctx.beginPath();
+    history.forEach((v,i)=>i?ctx.lineTo(sx(i),sy(v)):ctx.moveTo(sx(i),sy(v)));
+    ctx.strokeStyle=C.green;ctx.lineWidth=1.8;ctx.stroke();
+    // assi
+    ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+    ctx.fillStyle='rgba(0,0,0,0.35)';ctx.font='10px monospace';
+    ctx.textAlign='right';
+    [0,0.25,0.5,0.75,1].forEach(v=>{ctx.fillText(v.toFixed(2),pl-4,sy(v)+3);});
+    ctx.textAlign='center';ctx.fillText('lanci',W/2,H-2);
+    ctx.textAlign='left';ctx.fillText('freq. testa',pl+4,pt+12);
+    showStats('coinStats',{
+      'Totale lanci':total,
+      'Teste':heads,'Code':tails,
+      'Freq. testa':(heads/total).toFixed(4),
+      'Freq. croce':(tails/total).toFixed(4),
+      'P teorica testa':p.toFixed(2)
+    });
+  }
+  draw();
+  window.addEventListener('resize',draw);
+})();
+
+// ══════════════════════════════════════
+// SIMULATORE DADO
+// ══════════════════════════════════════
+(function(){
+  const cv=document.getElementById('cvdie');
+  let counts={},total=0;
+
+  document.getElementById('dieN').oninput=e=>document.getElementById('dieNv').textContent=e.target.value;
+  document.getElementById('dieReset').onclick=()=>{counts={};total=0;draw();};
+  document.getElementById('dieType').onchange=()=>{counts={};total=0;draw();};
+  document.getElementById('dieCount').onchange=()=>{counts={};total=0;draw();};
+
+  document.getElementById('dieRun').onclick=()=>{
+    const faces=+document.getElementById('dieType').value;
+    const nd=+document.getElementById('dieCount').value;
+    const n=+document.getElementById('dieN').value;
+    for(let i=0;i<n;i++){
+      let s=0;for(let j=0;j<nd;j++)s+=Math.floor(Math.random()*faces)+1;
+      counts[s]=(counts[s]||0)+1;total++;
+    }
+    draw();
+  };
+
+  function draw(){
+    const ctx=setupCanvas(cv);const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    const faces=+document.getElementById('dieType').value;
+    const nd=+document.getElementById('dieCount').value;
+    if(!total){
+      ctx.fillStyle=C.gray;ctx.font='14px sans-serif';ctx.textAlign='center';
+      ctx.fillText('Clicca ▶ Lancia per iniziare',W/2,H/2);
+      showStats('dieStats',{});return;
+    }
+    const minV=nd,maxV=nd*faces;
+    const nBars=maxV-minV+1;
+    const pl=54,pr=16,pt=24,pb=42;
+    const bw=(W-pl-pr)/nBars;
+    const maxC=Math.max(...Object.values(counts))||1;
+    // freq teorica
+    function theo(v){
+      // distribuzione somma di nd dadi a `faces` facce
+      // per nd=1: uniforme 1/faces
+      // per nd>1: convoluzione — usiamo stima normale per semplicità visiva
+      if(nd===1)return 1/faces;
+      const mu=nd*(faces+1)/2;
+      const sigma2=nd*(faces*faces-1)/12;
+      const sigma=Math.sqrt(sigma2);
+      return Math.exp(-0.5*((v-mu)/sigma)**2)/(sigma*Math.sqrt(2*Math.PI));
+    }
+    const theoVals=[];for(let v=minV;v<=maxV;v++)theoVals.push(theo(v));
+    const maxTheo=Math.max(...theoVals)||1;
+    for(let v=minV;v<=maxV;v++){
+      const i=v-minV;
+      const c=counts[v]||0;
+      const bh=(H-pt-pb)*c/maxC;
+      const x=pl+i*bw;
+      ctx.fillStyle=C.lb;ctx.fillRect(x+1,H-pb-bh,bw-2,bh);
+      ctx.strokeStyle=C.blue;ctx.lineWidth=1;ctx.strokeRect(x+1,H-pb-bh,bw-2,bh);
+      // freq
+      if(c>0&&bw>10){
+        ctx.fillStyle='rgba(0,0,0,0.5)';ctx.font='9px monospace';ctx.textAlign='center';
+        ctx.fillText((c/total*100).toFixed(0)+'%',x+bw/2,H-pb-bh-3);
+      }
+    }
+    // curva teorica
+    if(nd>1){
+      const maxC2=Math.max(...Array.from({length:maxV-minV+1},(_,i)=>counts[i+minV]||0))/total;
+      ctx.beginPath();
+      for(let v=minV;v<=maxV;v++){
+        const x=pl+(v-minV)*bw+bw/2;
+        const y=H-pb-(H-pt-pb)*theo(v)/maxTheo*(maxC/total)/maxC2*(H-pt-pb)/(H-pt-pb);
+        // normalizza per sovrapporsi all'istogramma
+        const yy=H-pb-(H-pt-pb)*(theo(v)/maxTheo);
+        v===minV?ctx.moveTo(x,yy):ctx.lineTo(x,yy);
+      }
+      ctx.strokeStyle=C.red;ctx.lineWidth=1.5;ctx.stroke();
+    }
+    // etichette x
+    ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='10px monospace';ctx.textAlign='center';
+    const step=Math.max(1,Math.floor(nBars/10));
+    for(let v=minV;v<=maxV;v+=step){
+      ctx.fillText(v,pl+(v-minV)*bw+bw/2,H-pb+13);
+    }
+    // assi
+    ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+    const mean=Object.entries(counts).reduce((s,[v,c])=>s+v*c,0)/total;
+    showStats('dieStats',{
+      'Totale lanci':total,
+      'Media osservata':mean.toFixed(2),
+      'Media teorica':(nd*(faces+1)/2).toFixed(2),
+      'Valore più freq.':Object.entries(counts).reduce((a,b)=>b[1]>a[1]?b:a,['?',0])[0]
+    });
+  }
+  draw();
+  window.addEventListener('resize',draw);
+})();
+
+// ══════════════════════════════════════
+// SIMULATORE CARTE
+// ══════════════════════════════════════
+(function(){
+  const cv=document.getElementById('cvcard');
+  const SUITS=['♠','♥','♦','♣'];
+  const VALS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+  // conteggi
+  let suitCounts={},valCounts={},total=0;
+  let pokerHands={};
+
+  document.getElementById('cardN').oninput=e=>document.getElementById('cardNv').textContent=e.target.value;
+  document.getElementById('cardReset').onclick=()=>{suitCounts={};valCounts={};pokerHands={};total=0;draw();};
+
+  function buildDeck(){
+    const d=[];
+    SUITS.forEach(s=>VALS.forEach(v=>d.push({s,v})));
+    return d;
+  }
+  function shuffle(d){for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}}
+  function classifyPoker(hand){
+    const vc={}; hand.forEach(c=>{vc[c.v]=(vc[c.v]||0)+1;});
+    const sc=new Set(hand.map(c=>c.s)).size;
+    const counts=Object.values(vc).sort((a,b)=>b-a);
+    const vals=Object.keys(vc).map(v=>VALS.indexOf(v)).sort((a,b)=>a-b);
+    const isFlush=sc===1;
+    const isStraight=vals.length===5&&vals[4]-vals[0]===4;
+    if(isFlush&&isStraight)return 'Scala reale/colore';
+    if(counts[0]===4)return 'Poker';
+    if(counts[0]===3&&counts[1]===2)return 'Full';
+    if(isFlush)return 'Colore';
+    if(isStraight)return 'Scala';
+    if(counts[0]===3)return 'Tris';
+    if(counts[0]===2&&counts[1]===2)return 'Doppia coppia';
+    if(counts[0]===2)return 'Coppia';
+    return 'Carta alta';
+  }
+
+  document.getElementById('cardRun').onclick=()=>{
+    const nDraw=+document.getElementById('cardDraw').value;
+    const replace=document.getElementById('cardReplace').value==='yes';
+    const n=+document.getElementById('cardN').value;
+    const deck=buildDeck();
+    for(let i=0;i<n;i++){
+      let hand;
+      if(replace){
+        hand=Array.from({length:nDraw},()=>deck[Math.floor(Math.random()*52)]);
+      } else {
+        shuffle(deck);hand=deck.slice(0,nDraw);
+      }
+      hand.forEach(c=>{
+        suitCounts[c.s]=(suitCounts[c.s]||0)+1;
+        valCounts[c.v]=(valCounts[c.v]||0)+1;
+      });
+      if(nDraw===5){
+        const h=classifyPoker(hand);
+        pokerHands[h]=(pokerHands[h]||0)+1;
+      }
+      total++;
+    }
+    draw();
+  };
+
+  function draw(){
+    const ctx=setupCanvas(cv);const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    const nDraw=+document.getElementById('cardDraw').value;
+    if(!total){
+      ctx.fillStyle=C.gray;ctx.font='14px sans-serif';ctx.textAlign='center';
+      ctx.fillText('Clicca ▶ Estrai per iniziare',W/2,H/2);
+      showStats('cardStats',{});return;
+    }
+    const pl=16,pr=16,pt=24,pb=40;
+    if(nDraw===5&&Object.keys(pokerHands).length>0){
+      // grafico mani poker
+      const order=['Carta alta','Coppia','Doppia coppia','Tris','Scala','Colore','Full','Poker','Scala reale/colore'];
+      const labels=order.filter(k=>pokerHands[k]||true);
+      const n=labels.length;
+      const bw=(W-pl-pr)/n;
+      const maxC=Math.max(...labels.map(k=>pokerHands[k]||0))||1;
+      labels.forEach((k,i)=>{
+        const c=pokerHands[k]||0;
+        const bh=(H-pt-pb)*c/maxC;
+        const x=pl+i*bw;
+        const colors=[C.lb,C.lg,C.lr,'rgba(90,26,140,0.15)','rgba(14,107,107,0.15)','rgba(140,94,26,0.15)','rgba(181,53,26,0.3)','rgba(26,75,140,0.5)','rgba(26,107,58,0.5)'];
+        ctx.fillStyle=colors[i%colors.length];ctx.fillRect(x+1,H-pb-bh,bw-2,bh);
+        ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;ctx.strokeRect(x+1,H-pb-bh,bw-2,bh);
+        if(c>0){ctx.fillStyle='rgba(0,0,0,0.55)';ctx.font='9px monospace';ctx.textAlign='center';ctx.fillText((c/total*100).toFixed(1)+'%',x+bw/2,H-pb-bh-3);}
+        // label obliqua
+        ctx.save();ctx.translate(x+bw/2,H-pb+4);ctx.rotate(-Math.PI/4);
+        ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='9px sans-serif';ctx.textAlign='right';
+        ctx.fillText(k,0,0);ctx.restore();
+      });
+      ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+      ctx.fillStyle=C.gray;ctx.font='11px monospace';ctx.textAlign='center';ctx.fillText('Frequenza mani poker su '+total+' mani',W/2,14);
+      const topHand=Object.entries(pokerHands).reduce((a,b)=>b[1]>a[1]?b:a,['?',0]);
+      showStats('cardStats',{'Mani totali':total,'Mano più freq.':topHand[0],'Freq.':(topHand[1]/total*100).toFixed(1)+'%',...Object.fromEntries(Object.entries(pokerHands).map(([k,v])=>[k,(v/total*100).toFixed(1)+'%']))});
+    } else {
+      // grafico semi
+      const suits=Object.keys(suitCounts).sort();
+      const maxC=Math.max(...suits.map(s=>suitCounts[s]))||1;
+      const n=suits.length||4;
+      const bw=(W-pl-pr)/n;
+      const suitColors={'♠':'rgba(30,30,30,0.7)','♥':'rgba(181,53,26,0.7)','♦':'rgba(181,53,26,0.5)','♣':'rgba(26,107,58,0.7)'};
+      suits.forEach((s,i)=>{
+        const c=suitCounts[s]||0;
+        const bh=(H-pt-pb)*c/maxC;
+        const x=pl+i*bw;
+        ctx.fillStyle=(suitColors[s]||C.lb).replace('0.7','0.2');
+        ctx.fillRect(x+4,H-pb-bh,bw-8,bh);
+        ctx.strokeStyle=suitColors[s]||C.blue;ctx.lineWidth=1.5;
+        ctx.strokeRect(x+4,H-pb-bh,bw-8,bh);
+        ctx.fillStyle=suitColors[s]||'#333';ctx.font='bold 22px sans-serif';
+        ctx.textAlign='center';ctx.fillText(s,x+bw/2,H-pb+18);
+        ctx.fillStyle='rgba(0,0,0,0.55)';ctx.font='10px monospace';
+        ctx.fillText((c/(total*nDraw)*100).toFixed(1)+'%',x+bw/2,H-pb-bh-5);
+      });
+      ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+      ctx.fillStyle='rgba(0,0,0,0.35)';ctx.font='10px monospace';ctx.textAlign='right';
+      [0.25,0.5,0.75,1].forEach(v=>{
+        const py=H-pb-(H-pt-pb)*v;
+        ctx.fillText((v*25).toFixed(0)+'%',pl-2,py+3);
+      });
+      ctx.fillStyle=C.gray;ctx.font='11px monospace';ctx.textAlign='center';
+      ctx.fillText('Frequenza semi — '+total+' estrazioni',W/2,14);
+      ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=0.5;ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(pl,H-pb-(H-pt-pb)*0.25);ctx.lineTo(W-pr,H-pb-(H-pt-pb)*0.25);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle=C.red;ctx.font='9px monospace';ctx.textAlign='right';ctx.fillText('← 25% teorico',W-pr,H-pb-(H-pt-pb)*0.25-3);
+      showStats('cardStats',{
+        'Estrazioni totali':total,
+        '♠ freq.':(((suitCounts['♠']||0)/(total*nDraw))*100).toFixed(1)+'%',
+        '♥ freq.':(((suitCounts['♥']||0)/(total*nDraw))*100).toFixed(1)+'%',
+        '♦ freq.':(((suitCounts['♦']||0)/(total*nDraw))*100).toFixed(1)+'%',
+        '♣ freq.':(((suitCounts['♣']||0)/(total*nDraw))*100).toFixed(1)+'%'
+      });
+    }
+  }
+  draw();
+  window.addEventListener('resize',draw);
+})();
+
+// nav attiva
+const secs=document.querySelectorAll('.sec');
+const navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{
+  let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur=s.id;});
+  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+</script>
+</body>
+</html>
