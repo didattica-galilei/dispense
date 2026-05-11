@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Sfera — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#0e6b6b;--accent2:#1a4b8c;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;--red:#b5351a;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:64px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,48px);font-weight:700;line-height:1.1;margin-bottom:10px}
+.hero h1 em{color:#5dcaa5;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.4);font-weight:300;max-width:520px;margin:0 auto 28px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 24px}
+.nav-inner{max-width:900px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:12px 13px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:900px;margin:0 auto;padding:48px 32px}
+@media(max-width:600px){.page{padding:28px 14px}.nav{padding:0 8px}.nav a{padding:10px 9px;font-size:10px}}
+.sec{margin-bottom:70px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px}
+h3{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin:18px 0 7px}
+p{font-size:15px;margin-bottom:11px;color:#2a2a2e}
+ul,ol{margin:6px 0 11px 22px;font-size:15px}
+li{margin-bottom:5px;color:#2a2a2e}
+strong{font-weight:600}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--accent2);text-align:center;padding:14px 18px;margin:13px 0;border-radius:0 3px 3px 0}
+.box-f .f{font-family:'Playfair Display',serif;font-size:19px;color:var(--accent2);margin-bottom:4px}
+.box-f .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:#e1f5ee;border-left:3px solid var(--accent);color:#0a3a2a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-w{background:#fdf3ee;border-left:3px solid var(--red);color:#5a1a0a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:18px;margin:20px 0}
+.sim-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sim-title::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;align-items:center;font-size:12px;color:var(--muted)}
+.ctrl label{font-weight:600;min-width:16px}
+.ctrl input[type=number]{width:64px;padding:3px 5px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink);font-family:'Source Code Pro',monospace}
+.btn-go{padding:5px 14px;border-radius:3px;border:none;background:var(--accent);color:#fff;font-size:12px;cursor:pointer;font-weight:600}
+.btn-go:hover{background:#094f4f}
+.btn-rst{padding:5px 12px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);font-size:12px;cursor:pointer}
+canvas{display:block;border:1px solid var(--border);border-radius:3px;cursor:grab;width:100%}
+canvas:active{cursor:grabbing}
+.eq-out{background:var(--ink);color:#fff;border-radius:4px;padding:12px 16px;margin-top:10px;font-family:'Source Code Pro',monospace;font-size:12px;line-height:1.9;min-height:44px;white-space:pre}
+.eq-out.empty{background:var(--surface);color:var(--muted);font-family:'Source Sans 3',sans-serif;font-style:italic;font-size:13px}
+.leg{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted);align-items:center}
+.ls{width:18px;height:3px;border-radius:1px;display:inline-block;margin-right:4px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;padding:22px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="eyebrow">Matematica · Geometria Analitica dello Spazio</div>
+  <h1>La <em>Sfera</em></h1>
+  <p class="hero-sub">Equazione della sfera, piano tangente, intersezione con un piano e posizione reciproca sfera-retta — con 3 simulatori 3D interattivi</p>
+  <div class="rule"></div>
+</div>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#equazione" class="active">Equazione</a>
+    <a href="#tangente">Piano tangente</a>
+    <a href="#sezione">Sezione piana</a>
+    <a href="#retta">Sfera e retta</a>
+    <a href="#sim1">Sim 1 — Sfera e tangente</a>
+    <a href="#sim2">Sim 2 — Sezione piana</a>
+    <a href="#sim3">Sim 3 — Sfera e retta</a>
+    <a href="#esercizi">Esercizi</a>
+  </div>
+</nav>
+<div class="page">
+
+<div class="sec" id="equazione">
+  <h2>1. Equazione della Sfera</h2>
+  <p class="sec-sub">Forma canonica e forma generale</p>
+  <p>Una <strong>sfera</strong> è il luogo dei punti dello spazio equidistanti da un punto fisso detto <strong>centro</strong>. La distanza costante è il <strong>raggio</strong> r.</p>
+  <h3>Forma canonica</h3>
+  <div class="box-f">
+    <div class="f">(x−x₀)² + (y−y₀)² + (z−z₀)² = r²</div>
+    <div class="fd">C=(x₀,y₀,z₀) = centro &nbsp;·&nbsp; r = raggio &nbsp;·&nbsp; r > 0</div>
+  </div>
+  <h3>Forma generale</h3>
+  <div class="box-f">
+    <div class="f">x² + y² + z² + ax + by + cz + d = 0</div>
+    <div class="fd">Centro: C=(−a/2,−b/2,−c/2) &nbsp;·&nbsp; raggio: r=√(a²/4+b²/4+c²/4−d)</div>
+  </div>
+  <h3>Sfera per due punti: centro A, passa per B</h3>
+  <div class="box-f">
+    <div class="f">r = |AB| = √((xB−xA)²+(yB−yA)²+(zB−zA)²)</div>
+    <div class="fd">Il raggio è la distanza euclidea tra centro e punto sulla superficie</div>
+  </div>
+</div>
+
+<div class="sec" id="tangente">
+  <h2>2. Piano Tangente alla Sfera</h2>
+  <p class="sec-sub">Il piano tangente in un punto B della superficie</p>
+  <p>Il <strong>piano tangente</strong> in B è perpendicolare al raggio CB nel punto B. Il vettore normale al piano è esattamente il vettore CB = B−C.</p>
+  <div class="box-f">
+    <div class="f">(xB−x₀)(x−x₀)+(yB−y₀)(y−y₀)+(zB−z₀)(z−z₀) = r²</div>
+    <div class="fd">Vettore normale = CB = B−C &nbsp;·&nbsp; distanza da C al piano = r</div>
+  </div>
+  <ul>
+    <li>Il piano tangente è <strong>perpendicolare al raggio</strong> CB.</li>
+    <li>Tocca la sfera in <strong>un solo punto</strong> (B).</li>
+    <li>La distanza dal centro C al piano tangente è uguale al <strong>raggio r</strong>.</li>
+  </ul>
+</div>
+
+<div class="sec" id="sezione">
+  <h2>3. Intersezione Sfera–Piano</h2>
+  <p class="sec-sub">La sezione di una sfera con un piano è sempre un cerchio</p>
+  <div class="box-f">
+    <div class="f">r_sezione = √(r² − d²)</div>
+    <div class="fd">d = distanza dal centro al piano &nbsp;·&nbsp; valido solo se d ≤ r</div>
+  </div>
+  <ul>
+    <li><strong>d &lt; r:</strong> sezione = cerchio di raggio √(r²−d²)</li>
+    <li><strong>d = r:</strong> piano tangente → intersezione = un punto</li>
+    <li><strong>d &gt; r:</strong> nessuna intersezione</li>
+  </ul>
+</div>
+
+<div class="sec" id="retta">
+  <h2>4. Posizione Reciproca Sfera–Retta</h2>
+  <p class="sec-sub">Secante, tangente o esterna</p>
+  <div class="box-f">
+    <div class="f">d = |CP × v| / |v|</div>
+    <div class="fd">C = centro &nbsp;·&nbsp; P = punto sulla retta &nbsp;·&nbsp; v = vettore direttore</div>
+  </div>
+  <ul>
+    <li><strong>d &lt; r:</strong> retta <strong>secante</strong> — 2 punti di intersezione</li>
+    <li><strong>d = r:</strong> retta <strong>tangente</strong> — 1 punto di tangenza</li>
+    <li><strong>d &gt; r:</strong> retta <strong>esterna</strong> — nessuna intersezione</li>
+  </ul>
+</div>
+
+<div class="sec" id="sim1">
+  <h2>5. Simulatore 1 — Sfera e Piano Tangente</h2>
+  <p class="sec-sub">Inserisci il centro A e il punto B sulla superficie</p>
+  <div class="sim-wrap">
+    <div class="sim-title">Sfera di centro A e raggio |AB|, piano tangente in B</div>
+    <div class="ctrl">
+      <label style="color:#e05252;font-weight:700">A</label>
+      <label>x</label><input type="number" id="s1ax" value="0" step="0.5">
+      <label>y</label><input type="number" id="s1ay" value="0" step="0.5">
+      <label>z</label><input type="number" id="s1az" value="0" step="0.5">
+      <label style="color:#1a4b8c;font-weight:700;margin-left:8px">B</label>
+      <label>x</label><input type="number" id="s1bx" value="3" step="0.5">
+      <label>y</label><input type="number" id="s1by" value="0" step="0.5">
+      <label>z</label><input type="number" id="s1bz" value="0" step="0.5">
+      <button class="btn-go" onclick="S1.build()">▶ Visualizza</button>
+      <button class="btn-rst" onclick="S1.reset()">Reset</button>
+    </div>
+    <canvas id="c1" style="height:400px"></canvas>
+    <div class="eq-out empty" id="o1">Clicca ▶ Visualizza</div>
+    <div class="leg">
+      <span><span class="ls" style="background:rgba(14,107,107,0.5);border:1px solid #0e6b6b"></span>Sfera</span>
+      <span><span class="ls" style="background:rgba(26,75,140,0.4);border:1px solid #1a4b8c"></span>Piano tangente</span>
+      <span><span class="ls" style="background:#b5351a"></span>Raggio AB (normale)</span>
+      <span style="font-size:10px">Trascina · Rotella = zoom</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="sim2">
+  <h2>6. Simulatore 2 — Sezione di una Sfera con un Piano</h2>
+  <p class="sec-sub">Sfera di centro A e punto B, piano ax+by+cz+d=0</p>
+  <div class="sim-wrap">
+    <div class="sim-title">Intersezione sfera–piano: cerchio di sezione</div>
+    <div class="ctrl">
+      <label style="color:#e05252;font-weight:700">A</label>
+      <label>x</label><input type="number" id="s2ax" value="0" step="0.5">
+      <label>y</label><input type="number" id="s2ay" value="0" step="0.5">
+      <label>z</label><input type="number" id="s2az" value="0" step="0.5">
+      <label style="color:#1a4b8c;font-weight:700;margin-left:8px">B</label>
+      <label>x</label><input type="number" id="s2bx" value="3" step="0.5">
+      <label>y</label><input type="number" id="s2by" value="0" step="0.5">
+      <label>z</label><input type="number" id="s2bz" value="0" step="0.5">
+    </div>
+    <div class="ctrl">
+      <label>Piano: a</label><input type="number" id="s2pa" value="1" step="0.5">
+      <label>b</label><input type="number" id="s2pb" value="0" step="0.5">
+      <label>c</label><input type="number" id="s2pc" value="0" step="0.5">
+      <label>d</label><input type="number" id="s2pd" value="-1" step="0.5">
+      <button class="btn-go" onclick="S2.build()">▶ Visualizza</button>
+      <button class="btn-rst" onclick="S2.reset()">Reset</button>
+    </div>
+    <canvas id="c2" style="height:400px"></canvas>
+    <div class="eq-out empty" id="o2">Clicca ▶ Visualizza</div>
+    <div class="leg">
+      <span><span class="ls" style="background:rgba(14,107,107,0.4);border:1px solid #0e6b6b"></span>Sfera</span>
+      <span><span class="ls" style="background:rgba(26,75,140,0.3);border:1px solid #1a4b8c"></span>Piano</span>
+      <span><span class="ls" style="background:#ffa500"></span>Cerchio di sezione</span>
+      <span style="font-size:10px">Trascina · Rotella = zoom</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="sim3">
+  <h2>7. Simulatore 3 — Posizione Reciproca Sfera–Retta</h2>
+  <p class="sec-sub">Retta per P con direttore v — secante, tangente o esterna</p>
+  <div class="sim-wrap">
+    <div class="sim-title">Sfera e retta: distanza e punti di intersezione</div>
+    <div class="ctrl">
+      <label style="color:#e05252;font-weight:700">A</label>
+      <label>x</label><input type="number" id="s3ax" value="0" step="0.5">
+      <label>y</label><input type="number" id="s3ay" value="0" step="0.5">
+      <label>z</label><input type="number" id="s3az" value="0" step="0.5">
+      <label style="color:#1a4b8c;font-weight:700;margin-left:8px">B</label>
+      <label>x</label><input type="number" id="s3bx" value="3" step="0.5">
+      <label>y</label><input type="number" id="s3by" value="0" step="0.5">
+      <label>z</label><input type="number" id="s3bz" value="0" step="0.5">
+    </div>
+    <div class="ctrl">
+      <label style="color:#1a6b3a;font-weight:700">P</label>
+      <label>x</label><input type="number" id="s3px" value="-5" step="0.5">
+      <label>y</label><input type="number" id="s3py" value="1" step="0.5">
+      <label>z</label><input type="number" id="s3pz" value="0" step="0.5">
+      <label style="font-weight:700;margin-left:8px">v</label>
+      <label>x</label><input type="number" id="s3vx" value="1" step="0.5">
+      <label>y</label><input type="number" id="s3vy" value="0" step="0.5">
+      <label>z</label><input type="number" id="s3vz" value="0" step="0.5">
+      <button class="btn-go" onclick="S3.build()">▶ Visualizza</button>
+      <button class="btn-rst" onclick="S3.reset()">Reset</button>
+    </div>
+    <canvas id="c3" style="height:400px"></canvas>
+    <div class="eq-out empty" id="o3">Clicca ▶ Visualizza</div>
+    <div class="leg">
+      <span><span class="ls" style="background:rgba(14,107,107,0.4);border:1px solid #0e6b6b"></span>Sfera</span>
+      <span><span class="ls" style="background:#1a6b3a"></span>Retta</span>
+      <span><span class="ls" style="background:#ffa500"></span>Punti intersezione</span>
+      <span style="font-size:10px">Trascina · Rotella = zoom</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="esercizi">
+  <h2>8. Esercizi Proposti</h2>
+  <p class="sec-sub">Sfera, piano tangente e intersezioni</p>
+  <ol>
+    <li><strong>Equazione:</strong> sfera di centro A=(1,2,3) e raggio 4. Verifica con il Sim 1 impostando B=(5,2,3).</li>
+    <li><strong>Piano tangente:</strong> sfera di centro O=(0,0,0) e raggio 5. Piano tangente in B=(3,4,0). Verifica che il vettore normale sia OB.</li>
+    <li><strong>Sezione:</strong> sfera di centro O e raggio 5, piano z=3. Calcola manualmente il raggio del cerchio di sezione e verifica con il Sim 2.</li>
+    <li><strong>Retta secante:</strong> sfera centro O raggio 3, retta per P=(−5,0,0) con v=(1,0,0). Trova i due punti di intersezione. Verifica con il Sim 3.</li>
+    <li><strong>Retta tangente:</strong> modifica il Sim 3 finché la retta è tangente. Qual è la condizione geometrica?</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri · Matematica · Geometria della Sfera</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const V3=(x,y,z)=>new THREE.Vector3(x,y,z);
+const fmt=v=>Number(v.toFixed(4)).toString();
+const rf=id=>parseFloat(document.getElementById(id).value)||0;
+function cross3(u,v){return new THREE.Vector3(u.y*v.z-u.z*v.y,u.z*v.x-u.x*v.z,u.x*v.y-u.y*v.x);}
+
+function makeScene(){
+  const s=new THREE.Scene();
+  s.add(new THREE.AmbientLight(0xffffff,0.85));
+  const dl=new THREE.DirectionalLight(0xffffff,0.4);dl.position.set(5,8,5);s.add(dl);
+  s.add(new THREE.GridHelper(14,14,0xcccccc,0xe8e8e8));
+  [[5,0,0,0xff4444],[0,5,0,0x44aa44],[0,0,5,0x4488ff]].forEach(([x,y,z,c])=>{
+    s.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([V3(0,0,0),V3(x,y,z)]),new THREE.LineBasicMaterial({color:c})));
+  });
+  return s;
+}
+
+function setupSim(canvasId,h){
+  const canvas=document.getElementById(canvasId);
+  const w=Math.max(canvas.parentElement.clientWidth-36,300);
+  canvas.style.width=w+'px';canvas.style.height=h+'px';
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setClearColor(0xfafafa);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(w,h);
+  const scene=makeScene();
+  const camera=new THREE.PerspectiveCamera(45,w/h,0.1,300);
+  let drag=false,lx=0,ly=0,th=0.6,ph=1.1,rad=14;
+  function upd(){camera.position.set(rad*Math.sin(ph)*Math.sin(th),rad*Math.cos(ph),rad*Math.sin(ph)*Math.cos(th));camera.lookAt(0,0,0);}
+  canvas.addEventListener('mousedown',e=>{drag=true;lx=e.clientX;ly=e.clientY});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{if(!drag)return;th-=(e.clientX-lx)*0.012;ph=Math.max(0.05,Math.min(Math.PI-0.05,ph-(e.clientY-ly)*0.012));lx=e.clientX;ly=e.clientY;upd();});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();rad=Math.max(4,Math.min(40,rad*(e.deltaY>0?1.08:0.93)));upd();},{passive:false});
+  canvas.addEventListener('touchstart',e=>{drag=true;lx=e.touches[0].clientX;ly=e.touches[0].clientY},{passive:true});
+  canvas.addEventListener('touchmove',e=>{if(!drag)return;th-=(e.touches[0].clientX-lx)*0.012;ph=Math.max(0.05,Math.min(Math.PI-0.05,ph-(e.touches[0].clientY-ly)*0.012));lx=e.touches[0].clientX;ly=e.touches[0].clientY;upd();},{passive:true});
+  canvas.addEventListener('touchend',()=>drag=false);
+  upd();
+  window.addEventListener('resize',()=>{const nw=Math.max(canvas.parentElement.clientWidth-36,300);canvas.style.width=nw+'px';renderer.setSize(nw,h);camera.aspect=nw/h;camera.updateProjectionMatrix();});
+  let objs=[];
+  function animate(){requestAnimationFrame(animate);renderer.render(scene,camera);}
+  animate();
+  return{
+    scene,camera,
+    clr(){objs.forEach(o=>scene.remove(o));objs=[];},
+    add(o){scene.add(o);objs.push(o);},
+    addSphere(pos,r,color,opacity){
+      const mat=new THREE.MeshPhongMaterial({color,transparent:true,opacity:opacity||0.18,side:THREE.FrontSide,shininess:60});
+      const m=new THREE.Mesh(new THREE.SphereGeometry(r,32,24),mat);
+      m.position.copy(pos);scene.add(m);objs.push(m);
+      // wireframe
+      const wm=new THREE.Mesh(new THREE.SphereGeometry(r,32,24),new THREE.MeshBasicMaterial({color,wireframe:true,transparent:true,opacity:0.15}));
+      wm.position.copy(pos);scene.add(wm);objs.push(wm);
+    },
+    addPlane(center,normal,size,color,opacity){
+      const n=normal.clone().normalize();
+      const arb=Math.abs(n.x)<0.9?V3(1,0,0):V3(0,1,0);
+      const right=new THREE.Vector3().crossVectors(n,arb).normalize();
+      const up=new THREE.Vector3().crossVectors(right,n).normalize();
+      const h=size/2;
+      const v0=center.clone().addScaledVector(right,-h).addScaledVector(up,-h);
+      const v1=center.clone().addScaledVector(right, h).addScaledVector(up,-h);
+      const v2=center.clone().addScaledVector(right, h).addScaledVector(up, h);
+      const v3=center.clone().addScaledVector(right,-h).addScaledVector(up, h);
+      const geo=new THREE.BufferGeometry();
+      geo.setAttribute('position',new THREE.BufferAttribute(new Float32Array([v0.x,v0.y,v0.z,v1.x,v1.y,v1.z,v2.x,v2.y,v2.z,v0.x,v0.y,v0.z,v2.x,v2.y,v2.z,v3.x,v3.y,v3.z]),3));
+      geo.computeVertexNormals();
+      const pm=new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color,transparent:true,opacity,side:THREE.DoubleSide}));
+      scene.add(pm);objs.push(pm);
+      const bl=new THREE.Line(new THREE.BufferGeometry().setFromPoints([v0,v1,v2,v3,v0]),new THREE.LineBasicMaterial({color,linewidth:1.5}));
+      scene.add(bl);objs.push(bl);
+    },
+    addArrow(origin,dir,len,color){
+      if(len<0.01)return;
+      const dn=dir.clone().normalize();
+      const end=origin.clone().addScaledVector(dn,len);
+      const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([origin,end]),new THREE.LineBasicMaterial({color}));
+      scene.add(l);objs.push(l);
+      const cH=Math.min(len*0.18,0.45),cR=cH*0.35;
+      const cone=new THREE.Mesh(new THREE.ConeGeometry(cR,cH,10),new THREE.MeshPhongMaterial({color}));
+      cone.position.copy(end.clone().addScaledVector(dn,-cH/2));
+      cone.quaternion.setFromUnitVectors(V3(0,1,0),dn);
+      scene.add(cone);objs.push(cone);
+    },
+    addDot(pos,r,color){
+      const m=new THREE.Mesh(new THREE.SphereGeometry(r,12,12),new THREE.MeshPhongMaterial({color}));
+      m.position.copy(pos);scene.add(m);objs.push(m);
+    },
+    addLabel(pos,text,color){
+      const c=document.createElement('canvas');c.width=144;c.height=52;
+      const ctx=c.getContext('2d');ctx.font='bold 24px Arial';ctx.fillStyle=color||'#333';
+      ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,72,26);
+      const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthTest:false}));
+      sp.position.copy(pos);sp.scale.set(0.7,0.26,1);scene.add(sp);objs.push(sp);
+    },
+    addCircle(center,normal,r,color){
+      const n=normal.clone().normalize();
+      const arb=Math.abs(n.x)<0.9?V3(1,0,0):V3(0,1,0);
+      const right=new THREE.Vector3().crossVectors(n,arb).normalize();
+      const up=new THREE.Vector3().crossVectors(right,n).normalize();
+      const pts=[];for(let i=0;i<=64;i++){const a=2*Math.PI*i/64;pts.push(center.clone().addScaledVector(right,r*Math.cos(a)).addScaledVector(up,r*Math.sin(a)));}
+      const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color,linewidth:2}));
+      scene.add(l);objs.push(l);
+    },
+    addLine(A,B,color){
+      const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([A,B]),new THREE.LineBasicMaterial({color,linewidth:2}));
+      scene.add(l);objs.push(l);
+    }
+  };
+}
+
+// ═══ SIM 1 ═══
+const S1=(function(){
+  const s=setupSim('c1',400);
+  return{
+    build(){
+      s.clr();
+      const A=V3(rf('s1ax'),rf('s1ay'),rf('s1az'));
+      const B=V3(rf('s1bx'),rf('s1by'),rf('s1bz'));
+      const r=A.distanceTo(B);
+      if(r<1e-9){const o=document.getElementById('o1');o.className='eq-out empty';o.textContent='⚠ A e B coincidono.';return;}
+      s.addSphere(A,r,0x0e6b6b,0.18);
+      const AB=new THREE.Vector3().subVectors(B,A);
+      s.addArrow(A,AB,r,0xb5351a);
+      s.addPlane(B,AB,Math.max(r*2.4,6),0x1a4b8c,0.28);
+      s.addDot(A,r*0.06,0xe05252);s.addDot(B,r*0.06,0x1a4b8c);
+      s.addLabel(A.clone().add(V3(0,r*0.13,0)),'A','#e05252');
+      s.addLabel(B.clone().add(V3(0,r*0.13,0)),'B','#1a4b8c');
+      s.addLabel(V3(5.5,0,0),'x','#ff4444');s.addLabel(V3(0,5.5,0),'y','#44aa44');s.addLabel(V3(0,0,5.5),'z','#4488ff');
+      const nx=B.x-A.x,ny=B.y-A.y,nz=B.z-A.z;
+      const o=document.getElementById('o1');o.className='eq-out';
+      o.textContent=`Sfera: centro A=(${fmt(A.x)},${fmt(A.y)},${fmt(A.z)})  raggio r=|AB|=${fmt(r)}\n(x-${fmt(A.x)})²+(y-${fmt(A.y)})²+(z-${fmt(A.z)})²=${fmt(r*r)}\n\nPiano tangente in B=(${fmt(B.x)},${fmt(B.y)},${fmt(B.z)}):\nNormale = AB = (${fmt(nx)},${fmt(ny)},${fmt(nz)})\n${fmt(nx)}(x-${fmt(A.x)})+${fmt(ny)}(y-${fmt(A.y)})+${fmt(nz)}(z-${fmt(A.z)})=${fmt(r*r)}`;
+    },
+    reset(){s.clr();['s1ax','s1ay','s1az'].forEach(id=>document.getElementById(id).value=0);document.getElementById('s1bx').value=3;document.getElementById('s1by').value=0;document.getElementById('s1bz').value=0;const o=document.getElementById('o1');o.className='eq-out empty';o.textContent='Clicca ▶ Visualizza';}
+  };
+})();
+
+// ═══ SIM 2 ═══
+const S2=(function(){
+  const s=setupSim('c2',400);
+  return{
+    build(){
+      s.clr();
+      const A=V3(rf('s2ax'),rf('s2ay'),rf('s2az'));
+      const B=V3(rf('s2bx'),rf('s2by'),rf('s2bz'));
+      const r=A.distanceTo(B);
+      if(r<1e-9){const o=document.getElementById('o2');o.className='eq-out empty';o.textContent='⚠ A e B coincidono.';return;}
+      const pa=rf('s2pa'),pb=rf('s2pb'),pc=rf('s2pc'),pd=rf('s2pd');
+      if(pa===0&&pb===0&&pc===0){const o=document.getElementById('o2');o.className='eq-out empty';o.textContent='⚠ Coefficienti piano non validi.';return;}
+      s.addSphere(A,r,0x0e6b6b,0.15);
+      const pn2=pa*pa+pb*pb+pc*pc;
+      const t=-(pa*A.x+pb*A.y+pc*A.z+pd)/pn2;
+      const foot=V3(A.x+pa*t,A.y+pb*t,A.z+pc*t);
+      const d=A.distanceTo(foot);
+      s.addPlane(foot,V3(pa,pb,pc),r*2.6,0x1a4b8c,0.22);
+      s.addDot(A,r*0.055,0xe05252);s.addLabel(A.clone().add(V3(0,r*0.13,0)),'A','#e05252');
+      s.addLabel(V3(5.5,0,0),'x','#ff4444');s.addLabel(V3(0,5.5,0),'y','#44aa44');s.addLabel(V3(0,0,5.5),'z','#4488ff');
+      const o=document.getElementById('o2');o.className='eq-out';
+      if(d>r+1e-9){
+        o.textContent=`Il piano NON interseca la sfera.\nd=${fmt(d)} > r=${fmt(r)}`;
+      } else if(Math.abs(d-r)<1e-5){
+        s.addDot(foot,r*0.07,0xffa500);s.addLabel(foot.clone().add(V3(0,r*0.13,0)),'T','#ffa500');
+        o.textContent=`Il piano è TANGENTE alla sfera.\nT=(${fmt(foot.x)},${fmt(foot.y)},${fmt(foot.z)})\nd=${fmt(d)} = r=${fmt(r)}`;
+      } else {
+        const rSez=Math.sqrt(r*r-d*d);
+        s.addCircle(foot,V3(pa,pb,pc),rSez,0xffa500);
+        s.addDot(foot,r*0.055,0xffa500);s.addLabel(foot.clone().add(V3(0,r*0.13,0)),'K','#ffa500');
+        s.addArrow(A,new THREE.Vector3().subVectors(foot,A),d,0xb5351a);
+        o.textContent=`Il piano SECA la sfera — cerchio di sezione\nDistanza centro-piano: d=${fmt(d)}\nr_sezione=√(r²-d²)=${fmt(rSez)}\nCentro cerchio K=(${fmt(foot.x)},${fmt(foot.y)},${fmt(foot.z)})`;
+      }
+    },
+    reset(){s.clr();['s2ax','s2ay','s2az'].forEach(id=>document.getElementById(id).value=0);document.getElementById('s2bx').value=3;document.getElementById('s2by').value=0;document.getElementById('s2bz').value=0;['s2pa','s2pb','s2pc','s2pd'].forEach((id,i)=>document.getElementById(id).value=[1,0,0,-1][i]);const o=document.getElementById('o2');o.className='eq-out empty';o.textContent='Clicca ▶ Visualizza';}
+  };
+})();
+
+// ═══ SIM 3 ═══
+const S3=(function(){
+  const s=setupSim('c3',400);
+  return{
+    build(){
+      s.clr();
+      const A=V3(rf('s3ax'),rf('s3ay'),rf('s3az'));
+      const B=V3(rf('s3bx'),rf('s3by'),rf('s3bz'));
+      const r=A.distanceTo(B);
+      if(r<1e-9){const o=document.getElementById('o3');o.className='eq-out empty';o.textContent='⚠ A e B coincidono.';return;}
+      const P=V3(rf('s3px'),rf('s3py'),rf('s3pz'));
+      const vv=V3(rf('s3vx'),rf('s3vy'),rf('s3vz'));
+      if(vv.length()<1e-9){const o=document.getElementById('o3');o.className='eq-out empty';o.textContent='⚠ Vettore direttore nullo.';return;}
+      const vn=vv.clone().normalize();
+      s.addSphere(A,r,0x0e6b6b,0.15);
+      const EXT=10;
+      s.addLine(P.clone().addScaledVector(vn,-EXT),P.clone().addScaledVector(vn,EXT+vv.length()),0x1a6b3a);
+      const AP=new THREE.Vector3().subVectors(P,A);
+      const d=cross3(AP,vn).length();
+      s.addDot(A,r*0.055,0xe05252);s.addLabel(A.clone().add(V3(0,r*0.13,0)),'A','#e05252');
+      s.addLabel(V3(5.5,0,0),'x','#ff4444');s.addLabel(V3(0,5.5,0),'y','#44aa44');s.addLabel(V3(0,0,5.5),'z','#4488ff');
+      const o=document.getElementById('o3');o.className='eq-out';
+      const PA=new THREE.Vector3().subVectors(P,A);
+      const a2=vv.dot(vv),b2=2*PA.dot(vv),c2=PA.dot(PA)-r*r;
+      const disc=b2*b2-4*a2*c2;
+      if(d>r+1e-6){
+        o.textContent=`La retta è ESTERNA.\nd=${fmt(d)} > r=${fmt(r)}`;
+      } else if(Math.abs(d-r)<1e-5){
+        const t0=-b2/(2*a2);
+        const T=P.clone().addScaledVector(vv,t0);
+        s.addDot(T,r*0.07,0xffa500);s.addLabel(T.clone().add(V3(0,r*0.13,0)),'T','#ffa500');
+        s.addArrow(A,new THREE.Vector3().subVectors(T,A),A.distanceTo(T),0xb5351a);
+        o.textContent=`La retta è TANGENTE.\nT=(${fmt(T.x)},${fmt(T.y)},${fmt(T.z)})\nd=${fmt(d)} = r=${fmt(r)}`;
+      } else {
+        const sq=Math.sqrt(Math.max(0,disc));
+        const t1=(-b2-sq)/(2*a2),t2=(-b2+sq)/(2*a2);
+        const I1=P.clone().addScaledVector(vv,t1),I2=P.clone().addScaledVector(vv,t2);
+        s.addDot(I1,r*0.07,0xffa500);s.addDot(I2,r*0.07,0xffa500);
+        s.addLabel(I1.clone().add(V3(0,r*0.13,0)),'I1','#ffa500');s.addLabel(I2.clone().add(V3(0,r*0.13,0)),'I2','#ffa500');
+        const tfoot=-b2/(2*a2);const foot=P.clone().addScaledVector(vv,tfoot);
+        s.addArrow(A,new THREE.Vector3().subVectors(foot,A),A.distanceTo(foot),0xb5351a);
+        o.textContent=`La retta è SECANTE.\nd=${fmt(d)} < r=${fmt(r)}\nI1=(${fmt(I1.x)},${fmt(I1.y)},${fmt(I1.z)})  t1=${fmt(t1)}\nI2=(${fmt(I2.x)},${fmt(I2.y)},${fmt(I2.z)})  t2=${fmt(t2)}\n|I1I2|=${fmt(I1.distanceTo(I2))}`;
+      }
+    },
+    reset(){s.clr();['s3ax','s3ay','s3az'].forEach(id=>document.getElementById(id).value=0);document.getElementById('s3bx').value=3;document.getElementById('s3by').value=0;document.getElementById('s3bz').value=0;['s3px','s3py','s3pz'].forEach((id,i)=>document.getElementById(id).value=[-5,1,0][i]);['s3vx','s3vy','s3vz'].forEach((id,i)=>document.getElementById(id).value=[1,0,0][i]);const o=document.getElementById('o3');o.className='eq-out empty';o.textContent='Clicca ▶ Visualizza';}
+  };
+})();
+
+S1.build();S2.build();S3.build();
+
+const secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur=s.id;});navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));},{passive:true});
+</script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Potenziale Elettrico sull'Asse x</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#1a4b8c;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;--red:#b5351a;--green:#1a6b3a;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
+
+.hero{background:var(--ink);color:#fff;padding:52px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:12px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,42px);font-weight:700;line-height:1.1;margin-bottom:8px}
+.hero h1 em{color:#7aaddf;font-style:italic}
+.hero p{font-size:14px;color:rgba(255,255,255,0.4);font-weight:300;max-width:480px;margin:0 auto}
+
+.page{max-width:920px;margin:0 auto;padding:32px 24px}
+@media(max-width:600px){.page{padding:20px 12px}}
+
+/* CARDS CARICHE */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-bottom:14px}
+.charge-card{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:10px 12px}
+.ch-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ch-name{font-size:12px;font-weight:600;font-family:'Source Code Pro',monospace}
+.ch-head label{font-size:11px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:3px}
+.ch-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;color:var(--muted)}
+.ch-row label{min-width:42px;font-weight:600}
+.ch-row input[type=range]{flex:1;accent-color:var(--accent)}
+.ch-row .vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:42px;text-align:right;color:var(--ink)}
+
+/* TOOLBAR */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;align-items:center;font-size:12px;color:var(--muted)}
+.toolbar label{font-weight:600}
+.toolbar input[type=range]{width:90px;accent-color:var(--accent)}
+.toolbar .vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:36px;color:var(--ink)}
+.tbtn{padding:4px 12px;border-radius:3px;border:1px solid var(--border);background:var(--surf2);color:var(--muted);font-size:11px;cursor:pointer}
+.tbtn:hover{background:var(--surface)}
+
+/* CANVAS */
+canvas{display:block;border:1px solid var(--border);border-radius:5px;background:#fff;width:100%}
+
+/* INFO */
+.info{background:var(--ink);color:#fff;border-radius:4px;padding:10px 14px;margin-top:10px;font-family:'Source Code Pro',monospace;font-size:12px;line-height:1.8;min-height:36px}
+
+/* LEGENDA */
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted);align-items:center}
+.ld{width:20px;height:3px;border-radius:1px;display:inline-block;margin-right:4px;vertical-align:middle}
+
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:40px;padding:20px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Fisica II — Elettrostatica</div>
+  <h1>Potenziale Elettrico<br><em>sull'Asse x</em></h1>
+  <p>Fino a 5 cariche puntiformi sull'asse x — il grafico mostra V(x) in funzione della posizione</p>
+</div>
+
+<div class="page">
+
+  <!-- CARDS CARICHE -->
+  <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px">Cariche sorgente</div>
+  <div class="cards-grid" id="cardsGrid"></div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <label>Zoom V</label>
+    <input type="range" id="zoomV" min="0.2" max="5" step="0.1" value="1">
+    <span class="vv" id="zoomVv">1×</span>
+    <label style="margin-left:8px">Zoom x</label>
+    <input type="range" id="zoomX" min="0.3" max="4" step="0.1" value="1">
+    <span class="vv" id="zoomXv">1×</span>
+    <button class="tbtn" id="btnReset">Reset zoom</button>
+    <button class="tbtn" id="btnResetAll">Reset tutto</button>
+  </div>
+
+  <!-- CANVAS -->
+  <canvas id="cv"></canvas>
+
+  <!-- INFO -->
+  <div class="info" id="info">Muovi il cursore sul grafico per leggere i valori di V(x)</div>
+
+  <!-- LEGENDA -->
+  <div class="leg">
+    <span><span class="ld" style="background:#1a4b8c"></span>V(x) totale</span>
+    <span><span class="ld" style="background:#aaa;border-top:1px dashed #888"></span>V(x) singole cariche</span>
+    <span style="font-size:10px;color:#bbb">Clicca sul grafico per leggere V nel punto x · Cursore sul grafico per valore continuo</span>
+  </div>
+
+<footer>Didattica Pierri · Fisica II · Potenziale sull'Asse x</footer>
+</div>
+
+<script>
+const K = 8.9875e9; // costante di Coulomb
+const UNITS_Q = {'mC':1e-3,'µC':1e-6,'nC':1e-9,'pC':1e-12};
+
+// Colori per le 5 cariche
+const COLORS_POS = ['#e05252','#3a8f3a','#c47a00','#7a4fc4','#0e6b6b'];
+const COLORS_NEG = ['#4a90d9','#d4537e','#5daa9a','#888820','#b5351a'];
+const NAMES = ['Q₁','Q₂','Q₃','Q₄','Q₅'];
+
+// Stato cariche
+const charges = [
+  {on:true,  x:2,  q:1,  uq:'µC'},
+  {on:true,  x:-2, q:-1, uq:'µC'},
+  {on:false, x:4,  q:1,  uq:'µC'},
+  {on:false, x:-4, q:1,  uq:'µC'},
+  {on:false, x:0,  q:2,  uq:'µC'},
+];
+
+let zoomV=1, zoomX=1;
+let mouseX=null; // posizione x mondo del cursore
+
+// ── Costruisce UI cariche ──
+function buildUI(){
+  const grid = document.getElementById('cardsGrid');
+  grid.innerHTML = '';
+  charges.forEach((c,i)=>{
+    const col = c.q >= 0 ? COLORS_POS[i] : COLORS_NEG[i];
+    const div = document.createElement('div');
+    div.className = 'charge-card';
+    div.innerHTML = `
+      <div class="ch-head">
+        <span class="ch-name" id="cname${i}" style="color:${col}">${NAMES[i]} (${c.q>0?'+':''}${c.q} ${c.uq})</span>
+        <label><input type="checkbox" id="con${i}" ${c.on?'checked':''}> on</label>
+      </div>
+      <div class="ch-row">
+        <label>Posizione</label>
+        <input type="range" id="cx${i}" min="-9" max="9" step="0.5" value="${c.x}">
+        <span class="vv" id="cxv${i}">${c.x} m</span>
+      </div>
+      <div class="ch-row">
+        <label>q</label>
+        <input type="range" id="cq${i}" min="-5" max="5" step="0.5" value="${c.q}">
+        <span class="vv" id="cqv${i}">${c.q>0?'+':''}${c.q}</span>
+      </div>
+      <div class="ch-row">
+        <label>Unità</label>
+        <select id="cuq${i}" style="font-size:10px;padding:2px 4px;border:1px solid var(--border);border-radius:3px;background:#fff;flex:1">
+          ${['mC','µC','nC','pC'].map(u=>`<option ${c.uq===u?'selected':''}>${u}</option>`).join('')}
+        </select>
+      </div>`;
+    grid.appendChild(div);
+
+    document.getElementById(`con${i}`).onchange = e => { charges[i].on=e.target.checked; draw(); };
+    document.getElementById(`cx${i}`).oninput = e => {
+      charges[i].x = +e.target.value;
+      document.getElementById(`cxv${i}`).textContent = charges[i].x+' m';
+      draw();
+    };
+    document.getElementById(`cq${i}`).oninput = e => {
+      charges[i].q = +e.target.value;
+      document.getElementById(`cqv${i}`).textContent = (charges[i].q>0?'+':'')+charges[i].q;
+      updateName(i); draw();
+    };
+    document.getElementById(`cuq${i}`).onchange = e => { charges[i].uq=e.target.value; updateName(i); draw(); };
+  });
+}
+
+function updateName(i){
+  const c=charges[i];
+  const col = c.q >= 0 ? COLORS_POS[i] : COLORS_NEG[i];
+  const el = document.getElementById(`cname${i}`);
+  if(el){ el.style.color=col; el.textContent=`${NAMES[i]} (${c.q>0?'+':''}${c.q} ${c.uq})`; }
+}
+
+// ── Calcolo potenziale ──
+function Vpot(xm){
+  // xm in metri
+  let v = 0;
+  charges.forEach(c => {
+    if(!c.on || c.q===0) return;
+    const qSI = c.q * UNITS_Q[c.uq];
+    const r = Math.abs(xm - c.x);
+    if(r < 0.01) return; // evita singolarità
+    v += K * qSI / r;
+  });
+  return v;
+}
+
+function VpotSingle(xm, i){
+  const c = charges[i];
+  if(!c.on || c.q===0) return 0;
+  const qSI = c.q * UNITS_Q[c.uq];
+  const r = Math.abs(xm - c.x);
+  if(r < 0.01) return 0;
+  return K * qSI / r;
+}
+
+// ── Formatta potenziale ──
+function fmtV(v){
+  const a=Math.abs(v);
+  if(!isFinite(v)||isNaN(v)) return '—';
+  if(a===0) return '0 V';
+  if(a>=1e6) return (v/1e6).toFixed(3)+' MV';
+  if(a>=1e3) return (v/1e3).toFixed(3)+' kV';
+  if(a>=1)   return v.toFixed(3)+' V';
+  if(a>=1e-3)return (v*1e3).toFixed(3)+' mV';
+  return v.toExponential(3)+' V';
+}
+
+// ── DISEGNO ──
+const cv = document.getElementById('cv');
+
+function setCanvasSize(){
+  const w = Math.max(cv.parentElement.clientWidth-2, 300);
+  cv.style.width = w+'px';
+  cv.style.height = Math.round(w*0.52)+'px';
+}
+
+function draw(){
+  setCanvasSize();
+  const W = parseInt(cv.style.width)||600;
+  const H = parseInt(cv.style.height)||320;
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+
+  const pl=64, pr=20, pt=24, pb=48;
+  const GW=W-pl-pr, GH=H-pt-pb;
+
+  // Range x in metri (asse x fisico)
+  const xRange = 10 / zoomX; // da -xRange a +xRange
+  const xmin=-xRange, xmax=xRange;
+
+  // Calcola range V (campionando il grafico)
+  const NP=600;
+  const xs=[], vs=[];
+  let vmin=Infinity, vmax=-Infinity;
+  const VCLAMP = 2e5; // clamp per evitare picchi infiniti
+  for(let i=0;i<=NP;i++){
+    const xm=xmin+i*(xmax-xmin)/NP;
+    let v=Vpot(xm);
+    v=Math.max(-VCLAMP,Math.min(VCLAMP,v));
+    xs.push(xm); vs.push(v);
+    if(v<vmin)vmin=v; if(v>vmax)vmax=v;
+  }
+  // Applica zoom V
+  const vCenter=(vmax+vmin)/2;
+  const vHalf=Math.max(Math.abs(vmax-vCenter),Math.abs(vmin-vCenter))/zoomV;
+  const VMIN=vCenter-vHalf*1.15, VMAX=vCenter+vHalf*1.15;
+  if(VMAX===VMIN){return;}
+
+  // Funzioni coordinate
+  const sx = xm => pl + (xm-xmin)/(xmax-xmin)*GW;
+  const sy = v  => pt + GH - (Math.max(VMIN,Math.min(VMAX,v))-VMIN)/(VMAX-VMIN)*GH;
+  const y0 = sy(0); // posizione y dell'asse x (V=0)
+
+  // Griglia
+  function niceStep(range,n){const r=range/n,m=Math.pow(10,Math.floor(Math.log10(r||1))),t=r/m;return(t<2?1:t<5?2:5)*m;}
+  const xStep=niceStep(xmax-xmin,8);
+  const vStep=niceStep(VMAX-VMIN,6);
+
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  for(let x=Math.ceil(xmin/xStep)*xStep;x<=xmax+xStep;x+=xStep){
+    ctx.beginPath();ctx.moveTo(sx(x),pt);ctx.lineTo(sx(x),H-pb);ctx.stroke();
+  }
+  for(let v=Math.ceil(VMIN/vStep)*vStep;v<=VMAX+vStep;v+=vStep){
+    ctx.beginPath();ctx.moveTo(pl,sy(v));ctx.lineTo(W-pr,sy(v));ctx.stroke();
+  }
+
+  // Asse V=0 (linea principale)
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+  if(y0>=pt&&y0<=H-pb){
+    ctx.beginPath();ctx.moveTo(pl,y0);ctx.lineTo(W-pr,y0);ctx.stroke();
+  }
+  // Asse verticale (x=0)
+  const x0px=sx(0);
+  if(x0px>=pl&&x0px<=W-pr){
+    ctx.beginPath();ctx.moveTo(x0px,pt);ctx.lineTo(x0px,H-pb);ctx.stroke();
+  }
+
+  // Etichette asse x
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='10px monospace';ctx.textAlign='center';
+  for(let x=Math.ceil(xmin/xStep)*xStep;x<=xmax+xStep;x+=xStep){
+    if(Math.abs(x)<xStep*0.01)continue;
+    const lbl=Math.abs(x)>=1?x.toFixed(1)+'m':(x*100).toFixed(0)+'cm';
+    ctx.fillText(lbl,sx(x),H-pb+13);
+  }
+  // Etichette asse V
+  ctx.textAlign='right';
+  for(let v=Math.ceil(VMIN/vStep)*vStep;v<=VMAX+vStep;v+=vStep){
+    if(sy(v)<pt||sy(v)>H-pb)continue;
+    ctx.fillText(fmtV(v),pl-4,sy(v)+3);
+  }
+  ctx.textAlign='center';ctx.fillText('x',W-pr,H-pb+13);
+  ctx.textAlign='right';ctx.fillText('V(x)',pl-4,pt+10);
+
+  // Curva contributi singoli (tratteggiate)
+  const activeCharges=charges.filter((c,i)=>c.on&&c.q!==0);
+  if(activeCharges.length>1){
+    charges.forEach((c,i)=>{
+      if(!c.on||c.q===0)return;
+      const col=c.q>=0?COLORS_POS[i]:COLORS_NEG[i];
+      ctx.strokeStyle=col+'66';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+      ctx.beginPath();
+      let first=true;
+      for(let j=0;j<=NP;j++){
+        let v=VpotSingle(xs[j],i);
+        v=Math.max(-VCLAMP,Math.min(VCLAMP,v));
+        if(v<VMIN*1.05||v>VMAX*1.05){first=true;continue;}
+        first?ctx.moveTo(sx(xs[j]),sy(v)):ctx.lineTo(sx(xs[j]),sy(v));
+        first=false;
+      }
+      ctx.stroke();ctx.setLineDash([]);
+    });
+  }
+
+  // Curva totale
+  ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2.2;ctx.setLineDash([]);
+  ctx.beginPath();
+  let first=true;
+  for(let i=0;i<=NP;i++){
+    const v=vs[i];
+    if(v<=VMIN*1.05||v>=VMAX*1.05){first=true;continue;}
+    first?ctx.moveTo(sx(xs[i]),sy(v)):ctx.lineTo(sx(xs[i]),sy(v));
+    first=false;
+  }
+  ctx.stroke();
+
+  // Posizioni cariche sull'asse x
+  charges.forEach((c,i)=>{
+    if(!c.on)return;
+    const cx_px=sx(c.x);
+    if(cx_px<pl||cx_px>W-pr)return;
+    const col=c.q>=0?COLORS_POS[i]:COLORS_NEG[i];
+    // triangolino sulla linea V=0
+    const ty=Math.min(Math.max(y0,pt+2),H-pb-2);
+    ctx.beginPath();ctx.arc(cx_px,ty,6,0,2*Math.PI);
+    ctx.fillStyle=col;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='#fff';ctx.font='bold 9px Arial';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(c.q>=0?'+':'−',cx_px,ty+0.5);ctx.textBaseline='alphabetic';
+    // label
+    ctx.fillStyle=col;ctx.font='bold 10px monospace';ctx.textAlign='center';
+    ctx.fillText(NAMES[i],cx_px,ty+18);
+  });
+
+  // Linea verticale cursore + lettura V
+  if(mouseX!==null && mouseX>=xmin && mouseX<=xmax){
+    const mxpx=sx(mouseX);
+    ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(mxpx,pt);ctx.lineTo(mxpx,H-pb);ctx.stroke();ctx.setLineDash([]);
+    const vAtX=Vpot(mouseX);
+    if(isFinite(vAtX)){
+      const vypx=sy(Math.max(VMIN,Math.min(VMAX,vAtX)));
+      ctx.beginPath();ctx.arc(mxpx,vypx,4,0,2*Math.PI);
+      ctx.fillStyle='#1a4b8c';ctx.fill();
+    }
+    // testo info
+    let infoStr=`x = ${mouseX.toFixed(2)} m  →  V(x) = ${fmtV(vAtX)}`;
+    if(activeCharges.length>1){
+      infoStr+='\n';
+      charges.forEach((c,i)=>{
+        if(!c.on||c.q===0)return;
+        infoStr+=`  ${NAMES[i]}: ${fmtV(VpotSingle(mouseX,i))}`;
+      });
+    }
+    document.getElementById('info').textContent=infoStr;
+  }
+
+  // Assi visivi
+  ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+}
+
+// ── EVENTI CANVAS ──
+function getXfromEvent(e){
+  const rect=cv.getBoundingClientRect();
+  const px=e.clientX-rect.left;
+  const pl=64,pr=20;
+  const GW=cv.width-pl-pr;
+  if(px<pl||px>cv.width-pr)return null;
+  const xRange=10/zoomX;
+  return -xRange+(px-pl)/GW*(2*xRange);
+}
+cv.addEventListener('mousemove',e=>{
+  mouseX=getXfromEvent(e);
+  draw();
+});
+cv.addEventListener('mouseleave',()=>{
+  mouseX=null;
+  document.getElementById('info').textContent='Muovi il cursore sul grafico per leggere i valori di V(x)';
+  draw();
+});
+cv.addEventListener('click',e=>{
+  const x=getXfromEvent(e);
+  if(x===null)return;
+  const v=Vpot(x);
+  document.getElementById('info').textContent=
+    `📍 x = ${x.toFixed(3)} m  →  V(x) = ${fmtV(v)}  (${v.toExponential(3)} V)`;
+});
+
+// ── TOOLBAR ──
+document.getElementById('zoomV').oninput=e=>{
+  zoomV=+e.target.value;document.getElementById('zoomVv').textContent=zoomV.toFixed(1)+'×';draw();
+};
+document.getElementById('zoomX').oninput=e=>{
+  zoomX=+e.target.value;document.getElementById('zoomXv').textContent=zoomX.toFixed(1)+'×';draw();
+};
+document.getElementById('btnReset').onclick=()=>{
+  zoomV=1;zoomX=1;
+  document.getElementById('zoomV').value=1;document.getElementById('zoomVv').textContent='1×';
+  document.getElementById('zoomX').value=1;document.getElementById('zoomXv').textContent='1×';
+  draw();
+};
+document.getElementById('btnResetAll').onclick=()=>{
+  charges.forEach((c,i)=>{
+    const def=[{x:2,q:1},{x:-2,q:-1},{x:4,q:1},{x:-4,q:1},{x:0,q:2}];
+    const on=[true,true,false,false,false];
+    c.x=def[i].x;c.q=def[i].q;c.uq='µC';c.on=on[i];
+  });
+  zoomV=1;zoomX=1;
+  document.getElementById('zoomV').value=1;document.getElementById('zoomVv').textContent='1×';
+  document.getElementById('zoomX').value=1;document.getElementById('zoomXv').textContent='1×';
+  buildUI();draw();
+};
+
+window.addEventListener('resize',()=>draw());
+buildUI();
+draw();
+</script>
+</body>
+</html>
