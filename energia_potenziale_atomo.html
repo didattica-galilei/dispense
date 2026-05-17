@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energia Potenziale dell'Elettrone — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#1a4b8c;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;--red:#b5351a;--green:#1a6b3a;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:64px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,44px);font-weight:700;line-height:1.15;margin-bottom:10px}
+.hero h1 em{color:#7aaddf;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.4);font-weight:300;max-width:520px;margin:0 auto 28px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 24px}
+.nav-inner{max-width:900px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:12px 13px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:900px;margin:0 auto;padding:48px 32px}
+@media(max-width:600px){.page{padding:28px 14px}.nav{padding:0 8px}.nav a{padding:10px 9px;font-size:10px}}
+.sec{margin-bottom:70px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px}
+h3{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin:18px 0 7px}
+p{font-size:15px;margin-bottom:11px;color:#2a2a2e}
+ul,ol{margin:6px 0 11px 22px;font-size:15px}
+li{margin-bottom:5px;color:#2a2a2e}
+strong{font-weight:600}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--accent);text-align:center;padding:14px 18px;margin:13px 0;border-radius:0 3px 3px 0}
+.box-f .f{font-family:'Playfair Display',serif;font-size:19px;color:var(--accent);margin-bottom:4px}
+.box-f .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:#e8f0fa;border-left:3px solid var(--accent);color:#0a2050;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-w{background:#fdf3ee;border-left:3px solid var(--red);color:#5a1a0a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:18px;margin:20px 0}
+.sim-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.sim-title::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:14px}
+.ctrl-item{background:var(--surface);border-radius:4px;padding:10px 12px}
+.ctrl-item label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px}
+.ctrl-item input[type=range]{width:100%;accent-color:var(--accent);margin-bottom:3px}
+.ctrl-item .val{font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:var(--ink)}
+canvas{display:block;border:1px solid var(--border);border-radius:4px;background:#fff;cursor:crosshair;width:100%}
+.info-bar{margin-top:8px;font-size:12px;color:var(--muted);font-family:'Source Code Pro',monospace;background:var(--surface);padding:8px 12px;border-radius:4px;min-height:32px}
+.info-bar span{color:var(--ink)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--muted);align-items:center}
+.ld{display:inline-block;width:22px;height:3px;border-radius:1px;margin-right:4px;vertical-align:middle}
+.levels-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px}
+.levels-table th{background:var(--ink);color:#fff;padding:7px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;font-weight:400}
+.levels-table td{padding:7px 10px;border-bottom:1px solid var(--border);font-family:'Source Code Pro',monospace;font-size:12px}
+.levels-table tr:nth-child(even) td{background:var(--surface)}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;padding:22px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Fisica — Fisica Atomica · Modello di Bohr</div>
+  <h1>Energia Potenziale<br>dell'<em>Elettrone</em> nel Nucleo</h1>
+  <p class="hero-sub">Pozzo coulombiano U(r), livelli energetici quantizzati e transizioni — con simulatore interattivo</p>
+  <div class="rule"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#teoria" class="active">Teoria</a>
+    <a href="#pozzo">Pozzo coulombiano</a>
+    <a href="#bohr">Modello di Bohr</a>
+    <a href="#livelli">Livelli energetici</a>
+    <a href="#simulatore">Simulatore</a>
+    <a href="#transizioni">Transizioni</a>
+    <a href="#solido">Cristallo e bande</a>
+    <a href="#sim2">Sim 2 — Serie di pozzi</a>
+    <a href="#conduttori">Conduttori/Isolanti</a>
+    <a href="#esercizi">Esercizi</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<div class="sec" id="teoria">
+  <h2>1. Il Sistema Nucleo–Elettrone</h2>
+  <p class="sec-sub">Forza di Coulomb ed energia potenziale</p>
+  <p>Un elettrone di carica −e orbitante attorno a un nucleo di carica +Ze è soggetto alla <strong>forza di Coulomb attrattiva</strong>. L'<strong>energia potenziale</strong> dell'elettrone a distanza r dal nucleo è:</p>
+  <div class="box-f">
+    <div class="f">U(r) = −k·Z·e² / r</div>
+    <div class="fd">k = 8,99×10⁹ N·m²/C² &nbsp;·&nbsp; e = 1,602×10⁻¹⁹ C &nbsp;·&nbsp; r = distanza nucleo-elettrone</div>
+  </div>
+  <h3>Proprietà di U(r)</h3>
+  <ul>
+    <li><strong>U(r) sempre negativa:</strong> l'elettrone è in un pozzo di potenziale</li>
+    <li><strong>U → 0</strong> per r → ∞ (zero di riferimento convenzionale all'infinito)</li>
+    <li><strong>U → −∞</strong> per r → 0 (singolarità coulombiana non fisicamente raggiunta)</li>
+    <li>La curva forma un <strong>pozzo a V</strong> simmetrico rispetto al nucleo</li>
+  </ul>
+</div>
+
+<div class="sec" id="pozzo">
+  <h2>2. Il Pozzo di Potenziale Coulombiano</h2>
+  <p class="sec-sub">Forma della curva U(r) e significato fisico dell'energia totale</p>
+  <p>Rappresentando U(r) sia per r > 0 che per r < 0 (simmetria sferica) si ottiene un <strong>pozzo a forma di V</strong> con il nucleo al centro. L'elettrone è "intrappolato" in questo pozzo.</p>
+  <div class="box-f">
+    <div class="f">E_tot = K + U = ½mv² − kZe²/r</div>
+    <div class="fd">K ≥ 0 sempre &nbsp;·&nbsp; U < 0 sempre &nbsp;·&nbsp; E_tot < 0 → elettrone legato</div>
+  </div>
+  <h3>Tre regimi energetici</h3>
+  <ul>
+    <li><strong>E_tot &lt; 0:</strong> elettrone <em>legato</em> — non può allontanarsi all'infinito</li>
+    <li><strong>E_tot = 0:</strong> soglia di <em>ionizzazione</em> — l'elettrone è appena libero</li>
+    <li><strong>E_tot &gt; 0:</strong> elettrone <em>libero</em> — energia cinetica residua dopo ionizzazione</li>
+  </ul>
+  <div class="box-w">⚠ In meccanica classica qualsiasi E_tot &lt; 0 sarebbe possibile. La meccanica quantistica impone che solo certi valori discreti siano permessi: i <strong>livelli energetici quantizzati</strong>.</div>
+</div>
+
+<div class="sec" id="bohr">
+  <h2>3. Il Modello di Bohr</h2>
+  <p class="sec-sub">Quantizzazione del momento angolare e orbite stazionarie</p>
+  <p>Bohr (1913) propose due postulati fondamentali che spiegano la discretizzazione dei livelli:</p>
+  <h3>Postulato 1 — Orbite stazionarie</h3>
+  <div class="box-f">
+    <div class="f">L = mvr = n·ℏ &nbsp;&nbsp; n = 1, 2, 3, …</div>
+    <div class="fd">ℏ = h/2π = 1,055×10⁻³⁴ J·s &nbsp;·&nbsp; n = numero quantico principale</div>
+  </div>
+
+  <h3>Perché proprio queste orbite? Il legame con le onde stazionarie</h3>
+  <p>Il postulato di Bohr sembra arbitrario: perché solo certe orbite sono permesse? La risposta arriva dall'idea di <strong>de Broglie</strong> (1924): ogni particella in moto ha una <strong>lunghezza d'onda associata</strong>.</p>
+  <div class="box-f">
+    <div class="f">λ = h / p = h / (mv)</div>
+    <div class="fd">λ = lunghezza d'onda di de Broglie &nbsp;·&nbsp; p = mv = quantità di moto dell'elettrone</div>
+  </div>
+  <p>Ricordate le <strong>onde stazionarie su una corda</strong> tesa tra due estremi fissi: la corda può vibrare solo con lunghezze d'onda tali da contenere un numero intero di semionde tra gli estremi. Analogia: se l'elettrone è un'onda che percorre la circonferenza dell'orbita, per non autodistruggersi per interferenza deve formare un'<strong>onda stazionaria chiusa</strong>. Cioè la lunghezza d'onda deve stare esattamente un numero intero di volte nella circonferenza:</p>
+  <div class="box-f">
+    <div class="f">2πr = n·λ &nbsp;&nbsp; cioè &nbsp;&nbsp; 2πr = n · h/(mv)</div>
+    <div class="fd">La circonferenza deve contenere esattamente n lunghezze d'onda intere &nbsp;·&nbsp; n = 1, 2, 3, …</div>
+  </div>
+  <p>Riarrangiando si ottiene <strong>esattamente il postulato di Bohr</strong>:</p>
+  <div class="box-f">
+    <div class="f">mvr = n · h/(2π) = n·ℏ</div>
+    <div class="fd">Il postulato di Bohr è la condizione di risonanza dell'onda dell'elettrone sull'orbita</div>
+  </div>
+  <div class="box-n">
+    💡 <strong>Analogia con le onde stazionarie:</strong><br>
+    • Corda vibrante fissa agli estremi: n = numero di ventri → frequenze permesse fₙ = n·f₁<br>
+    • Elettrone nell'atomo: n = numero di λ sull'orbita → raggi e energie permesse Eₙ<br><br>
+    In entrambi i casi è la <strong>condizione di intero</strong> che quantizza il sistema. Le orbite "proibite" corrispondono a onde che, dopo un giro completo, si distruggono per interferenza distruttiva. Solo le orbite in cui l'onda si chiude su se stessa costruttivamente sono stabili.
+  </div>
+  <h3>Postulato 2 — Emissione e assorbimento</h3>
+  <div class="box-f">
+    <div class="f">E_fotone = hν = |E_n2 − E_n1|</div>
+    <div class="fd">L'elettrone emette/assorbe un fotone solo saltando tra livelli</div>
+  </div>
+  <h3>Raggi delle orbite</h3>
+  <div class="box-f">
+    <div class="f">r_n = n²·a₀/Z &nbsp;&nbsp; con a₀ = 0,529 Å</div>
+    <div class="fd">a₀ = raggio di Bohr (orbita fondamentale dell'idrogeno)</div>
+  </div>
+</div>
+
+<div class="sec" id="livelli">
+  <h2>4. Livelli Energetici Quantizzati</h2>
+  <p class="sec-sub">Formula di Bohr per l'energia dei livelli</p>
+  <div class="box-f">
+    <div class="f">E_n = −13,6 eV · Z² / n²</div>
+    <div class="fd">n = 1,2,3,… &nbsp;·&nbsp; Z = numero atomico &nbsp;·&nbsp; 13,6 eV = energia di Rydberg</div>
+  </div>
+  <ul>
+    <li>Tutti i livelli hanno <strong>energia negativa</strong> → l'elettrone è sempre legato</li>
+    <li>Il livello <strong>fondamentale</strong> (n=1) è il più basso (più negativo)</li>
+    <li>I livelli convergono a zero per n → ∞</li>
+    <li>L'<strong>energia di ionizzazione</strong> da n=1 è 13,6·Z² eV</li>
+  </ul>
+  <div class="box-n">💡 Per l'idrogeno (Z=1): E₁=−13,6 eV, E₂=−3,4 eV, E₃=−1,51 eV, E₄=−0,85 eV</div>
+  <table class="levels-table">
+    <tr><th>n</th><th>Eₙ (eV)</th><th>rₙ (Å)</th><th>stato</th></tr>
+    <tr><td>1</td><td>−13,600</td><td>0,529</td><td>fondamentale</td></tr>
+    <tr><td>2</td><td>−3,400</td><td>2,116</td><td>1° eccitato</td></tr>
+    <tr><td>3</td><td>−1,511</td><td>4,761</td><td>2° eccitato</td></tr>
+    <tr><td>4</td><td>−0,850</td><td>8,464</td><td>3° eccitato</td></tr>
+    <tr><td>5</td><td>−0,544</td><td>13,225</td><td>4° eccitato</td></tr>
+    <tr><td>∞</td><td>0</td><td>∞</td><td>ionizzazione</td></tr>
+  </table>
+</div>
+
+<!-- SIMULATORE -->
+<div class="sec" id="simulatore">
+  <h2>5. Simulatore — U(r) e Livelli Energetici</h2>
+  <p class="sec-sub">Pozzo coulombiano simmetrico con i livelli Eₙ sovrapposti — asse orizzontale = distanza dal nucleo</p>
+  <div class="sim-wrap">
+    <div class="sim-title">U(r) = −kZe²/|r| — grafico simmetrico rispetto al nucleo (r=0)</div>
+    <div class="ctrl-grid">
+      <div class="ctrl-item">
+        <label>Numero atomico Z</label>
+        <input type="range" id="slZ" min="1" max="20" step="1" value="1">
+        <div class="val" id="vlZ">Z = 1 (H)</div>
+      </div>
+      <div class="ctrl-item">
+        <label>Livelli mostrati (n max)</label>
+        <input type="range" id="slN" min="3" max="8" step="1" value="5">
+        <div class="val" id="vlN">n = 1 … 5</div>
+      </div>
+      <div class="ctrl-item">
+        <label>Zoom asse r</label>
+        <input type="range" id="slZX" min="0.2" max="4" step="0.1" value="1">
+        <div class="val" id="vlZX">1×</div>
+      </div>
+      <div class="ctrl-item">
+        <label>Zoom asse U</label>
+        <input type="range" id="slZV" min="0.2" max="5" step="0.1" value="1">
+        <div class="val" id="vlZV">1×</div>
+      </div>
+    </div>
+    <canvas id="cv"></canvas>
+    <div class="info-bar" id="infoBar"><span>Muovi il cursore sul grafico per leggere U(r)</span></div>
+    <div class="leg">
+      <span><span class="ld" style="background:#b5351a"></span>U(r) coulombiano</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>U = 0 (ionizzazione)</span>
+      <span><span class="ld" style="background:#1a4b8c;border-top:2px dashed #1a4b8c"></span>Livelli Eₙ</span>
+      <span style="font-size:10px;color:#bbb">Cursore sul grafico per leggere i valori</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="transizioni">
+  <h2>6. Transizioni e Spettro</h2>
+  <p class="sec-sub">Emissione e assorbimento di fotoni tra livelli</p>
+  <div class="box-f">
+    <div class="f">ΔE = 13,6·Z² · (1/n₁² − 1/n₂²) eV</div>
+    <div class="fd">n₂ > n₁ → emissione fotone &nbsp;·&nbsp; n₁ > n₂ → assorbimento fotone</div>
+  </div>
+  <h3>Serie spettrali dell'idrogeno</h3>
+  <ul>
+    <li><strong>Lyman</strong> (n₁=1): transizioni verso il fondamentale → UV</li>
+    <li><strong>Balmer</strong> (n₁=2): transizioni verso n=2 → visibile (Hα 656 nm, Hβ 486 nm)</li>
+    <li><strong>Paschen</strong> (n₁=3): transizioni verso n=3 → infrarosso</li>
+  </ul>
+</div>
+
+
+<!-- SOLIDO -->
+<div class="sec" id="solido">
+  <h2>8. Dal Singolo Atomo al Solido Cristallino</h2>
+  <p class="sec-sub">Come i livelli discreti diventano bande di energia</p>
+  <p>In un solido cristallino gli atomi sono disposti in un <strong>reticolo periodico</strong>. Ogni elettrone sente la <strong>somma periodica</strong> di tutti i pozzi coulombiani dei nuclei vicini.</p>
+  <h3>Sovrapposizione dei pozzi</h3>
+  <p>Quando due atomi si avvicinano, i loro pozzi si sovrappongono nella regione tra i nuclei. I due livelli energetici identici si <strong>sdoppiano</strong>. Con N atomi ogni livello si divide in <strong>N livelli</strong> molto ravvicinati che formano una <strong>banda continua</strong>.</p>
+  <div class="box-f">
+    <div class="f">N atomi &rarr; ogni livello E&#x2099; diventa una banda di larghezza &Delta;E</div>
+    <div class="fd">Tra bande successive possono esserci regioni vietate: i <strong>gap energetici</strong></div>
+  </div>
+  <h3>Banda di valenza e banda di conduzione</h3>
+  <ul>
+    <li><strong>Banda di valenza:</strong> banda pi&ugrave; alta completamente occupata a T=0</li>
+    <li><strong>Banda di conduzione:</strong> banda superiore, normalmente vuota o parzialmente occupata</li>
+    <li><strong>Gap energetico (E_gap):</strong> differenza tra cima della valenza e fondo della conduzione</li>
+  </ul>
+  <div class="box-n">&#x1F4A1; Un elettrone pu&ograve; condurre corrente solo se ha stati liberi accessibili. Nella banda di conduzione ci sono stati liberi; nella banda di valenza piena no.</div>
+</div>
+
+<!-- SIM 2 -->
+<div class="sec" id="sim2">
+  <h2>9. Simulatore 2 &mdash; Serie di Pozzi Coulombiani</h2>
+  <p class="sec-sub">U(x) per N nuclei allineati &mdash; sovrapposizione dei pozzi e allargamento in bande</p>
+  <div class="sim-wrap">
+    <div class="sim-title">U(x) = &minus;&Sigma; kZe&sup2;/|x&minus;x&#x1D62;| &mdash; serie di N nuclei equidistanti</div>
+    <div class="ctrl-grid">
+      <div class="ctrl-item">
+        <label>Numero nuclei N</label>
+        <input type="range" id="s2N" min="2" max="8" step="1" value="4">
+        <div class="val" id="v2N">N = 4</div>
+      </div>
+      <div class="ctrl-item">
+        <label>Distanza tra nuclei (&Aring;)</label>
+        <input type="range" id="s2d" min="1.5" max="8" step="0.5" value="3">
+        <div class="val" id="v2d">d = 3,0 &Aring;</div>
+      </div>
+      <div class="ctrl-item">
+        <label>Numero atomico Z</label>
+        <input type="range" id="s2Z" min="1" max="10" step="1" value="1">
+        <div class="val" id="v2Z">Z = 1 (H)</div>
+      </div>
+      <div class="ctrl-item">
+        <label>Zoom U</label>
+        <input type="range" id="s2ZV" min="0.2" max="4" step="0.1" value="1">
+        <div class="val" id="v2ZV">1&times;</div>
+      </div>
+    </div>
+    <canvas id="cv2"></canvas>
+    <div class="info-bar" id="infoBar2"><span>Muovi il cursore sul grafico</span></div>
+    <div class="leg">
+      <span><span class="ld" style="background:#b5351a"></span>U(x) totale</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>U = 0</span>
+      <span><span class="ld" style="background:#1a4b8c"></span>Livelli E&#x2099;</span>
+      <span>&#x25CF; Nuclei</span>
+      <span style="font-size:10px;color:#bbb">Riduci la distanza per vedere la sovrapposizione</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONDUTTORI ISOLANTI SEMICONDUTTORI -->
+<div class="sec" id="conduttori">
+  <h2>10. Conduttori, Semiconduttori e Isolanti</h2>
+  <p class="sec-sub">La differenza sta nel gap energetico tra banda di valenza e banda di conduzione</p>
+  <h3>Conduttori (metalli)</h3>
+  <p>La banda di conduzione &egrave; <strong>parzialmente occupata</strong>. Gli elettroni hanno stati liberi immediatamente accessibili senza energia aggiuntiva.</p>
+  <div class="box-f">
+    <div class="f">E_gap = 0 eV</div>
+    <div class="fd">Esempi: rame (Cu), alluminio (Al), oro (Au)</div>
+  </div>
+  <h3>Isolanti</h3>
+  <p>La banda di valenza &egrave; <strong>completamente piena</strong> e il gap &egrave; molto grande. L&apos;agitazione termica a temperatura ambiente (~0,025 eV) non basta a far saltare gli elettroni nella banda di conduzione.</p>
+  <div class="box-f">
+    <div class="f">E_gap &gt; 4 eV</div>
+    <div class="fd">Esempi: diamante (5,5 eV), SiO&#x2082; (9 eV), NaCl (8,5 eV)</div>
+  </div>
+  <h3>Semiconduttori</h3>
+  <p>Gap <strong>piccolo ma non nullo</strong>. A temperatura ambiente una piccola frazione di elettroni salta nella banda di conduzione. La conducibilit&agrave; <strong>aumenta con la temperatura</strong> e pu&ograve; essere controllata con il <strong>drogaggio</strong>.</p>
+  <div class="box-f">
+    <div class="f">E_gap &asymp; 0,1 &divide; 4 eV</div>
+    <div class="fd">Silicio: 1,12 eV &nbsp;&middot;&nbsp; Germanio: 0,67 eV &nbsp;&middot;&nbsp; GaAs: 1,42 eV</div>
+  </div>
+  <div class="box-n">&#x1F4A1; <strong>Drogaggio:</strong> aggiungendo impurit&agrave; controllate al silicio si aumenta il numero di elettroni liberi (tipo n) o di lacune (tipo p). &Egrave; il principio di transistor e circuiti integrati.</div>
+  <table class="levels-table">
+    <tr><th>Materiale</th><th>E_gap</th><th>Esempi</th></tr>
+    <tr><td>Conduttore</td><td>0 eV</td><td>Cu, Al, Au</td></tr>
+    <tr><td>Semiconduttore</td><td>0,1&ndash;4 eV</td><td>Si, Ge, GaAs</td></tr>
+    <tr><td>Isolante</td><td>&gt; 4 eV</td><td>SiO&#x2082;, diamante</td></tr>
+  </table>
+</div>
+
+<div class="sec" id="esercizi">
+  <h2>11. Esercizi Proposti</h2>
+  <p class="sec-sub">Livelli energetici e transizioni atomiche</p>
+  <ol>
+    <li><strong>Idrogeno:</strong> calcola l'energia del fotone emesso nella transizione 3→1. A quale lunghezza d'onda corrisponde?</li>
+    <li><strong>Ionizzazione:</strong> quanta energia serve per ionizzare H da n=2? E He (Z=2) da n=1?</li>
+    <li><strong>Raggio:</strong> calcola r₃ per l'idrogeno. Quante volte è più grande di r₁?</li>
+    <li><strong>Simulatore:</strong> aumenta Z. Come cambia la profondità del pozzo? Come cambiano i livelli?</li>
+    <li><strong>Assorbimento:</strong> H assorbe un fotone di 10,2 eV. Da quale livello a quale passa?</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri · Fisica · Fisica Atomica · Modello di Bohr</footer>
+</div>
+
+<script>
+const E_RY = 13.6;   // eV
+const A0   = 0.529;  // Å
+const K_E2 = 14.4;   // eV·Å  (k·e²)
+const ELEM = ['','H','He','Li','Be','B','C','N','O','F','Ne','Na','Mg','Al','Si','P','S','Cl','Ar','K','Ca'];
+const LVL_COLORS = ['#e05252','#3a8f3a','#c47a00','#7a4fc4','#0e6b6b','#d4537e','#1a6b3a','#888820'];
+
+const cv = document.getElementById('cv');
+let mouseXpx = null;
+
+function setSize(){
+  const w = Math.max(cv.parentElement.clientWidth-36, 300);
+  cv.style.width  = w+'px';
+  cv.style.height = Math.round(w*0.62)+'px';
+}
+
+const getZ   = () => +document.getElementById('slZ').value;
+const getNmax= () => +document.getElementById('slN').value;
+const getZX  = () => +document.getElementById('slZX').value;
+const getZV  = () => +document.getElementById('slZV').value;
+
+function draw(){
+  setSize();
+  const W = parseInt(cv.style.width)||600;
+  const H = parseInt(cv.style.height)||372;
+  cv.width=W; cv.height=H;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+
+  const Z=getZ(), Nmax=getNmax(), zX=getZX(), zV=getZV();
+  const pl=72, pr=16, pt=28, pb=48;
+  const GW=W-pl-pr, GH=H-pt-pb;
+
+  // ── Range fisico sull'asse x: da -rMax a +rMax (simmetrico) ──
+  // rMax scelta così che il livello Nmax sia ben visibile
+  const rMaxBase = (Nmax*Nmax*A0/Z) * 2.0;
+  const rMax = rMaxBase / zX;
+  const rMin = 0.08 * A0 / Z; // distanza minima (evita singolarità)
+
+  // ── Range U ──
+  const E1 = -E_RY*Z*Z;          // livello fondamentale (più basso)
+  const Umin = E1 * 1.3 / zV;
+  const Umax = -E1 * 0.12 / zV;
+  if(Umax<=Umin) return;
+
+  // ── Funzioni coordinate ──
+  // asse x: r lineare da -rMax a +rMax
+  // x=0 è il nucleo → centro del canvas
+  const sx = r  => pl + (r + rMax)/(2*rMax)*GW;   // r in Å (−rMax…+rMax)
+  const sy = u  => pt + GH - (Math.max(Umin,Math.min(Umax,u))-Umin)/(Umax-Umin)*GH;
+  const invSX= px=> (px-pl)/GW*(2*rMax) - rMax;   // px → r in Å
+  const y0  = sy(0);   // quota U=0
+  const x0  = sx(0);   // posizione nucleo
+
+  // ── Griglia U ──
+  function niceStep(range,n){
+    const r=range/n, m=Math.pow(10,Math.floor(Math.log10(Math.abs(r)||1))), t=r/m;
+    return (t<2?1:t<5?2:5)*m;
+  }
+  const uStep = niceStep(Umax-Umin,6);
+  ctx.strokeStyle='rgba(0,0,0,0.06)'; ctx.lineWidth=0.5;
+  for(let u=Math.ceil(Umin/uStep)*uStep; u<=Umax+uStep; u+=uStep){
+    const yy=sy(u); if(yy<pt||yy>H-pb) continue;
+    ctx.beginPath(); ctx.moveTo(pl,yy); ctx.lineTo(W-pr,yy); ctx.stroke();
+  }
+
+  // Griglia r
+  const rStep = niceStep(2*rMax, 8);
+  for(let r=Math.ceil(-rMax/rStep)*rStep; r<=rMax+rStep; r+=rStep){
+    const xx=sx(r); if(xx<pl||xx>W-pr) continue;
+    ctx.beginPath(); ctx.moveTo(xx,pt); ctx.lineTo(xx,H-pb); ctx.stroke();
+  }
+
+  // ── Asse U=0 (ionizzazione) ──
+  if(y0>=pt&&y0<=H-pb){
+    ctx.strokeStyle='#1a6b3a'; ctx.lineWidth=1.5; ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(pl,y0); ctx.lineTo(W-pr,y0); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#1a6b3a'; ctx.font='bold 10px monospace'; ctx.textAlign='left';
+    ctx.fillText('U = 0  (ionizzazione)', pl+4, y0-5);
+  }
+
+  // ── Asse verticale (nucleo r=0) ──
+  ctx.strokeStyle='rgba(0,0,0,0.25)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x0,pt); ctx.lineTo(x0,H-pb); ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,0.5)'; ctx.font='bold 10px monospace'; ctx.textAlign='center';
+  ctx.fillText('nucleo',x0,H-pb+14);
+
+  // ── Etichette asse U ──
+  ctx.fillStyle='rgba(0,0,0,0.45)'; ctx.font='10px monospace'; ctx.textAlign='right';
+  for(let u=Math.ceil(Umin/uStep)*uStep; u<=Umax+uStep; u+=uStep){
+    const yy=sy(u); if(yy<pt||yy>H-pb) continue;
+    const lbl = Math.abs(u)>=1 ? u.toFixed(1)+' eV' : u.toFixed(2)+' eV';
+    ctx.fillText(lbl, pl-4, yy+3);
+  }
+
+  // ── Etichette asse r ──
+  ctx.fillStyle='rgba(0,0,0,0.4)'; ctx.font='10px monospace'; ctx.textAlign='center';
+  for(let r=Math.ceil(-rMax/rStep)*rStep; r<=rMax+rStep; r+=rStep){
+    if(Math.abs(r)<rStep*0.05) continue;
+    const xx=sx(r); if(xx<pl||xx>W-pr) continue;
+    const lbl = Math.abs(r)>=1 ? r.toFixed(1)+' Å' : (r*100).toFixed(0)+'pm';
+    ctx.fillText(lbl, xx, H-pb+14);
+  }
+  ctx.fillStyle='#555'; ctx.font='11px sans-serif';
+  ctx.fillText('r (Å)', W/2, H-pb+30);
+  ctx.textAlign='right'; ctx.fillStyle='#555';
+  ctx.save(); ctx.translate(14,H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('U(r) [eV]',0,0); ctx.restore();
+
+  // ── Curva U(r) — lato destro (r>0) ──
+  const NP=800;
+  function drawHalf(sign){
+    ctx.beginPath(); let first=true;
+    for(let i=1;i<=NP;i++){
+      // scala quasi-lineare con densità maggiore vicino al nucleo
+      const frac = i/NP;
+      const r = rMin + (rMax-rMin)*frac*frac; // quadratica: più punti vicino al nucleo
+      const u = -K_E2*Z/r;
+      if(u<Umin||u>Umax){first=true;continue;}
+      const px=sx(sign*r), py=sy(u);
+      if(px<pl||px>W-pr){first=true;continue;}
+      first ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+      first=false;
+    }
+    ctx.strokeStyle='#b5351a'; ctx.lineWidth=2.5; ctx.setLineDash([]); ctx.stroke();
+  }
+  drawHalf(+1); // r > 0
+  drawHalf(-1); // r < 0 (simmetrico)
+
+  // ── Livelli energetici (linee orizzontali) ──
+  for(let n=1; n<=Nmax; n++){
+    const En  = -E_RY*Z*Z/(n*n);
+    const rn  = n*n*A0/Z;          // raggio di Bohr in Å
+    if(En<Umin||En>Umax) continue;
+    const yE  = sy(En);
+    const col = LVL_COLORS[(n-1)%LVL_COLORS.length];
+
+    // Linea livello: da −rn*1.8 a +rn*1.8 (tratteggiata)
+    const x1 = Math.max(pl,   sx(-rn*1.8));
+    const x2 = Math.min(W-pr, sx(+rn*1.8));
+    ctx.strokeStyle=col; ctx.lineWidth=1.8; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(x1,yE); ctx.lineTo(x2,yE); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Puntini sui raggi ±rn (intersezione livello-curva)
+    [-rn,+rn].forEach(rs=>{
+      const xr=sx(rs);
+      if(xr>=pl&&xr<=W-pr){
+        ctx.beginPath(); ctx.arc(xr,yE,4,0,2*Math.PI);
+        ctx.fillStyle=col; ctx.fill();
+        ctx.strokeStyle='#fff'; ctx.lineWidth=1; ctx.stroke();
+      }
+    });
+
+    // Etichetta
+    const lblX = Math.min(sx(rn*1.8)+6, W-pr-80);
+    ctx.fillStyle=col; ctx.font='bold 10px monospace'; ctx.textAlign='left';
+    ctx.fillText(`n=${n}  ${En.toFixed(2)} eV`, lblX, yE-4);
+  }
+
+  // ── Simbolo nucleo ──
+  ctx.beginPath(); ctx.arc(x0,y0>=pt&&y0<=H-pb?y0:pt+GH*0.85,5,0,2*Math.PI);
+  ctx.fillStyle='#1a1a1e'; ctx.fill();
+
+  // ── Cursore ──
+  if(mouseXpx!==null){
+    const rCur = invSX(mouseXpx);
+    const absR = Math.abs(rCur);
+    if(absR>=rMin&&absR<=rMax&&mouseXpx>=pl&&mouseXpx<=W-pr){
+      ctx.strokeStyle='rgba(0,0,0,0.2)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(mouseXpx,pt); ctx.lineTo(mouseXpx,H-pb); ctx.stroke();
+      ctx.setLineDash([]);
+      const uCur = -K_E2*Z/absR;
+      if(uCur>=Umin&&uCur<=Umax){
+        ctx.beginPath(); ctx.arc(mouseXpx,sy(uCur),4,0,2*Math.PI);
+        ctx.fillStyle='#b5351a'; ctx.fill();
+      }
+      let info = `r = ${rCur.toFixed(3)} Å  →  U(r) = ${uCur.toFixed(3)} eV`;
+      // Livello più vicino
+      let bestN=1, bestD=Infinity;
+      for(let n=1;n<=Nmax;n++){
+        const En=-E_RY*Z*Z/(n*n);
+        const d=Math.abs(uCur-En);
+        if(d<bestD){bestD=d;bestN=n;}
+      }
+      info += `  |  Livello più vicino: n=${bestN}  (E${bestN}=${(-E_RY*Z*Z/(bestN*bestN)).toFixed(2)} eV)`;
+      document.getElementById('infoBar').innerHTML=`<span>${info}</span>`;
+    }
+  }
+
+  // ── Titolo interno ──
+  const name=ELEM[Z]||'Z='+Z;
+  ctx.fillStyle='#1a1a1e'; ctx.font='bold 11px monospace'; ctx.textAlign='right';
+  ctx.fillText(`Z=${Z} (${name})  ·  E₁=${(-E_RY*Z*Z).toFixed(2)} eV`, W-pr, pt+14);
+
+  // ── Bordo assi ──
+  ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(pl,pt); ctx.lineTo(pl,H-pb); ctx.lineTo(W-pr,H-pb); ctx.stroke();
+}
+
+// ── EVENTI CANVAS ──
+cv.addEventListener('mousemove', e=>{
+  const rect=cv.getBoundingClientRect();
+  mouseXpx = e.clientX - rect.left;
+  draw();
+});
+cv.addEventListener('mouseleave', ()=>{
+  mouseXpx=null;
+  document.getElementById('infoBar').innerHTML='<span>Muovi il cursore sul grafico per leggere U(r)</span>';
+  draw();
+});
+
+// ── CONTROLLI ──
+document.getElementById('slZ').oninput=()=>{
+  const Z=getZ();
+  document.getElementById('vlZ').textContent=`Z = ${Z} (${ELEM[Z]||Z})`;
+  draw();
+};
+document.getElementById('slN').oninput=()=>{
+  document.getElementById('vlN').textContent=`n = 1 … ${getNmax()}`;
+  draw();
+};
+document.getElementById('slZX').oninput=()=>{
+  document.getElementById('vlZX').textContent=getZX().toFixed(1)+'×';
+  draw();
+};
+document.getElementById('slZV').oninput=()=>{
+  document.getElementById('vlZV').textContent=getZV().toFixed(1)+'×';
+  draw();
+};
+window.addEventListener('resize', draw);
+draw();
+
+
+// ══════════════════════════════════════
+// SIMULATORE 2 — Serie di pozzi
+// ══════════════════════════════════════
+(function(){
+  const ELEM=['','H','He','Li','Be','B','C','N','O','F','Ne'];
+  const K_E2=14.4, E_RY=13.6, A0=0.529;
+  const LVL_COLORS=['#e05252','#3a8f3a','#c47a00','#7a4fc4','#0e6b6b','#d4537e','#1a6b3a','#888820'];
+
+  const cv2=document.getElementById('cv2');
+  let mouseX2=null;
+
+  function setSize2(){
+    const w=Math.max(cv2.parentElement.clientWidth-36,300);
+    cv2.style.width=w+'px';
+    cv2.style.height=Math.round(w*0.55)+'px';
+  }
+
+  const getN2 =()=>+document.getElementById('s2N').value;
+  const getD2 =()=>+document.getElementById('s2d').value;
+  const getZ2 =()=>+document.getElementById('s2Z').value;
+  const getZV2=()=>+document.getElementById('s2ZV').value;
+
+  // Energia potenziale totale in x per N nuclei equidistanti centrati in 0
+  function Utot(x,nuclei,Z){
+    let u=0;
+    const rMin=0.08*A0/Z;
+    nuclei.forEach(xn=>{
+      const r=Math.max(Math.abs(x-xn),rMin);
+      u-=K_E2*Z/r;
+    });
+    return u;
+  }
+
+  function draw2(){
+    setSize2();
+    const W=parseInt(cv2.style.width)||600;
+    const H=parseInt(cv2.style.height)||330;
+    cv2.width=W; cv2.height=H;
+    const ctx=cv2.getContext('2d');
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#fff'; ctx.fillRect(0,0,W,H);
+
+    const N=getN2(), d=getD2(), Z=getZ2(), zV=getZV2();
+    const pl=68,pr=16,pt=24,pb=44;
+    const GW=W-pl-pr, GH=H-pt-pb;
+
+    // Posizioni nuclei: centrati in 0
+    const nuclei=[];
+    for(let i=0;i<N;i++) nuclei.push(-(N-1)*d/2 + i*d);
+    const xMin=nuclei[0]-d*1.2, xMax=nuclei[N-1]+d*1.2;
+
+    // Campiona U(x) per trovare il range
+    const NP=600;
+    const xs=[], us=[];
+    const UCLAMP=-0.05; // clamp superiore vicino a 0
+    let uMin=Infinity;
+    for(let i=0;i<=NP;i++){
+      const x=xMin+i*(xMax-xMin)/NP;
+      const u=Math.max(-200/zV, Utot(x,nuclei,Z));
+      xs.push(x); us.push(u);
+      if(u<uMin) uMin=u;
+    }
+    const UMIN=uMin*1.1/zV;
+    const UMAX=-uMin*0.08/zV;
+    if(UMAX<=UMIN) return;
+
+    const sx=x=>pl+(x-xMin)/(xMax-xMin)*GW;
+    const sy=u=>pt+GH-(Math.max(UMIN,Math.min(UMAX,u))-UMIN)/(UMAX-UMIN)*GH;
+    const y0=sy(0);
+
+    // Griglia
+    function niceStep(range,n){const r=range/n,m=Math.pow(10,Math.floor(Math.log10(Math.abs(r)||1))),t=r/m;return(t<2?1:t<5?2:5)*m;}
+    const uStep=niceStep(UMAX-UMIN,5);
+    ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+    for(let u=Math.ceil(UMIN/uStep)*uStep;u<=UMAX+uStep;u+=uStep){
+      const yy=sy(u);if(yy<pt||yy>H-pb)continue;
+      ctx.beginPath();ctx.moveTo(pl,yy);ctx.lineTo(W-pr,yy);ctx.stroke();
+    }
+
+    // Asse U=0
+    if(y0>=pt&&y0<=H-pb){
+      ctx.strokeStyle='#1a6b3a';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);
+      ctx.beginPath();ctx.moveTo(pl,y0);ctx.lineTo(W-pr,y0);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#1a6b3a';ctx.font='10px monospace';ctx.textAlign='right';
+      ctx.fillText('U=0',W-pr-2,y0-4);
+    }
+
+    // Etichette U
+    ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='9px monospace';ctx.textAlign='right';
+    for(let u=Math.ceil(UMIN/uStep)*uStep;u<=UMAX+uStep;u+=uStep){
+      const yy=sy(u);if(yy<pt||yy>H-pb)continue;
+      ctx.fillText(u.toFixed(1)+' eV',pl-3,yy+3);
+    }
+
+    // Etichette x
+    ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='9px monospace';ctx.textAlign='center';
+    const xStep=niceStep(xMax-xMin,8);
+    for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax+xStep;x+=xStep){
+      const xx=sx(x);if(xx<pl||xx>W-pr)continue;
+      ctx.fillText(x.toFixed(1)+'Å',xx,H-pb+12);
+    }
+    ctx.fillStyle='#555';ctx.font='10px sans-serif';
+    ctx.fillText('x (Å)',W/2,H-pb+26);
+    ctx.textAlign='right';ctx.save();ctx.translate(13,H/2);ctx.rotate(-Math.PI/2);
+    ctx.fillText('U(x) [eV]',0,0);ctx.restore();
+
+    // Curva U(x)
+    ctx.strokeStyle='#b5351a';ctx.lineWidth=2.2;ctx.setLineDash([]);
+    ctx.beginPath();let first=true;
+    for(let i=0;i<=NP;i++){
+      const u=us[i];
+      if(u<=UMIN*1.02||u>=UMAX*1.5){first=true;continue;}
+      const px=sx(xs[i]),py=sy(u);
+      if(px<pl||px>W-pr){first=true;continue;}
+      first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;
+    }
+    ctx.stroke();
+
+    // Livelli energetici isolati (atomo singolo)
+    const Nmax=4;
+    for(let n=1;n<=Nmax;n++){
+      const En=-E_RY*Z*Z/(n*n);
+      if(En<UMIN||En>UMAX) continue;
+      const yE=sy(En);
+      const col=LVL_COLORS[(n-1)%LVL_COLORS.length];
+      // Livello allargato: banda con spessore visivo proporzionale a N e all'overlap
+      const overlap=Math.exp(-d/(A0/Z*n*n)); // stima qualitativa dell'allargamento
+      const bandW=E_RY*Z*Z/(n*n)*overlap*(N-1)*0.3;
+      const yTop=sy(En+bandW/2);
+      const yBot=sy(En-bandW/2);
+      // Fascia colorata (banda)
+      ctx.fillStyle=col+'33';
+      ctx.fillRect(pl,Math.min(yTop,yBot),GW,Math.max(2,Math.abs(yBot-yTop)));
+      // Linea centrale
+      ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+      ctx.beginPath();ctx.moveTo(pl,yE);ctx.lineTo(W-pr,yE);ctx.stroke();
+      ctx.setLineDash([]);
+      // Etichetta
+      ctx.fillStyle=col;ctx.font='bold 9px monospace';ctx.textAlign='right';
+      ctx.fillText('n='+n+' ('+En.toFixed(1)+' eV)',W-pr-2,yE-3);
+    }
+
+    // Nuclei sull'asse
+    nuclei.forEach(xn=>{
+      const xpx=sx(xn);
+      const yy=Math.min(Math.max(y0,pt+2),H-pb-2);
+      ctx.beginPath();ctx.arc(xpx,yy,5,0,2*Math.PI);
+      ctx.fillStyle='#1a1a1e';ctx.fill();
+      ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+    });
+
+    // Cursore
+    if(mouseX2!==null&&mouseX2>=pl&&mouseX2<=W-pr){
+      const xCur=xMin+(mouseX2-pl)/GW*(xMax-xMin);
+      const uCur=Utot(xCur,nuclei,Z);
+      ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(mouseX2,pt);ctx.lineTo(mouseX2,H-pb);ctx.stroke();ctx.setLineDash([]);
+      if(uCur>=UMIN&&uCur<=UMAX){
+        ctx.beginPath();ctx.arc(mouseX2,sy(uCur),4,0,2*Math.PI);
+        ctx.fillStyle='#b5351a';ctx.fill();
+      }
+      document.getElementById('infoBar2').innerHTML=
+        `<span>x = ${xCur.toFixed(3)} Å  &rarr;  U(x) = ${uCur.toFixed(3)} eV</span>`;
+    }
+
+    // Titolo
+    ctx.fillStyle='#1a1a1e';ctx.font='bold 10px monospace';ctx.textAlign='right';
+    ctx.fillText(`N=${N}  d=${d.toFixed(1)}&Aring;  Z=${Z}(${ELEM[Z]||Z})`,W-pr,pt+13);
+
+    // Bordo
+    ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+  }
+
+  // Controlli
+  document.getElementById('s2N').oninput=()=>{document.getElementById('v2N').textContent='N = '+getN2();draw2();};
+  document.getElementById('s2d').oninput=()=>{document.getElementById('v2d').textContent='d = '+getD2().toFixed(1)+' Å';draw2();};
+  document.getElementById('s2Z').oninput=()=>{document.getElementById('v2Z').textContent='Z = '+getZ2()+' ('+( ELEM[getZ2()]||getZ2())+')';draw2();};
+  document.getElementById('s2ZV').oninput=()=>{document.getElementById('v2ZV').textContent=getZV2().toFixed(1)+'×';draw2();};
+
+  cv2.addEventListener('mousemove',e=>{
+    const rect=cv2.getBoundingClientRect();
+    mouseX2=e.clientX-rect.left;draw2();
+  });
+  cv2.addEventListener('mouseleave',()=>{
+    mouseX2=null;
+    document.getElementById('infoBar2').innerHTML='<span>Muovi il cursore sul grafico</span>';
+    draw2();
+  });
+  window.addEventListener('resize',draw2);
+  draw2();
+})();
+
+// Nav attiva
+const secs=document.querySelectorAll('.sec'), navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur=s.id;});
+  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+</script>
+</body>
+</html>
