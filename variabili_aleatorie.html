@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Variabili Aleatorie — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#2d1a8c;--accent2:#0e6b6b;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--surf2:#fff;--red:#b5351a;--green:#1a6b3a;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:64px 32px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,48px);font-weight:700;line-height:1.1;margin-bottom:10px}
+.hero h1 em{color:#b4a8f0;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(255,255,255,0.4);font-weight:300;max-width:540px;margin:0 auto 28px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 24px}
+.nav-inner{max-width:900px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:12px 13px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:900px;margin:0 auto;padding:48px 32px}
+@media(max-width:600px){.page{padding:28px 14px}.nav{padding:0 8px}.nav a{padding:10px 9px;font-size:10px}}
+.sec{margin-bottom:72px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px}
+h3{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent2);margin:18px 0 7px}
+p{font-size:15px;margin-bottom:11px;color:#2a2a2e}
+ul,ol{margin:6px 0 11px 22px;font-size:15px}
+li{margin-bottom:5px;color:#2a2a2e}
+strong{font-weight:600}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--accent);text-align:center;padding:14px 18px;margin:13px 0;border-radius:0 3px 3px 0}
+.box-f .f{font-family:'Playfair Display',serif;font-size:19px;color:var(--accent);margin-bottom:4px}
+.box-f .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:#eae8fa;border-left:3px solid var(--accent);color:#1a0a5a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-w{background:#fdf3ee;border-left:3px solid var(--red);color:#5a1a0a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-g{background:#e8f5ee;border-left:3px solid var(--green);color:#0a3a1a;padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:13px 0}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+/* SIM */
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:18px;margin:20px 0}
+.sim-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.sim-title::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;align-items:center;font-size:12px;color:var(--muted)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:110px;accent-color:var(--accent)}
+.ctrl .vv{font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;min-width:36px;color:var(--ink)}
+canvas{display:block;border:1px solid var(--border);border-radius:4px;background:#fff;width:100%}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.stat{background:var(--surface);border-radius:4px;padding:8px 14px;font-size:12px;font-family:'Source Code Pro',monospace;color:var(--ink);min-width:120px}
+.stat .sl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:2px}
+.stat .sv{font-size:16px;font-weight:600;color:var(--accent)}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;padding:22px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="eyebrow">Matematica · Probabilità · Liceo Scientifico</div>
+  <h1>Variabili<br><em>Aleatorie</em></h1>
+  <p class="hero-sub">Discrete e continue: media, varianza, Bernoulli, binomiale, Poisson e distribuzione normale — con simulatori interattivi</p>
+  <div class="rule"></div>
+</div>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#intro" class="active">Introduzione</a>
+    <a href="#media">Media e Varianza</a>
+    <a href="#bernoulli">Bernoulli</a>
+    <a href="#gioco">Gioco equo</a>
+    <a href="#binomiale">Binomiale</a>
+    <a href="#poisson">Poisson</a>
+    <a href="#continua">Variabili continue</a>
+    <a href="#normale">Normale</a>
+    <a href="#esercizi">Esercizi</a>
+  </div>
+</nav>
+<div class="page">
+
+<!-- 1. INTRO -->
+<div class="sec" id="intro">
+  <h2>1. Variabili Aleatorie</h2>
+  <p class="sec-sub">Definizione e classificazione</p>
+  <p>Una <strong>variabile aleatoria</strong> (o casuale) è una variabile il cui valore dipende dall'esito di un esperimento aleatorio. Non sappiamo in anticipo quale valore assumerà, ma conosciamo la <strong>distribuzione di probabilità</strong>: l'elenco di tutti i valori possibili e delle probabilità associate.</p>
+  <h3>Variabili discrete</h3>
+  <p>Una variabile aleatoria è <strong>discreta</strong> se può assumere solo un insieme finito o numerabile di valori. Esempi: il risultato di un dado, il numero di teste in 10 lanci di moneta, il numero di auto che passano in un'ora.</p>
+  <p>La distribuzione di una variabile discreta X è descritta dalla <strong>funzione di probabilità</strong>:</p>
+  <div class="box-f">
+    <div class="f">P(X = xₖ) = pₖ &nbsp;&nbsp; con &nbsp;&nbsp; Σ pₖ = 1</div>
+    <div class="fd">La somma di tutte le probabilità deve essere uguale a 1</div>
+  </div>
+  <h3>Variabili continue</h3>
+  <p>Una variabile aleatoria è <strong>continua</strong> se può assumere qualsiasi valore in un intervallo reale. Esempi: l'altezza di una persona, la temperatura, il tempo di attesa. Per le variabili continue si usa la <strong>funzione densità di probabilità</strong> f(x), e la probabilità si calcola come area sotto la curva.</p>
+  <div class="box-n">💡 Per una variabile discreta P(X = x) è un numero. Per una variabile continua P(X = x) = 0 per ogni singolo valore x: ha senso solo parlare di P(a ≤ X ≤ b).</div>
+</div>
+
+<!-- 2. MEDIA E VARIANZA -->
+<div class="sec" id="media">
+  <h2>2. Media e Varianza</h2>
+  <p class="sec-sub">Le due misure fondamentali di una distribuzione</p>
+  <h3>Valore atteso (media)</h3>
+  <p>Il <strong>valore atteso</strong> E[X] (o media μ) è la media ponderata dei valori possibili, pesata con le relative probabilità. Rappresenta il valore "tipico" che ci aspettiamo in media su molte ripetizioni dell'esperimento.</p>
+  <div class="box-f">
+    <div class="f">E[X] = μ = Σₖ xₖ · pₖ</div>
+    <div class="fd">Somma di ogni valore moltiplicato per la sua probabilità</div>
+  </div>
+  <h3>Varianza e deviazione standard</h3>
+  <p>La <strong>varianza</strong> Var(X) misura quanto i valori di X si disperdono attorno alla media. Una varianza grande indica valori molto dispersi; una varianza piccola indica valori concentrati vicino alla media.</p>
+  <div class="box-f">
+    <div class="f">Var(X) = σ² = Σₖ (xₖ − μ)² · pₖ = E[X²] − μ²</div>
+    <div class="fd">σ = √Var(X) = deviazione standard &nbsp;·&nbsp; ha le stesse unità di X</div>
+  </div>
+  <h3>Proprietà fondamentali</h3>
+  <ul>
+    <li>E[aX + b] = a·E[X] + b (linearità del valore atteso)</li>
+    <li>Var(aX + b) = a²·Var(X) (la traslazione b non cambia la dispersione)</li>
+    <li>Se X e Y sono indipendenti: E[X+Y] = E[X] + E[Y] e Var(X+Y) = Var(X) + Var(Y)</li>
+  </ul>
+  <div class="box-w">⚠ La media non è necessariamente un valore che X può assumere. Ad esempio, il numero medio di figli per famiglia può essere 1,8 — un valore non intero, quindi mai realizzabile.</div>
+</div>
+
+<!-- 3. BERNOULLI -->
+<div class="sec" id="bernoulli">
+  <h2>3. Variabile di Bernoulli</h2>
+  <p class="sec-sub">L'esperimento più semplice: successo o fallimento</p>
+  <p>Una variabile di <strong>Bernoulli</strong> descrive un esperimento con solo due esiti possibili: <em>successo</em> (X=1) con probabilità p, e <em>insuccesso</em> (X=0) con probabilità 1−p. È il mattone fondamentale di tutta la probabilità discreta.</p>
+  <div class="box-f">
+    <div class="f">P(X=1) = p &nbsp;&nbsp; P(X=0) = 1−p &nbsp;&nbsp; con 0 ≤ p ≤ 1</div>
+    <div class="fd">X ~ Bernoulli(p)</div>
+  </div>
+  <h3>Media e varianza di Bernoulli</h3>
+  <div class="two-col">
+    <div class="box-f" style="text-align:left;padding:10px 14px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">Media</div>
+      <div style="font-size:18px;font-family:'Playfair Display',serif;color:var(--accent)">E[X] = p</div>
+      <div style="font-size:11px;color:var(--muted);font-family:monospace;margin-top:3px">1·p + 0·(1−p) = p</div>
+    </div>
+    <div class="box-f" style="text-align:left;padding:10px 14px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">Varianza</div>
+      <div style="font-size:18px;font-family:'Playfair Display',serif;color:var(--accent)">Var(X) = p(1−p)</div>
+      <div style="font-size:11px;color:var(--muted);font-family:monospace;margin-top:3px">massima per p = 0,5</div>
+    </div>
+  </div>
+  <h3>Esempi</h3>
+  <ul>
+    <li>Lancio di una moneta: X=1 (testa), p=0,5</li>
+    <li>Estrazione di un asso da un mazzo: p=4/52 ≈ 0,077</li>
+    <li>Difetto di produzione: X=1 (pezzo difettoso), p=0,02</li>
+  </ul>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Variabile di Bernoulli</div>
+    <div class="ctrl">
+      <label>p (probabilità successo)</label>
+      <input type="range" id="bp" min="0.01" max="0.99" step="0.01" value="0.5">
+      <span class="vv" id="bpv">0.50</span>
+    </div>
+    <canvas id="cvB" style="height:220px"></canvas>
+    <div class="stats">
+      <div class="stat"><div class="sl">Media E[X]</div><div class="sv" id="bm">0.500</div></div>
+      <div class="stat"><div class="sl">Varianza</div><div class="sv" id="bv">0.250</div></div>
+      <div class="stat"><div class="sl">Dev. standard σ</div><div class="sv" id="bs">0.500</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. GIOCO EQUO -->
+<div class="sec" id="gioco">
+  <h2>4. Gioco Equo e Media Nulla</h2>
+  <p class="sec-sub">Quando la speranza di guadagno è zero</p>
+  <p>In un <strong>gioco d'azzardo</strong>, un giocatore vince o perde somme di denaro con certe probabilità. La variabile aleatoria G rappresenta il <strong>guadagno netto</strong> del giocatore in una singola partita.</p>
+  <h3>Definizione di gioco equo</h3>
+  <p>Un gioco si dice <strong>equo</strong> (o <em>fair</em>) se il valore atteso del guadagno è zero: in media, né il giocatore né il banco guadagna. Matematicamente:</p>
+  <div class="box-f">
+    <div class="f">E[G] = 0 &nbsp;&nbsp; ⟺ &nbsp;&nbsp; gioco equo</div>
+    <div class="fd">La somma di tutti i guadagni ponderati per le probabilità è zero</div>
+  </div>
+  <h3>Esempio: moneta truccata</h3>
+  <p>Un gioco: si lancia una moneta. Se esce testa (prob. p) guadagni +a euro; se esce croce (prob. 1−p) perdi −b euro. Il gioco è equo se E[G] = a·p + (−b)·(1−p) = 0, cioè se <strong>a·p = b·(1−p)</strong>.</p>
+  <h3>Giochi di casinò — E[G] &lt; 0</h3>
+  <p>Nei giochi di casinò il valore atteso è sempre <strong>negativo per il giocatore</strong>. Il casinò guadagna sistematicamente nel lungo periodo, qualunque sia la strategia del giocatore. Questo è il <strong>vantaggio della casa</strong>.</p>
+  <div class="box-w">⚠ <strong>Legge dei grandi numeri:</strong> su un grande numero di partite, il guadagno medio tende al valore atteso. Se E[G] &lt; 0, giocare a lungo è sempre perdente in media — indipendentemente dalla fortuna iniziale.</div>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Gioco e Valore Atteso</div>
+    <div class="ctrl">
+      <label>Vincita se successo (+€)</label>
+      <input type="range" id="ga" min="1" max="20" step="1" value="3">
+      <span class="vv" id="gav">3</span>
+      <label style="margin-left:10px">Perdita se insuccesso (€)</label>
+      <input type="range" id="gb" min="1" max="20" step="1" value="2">
+      <span class="vv" id="gbv">2</span>
+      <label style="margin-left:10px">p</label>
+      <input type="range" id="gp" min="0.01" max="0.99" step="0.01" value="0.4">
+      <span class="vv" id="gpv">0.40</span>
+    </div>
+    <canvas id="cvG" style="height:220px"></canvas>
+    <div class="stats">
+      <div class="stat"><div class="sl">E[G] (guadagno atteso)</div><div class="sv" id="gm">−0.800</div></div>
+      <div class="stat"><div class="sl">Varianza</div><div class="sv" id="gv">—</div></div>
+      <div class="stat"><div class="sl">Tipo di gioco</div><div class="sv" id="gt" style="font-size:13px">Sfavorevole</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. BINOMIALE -->
+<div class="sec" id="binomiale">
+  <h2>5. Distribuzione Binomiale</h2>
+  <p class="sec-sub">Numero di successi in n prove indipendenti di Bernoulli</p>
+  <p>La variabile <strong>binomiale</strong> X ~ B(n,p) conta il numero di successi ottenuti in n prove indipendenti, ognuna con probabilità di successo p. È la naturale generalizzazione della Bernoulli (che corrisponde a n=1).</p>
+  <div class="box-f">
+    <div class="f">P(X = k) = C(n,k) · pᵏ · (1−p)ⁿ⁻ᵏ</div>
+    <div class="fd">C(n,k) = n! / (k!(n−k)!) = coefficiente binomiale &nbsp;·&nbsp; k = 0,1,…,n</div>
+  </div>
+  <h3>Media e varianza della binomiale</h3>
+  <div class="two-col">
+    <div class="box-f" style="text-align:left;padding:10px 14px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">Media</div>
+      <div style="font-size:18px;font-family:'Playfair Display',serif;color:var(--accent)">E[X] = np</div>
+    </div>
+    <div class="box-f" style="text-align:left;padding:10px 14px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">Varianza</div>
+      <div style="font-size:18px;font-family:'Playfair Display',serif;color:var(--accent)">Var(X) = np(1−p)</div>
+    </div>
+  </div>
+  <h3>Esempi</h3>
+  <ul>
+    <li>Lancio di 10 monete: X = numero di teste ~ B(10, 0.5)</li>
+    <li>100 tiri liberi a basket con p=0.7: X = canestri realizzati ~ B(100, 0.7)</li>
+    <li>Controllo qualità: 50 pezzi con difetto con probabilità 0.02 ~ B(50, 0.02)</li>
+  </ul>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Distribuzione Binomiale B(n, p)</div>
+    <div class="ctrl">
+      <label>n (prove)</label>
+      <input type="range" id="bn" min="1" max="40" step="1" value="10">
+      <span class="vv" id="bnv">10</span>
+      <label style="margin-left:10px">p</label>
+      <input type="range" id="bpp" min="0.01" max="0.99" step="0.01" value="0.5">
+      <span class="vv" id="bppv">0.50</span>
+    </div>
+    <canvas id="cvBin" style="height:260px"></canvas>
+    <div class="stats">
+      <div class="stat"><div class="sl">Media np</div><div class="sv" id="binm">5.00</div></div>
+      <div class="stat"><div class="sl">Varianza np(1−p)</div><div class="sv" id="binv">2.50</div></div>
+      <div class="stat"><div class="sl">Dev. standard σ</div><div class="sv" id="bins">1.58</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. POISSON -->
+<div class="sec" id="poisson">
+  <h2>6. Distribuzione di Poisson</h2>
+  <p class="sec-sub">Numero di eventi rari in un intervallo di tempo o spazio</p>
+  <p>La distribuzione di <strong>Poisson</strong> descrive il numero di eventi che si verificano in un intervallo fisso di tempo o spazio, quando gli eventi sono rari e indipendenti. Il parametro λ è il numero medio di eventi nell'intervallo.</p>
+  <div class="box-f">
+    <div class="f">P(X = k) = e⁻λ · λᵏ / k!</div>
+    <div class="fd">λ > 0 = numero medio di eventi &nbsp;·&nbsp; k = 0, 1, 2, 3, … &nbsp;·&nbsp; e ≈ 2,718</div>
+  </div>
+  <h3>Media e varianza di Poisson</h3>
+  <div class="two-col">
+    <div class="box-f" style="text-align:left;padding:10px 14px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">Media</div>
+      <div style="font-size:18px;font-family:'Playfair Display',serif;color:var(--accent)">E[X] = λ</div>
+    </div>
+    <div class="box-f" style="text-align:left;padding:10px 14px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">Varianza</div>
+      <div style="font-size:18px;font-family:'Playfair Display',serif;color:var(--accent)">Var(X) = λ</div>
+    </div>
+  </div>
+  <p>Proprietà notevole: nella Poisson media e varianza coincidono entrambe con λ.</p>
+  <h3>Approssimazione della binomiale</h3>
+  <p>Quando n è grande e p è piccolo, con λ = np, la distribuzione B(n,p) è ben approssimata dalla Poisson(λ). Regola pratica: si usa Poisson quando n &gt; 30 e p &lt; 0.05.</p>
+  <h3>Esempi</h3>
+  <ul>
+    <li>Numero di telefonate in arrivo in un call center in un minuto: λ = 3</li>
+    <li>Numero di errori di stampa per pagina: λ = 0.5</li>
+    <li>Decadimenti radioattivi per secondo: λ = 10</li>
+  </ul>
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Distribuzione di Poisson(λ)</div>
+    <div class="ctrl">
+      <label>λ (media)</label>
+      <input type="range" id="plam" min="0.1" max="15" step="0.1" value="3">
+      <span class="vv" id="plamv">3.0</span>
+    </div>
+    <canvas id="cvP" style="height:260px"></canvas>
+    <div class="stats">
+      <div class="stat"><div class="sl">Media λ</div><div class="sv" id="pm">3.0</div></div>
+      <div class="stat"><div class="sl">Varianza λ</div><div class="sv" id="pv">3.0</div></div>
+      <div class="stat"><div class="sl">Dev. standard √λ</div><div class="sv" id="ps">1.73</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. VARIABILI CONTINUE -->
+<div class="sec" id="continua">
+  <h2>7. Variabili Aleatorie Continue</h2>
+  <p class="sec-sub">Densità di probabilità, media e varianza per variabili continue</p>
+  <p>Per una variabile aleatoria continua X non ha senso chiedere P(X = x) — questa probabilità è sempre zero. Si introduce la <strong>funzione di densità di probabilità</strong> f(x), tale che la probabilità che X cada nell'intervallo [a, b] sia l'area sotto f(x) tra a e b.</p>
+  <div class="box-f">
+    <div class="f">P(a ≤ X ≤ b) = ∫ₐᵇ f(x) dx</div>
+    <div class="fd">f(x) ≥ 0 &nbsp;·&nbsp; ∫₋∞⁺∞ f(x) dx = 1 &nbsp;·&nbsp; f(x) non è una probabilità!</div>
+  </div>
+  <h3>Media e varianza per variabili continue</h3>
+  <div class="two-col">
+    <div class="box-f" style="text-align:left;padding:10px 14px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">Media</div>
+      <div style="font-size:16px;font-family:'Playfair Display',serif;color:var(--accent)">μ = ∫ x · f(x) dx</div>
+    </div>
+    <div class="box-f" style="text-align:left;padding:10px 14px">
+      <div style="font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px">Varianza</div>
+      <div style="font-size:16px;font-family:'Playfair Display',serif;color:var(--accent)">σ² = ∫ (x−μ)² f(x) dx</div>
+    </div>
+  </div>
+  <h3>Distribuzione uniforme continua</h3>
+  <p>La più semplice variabile continua: X ~ U(a,b) assume valori equamente distribuiti nell'intervallo [a,b]. La densità è costante: f(x) = 1/(b−a) per a ≤ x ≤ b.</p>
+  <div class="box-f">
+    <div class="f">E[X] = (a+b)/2 &nbsp;&nbsp; Var(X) = (b−a)²/12</div>
+    <div class="fd">La media è il punto medio dell'intervallo</div>
+  </div>
+  <div class="box-n">💡 L'integrale sostituisce la somma: per le variabili continue, la somma Σ xₖ·pₖ diventa l'integrale ∫ x·f(x)dx. È la stessa idea, ma per infiniti valori possibili.</div>
+</div>
+
+<!-- 8. NORMALE -->
+<div class="sec" id="normale">
+  <h2>8. Distribuzione Normale (Gaussiana)</h2>
+  <p class="sec-sub">La distribuzione più importante della statistica</p>
+  <p>La distribuzione <strong>normale</strong> N(μ, σ²) è la distribuzione continua più importante in statistica e nelle scienze. La sua funzione densità ha la caratteristica forma a <em>campana</em> simmetrica attorno alla media μ.</p>
+  <div class="box-f">
+    <div class="f">f(x) = 1/(σ√2π) · e^(−(x−μ)²/(2σ²))</div>
+    <div class="fd">μ = media (centro della campana) &nbsp;·&nbsp; σ = deviazione standard (larghezza)</div>
+  </div>
+  <h3>Proprietà della distribuzione normale</h3>
+  <ul>
+    <li><strong>Simmetria:</strong> la curva è simmetrica rispetto a μ</li>
+    <li><strong>Regola 68-95-99.7:</strong> circa il 68% dei valori cade entro μ±σ, il 95% entro μ±2σ, il 99.7% entro μ±3σ</li>
+    <li><strong>Media = Mediana = Moda</strong> (tutte uguali a μ)</li>
+    <li>La curva ha due <strong>flessi</strong> in x = μ±σ</li>
+  </ul>
+  <h3>Perché la normale è così importante?</h3>
+  <p>Il <strong>Teorema Centrale del Limite</strong> afferma che la somma (o la media) di un grande numero di variabili aleatorie indipendenti, con qualsiasi distribuzione, tende a una distribuzione normale. Questo spiega perché fenomeni come l'altezza umana, gli errori di misura, i punteggi dei test seguono una distribuzione normale.</p>
+  <div class="box-g">✔ <strong>Standardizzazione:</strong> ogni variabile normale X ~ N(μ, σ²) può essere trasformata in una normale standard Z ~ N(0,1) con Z = (X − μ)/σ. Le tavole della normale standard permettono di calcolare qualsiasi probabilità.</div>
+
+  <div class="sim-wrap">
+    <div class="sim-title">Simulatore — Distribuzione Normale N(μ, σ²)</div>
+    <div class="ctrl">
+      <label>Media μ</label>
+      <input type="range" id="nmu" min="-5" max="5" step="0.5" value="0">
+      <span class="vv" id="nmuv">0.0</span>
+      <label style="margin-left:10px">Dev. standard σ</label>
+      <input type="range" id="nsg" min="0.3" max="3" step="0.1" value="1">
+      <span class="vv" id="nsgv">1.0</span>
+      <label style="margin-left:10px">Mostra μ±kσ: k=</label>
+      <input type="range" id="nk" min="1" max="3" step="1" value="1">
+      <span class="vv" id="nkv">1</span>
+    </div>
+    <canvas id="cvN" style="height:280px"></canvas>
+    <div class="stats">
+      <div class="stat"><div class="sl">Media μ</div><div class="sv" id="nm">0.0</div></div>
+      <div class="stat"><div class="sl">Varianza σ²</div><div class="sv" id="nv">1.00</div></div>
+      <div class="stat"><div class="sl">P(μ−kσ, μ+kσ)</div><div class="sv" id="np">68.3%</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>9. Esercizi Proposti</h2>
+  <p class="sec-sub">Variabili discrete e continue</p>
+  <ol>
+    <li><strong>Bernoulli:</strong> si lancia un dado equo. Sia X=1 se esce 6, X=0 altrimenti. Calcola E[X] e Var(X). Qual è la probabilità di successo p?</li>
+    <li><strong>Gioco equo:</strong> in un gioco si vince 5€ con probabilità 1/3 e si perde b€ con probabilità 2/3. Quanto deve essere b perché il gioco sia equo?</li>
+    <li><strong>Binomiale:</strong> in una classe di 30 studenti, la probabilità che uno studente sia mancino è 0.1. Quanti mancini ci si aspetta in media? Qual è la varianza?</li>
+    <li><strong>Poisson:</strong> in un call center arrivano in media 4 telefonate al minuto. Qual è la probabilità che in un minuto ne arrivino esattamente 2? E 0?</li>
+    <li><strong>Normale:</strong> l'altezza degli studenti di una scuola è distribuita normalmente con μ=170 cm e σ=8 cm. Che percentuale di studenti ha altezza tra 162 e 178 cm? (Regola μ±σ)</li>
+    <li><strong>Teorema Centrale del Limite:</strong> nel simulatore della binomiale, aumenta n con p=0.5. La forma della distribuzione si avvicina sempre di più a una curva gaussiana?</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri · Matematica · Variabili Aleatorie · Liceo Scientifico</footer>
+</div>
+
+<script>
+// ── UTILITÀ ──
+function fmt(v,d){return isNaN(v)||!isFinite(v)?'—':v.toFixed(d===undefined?3:d);}
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+
+// Disegna istogramma su canvas
+function drawBar(canvasId,labels,probs,color,meanVal,title){
+  const cv=document.getElementById(canvasId);
+  const W=cv.parentElement.clientWidth-36||520;
+  cv.width=W;cv.height=parseInt(cv.style.height)||260;
+  const H=cv.height;
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+
+  const pl=48,pr=20,pt=24,pb=40;
+  const GW=W-pl-pr,GH=H-pt-pb;
+  const n=labels.length;
+  const maxP=Math.max(...probs)*1.15||0.5;
+  const bw=Math.max(4,GW/n-2);
+  const gap=(GW-bw*n)/(n+1);
+
+  // griglia
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  [0.25,0.5,0.75,1].forEach(f=>{
+    const y=pt+GH*(1-f*maxP/maxP);
+    ctx.beginPath();ctx.moveTo(pl,pt+GH*(1-f));ctx.lineTo(W-pr,pt+GH*(1-f));ctx.stroke();
+  });
+
+  // barre
+  probs.forEach((p,i)=>{
+    const bh=p/maxP*GH;
+    const x=pl+gap+(bw+gap)*i;
+    const y=pt+GH-bh;
+    // gradiente
+    const grad=ctx.createLinearGradient(x,y,x,pt+GH);
+    grad.addColorStop(0,color+'cc');
+    grad.addColorStop(1,color+'66');
+    ctx.fillStyle=grad;
+    ctx.fillRect(x,y,bw,bh);
+    ctx.strokeStyle=color;ctx.lineWidth=1;
+    ctx.strokeRect(x,y,bw,bh);
+    // etichetta x
+    if(n<=25){
+      ctx.fillStyle='rgba(0,0,0,0.5)';ctx.font='9px monospace';ctx.textAlign='center';
+      ctx.fillText(labels[i],x+bw/2,H-pb+12);
+    }
+    // valore probabilità sopra la barra
+    if(p>maxP*0.06&&bw>18){
+      ctx.fillStyle=color;ctx.font='8px monospace';ctx.textAlign='center';
+      ctx.fillText(p.toFixed(3),x+bw/2,y-3);
+    }
+  });
+
+  // asse y
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='9px monospace';ctx.textAlign='right';
+  [0,0.25,0.5,0.75,1].forEach(f=>{
+    const v=f*maxP;
+    ctx.fillText(v.toFixed(2),pl-3,pt+GH*(1-f)+3);
+  });
+
+  // linea media
+  if(meanVal!==undefined&&n>0){
+    const minL=labels[0],maxL=labels[n-1];
+    const range=maxL-minL||1;
+    const mx=pl+gap+bw/2+(meanVal-minL)/range*(GW-gap*2-bw);
+    ctx.strokeStyle='#b5351a';ctx.lineWidth=2;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(mx,pt);ctx.lineTo(mx,H-pb);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#b5351a';ctx.font='bold 10px monospace';ctx.textAlign='center';
+    ctx.fillText('μ='+fmt(meanVal,2),mx,pt+10);
+  }
+
+  // etichette assi
+  ctx.fillStyle='#555';ctx.font='10px sans-serif';ctx.textAlign='center';
+  ctx.fillText('P(X = k)',W/2,H-pb+26);
+  ctx.textAlign='left';ctx.fillStyle='rgba(0,0,0,0.35)';ctx.font='9px monospace';
+  ctx.fillText(title,pl+2,pt+8);
+
+  // bordo
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+}
+
+function binom(n,k){
+  if(k<0||k>n)return 0;
+  if(k===0||k===n)return 1;
+  let r=1;
+  for(let i=0;i<Math.min(k,n-k);i++){r=r*(n-i)/(i+1);}
+  return Math.round(r);
+}
+function poissonP(lam,k){return Math.exp(-lam)*Math.pow(lam,k)/factorial(k);}
+function factorial(n){let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+
+// ── BERNOULLI ──
+function drawBernoulli(){
+  const p=rf('bp');
+  document.getElementById('bpv').textContent=p.toFixed(2);
+  drawBar('cvB',[0,1],[1-p,p],'#2d1a8c',p,'Bernoulli(p='+p.toFixed(2)+')');
+  document.getElementById('bm').textContent=fmt(p);
+  const v=p*(1-p);
+  document.getElementById('bv').textContent=fmt(v);
+  document.getElementById('bs').textContent=fmt(Math.sqrt(v));
+}
+document.getElementById('bp').oninput=drawBernoulli;
+
+// ── GIOCO EQUO ──
+function drawGioco(){
+  const a=rf('ga'),b=rf('gb'),p=rf('gp');
+  document.getElementById('gav').textContent=a;
+  document.getElementById('gbv').textContent=b;
+  document.getElementById('gpv').textContent=p.toFixed(2);
+  const EG=a*p+(-b)*(1-p);
+  const EG2=a*a*p+b*b*(1-p);
+  const varG=EG2-EG*EG;
+  drawBar('cvG',[-b,a],[(1-p),p],'#0e6b6b',EG,'Gioco: +'+a+'€ (p='+p.toFixed(2)+'), −'+b+'€ (1−p)');
+  document.getElementById('gm').textContent=(EG>=0?'+':'')+fmt(EG,3)+'€';
+  document.getElementById('gv').textContent=fmt(varG,3);
+  const tipo=Math.abs(EG)<0.001?'Equo (E[G]=0)':EG>0?'Favorevole al giocatore':'Sfavorevole al giocatore';
+  document.getElementById('gt').textContent=tipo;
+  document.getElementById('gt').style.color=Math.abs(EG)<0.001?'#1a6b3a':EG>0?'#1a4b8c':'#b5351a';
+}
+document.getElementById('ga').oninput=drawGioco;
+document.getElementById('gb').oninput=drawGioco;
+document.getElementById('gp').oninput=drawGioco;
+
+// ── BINOMIALE ──
+function drawBinomiale(){
+  const n=Math.round(rf('bn')),p=rf('bpp');
+  document.getElementById('bnv').textContent=n;
+  document.getElementById('bppv').textContent=p.toFixed(2);
+  const labels=[],probs=[];
+  for(let k=0;k<=n;k++){
+    labels.push(k);
+    probs.push(binom(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k));
+  }
+  const mu=n*p,va=n*p*(1-p);
+  drawBar('cvBin',labels,probs,'#1a4b8c',mu,'B(n='+n+', p='+p.toFixed(2)+')');
+  document.getElementById('binm').textContent=fmt(mu);
+  document.getElementById('binv').textContent=fmt(va);
+  document.getElementById('bins').textContent=fmt(Math.sqrt(va));
+}
+document.getElementById('bn').oninput=drawBinomiale;
+document.getElementById('bpp').oninput=drawBinomiale;
+
+// ── POISSON ──
+function drawPoisson(){
+  const lam=rf('plam');
+  document.getElementById('plamv').textContent=lam.toFixed(1);
+  const kmax=Math.min(30,Math.ceil(lam+4*Math.sqrt(lam)+4));
+  const labels=[],probs=[];
+  for(let k=0;k<=kmax;k++){labels.push(k);probs.push(poissonP(lam,k));}
+  drawBar('cvP',labels,probs,'#b5351a',lam,'Poisson(λ='+lam.toFixed(1)+')');
+  document.getElementById('pm').textContent=lam.toFixed(2);
+  document.getElementById('pv').textContent=lam.toFixed(2);
+  document.getElementById('ps').textContent=fmt(Math.sqrt(lam));
+}
+document.getElementById('plam').oninput=drawPoisson;
+
+// ── NORMALE ──
+function drawNormale(){
+  const mu=rf('nmu'),sg=rf('nsg'),k=Math.round(rf('nk'));
+  document.getElementById('nmuv').textContent=mu.toFixed(1);
+  document.getElementById('nsgv').textContent=sg.toFixed(1);
+  document.getElementById('nkv').textContent=k;
+
+  const cv=document.getElementById('cvN');
+  const W=cv.parentElement.clientWidth-36||520;
+  cv.width=W;cv.height=280;
+  const H=280;
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+
+  const pl=52,pr=20,pt=28,pb=44;
+  const GW=W-pl-pr,GH=H-pt-pb;
+  const xmin=mu-4.5*sg,xmax=mu+4.5*sg;
+  const sx=x=>pl+(x-xmin)/(xmax-xmin)*GW;
+  const norm=x=>Math.exp(-0.5*((x-mu)/sg)**2)/(sg*Math.sqrt(2*Math.PI));
+  const ymax=norm(mu)*1.15;
+  const sy=y=>pt+GH*(1-y/ymax);
+  const y0=sy(0);
+
+  // Griglia
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  [0.25,0.5,0.75,1].forEach(f=>{
+    ctx.beginPath();ctx.moveTo(pl,sy(f*ymax/1.15));ctx.lineTo(W-pr,sy(f*ymax/1.15));ctx.stroke();
+  });
+
+  // Area μ±kσ colorata
+  const x1=mu-k*sg,x2=mu+k*sg;
+  ctx.fillStyle='#2d1a8c22';
+  ctx.beginPath();
+  ctx.moveTo(sx(x1),y0);
+  for(let i=0;i<=200;i++){
+    const x=x1+i*(x2-x1)/200;
+    ctx.lineTo(sx(x),sy(norm(x)));
+  }
+  ctx.lineTo(sx(x2),y0);ctx.closePath();ctx.fill();
+
+  // Curva normale
+  ctx.strokeStyle='#2d1a8c';ctx.lineWidth=2.5;ctx.setLineDash([]);
+  ctx.beginPath();
+  for(let i=0;i<=400;i++){
+    const x=xmin+i*(xmax-xmin)/400;
+    const y=norm(x);
+    i===0?ctx.moveTo(sx(x),sy(y)):ctx.lineTo(sx(x),sy(y));
+  }
+  ctx.stroke();
+
+  // Linee μ±kσ
+  [x1,x2].forEach(x=>{
+    ctx.strokeStyle='#b5351a';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(sx(x),pt);ctx.lineTo(sx(x),y0);ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  // Linea μ
+  ctx.strokeStyle='#1a6b3a';ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(sx(mu),pt);ctx.lineTo(sx(mu),y0);ctx.stroke();
+
+  // Etichette asse x
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='10px monospace';ctx.textAlign='center';
+  for(let i=-4;i<=4;i++){
+    const x=mu+i*sg;
+    if(x<xmin||x>xmax)continue;
+    ctx.fillText((i===0?'μ':(i>0?'μ+':'μ−')+Math.abs(i)+'σ'),sx(x),H-pb+14);
+  }
+
+  // Etichette su asse y
+  ctx.textAlign='right';ctx.fillStyle='rgba(0,0,0,0.4)';
+  ctx.fillText('f(x)',pl-3,pt+8);
+
+  // Asse x
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pl,y0);ctx.lineTo(W-pr,y0);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,y0);ctx.stroke();
+
+  // Probabilità area
+  // erf approssimata
+  function erf(x){
+    const t=1/(1+0.3275911*Math.abs(x));
+    const poly=t*(0.254829592+t*(-0.284496736+t*(1.421413741+t*(-1.453152027+t*1.061405429))));
+    return(1-poly*Math.exp(-x*x))*(x>=0?1:-1);
+  }
+  const prob=erf(k/Math.sqrt(2));
+  document.getElementById('nm').textContent=mu.toFixed(1);
+  document.getElementById('nv').textContent=fmt(sg*sg);
+  document.getElementById('np').textContent=(prob*100).toFixed(1)+'%';
+
+  // Testo area
+  ctx.fillStyle='#2d1a8c';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText((prob*100).toFixed(1)+'%',sx(mu),sy(norm(mu)*0.5));
+}
+document.getElementById('nmu').oninput=drawNormale;
+document.getElementById('nsg').oninput=drawNormale;
+document.getElementById('nk').oninput=drawNormale;
+
+// Avvio e resize
+function drawAll(){drawBernoulli();drawGioco();drawBinomiale();drawPoisson();drawNormale();}
+window.addEventListener('resize',drawAll);
+drawAll();
+
+// Nav attiva
+const secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{
+  let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur=s.id;});
+  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+</script>
+</body>
+</html>
