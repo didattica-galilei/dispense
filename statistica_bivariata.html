@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistica Bivariata</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#0e6b6b;--a2:#1a4b8c;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--s2:#fff;--red:#b5351a;--green:#1a6b3a;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:60px 32px 44px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,48px);font-weight:700;line-height:1.1;margin-bottom:10px}
+.hero h1 em{color:#5dcaa5}
+.hero p{font-size:15px;color:rgba(255,255,255,0.4);font-weight:300;max-width:540px;margin:0 auto 26px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 20px}
+.nav-inner{max-width:940px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:12px 12px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:940px;margin:0 auto;padding:44px 28px}
+@media(max-width:600px){.page{padding:24px 12px}}
+.sec{margin-bottom:68px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:14px}
+h3{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:16px 0 6px}
+p{font-size:15px;margin-bottom:10px;color:#2a2a2e}
+ul,ol{margin:6px 0 10px 22px;font-size:15px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+/* FORMULE */
+.formula{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--a2);text-align:center;padding:14px 18px;margin:12px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:19px;color:var(--a2);margin-bottom:4px;line-height:2.2}
+.formula .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 3px;font-size:.9em}
+.frac .n{border-bottom:1.5px solid var(--a2);padding:0 5px 1px;text-align:center}
+.frac .d{padding:1px 5px 0;text-align:center}
+.oline{text-decoration:overline}
+/* BOX */
+.box-n{background:#e1f5ee;border-left:3px solid var(--accent);color:#0a3a2a;padding:11px 15px;margin:12px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-w{background:#fdf3ee;border-left:3px solid var(--red);color:#5a1a0a;padding:11px 15px;margin:12px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-g{background:#e8f5ee;border-left:3px solid var(--green);color:#0a3a1a;padding:11px 15px;margin:12px 0;font-size:14px;border-radius:0 3px 3px 0}
+/* ESEMPIO */
+.esempio{background:var(--surface);border-left:3px solid var(--a2);border-radius:0 4px 4px 0;padding:12px 16px;margin:12px 0;font-size:14px}
+.esempio .step{margin:5px 0;padding:4px 0;border-bottom:1px dashed var(--border);font-family:'Source Code Pro',monospace;font-size:13px}
+.esempio .step:last-child{border-bottom:none}
+/* TABELLA */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+th{background:var(--ink);color:#fff;padding:7px 10px;text-align:center;font-size:10px;text-transform:uppercase;font-weight:400;letter-spacing:.5px}
+td{padding:7px 10px;border-bottom:1px solid var(--border);text-align:center;color:#2a2a2e}
+tr:nth-child(even) td{background:var(--surface)}
+td.tot{background:var(--ink);color:#fff;font-weight:600}
+/* SIMULATORI */
+.sim{background:var(--s2);border:1px solid var(--border);border-radius:5px;padding:18px;margin:18px 0}
+.sim-t{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.sim-t::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;font-size:12px;color:var(--muted)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:100px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;min-width:34px;color:var(--ink)}
+.btn{padding:4px 11px;border-radius:3px;border:1px solid var(--border);background:var(--s2);color:var(--muted);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--surface)}
+.btn.go{background:var(--accent);color:#fff;border-color:var(--accent)}
+canvas{display:block;border:1px solid var(--border);border-radius:3px;background:#fff;width:100%}
+.stats{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.stat{background:var(--surface);border-radius:4px;padding:7px 13px;font-size:12px;font-family:'Source Code Pro',monospace}
+.stat .sl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:2px}
+.stat .sv{font-size:15px;font-weight:600;color:var(--a2)}
+.ci{width:52px;padding:4px 6px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:#fff;text-align:center;font-family:'Source Code Pro',monospace}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;padding:22px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Matematica &middot; Statistica &middot; Liceo Scientifico</div>
+  <h1>Statistica<br><em>Bivariata</em></h1>
+  <p>Connessione e correlazione tra due variabili &mdash; Pearson, Chi-quadro, retta di regressione</p>
+  <div class="rule"></div>
+</div>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#intro" class="active">Intro</a>
+    <a href="#scatter">Scatter plot</a>
+    <a href="#cov">Covarianza</a>
+    <a href="#pearson">Pearson</a>
+    <a href="#reg">Regressione</a>
+    <a href="#cont">Contingenza</a>
+    <a href="#chi">Chi-quadro</a>
+    <a href="#sim1">Sim 1</a>
+    <a href="#sim2">Sim 2</a>
+    <a href="#sim3">Sim 3</a>
+    <a href="#esercizi">Esercizi</a>
+  </div>
+</nav>
+<div class="page">
+
+<!-- INTRO -->
+<div class="sec" id="intro">
+  <h2>1. Statistica Bivariata</h2>
+  <p class="sub">Studiare la relazione tra due variabili osservate sulle stesse unit&agrave; statistiche</p>
+  <p>La <strong>statistica bivariata</strong> studia come due variabili X e Y variano insieme. Non ci chiediamo solo come &egrave; distribuita X o Y singolarmente, ma: <em>X e Y sono legate? Come varia Y al variare di X?</em></p>
+  <h3>Tipi di variabili e metodi</h3>
+  <ul>
+    <li><strong>Entrambe quantitative</strong> (es. altezza e peso): covarianza, indice di Pearson, retta di regressione</li>
+    <li><strong>Entrambe qualitative</strong> (es. sesso e preferenza): tabelle di contingenza, test Chi-quadro</li>
+  </ul>
+  <div class="box-w">&#9888; <strong>Correlazione &ne; causalit&agrave;.</strong> Una forte relazione statistica non implica che X causi Y. Pu&ograve; esserci una terza variabile confondente. Esempio: citt&agrave; con pi&ugrave; chiese hanno pi&ugrave; crimini &mdash; ma la causa comune &egrave; la dimensione della citt&agrave;!</div>
+</div>
+
+<!-- SCATTER -->
+<div class="sec" id="scatter">
+  <h2>2. Il Diagramma di Dispersione</h2>
+  <p class="sub">Il primo strumento visivo per studiare la relazione tra X e Y</p>
+  <p>Nel <strong>diagramma di dispersione</strong> ogni unit&agrave; statistica &egrave; un punto nel piano, con coordinata x il valore di X e coordinata y il valore di Y. La forma della &ldquo;nuvola&rdquo; di punti rivela il tipo di relazione.</p>
+  <h3>Galleria &mdash; tipi di correlazione</h3>
+  <canvas id="cvGallery" style="height:190px"></canvas>
+  <h3>Esempio &mdash; altezza e peso di 10 studenti</h3>
+  <div class="esempio">
+    <div class="step">Altezza X (cm): 160, 165, 170, 172, 175, 178, 180, 182, 185, 190</div>
+    <div class="step">Peso &nbsp;&nbsp;&nbsp;Y (kg): &nbsp;55, &nbsp;60, &nbsp;65, &nbsp;68, &nbsp;70, &nbsp;74, &nbsp;78, &nbsp;80, &nbsp;84, &nbsp;90</div>
+    <div class="step">&rarr; Al crescere dell'altezza il peso tende ad aumentare: correlazione <strong>positiva</strong></div>
+  </div>
+  <canvas id="cvEsScatter" style="height:210px"></canvas>
+  <ul>
+    <li><strong>Correlazione positiva:</strong> nuvola di punti che sale da sinistra a destra</li>
+    <li><strong>Correlazione negativa:</strong> nuvola che scende</li>
+    <li><strong>Nessuna correlazione:</strong> punti sparsi senza pattern</li>
+  </ul>
+  <div class="box-n">&#128161; Il diagramma di dispersione va sempre guardato <em>prima</em> di calcolare qualsiasi indice numerico. Un indice pu&ograve; essere fuorviante senza il supporto visivo.</div>
+</div>
+
+<!-- COVARIANZA -->
+<div class="sec" id="cov">
+  <h2>3. La Covarianza</h2>
+  <p class="sub">Misura della variazione congiunta di due variabili</p>
+  <p>La <strong>covarianza</strong> misura quanto X e Y variano insieme. &Egrave; la media dei prodotti degli scarti dalla rispettiva media:</p>
+  <div class="formula">
+    <div class="f">cov(X,Y) = <span class="frac"><span class="n">1</span><span class="d">n</span></span> &sum;<sub>i</sub> (x<sub>i</sub>&minus;<span class="oline">x</span>)(y<sub>i</sub>&minus;<span class="oline">y</span>)</div>
+    <div class="fd">x&#773; = media di X &nbsp;&middot;&nbsp; y&#773; = media di Y &nbsp;&middot;&nbsp; n = numero di coppie</div>
+  </div>
+  <h3>Interpretazione del segno</h3>
+  <ul>
+    <li><strong>cov &gt; 0:</strong> X e Y tendono ad essere entrambe sopra o entrambe sotto la media &rarr; correlazione positiva</li>
+    <li><strong>cov &lt; 0:</strong> quando X &egrave; alta, Y tende ad essere bassa &rarr; correlazione negativa</li>
+    <li><strong>cov = 0:</strong> nessuna relazione lineare</li>
+  </ul>
+  <h3>Esempio numerico</h3>
+  <div class="esempio">
+    <div class="step">x&#773; = (160+165+&hellip;+190)/10 = <strong>175.7 cm</strong></div>
+    <div class="step">y&#773; = (55+60+&hellip;+90)/10 = <strong>72.4 kg</strong></div>
+    <div class="step">&sum;(x<sub>i</sub>&minus;x&#773;)(y<sub>i</sub>&minus;y&#773;) = (160&minus;175.7)(55&minus;72.4) + &hellip; = <strong>833.8</strong></div>
+    <div class="step">cov(X,Y) = 833.8 / 10 = <strong>83.38 cm&middot;kg</strong> &rarr; correlazione positiva &#10003;</div>
+  </div>
+  <div class="box-w">&#9888; La covarianza dipende dalle unit&agrave; di misura. Questo rende difficile confrontare coppie diverse di variabili. Per questo si usa l&rsquo;indice di Pearson (adimensionale).</div>
+</div>
+
+<!-- PEARSON -->
+<div class="sec" id="pearson">
+  <h2>4. Indice di Correlazione di Bravais-Pearson</h2>
+  <p class="sub">La covarianza normalizzata: un indice adimensionale in [&minus;1, +1]</p>
+  <p>L&rsquo;<strong>indice di Pearson r</strong> normalizza la covarianza dividendo per il prodotto delle deviazioni standard:</p>
+  <div class="formula">
+    <div class="f">r = <span class="frac"><span class="n">cov(X,Y)</span><span class="d">&sigma;<sub>x</sub> &middot; &sigma;<sub>y</sub></span></span> = <span class="frac"><span class="n">&sum;(x<sub>i</sub>&minus;<span class="oline">x</span>)(y<sub>i</sub>&minus;<span class="oline">y</span>)</span><span class="d">&radic;[&sum;(x<sub>i</sub>&minus;<span class="oline">x</span>)<sup>2</sup> &middot; &sum;(y<sub>i</sub>&minus;<span class="oline">y</span>)<sup>2</sup>]</span></span></div>
+    <div class="fd">&minus;1 &le; r &le; +1 &nbsp;&middot;&nbsp; adimensionale &nbsp;&middot;&nbsp; invariante per trasformazioni lineari</div>
+  </div>
+  <h3>Scala visiva di r</h3>
+  <canvas id="cvScalaR" style="height:100px"></canvas>
+  <h3>Interpretazione di r</h3>
+  <table>
+    <tr><th>Valore di r</th><th>Interpretazione</th><th>Esempio</th></tr>
+    <tr><td>r = +1</td><td>Correlazione lineare positiva perfetta</td><td>Tutti i punti su una retta crescente</td></tr>
+    <tr><td>0.7 &le; r &lt; 1</td><td>Correlazione positiva forte</td><td>Altezza e peso</td></tr>
+    <tr><td>0.3 &le; r &lt; 0.7</td><td>Correlazione positiva moderata</td><td>Reddito e spesa</td></tr>
+    <tr><td>&minus;0.3 &lt; r &lt; 0.3</td><td>Correlazione debole o assente</td><td>Numero di scarpe e voto</td></tr>
+    <tr><td>r = &minus;1</td><td>Correlazione lineare negativa perfetta</td><td>Tutti i punti su una retta decrescente</td></tr>
+  </table>
+  <h3>Esempio numerico (seguito)</h3>
+  <div class="esempio">
+    <div class="step">&sigma;<sub>x</sub> = <strong>8.78 cm</strong> &nbsp;&nbsp; &sigma;<sub>y</sub> = <strong>10.16 kg</strong></div>
+    <div class="step">r = 83.38 / (8.78 &times; 10.16) = <strong>0.935</strong></div>
+    <div class="step">&rarr; Correlazione lineare <strong>positiva forte</strong></div>
+  </div>
+  <div class="box-w">&#9888; <strong>Limite di Pearson:</strong> r misura solo la relazione <em>lineare</em>. Con r &asymp; 0 pu&ograve; esistere una forte relazione non lineare. Guardare sempre lo scatter plot!</div>
+</div>
+
+<!-- REGRESSIONE -->
+<div class="sec" id="reg">
+  <h2>5. Retta di Regressione</h2>
+  <p class="sub">La retta che minimizza la somma dei quadrati dei residui (minimi quadrati)</p>
+  <p>La <strong>retta di regressione</strong> &ycirc; = a + bx &egrave; la retta che meglio descrive la relazione lineare tra X e Y secondo il criterio dei <strong>minimi quadrati</strong>:</p>
+  <div class="formula">
+    <div class="f">b = <span class="frac"><span class="n">cov(X,Y)</span><span class="d">&sigma;<sub>x</sub><sup>2</sup></span></span> = r &middot; <span class="frac"><span class="n">&sigma;<sub>y</sub></span><span class="d">&sigma;<sub>x</sub></span></span> &nbsp;&nbsp;&nbsp; a = <span class="oline">y</span> &minus; b &middot; <span class="oline">x</span></div>
+    <div class="fd">b = pendenza &nbsp;&middot;&nbsp; a = intercetta &nbsp;&middot;&nbsp; la retta passa sempre per (x&#773;, y&#773;)</div>
+  </div>
+  <div class="formula">
+    <div class="f">R<sup>2</sup> = r<sup>2</sup></div>
+    <div class="fd">Coefficiente di determinazione &nbsp;&middot;&nbsp; % di varianza di Y spiegata da X</div>
+  </div>
+  <h3>Esempio numerico (seguito)</h3>
+  <div class="esempio">
+    <div class="step">b = 83.38 / 77.1 = <strong>1.08 kg/cm</strong></div>
+    <div class="step">a = 72.4 &minus; 1.08 &times; 175.7 = <strong>&minus;117.3 kg</strong></div>
+    <div class="step">Retta: <strong>&ycirc; = 1.08x &minus; 117.3</strong></div>
+    <div class="step">Previsione per x=183 cm: &ycirc; = 1.08&times;183 &minus; 117.3 &asymp; <strong>80.3 kg</strong></div>
+    <div class="step">R<sup>2</sup> = 0.935<sup>2</sup> &asymp; <strong>0.874</strong> &rarr; l&rsquo;87.4% della varianza del peso &egrave; spiegata dall&rsquo;altezza</div>
+  </div>
+  <canvas id="cvEsReg" style="height:220px"></canvas>
+  <div class="box-n">&#128161; La retta passa sempre per il <strong>centroide</strong> (x&#773;, y&#773;). I segmenti verticali tra i punti e la retta si chiamano <strong>residui</strong>: i minimi quadrati li minimizza.</div>
+</div>
+
+<!-- CONTINGENZA -->
+<div class="sec" id="cont">
+  <h2>6. Tabelle di Contingenza</h2>
+  <p class="sub">Distribuzioni congiunte per variabili qualitative</p>
+  <p>Quando le variabili sono <strong>qualitative</strong>, la relazione si studia con la <strong>tabella di contingenza</strong>: righe = modalit&agrave; di X, colonne = modalit&agrave; di Y, celle = frequenze assolute.</p>
+  <div class="formula">
+    <div class="f">f<sub>ij</sub><sup>att</sup> = <span class="frac"><span class="n">n<sub>i&middot;</sub> &middot; n<sub>&middot;j</sub></span><span class="d">n</span></span></div>
+    <div class="fd">Frequenza attesa sotto indipendenza &nbsp;&middot;&nbsp; n<sub>i&middot;</sub> = tot. riga &nbsp;&middot;&nbsp; n<sub>&middot;j</sub> = tot. colonna</div>
+  </div>
+  <h3>Esempio &mdash; fumo e malattia polmonare (n=200)</h3>
+  <div class="esempio">
+    <div class="step">Fumatori malati: 60 &nbsp;&middot;&nbsp; Fumatori sani: 40 &nbsp;&middot;&nbsp; Tot fumatori: 100</div>
+    <div class="step">Non fumatori malati: 20 &nbsp;&middot;&nbsp; Non fumatori sani: 80 &nbsp;&middot;&nbsp; Tot non fumatori: 100</div>
+    <div class="step">Attesi fumatori malati sotto indip.: (100&times;80)/200 = <strong>40</strong> &mdash; osservati: <strong>60</strong></div>
+    <div class="step">&rarr; Scarto grande: c&rsquo;&egrave; <strong>dipendenza</strong> tra fumo e malattia</div>
+  </div>
+</div>
+
+<!-- CHI QUADRO -->
+<div class="sec" id="chi">
+  <h2>7. Indice Chi-quadro (&chi;<sup>2</sup>)</h2>
+  <p class="sub">Misura dello scarto tra frequenze osservate e attese</p>
+  <div class="formula">
+    <div class="f">&chi;<sup>2</sup> = &sum;<sub>i,j</sub> <span class="frac"><span class="n">(O<sub>ij</sub> &minus; E<sub>ij</sub>)<sup>2</sup></span><span class="d">E<sub>ij</sub></span></span></div>
+    <div class="fd">O<sub>ij</sub> = frequenza osservata &nbsp;&middot;&nbsp; E<sub>ij</sub> = frequenza attesa &nbsp;&middot;&nbsp; somma su tutte le celle</div>
+  </div>
+  <h3>V di Cram&eacute;r (normalizzato)</h3>
+  <div class="formula">
+    <div class="f">V = &radic;<span class="frac"><span class="n">&chi;<sup>2</sup></span><span class="d">n &middot; min(r&minus;1, c&minus;1)</span></span></div>
+    <div class="fd">0 &le; V &le; 1 &nbsp;&middot;&nbsp; V=0 indipendenza &nbsp;&middot;&nbsp; V=1 dipendenza perfetta</div>
+  </div>
+  <ul>
+    <li>&chi;<sup>2</sup> = 0 &hArr; frequenze osservate = attese (indipendenza perfetta)</li>
+    <li>&chi;<sup>2</sup> cresce al crescere della dipendenza</li>
+    <li>&chi;<sup>2</sup> dipende da n: raddoppiando il campione, &chi;<sup>2</sup> raddoppia &rarr; usare V di Cram&eacute;r per confrontare</li>
+  </ul>
+  <div class="box-g">&#10004; <strong>Regola V di Cram&eacute;r:</strong> V &lt; 0.1 trascurabile &middot; 0.1&ndash;0.3 debole &middot; 0.3&ndash;0.5 moderata &middot; &gt;0.5 forte</div>
+</div>
+
+<!-- SIM 1 -->
+<div class="sec" id="sim1">
+  <h2>8. Simulatore 1 &mdash; Scatter Plot e Indice di Pearson</h2>
+  <p class="sub">Clicca sul grafico per aggiungere punti &middot; click destro per rimuovere l&rsquo;ultimo</p>
+  <div class="sim">
+    <div class="sim-t">Diagramma di dispersione &mdash; indice r di Pearson</div>
+    <div class="ctrl">
+      <button class="btn go" id="b1pos">Corr. positiva</button>
+      <button class="btn go" id="b1neg">Corr. negativa</button>
+      <button class="btn go" id="b1no">Nessuna corr.</button>
+      <button class="btn go" id="b1perf">Perfetta</button>
+      <button class="btn" id="b1clr">Cancella</button>
+    </div>
+    <canvas id="cv1" style="height:320px;cursor:crosshair"></canvas>
+    <div class="stats">
+      <div class="stat"><div class="sl">n punti</div><div class="sv" id="s1n">0</div></div>
+      <div class="stat"><div class="sl">r di Pearson</div><div class="sv" id="s1r">&mdash;</div></div>
+      <div class="stat"><div class="sl">Interpretazione</div><div class="sv" id="s1i" style="font-size:12px">&mdash;</div></div>
+      <div class="stat"><div class="sl">x&#773;</div><div class="sv" id="s1mx">&mdash;</div></div>
+      <div class="stat"><div class="sl">y&#773;</div><div class="sv" id="s1my">&mdash;</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2 -->
+<div class="sec" id="sim2">
+  <h2>9. Simulatore 2 &mdash; Retta di Regressione</h2>
+  <p class="sub">Visualizza la retta dei minimi quadrati con R<sup>2</sup> e residui</p>
+  <div class="sim">
+    <div class="sim-t">Retta di regressione &ycirc; = a + bx</div>
+    <div class="ctrl">
+      <button class="btn go" id="b2lin">Lineare + rumore</button>
+      <button class="btn go" id="b2str">Correlazione forte</button>
+      <button class="btn go" id="b2wk">Correlazione debole</button>
+      <button class="btn" id="b2res">Mostra residui</button>
+      <button class="btn" id="b2clr">Cancella</button>
+    </div>
+    <canvas id="cv2" style="height:320px;cursor:crosshair"></canvas>
+    <div class="stats">
+      <div class="stat"><div class="sl">b (pendenza)</div><div class="sv" id="s2b">&mdash;</div></div>
+      <div class="stat"><div class="sl">a (intercetta)</div><div class="sv" id="s2a">&mdash;</div></div>
+      <div class="stat"><div class="sl">r</div><div class="sv" id="s2r">&mdash;</div></div>
+      <div class="stat"><div class="sl">R<sup>2</sup></div><div class="sv" id="s2r2">&mdash;</div></div>
+      <div class="stat"><div class="sl">Equazione</div><div class="sv" id="s2eq" style="font-size:11px">&mdash;</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 3 -->
+<div class="sec" id="sim3">
+  <h2>10. Simulatore 3 &mdash; Chi-quadro</h2>
+  <p class="sub">Inserisci le frequenze osservate &mdash; calcola &chi;<sup>2</sup> e V di Cram&eacute;r</p>
+  <div class="sim">
+    <div class="sim-t">Tabella di contingenza 2&times;2</div>
+    <div class="ctrl">
+      <button class="btn go" id="b3ind">Indipendenza</button>
+      <button class="btn go" id="b3str">Dipendenza forte</button>
+      <button class="btn go" id="b3wk">Dipendenza debole</button>
+      <button class="btn go" id="b3calc">&#9654; Calcola</button>
+    </div>
+    <div style="overflow-x:auto;margin-bottom:10px">
+      <table style="width:auto;min-width:320px;margin:0 auto">
+        <tr><th style="background:transparent;color:var(--muted)"></th><th>Y = A</th><th>Y = B</th><th>Totale</th></tr>
+        <tr><td style="font-weight:600;color:var(--a2);background:var(--surface)">X = 1</td><td><input class="ci" id="c00" type="number" value="40" min="0"></td><td><input class="ci" id="c01" type="number" value="5" min="0"></td><td class="tot" id="cr0">45</td></tr>
+        <tr><td style="font-weight:600;color:var(--a2);background:var(--surface)">X = 2</td><td><input class="ci" id="c10" type="number" value="5" min="0"></td><td><input class="ci" id="c11" type="number" value="40" min="0"></td><td class="tot" id="cr1">45</td></tr>
+        <tr><td class="tot">Totale</td><td class="tot" id="cc0">45</td><td class="tot" id="cc1">45</td><td class="tot" id="ctot">90</td></tr>
+      </table>
+    </div>
+    <canvas id="cv3" style="height:240px"></canvas>
+    <div class="stats" style="margin-top:9px">
+      <div class="stat"><div class="sl">&chi;<sup>2</sup></div><div class="sv" id="s3chi">&mdash;</div></div>
+      <div class="stat"><div class="sl">V di Cram&eacute;r</div><div class="sv" id="s3v">&mdash;</div></div>
+      <div class="stat"><div class="sl">n totale</div><div class="sv" id="s3n">&mdash;</div></div>
+      <div class="stat"><div class="sl">Dipendenza</div><div class="sv" id="s3int" style="font-size:12px">&mdash;</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>11. Esercizi Proposti</h2>
+  <p class="sub">Correlazione, regressione e Chi-quadro</p>
+  <ol>
+    <li><strong>Pearson manuale:</strong> X=(1,2,3,4,5), Y=(2,4,5,4,5). Calcola x&#773;, y&#773;, cov, &sigma;<sub>x</sub>, &sigma;<sub>y</sub> e r. Verifica col Sim 1.</li>
+    <li><strong>Interpretazione:</strong> nel Sim 1 genera &ldquo;correlazione positiva&rdquo; e poi &ldquo;nessuna correlazione&rdquo;. Quanto vale r? Come cambia la nuvola?</li>
+    <li><strong>Regressione:</strong> x&#773;=4, y&#773;=7, &sigma;<sub>x</sub>=1.5, &sigma;<sub>y</sub>=1.2, r=0.8. Calcola b e a. Qual &egrave; il valore previsto per x=6?</li>
+    <li><strong>R<sup>2</sup>:</strong> nel Sim 2 genera &ldquo;forte&rdquo; e &ldquo;debole&rdquo;. Confronta R<sup>2</sup>. Se R<sup>2</sup>=0.64, quale % della varianza di Y &egrave; spiegata da X?</li>
+    <li><strong>Chi-quadro:</strong> maschi: 40 suff, 20 insuff; femmine: 35 suff, 5 insuff. Calcola &chi;<sup>2</sup> e V con il Sim 3.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Matematica &middot; Statistica Bivariata &middot; Liceo Scientifico</footer>
+</div>
+
+<script>
+// ── UTILITY ──────────────────────────────────
+function mean(a){return a.reduce((s,v)=>s+v,0)/a.length;}
+function std(a){var m=mean(a);return Math.sqrt(a.reduce((s,v)=>s+(v-m)*(v-m),0)/a.length);}
+function pearson(xs,ys){
+  if(xs.length<2)return NaN;
+  var mx=mean(xs),my=mean(ys),sx=std(xs),sy=std(ys);
+  if(sx===0||sy===0)return NaN;
+  var cov=xs.reduce(function(s,x,i){return s+(x-mx)*(ys[i]-my);},0)/xs.length;
+  return cov/(sx*sy);
+}
+function fmt(v,d){return (isNaN(v)||!isFinite(v))?'—':v.toFixed(d===undefined?3:d);}
+function interp(r){
+  if(isNaN(r))return '—';
+  var a=Math.abs(r),sg=r>=0?'positiva':'negativa';
+  if(a>0.97)return 'Perfetta '+sg;
+  if(a>0.7)return 'Forte '+sg;
+  if(a>0.3)return 'Moderata '+sg;
+  if(a>0.1)return 'Debole '+sg;
+  return 'Assente';
+}
+function resize(cv,h){
+  var w=Math.max(cv.parentElement.clientWidth-36,280);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;
+}
+
+// ── DATI ESEMPIO ─────────────────────────────
+var EX_X=[160,165,170,172,175,178,180,182,185,190];
+var EX_Y=[55,60,65,68,70,74,78,80,84,90];
+
+// ── GALLERIA SCATTER ─────────────────────────
+function drawGallery(){
+  var cv=document.getElementById('cvGallery');
+  if(!cv)return;
+  resize(cv,190);
+  var W=cv.width,H=190,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var titles=['r ≈ +0.95 forte +','r ≈ −0.90 forte −','r ≈ 0 assente','r ≈ +0.50 moderata'];
+  var colors=['#1a4b8c','#b5351a','#888','#0e6b6b'];
+  var generators=[
+    function(i){var x=i/14;return[x,x*1.1+(Math.random()-0.5)*0.08];},
+    function(i){var x=i/14;return[x,1.1-x*1.0+(Math.random()-0.5)*0.09];},
+    function(i){var x=i/14;return[x,0.5+(Math.random()-0.5)*0.5];},
+    function(i){var x=i/14;return[x,x*0.7+(Math.random()-0.5)*0.22+0.1];}
+  ];
+  var pw=Math.floor((W-8)/4);
+  for(var ci=0;ci<4;ci++){
+    var ox=4+ci*pw,oy=4,cw=pw-4,ch=H-8;
+    var pl=6,pr=4,pt=18,pb=8,gw=cw-pl-pr,gh=ch-pt-pb;
+    ctx.strokeStyle='rgba(0,0,0,0.08)';ctx.lineWidth=1;
+    ctx.strokeRect(ox,oy,cw,ch);
+    var pts=[];
+    for(var i=1;i<=15;i++)pts.push(generators[ci](i));
+    var xs2=pts.map(function(p){return p[0];}),ys2=pts.map(function(p){return p[1];});
+    var xmn=Math.min.apply(null,xs2),xmx=Math.max.apply(null,xs2);
+    var ymn=Math.min.apply(null,ys2),ymx=Math.max.apply(null,ys2);
+    var sxf=function(x){return ox+pl+(x-xmn)/(xmx-xmn||1)*gw;};
+    var syf=function(y){return oy+ch-pb-(y-ymn)/(ymx-ymn||1)*gh;};
+    if(ci!==2){
+      var mxr=xs2.reduce(function(a,b){return a+b;})/xs2.length;
+      var myr=ys2.reduce(function(a,b){return a+b;})/ys2.length;
+      var num2=xs2.reduce(function(s,x,i){return s+(x-mxr)*(ys2[i]-myr);},0);
+      var den2=xs2.reduce(function(s,x){return s+(x-mxr)*(x-mxr);},0);
+      var b2=den2===0?0:num2/den2,a2=myr-b2*mxr;
+      ctx.strokeStyle=colors[ci]+'66';ctx.lineWidth=1.5;ctx.setLineDash([]);
+      ctx.beginPath();ctx.moveTo(sxf(xmn),syf(a2+b2*xmn));ctx.lineTo(sxf(xmx),syf(a2+b2*xmx));ctx.stroke();
+    }
+    for(var j=0;j<pts.length;j++){
+      ctx.beginPath();ctx.arc(sxf(pts[j][0]),syf(pts[j][1]),3,0,2*Math.PI);
+      ctx.fillStyle=colors[ci]+'99';ctx.fill();ctx.strokeStyle=colors[ci];ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.fillStyle=colors[ci];ctx.font='bold 9px monospace';ctx.textAlign='left';
+    ctx.fillText(titles[ci],ox+pl+1,oy+pt-3);
+  }
+}
+
+// ── SCATTER ESEMPIO ──────────────────────────
+function drawEsScatter(){
+  var cv=document.getElementById('cvEsScatter');
+  if(!cv)return;
+  resize(cv,210);
+  var W=cv.width,H=210,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var pl=50,pr=20,pt=22,pb=40,GW=W-pl-pr,GH=H-pt-pb;
+  var xmn=155,xmx=195,ymn=50,ymx=95;
+  var sx=function(x){return pl+(x-xmn)/(xmx-xmn)*GW;};
+  var sy=function(y){return H-pb-(y-ymn)/(ymx-ymn)*GH;};
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  [160,170,180,190].forEach(function(x){ctx.beginPath();ctx.moveTo(sx(x),pt);ctx.lineTo(sx(x),H-pb);ctx.stroke();});
+  [55,65,75,85].forEach(function(y){ctx.beginPath();ctx.moveTo(pl,sy(y));ctx.lineTo(W-pr,sy(y));ctx.stroke();});
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='9px monospace';ctx.textAlign='center';
+  [160,170,180,190].forEach(function(x){ctx.fillText(x,sx(x),H-pb+12);});
+  ctx.textAlign='right';
+  [55,65,75,85].forEach(function(y){ctx.fillText(y,pl-4,sy(y)+3);});
+  EX_X.forEach(function(x,i){
+    ctx.beginPath();ctx.arc(sx(x),sy(EX_Y[i]),5,0,2*Math.PI);
+    ctx.fillStyle='#1a4b8c88';ctx.fill();ctx.strokeStyle='#1a4b8c';ctx.lineWidth=1.5;ctx.stroke();
+  });
+  var mx=mean(EX_X),my=mean(EX_Y);
+  ctx.beginPath();ctx.arc(sx(mx),sy(my),7,0,2*Math.PI);ctx.strokeStyle='#b5351a';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#b5351a';ctx.font='bold 9px monospace';ctx.textAlign='left';ctx.fillText('centroide (175.7, 72.4)',sx(mx)+10,sy(my));
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='10px sans-serif';ctx.textAlign='center';
+  ctx.fillText('Altezza (cm)',W/2,H-pb+28);
+  ctx.save();ctx.translate(13,H/2);ctx.rotate(-Math.PI/2);ctx.fillText('Peso (kg)',0,0);ctx.restore();
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='bold 10px monospace';ctx.textAlign='left';ctx.fillText('r = 0.935 (forte +)',pl+4,pt+12);
+}
+
+// ── SCALA R ───────────────────────────────────
+function drawScalaR(){
+  var cv=document.getElementById('cvScalaR');
+  if(!cv)return;
+  resize(cv,100);
+  var W=cv.width,H=100,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var bx=40,by=34,bw=W-80,bh=26;
+  var grad=ctx.createLinearGradient(bx,0,bx+bw,0);
+  grad.addColorStop(0,'#b5351a');grad.addColorStop(0.5,'#f0ede6');grad.addColorStop(1,'#1a4b8c');
+  ctx.fillStyle=grad;ctx.fillRect(bx,by,bw,bh);
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;ctx.strokeRect(bx,by,bw,bh);
+  var ticks=[-1,-0.7,-0.3,0,0.3,0.7,1];
+  ticks.forEach(function(v){
+    var x=bx+(v+1)/2*bw;
+    ctx.strokeStyle='rgba(0,0,0,0.4)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x,by+bh);ctx.lineTo(x,by+bh+5);ctx.stroke();
+    ctx.fillStyle='rgba(0,0,0,0.55)';ctx.font='bold 10px monospace';ctx.textAlign='center';
+    ctx.fillText(v.toFixed(1),x,by+bh+16);
+  });
+  var labels=[{v:-1,t:'Perfetta −',c:'#b5351a'},{v:-0.85,t:'Forte −',c:'#c47a00'},{v:0,t:'Nessuna',c:'#888'},{v:0.85,t:'Forte +',c:'#0e6b6b'},{v:1,t:'Perfetta +',c:'#1a4b8c'}];
+  labels.forEach(function(l){
+    var x=bx+(l.v+1)/2*bw;
+    ctx.fillStyle=l.c;ctx.font='8px monospace';ctx.textAlign='center';
+    ctx.fillText(l.t,x,by-6);
+    ctx.strokeStyle=l.c;ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x,by-1);ctx.lineTo(x,by);ctx.stroke();
+  });
+}
+
+// ── RETTA REGRESSIONE ESEMPIO ─────────────────
+function drawEsReg(){
+  var cv=document.getElementById('cvEsReg');
+  if(!cv)return;
+  resize(cv,220);
+  var W=cv.width,H=220,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var pl=52,pr=20,pt=28,pb=44,GW=W-pl-pr,GH=H-pt-pb;
+  var xmn=155,xmx=195,ymn=50,ymx=95;
+  var sx=function(x){return pl+(x-xmn)/(xmx-xmn)*GW;};
+  var sy=function(y){return H-pb-(y-ymn)/(ymx-ymn)*GH;};
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  [160,170,180,190].forEach(function(x){ctx.beginPath();ctx.moveTo(sx(x),pt);ctx.lineTo(sx(x),H-pb);ctx.stroke();});
+  [55,65,75,85].forEach(function(y){ctx.beginPath();ctx.moveTo(pl,sy(y));ctx.lineTo(W-pr,sy(y));ctx.stroke();});
+  var a=-117.3,b=1.08;
+  // Residui
+  EX_X.forEach(function(x,i){
+    var yhat=a+b*x;
+    ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([3,2]);
+    ctx.beginPath();ctx.moveTo(sx(x),sy(EX_Y[i]));ctx.lineTo(sx(x),sy(yhat));ctx.stroke();ctx.setLineDash([]);
+  });
+  // Retta
+  ctx.strokeStyle='#b5351a';ctx.lineWidth=2.5;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(sx(xmn),sy(a+b*xmn));ctx.lineTo(sx(xmx),sy(a+b*xmx));ctx.stroke();
+  // Centroide
+  var mx=mean(EX_X),my=mean(EX_Y);
+  ctx.beginPath();ctx.arc(sx(mx),sy(my),7,0,2*Math.PI);ctx.strokeStyle='#1a6b3a';ctx.lineWidth=2;ctx.stroke();
+  // Punti
+  EX_X.forEach(function(x,i){
+    ctx.beginPath();ctx.arc(sx(x),sy(EX_Y[i]),5,0,2*Math.PI);
+    ctx.fillStyle='#1a4b8c88';ctx.fill();ctx.strokeStyle='#1a4b8c';ctx.lineWidth=1.5;ctx.stroke();
+  });
+  // Etichette
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='9px monospace';ctx.textAlign='center';
+  [160,170,180,190].forEach(function(x){ctx.fillText(x,sx(x),H-pb+12);});
+  ctx.textAlign='right';
+  [55,65,75,85].forEach(function(y){ctx.fillText(y,pl-4,sy(y)+3);});
+  ctx.fillStyle='#b5351a';ctx.font='bold 11px monospace';ctx.textAlign='left';
+  ctx.fillText('ŷ = 1.08x − 117.3   R²=0.874',pl+4,pt+14);
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='10px sans-serif';ctx.textAlign='center';
+  ctx.fillText('Altezza (cm)',W/2,H-pb+28);
+  ctx.save();ctx.translate(13,H/2);ctx.rotate(-Math.PI/2);ctx.fillText('Peso (kg)',0,0);ctx.restore();
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+}
+
+// ── SIM 1: SCATTER INTERATTIVO ────────────────
+(function(){
+  var cv=document.getElementById('cv1');
+  var pts=[];
+  var PAD=44;
+  function getRange(){
+    if(pts.length<2)return{xmn:0,xmx:10,ymn:0,ymx:10};
+    var xs=pts.map(function(p){return p[0];}),ys=pts.map(function(p){return p[1];});
+    var xmn=Math.min.apply(null,xs),xmx=Math.max.apply(null,xs);
+    var ymn=Math.min.apply(null,ys),ymx=Math.max.apply(null,ys);
+    var dx=Math.max((xmx-xmn)*0.15,0.5),dy=Math.max((ymx-ymn)*0.15,0.5);
+    return{xmn:xmn-dx,xmx:xmx+dx,ymn:ymn-dy,ymx:ymx+dy};
+  }
+  function draw(){
+    resize(cv,320);
+    var W=cv.width,H=320,ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    var GW=W-PAD*2,GH=H-PAD*2;
+    var r=getRange();
+    var sx=function(x){return PAD+(x-r.xmn)/(r.xmx-r.xmn)*GW;};
+    var sy=function(y){return H-PAD-(y-r.ymn)/(r.ymx-r.ymn)*GH;};
+    ctx.strokeStyle='rgba(0,0,0,0.05)';ctx.lineWidth=0.5;
+    for(var i=0;i<=5;i++){
+      ctx.beginPath();ctx.moveTo(PAD+i*GW/5,PAD);ctx.lineTo(PAD+i*GW/5,H-PAD);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(PAD,PAD+i*GH/5);ctx.lineTo(W-PAD,PAD+i*GH/5);ctx.stroke();
+    }
+    ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(PAD,PAD);ctx.lineTo(PAD,H-PAD);ctx.lineTo(W-PAD,H-PAD);ctx.stroke();
+    for(var j=0;j<pts.length;j++){
+      ctx.beginPath();ctx.arc(sx(pts[j][0]),sy(pts[j][1]),5,0,2*Math.PI);
+      ctx.fillStyle='#1a4b8c88';ctx.fill();ctx.strokeStyle='#1a4b8c';ctx.lineWidth=1.5;ctx.stroke();
+    }
+    if(pts.length>=2){
+      var xs=pts.map(function(p){return p[0];}),ys=pts.map(function(p){return p[1];});
+      var rvl=pearson(xs,ys);
+      var mx=mean(xs),my=mean(ys);
+      ctx.beginPath();ctx.arc(sx(mx),sy(my),7,0,2*Math.PI);ctx.strokeStyle='#b5351a';ctx.lineWidth=2;ctx.stroke();
+      ctx.beginPath();ctx.moveTo(sx(mx)-10,sy(my));ctx.lineTo(sx(mx)+10,sy(my));
+      ctx.moveTo(sx(mx),sy(my)-10);ctx.lineTo(sx(mx),sy(my)+10);
+      ctx.strokeStyle='#b5351a';ctx.lineWidth=1.5;ctx.stroke();
+      document.getElementById('s1r').textContent=fmt(rvl);
+      document.getElementById('s1r').style.color=Math.abs(rvl)>0.7?'#1a6b3a':Math.abs(rvl)>0.3?'#c47a00':'#b5351a';
+      document.getElementById('s1i').textContent=interp(rvl);
+      document.getElementById('s1mx').textContent=fmt(mx,2);
+      document.getElementById('s1my').textContent=fmt(my,2);
+    } else {
+      ['s1r','s1i','s1mx','s1my'].forEach(function(id){document.getElementById(id).textContent='—';});
+    }
+    document.getElementById('s1n').textContent=pts.length;
+  }
+  function addPoint(e){
+    var rect=cv.getBoundingClientRect();
+    var px=e.clientX-rect.left,py=e.clientY-rect.top;
+    var r=getRange();
+    var GW=cv.width-PAD*2,GH=cv.height-PAD*2;
+    if(px<PAD||px>cv.width-PAD||py<PAD||py>cv.height-PAD)return;
+    var x=r.xmn+(px-PAD)/GW*(r.xmx-r.xmn);
+    var y=r.ymn+(1-(py-PAD)/GH)*(r.ymx-r.ymn);
+    pts.push([x,y]);draw();
+  }
+  cv.addEventListener('click',addPoint);
+  cv.addEventListener('contextmenu',function(e){e.preventDefault();pts.pop();draw();});
+  function gen(type){
+    pts=[];
+    for(var i=0;i<20;i++){
+      var x=Math.random()*8+1,y;
+      if(type==='pos')     y=x*0.9+(Math.random()-0.5)*1.5+1;
+      else if(type==='neg') y=12-x*0.85+(Math.random()-0.5)*1.5;
+      else if(type==='none')y=Math.random()*8+1;
+      else                  y=x*1.0+1+(Math.random()-0.5)*0.1;
+      pts.push([x,y]);
+    }
+    draw();
+  }
+  document.getElementById('b1pos').onclick=function(){gen('pos');};
+  document.getElementById('b1neg').onclick=function(){gen('neg');};
+  document.getElementById('b1no').onclick=function(){gen('none');};
+  document.getElementById('b1perf').onclick=function(){gen('perf');};
+  document.getElementById('b1clr').onclick=function(){pts=[];draw();};
+  window.addEventListener('resize',draw);
+  gen('pos');
+})();
+
+// ── SIM 2: REGRESSIONE INTERATTIVA ────────────
+(function(){
+  var cv=document.getElementById('cv2');
+  var pts=[],showRes=false;
+  var PAD=44;
+  function getRange(){
+    if(pts.length<2)return{xmn:0,xmx:10,ymn:0,ymx:10};
+    var xs=pts.map(function(p){return p[0];}),ys=pts.map(function(p){return p[1];});
+    var xmn=Math.min.apply(null,xs),xmx=Math.max.apply(null,xs);
+    var ymn=Math.min.apply(null,ys),ymx=Math.max.apply(null,ys);
+    var dx=Math.max((xmx-xmn)*0.2,0.5),dy=Math.max((ymx-ymn)*0.2,0.5);
+    return{xmn:xmn-dx,xmx:xmx+dx,ymn:ymn-dy,ymx:ymx+dy};
+  }
+  function regr(xs,ys){
+    var mx=mean(xs),my=mean(ys);
+    var num=xs.reduce(function(s,x,i){return s+(x-mx)*(ys[i]-my);},0);
+    var den=xs.reduce(function(s,x){return s+(x-mx)*(x-mx);},0);
+    var b=den===0?0:num/den,a=my-b*mx;
+    return{a:a,b:b,mx:mx,my:my};
+  }
+  function draw(){
+    resize(cv,320);
+    var W=cv.width,H=320,ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    var GW=W-PAD*2,GH=H-PAD*2;
+    var r=getRange();
+    var sx=function(x){return PAD+(x-r.xmn)/(r.xmx-r.xmn)*GW;};
+    var sy=function(y){return H-PAD-(y-r.ymn)/(r.ymx-r.ymn)*GH;};
+    ctx.strokeStyle='rgba(0,0,0,0.05)';ctx.lineWidth=0.5;
+    for(var i=0;i<=5;i++){
+      ctx.beginPath();ctx.moveTo(PAD+i*GW/5,PAD);ctx.lineTo(PAD+i*GW/5,H-PAD);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(PAD,PAD+i*GH/5);ctx.lineTo(W-PAD,PAD+i*GH/5);ctx.stroke();
+    }
+    ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(PAD,PAD);ctx.lineTo(PAD,H-PAD);ctx.lineTo(W-PAD,H-PAD);ctx.stroke();
+    if(pts.length>=2){
+      var xs=pts.map(function(p){return p[0];}),ys=pts.map(function(p){return p[1];});
+      var rg=regr(xs,ys);
+      var rvl=pearson(xs,ys);
+      if(showRes){
+        pts.forEach(function(p){
+          var yhat=rg.a+rg.b*p[0];
+          ctx.strokeStyle='rgba(181,53,26,0.3)';ctx.lineWidth=1.2;ctx.setLineDash([3,2]);
+          ctx.beginPath();ctx.moveTo(sx(p[0]),sy(p[1]));ctx.lineTo(sx(p[0]),sy(yhat));ctx.stroke();
+          ctx.setLineDash([]);
+        });
+      }
+      ctx.strokeStyle='#b5351a';ctx.lineWidth=2.5;ctx.setLineDash([]);
+      ctx.beginPath();ctx.moveTo(sx(r.xmn),sy(rg.a+rg.b*r.xmn));ctx.lineTo(sx(r.xmx),sy(rg.a+rg.b*r.xmx));ctx.stroke();
+      ctx.beginPath();ctx.arc(sx(rg.mx),sy(rg.my),7,0,2*Math.PI);ctx.strokeStyle='#1a6b3a';ctx.lineWidth=2;ctx.stroke();
+      var sgn=rg.a>=0?'+':'';
+      document.getElementById('s2b').textContent=fmt(rg.b);
+      document.getElementById('s2a').textContent=fmt(rg.a);
+      document.getElementById('s2r').textContent=fmt(rvl);
+      document.getElementById('s2r2').textContent=fmt(rvl*rvl);
+      document.getElementById('s2eq').textContent='ŷ='+fmt(rg.b,3)+'x'+sgn+fmt(rg.a,3);
+      ctx.fillStyle='#b5351a';ctx.font='bold 10px monospace';ctx.textAlign='left';
+      ctx.fillText('ŷ='+fmt(rg.b,2)+'x'+sgn+fmt(rg.a,2)+'  R²='+fmt(rvl*rvl,3),PAD+4,PAD+13);
+    } else {
+      ['s2b','s2a','s2r','s2r2','s2eq'].forEach(function(id){document.getElementById(id).textContent='—';});
+    }
+    pts.forEach(function(p){
+      ctx.beginPath();ctx.arc(sx(p[0]),sy(p[1]),5,0,2*Math.PI);
+      ctx.fillStyle='#1a4b8c88';ctx.fill();ctx.strokeStyle='#1a4b8c';ctx.lineWidth=1.5;ctx.stroke();
+    });
+  }
+  function addPoint(e){
+    var rect=cv.getBoundingClientRect();
+    var px=e.clientX-rect.left,py=e.clientY-rect.top;
+    var r=getRange();
+    var GW=cv.width-PAD*2,GH=cv.height-PAD*2;
+    if(px<PAD||px>cv.width-PAD||py<PAD||py>cv.height-PAD)return;
+    var x=r.xmn+(px-PAD)/GW*(r.xmx-r.xmn);
+    var y=r.ymn+(1-(py-PAD)/GH)*(r.ymx-r.ymn);
+    pts.push([x,y]);draw();
+  }
+  cv.addEventListener('click',addPoint);
+  cv.addEventListener('contextmenu',function(e){e.preventDefault();pts.pop();draw();});
+  function gen(type){
+    pts=[];
+    for(var i=0;i<20;i++){
+      var x=Math.random()*8+1,y,noise;
+      if(type==='lin'){noise=(Math.random()-0.5)*2.5;y=1.5*x+2+noise;}
+      else if(type==='str'){noise=(Math.random()-0.5)*0.6;y=1.5*x+2+noise;}
+      else{noise=(Math.random()-0.5)*7;y=1.5*x+2+noise;}
+      pts.push([x,y]);
+    }
+    draw();
+  }
+  document.getElementById('b2lin').onclick=function(){gen('lin');};
+  document.getElementById('b2str').onclick=function(){gen('str');};
+  document.getElementById('b2wk').onclick=function(){gen('wk');};
+  document.getElementById('b2res').onclick=function(){
+    showRes=!showRes;
+    document.getElementById('b2res').className=showRes?'btn go':'btn';
+    draw();
+  };
+  document.getElementById('b2clr').onclick=function(){pts=[];draw();};
+  window.addEventListener('resize',draw);
+  gen('lin');
+})();
+
+// ── SIM 3: CHI-QUADRO ─────────────────────────
+(function(){
+  function getO(){
+    return[
+      [+(document.getElementById('c00').value)||0, +(document.getElementById('c01').value)||0],
+      [+(document.getElementById('c10').value)||0, +(document.getElementById('c11').value)||0]
+    ];
+  }
+  function updTot(){
+    var O=getO();
+    document.getElementById('cr0').textContent=O[0][0]+O[0][1];
+    document.getElementById('cr1').textContent=O[1][0]+O[1][1];
+    document.getElementById('cc0').textContent=O[0][0]+O[1][0];
+    document.getElementById('cc1').textContent=O[0][1]+O[1][1];
+    document.getElementById('ctot').textContent=O[0][0]+O[0][1]+O[1][0]+O[1][1];
+  }
+  ['c00','c01','c10','c11'].forEach(function(id){document.getElementById(id).oninput=updTot;});
+  function calc(){
+    var O=getO();
+    var n=O[0][0]+O[0][1]+O[1][0]+O[1][1];
+    if(n===0)return;
+    var r0=O[0][0]+O[0][1],r1=O[1][0]+O[1][1];
+    var c0=O[0][0]+O[1][0],c1=O[0][1]+O[1][1];
+    var E=[[r0*c0/n,r0*c1/n],[r1*c0/n,r1*c1/n]];
+    var chi2=0;
+    O.forEach(function(row,i){row.forEach(function(o,j){if(E[i][j]>0)chi2+=(o-E[i][j])*(o-E[i][j])/E[i][j];});});
+    var V=Math.sqrt(chi2/n);
+    drawChi(O,E);
+    document.getElementById('s3chi').textContent=fmt(chi2,3);
+    document.getElementById('s3v').textContent=fmt(V,3);
+    document.getElementById('s3n').textContent=n;
+    var it=V<0.1?'Trascurabile':V<0.3?'Debole':V<0.5?'Moderata':'Forte';
+    document.getElementById('s3int').textContent=it;
+    document.getElementById('s3int').style.color=V<0.1?'#888':V<0.3?'#c47a00':V<0.5?'#1a4b8c':'#1a6b3a';
+  }
+  function drawChi(O,E){
+    var cv=document.getElementById('cv3');
+    resize(cv,240);
+    var W=cv.width,H=240,ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    var cells=[
+      {label:'(1,A)',o:O[0][0],e:E[0][0]},
+      {label:'(1,B)',o:O[0][1],e:E[0][1]},
+      {label:'(2,A)',o:O[1][0],e:E[1][0]},
+      {label:'(2,B)',o:O[1][1],e:E[1][1]}
+    ];
+    var pl=44,pr=16,pt=22,pb=44,GW=W-pl-pr,GH=H-pt-pb;
+    var maxV=Math.max.apply(null,cells.map(function(c){return Math.max(c.o,c.e);}));
+    maxV=maxV*1.2||10;
+    var sy=function(v){return pt+GH*(1-v/maxV);};
+    var nc=4,bw=Math.min(GW/(nc*3),55);
+    // Griglia
+    ctx.strokeStyle='rgba(0,0,0,0.05)';ctx.lineWidth=0.5;
+    [0.25,0.5,0.75,1].forEach(function(f){
+      ctx.beginPath();ctx.moveTo(pl,sy(f*maxV));ctx.lineTo(W-pr,sy(f*maxV));ctx.stroke();
+    });
+    cells.forEach(function(c,i){
+      var cx=pl+GW*(i+0.5)/nc;
+      // Barra osservata
+      var oh=(c.o/maxV)*GH;
+      ctx.fillStyle='#1a4b8caa';ctx.fillRect(cx-bw-2,sy(c.o),bw,oh);
+      ctx.strokeStyle='#1a4b8c';ctx.lineWidth=1;ctx.strokeRect(cx-bw-2,sy(c.o),bw,oh);
+      // Barra attesa
+      var eh=(c.e/maxV)*GH;
+      ctx.fillStyle='#b5351a33';ctx.fillRect(cx+2,sy(c.e),bw,eh);
+      ctx.strokeStyle='#b5351a';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+      ctx.strokeRect(cx+2,sy(c.e),bw,eh);ctx.setLineDash([]);
+      // Etichette
+      ctx.fillStyle='rgba(0,0,0,0.5)';ctx.font='10px monospace';ctx.textAlign='center';
+      ctx.fillText(c.label,cx,H-pb+14);
+      ctx.fillStyle='#1a4b8c';ctx.font='bold 9px monospace';
+      ctx.fillText('O='+c.o,cx-bw/2-2,sy(c.o)-3);
+      ctx.fillStyle='#b5351a';
+      ctx.fillText('E='+c.e.toFixed(1),cx+bw/2+2,sy(c.e)-3);
+    });
+    // Assi
+    ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+    // Legenda
+    ctx.fillStyle='#1a4b8c';ctx.font='10px monospace';ctx.textAlign='left';
+    ctx.fillRect(pl,H-pb+24,12,10);
+    ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillText('Osservate (O)',pl+15,H-pb+33);
+    ctx.strokeStyle='#b5351a';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+    ctx.strokeRect(pl+100,H-pb+24,12,10);ctx.setLineDash([]);
+    ctx.fillText('Attese (E)',pl+115,H-pb+33);
+  }
+  document.getElementById('b3calc').onclick=calc;
+  document.getElementById('b3ind').onclick=function(){
+    ['c00','c01','c10','c11'].forEach(function(id,i){document.getElementById(id).value=[25,25,25,25][i];});
+    updTot();calc();
+  };
+  document.getElementById('b3str').onclick=function(){
+    ['c00','c01','c10','c11'].forEach(function(id,i){document.getElementById(id).value=[40,5,5,40][i];});
+    updTot();calc();
+  };
+  document.getElementById('b3wk').onclick=function(){
+    ['c00','c01','c10','c11'].forEach(function(id,i){document.getElementById(id).value=[30,15,15,25][i];});
+    updTot();calc();
+  };
+  window.addEventListener('resize',function(){calc();});
+  updTot();calc();
+})();
+
+// ── GRAFICI STATICI ───────────────────────────
+function drawAllStatic(){
+  drawGallery();
+  drawEsScatter();
+  drawScalaR();
+  drawEsReg();
+}
+window.addEventListener('resize',drawAllStatic);
+drawAllStatic();
+
+// ── NAV ATTIVA ────────────────────────────────
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';
+  secs.forEach(function(s){if(window.scrollY>=s.offsetTop-70)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
