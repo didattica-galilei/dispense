@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Probabilità con le Carte</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--accent:#1a4b8c;--muted:#6b6860;--border:#dddbd5;--surface:#f0ede6;--s2:#fff;--red:#b5351a;--green:#1a6b3a;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
+.hero{background:var(--ink);color:#fff;padding:48px 32px 36px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:12px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,42px);font-weight:700;line-height:1.1;margin-bottom:8px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:14px;color:rgba(255,255,255,0.4);font-weight:300;max-width:480px;margin:0 auto}
+.page{max-width:860px;margin:0 auto;padding:32px 24px}
+@media(max-width:600px){.page{padding:18px 10px}}
+
+/* SEZIONI */
+.panel{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:20px;margin-bottom:18px}
+.panel-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.panel-title::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+
+/* OPZIONI MAZZO */
+.opt-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center;font-size:13px}
+.opt-row label{font-weight:600;color:var(--muted)}
+.rbtn{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--s2);color:var(--muted);font-size:12px;cursor:pointer;font-family:'Source Sans 3',sans-serif;transition:all .15s}
+.rbtn.sel{background:var(--accent);color:#fff;border-color:var(--accent)}
+.rbtn:hover:not(.sel){background:var(--surface)}
+
+/* EVENTI */
+.event-block{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:14px;margin-bottom:10px;position:relative}
+.event-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.event-label{font-size:12px;font-weight:600;color:var(--accent);min-width:24px}
+.connector{padding:4px 10px;border-radius:3px;border:1px solid var(--border);background:var(--s2);color:var(--muted);font-size:11px;cursor:pointer;font-weight:600}
+.connector.sel{background:var(--red);color:#fff;border-color:var(--red)}
+.sel-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.sel-row label{font-weight:600;min-width:60px}
+.sel-row select{padding:4px 8px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:#fff;color:var(--ink)}
+.sel-row input[type=number]{width:52px;padding:4px 6px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:#fff;font-family:'Source Code Pro',monospace}
+.negbtn{padding:3px 8px;border-radius:3px;border:1px solid var(--border);background:var(--s2);color:var(--muted);font-size:10px;cursor:pointer;font-weight:600;margin-left:4px}
+.negbtn.on{background:#c47a00;color:#fff;border-color:#c47a00}
+.delbtn{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:3px;border:1px solid var(--border);background:var(--s2);color:var(--muted);font-size:11px;cursor:pointer}
+.delbtn:hover{background:#fdf3ee;color:var(--red)}
+.addbtn{padding:6px 16px;border-radius:3px;border:1.5px dashed var(--border);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;width:100%;transition:all .15s}
+.addbtn:hover{background:var(--surface);color:var(--accent);border-color:var(--accent)}
+
+/* CONDIZIONATA */
+.cond-block{background:#e8f0fa;border:1px solid #b0c8f0;border-radius:5px;padding:12px;margin-top:10px}
+.cond-block label{font-size:12px;font-weight:600;color:var(--accent)}
+
+/* CALCOLA */
+.calc-btn{padding:10px 28px;border-radius:4px;border:none;background:var(--accent);color:#fff;font-size:14px;cursor:pointer;font-weight:600;font-family:'Source Sans 3',sans-serif;transition:background .15s}
+.calc-btn:hover{background:#0f3060}
+.reset-btn{padding:10px 18px;border-radius:4px;border:1px solid var(--border);background:var(--s2);color:var(--muted);font-size:13px;cursor:pointer;font-family:'Source Sans 3',sans-serif;margin-left:8px}
+
+/* RISULTATI */
+.result-box{background:var(--ink);color:#fff;border-radius:5px;padding:20px 24px;margin-top:16px;min-height:80px}
+.result-box.empty{background:var(--surface);color:var(--muted);font-style:italic;font-size:14px;display:flex;align-items:center}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:14px}
+.res-item{background:rgba(255,255,255,0.07);border-radius:4px;padding:10px 14px}
+.res-item .rl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:3px;font-weight:600}
+.res-item .rv{font-family:'Source Code Pro',monospace;font-size:18px;color:#fff}
+.res-item.hi .rv{color:#f4d03f;font-size:22px}
+.res-item.gr .rv{color:#74c99a}
+.res-steps{background:rgba(255,255,255,0.05);border-radius:4px;padding:12px 14px;font-family:'Source Code Pro',monospace;font-size:12px;line-height:1.9;white-space:pre-wrap;color:rgba(255,255,255,0.85)}
+
+/* MONTE CARLO */
+.mc-panel{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:18px;margin-top:16px}
+.mc-ctrl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px;font-size:13px;color:var(--muted)}
+.mc-ctrl label{font-weight:600}
+.mc-ctrl input[type=range]{width:120px;accent-color:var(--accent)}
+.mc-ctrl .vv{font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;min-width:52px;color:var(--ink)}
+canvas{display:block;border:1px solid var(--border);border-radius:3px;background:#fff;width:100%;margin-top:8px}
+.mc-res{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.mc-stat{background:var(--surface);border-radius:4px;padding:7px 13px;font-size:12px;font-family:'Source Code Pro',monospace}
+.mc-stat .sl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:2px}
+.mc-stat .sv{font-size:15px;font-weight:600;color:var(--accent)}
+
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:40px;padding:20px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="eyebrow">Matematica &middot; Probabilit&agrave;</div>
+  <h1>Probabilit&agrave; con le <em>Carte</em></h1>
+  <p>Calcola la probabilit&agrave; di eventi composti su estrazioni da mazzo da 40 o 52 carte &mdash; con connettivi logici E/O/NON e probabilit&agrave; condizionata</p>
+</div>
+
+<div class="page">
+
+<!-- CONFIGURAZIONE MAZZO -->
+<div class="panel">
+  <div class="panel-title">Configurazione mazzo ed estrazione</div>
+  <div class="opt-row">
+    <label>Mazzo:</label>
+    <button class="rbtn sel" id="btn40" onclick="setMazzo(40)">40 carte (italiano)</button>
+    <button class="rbtn" id="btn52" onclick="setMazzo(52)">52 carte (francese)</button>
+  </div>
+  <div class="opt-row">
+    <label>Carte estratte:</label>
+    <span id="nCarteLabel" style="font-size:13px;color:var(--muted)">n =</span>
+    <input type="range" id="nCarte" min="1" max="5" step="1" value="3" style="width:120px;accent-color:var(--accent)">
+    <span style="font-family:monospace;font-size:13px;font-weight:600;min-width:20px" id="nCarteVal">3</span>
+  </div>
+  <div class="opt-row">
+    <label>Tipo estrazione:</label>
+    <button class="rbtn sel" id="btnSenza" onclick="setEstr('senza')">Senza reinserimento</button>
+    <button class="rbtn" id="btnCon" onclick="setEstr('con')">Con reinserimento</button>
+  </div>
+  <div id="mazzoInfo" style="font-size:12px;color:var(--muted);margin-top:6px;font-family:monospace"></div>
+</div>
+
+<!-- EVENTO A -->
+<div class="panel">
+  <div class="panel-title">Evento A &mdash; definisci i criteri (connessi da E / O)</div>
+  <div id="eventiA"></div>
+  <button class="addbtn" onclick="addEvento('A')">+ Aggiungi criterio per A</button>
+</div>
+
+<!-- EVENTO B (per condizionata) -->
+<div class="panel" id="panelB">
+  <div class="panel-title">Evento B &mdash; per probabilit&agrave; condizionata P(A|B)</div>
+  <div id="eventiB"></div>
+  <button class="addbtn" onclick="addEvento('B')">+ Aggiungi criterio per B</button>
+  <div style="font-size:12px;color:var(--muted);margin-top:8px">&#128161; P(A|B) = P(A&cap;B)/P(B) &mdash; probabilit&agrave; di A sapendo che si &egrave; verificato B</div>
+</div>
+
+<!-- CALCOLA -->
+<div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px">
+  <button class="calc-btn" onclick="calcola()">&#9654; Calcola probabilit&agrave;</button>
+  <button class="reset-btn" onclick="resetTutto()">Reset</button>
+  <label style="font-size:12px;color:var(--muted);margin-left:8px;display:flex;align-items:center;gap:5px">
+    <input type="checkbox" id="chkB" onchange="toggleB()"> Calcola anche P(A|B)
+  </label>
+</div>
+
+<!-- RISULTATI -->
+<div class="result-box empty" id="risultati">Definisci l'evento A e clicca &#9654; Calcola</div>
+
+<!-- MONTE CARLO -->
+<div class="mc-panel">
+  <div class="panel-title">Simulazione Monte Carlo &mdash; verifica empirica</div>
+  <div class="mc-ctrl">
+    <label>Simulazioni:</label>
+    <input type="range" id="mcN" min="1000" max="100000" step="1000" value="10000">
+    <span class="vv" id="mcNv">10 000</span>
+    <button class="calc-btn" style="font-size:12px;padding:6px 16px" onclick="monteCarlo()">&#9654; Simula</button>
+  </div>
+  <canvas id="cvMC" style="height:180px"></canvas>
+  <div class="mc-res">
+    <div class="mc-stat"><div class="sl">P(A) teorica</div><div class="sv" id="mcTeo">&mdash;</div></div>
+    <div class="mc-stat"><div class="sl">P(A) simulata</div><div class="sv" id="mcSim">&mdash;</div></div>
+    <div class="mc-stat"><div class="sl">Scarto</div><div class="sv" id="mcErr">&mdash;</div></div>
+    <div class="mc-stat"><div class="sl">Simulazioni</div><div class="sv" id="mcNres">&mdash;</div></div>
+  </div>
+</div>
+
+<footer>Didattica Pierri &middot; Matematica &middot; Probabilit&agrave; con le Carte &nbsp;|&nbsp; <a href="index.html" style="color:var(--accent)">&#8592; Home</a></footer>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// COSTANTI MAZZO
+// ═══════════════════════════════════════
+var SEMI40 = ['Bastoni','Coppe','Denari','Spade'];
+var SEMI52 = ['Cuori','Quadri','Fiori','Picche'];
+var VALORI40 = ['Asso','2','3','4','5','6','7','Fante','Cavallo','Re'];
+var VALORI52 = ['Asso','2','3','4','5','6','7','8','9','10','Jack','Donna','Re'];
+var FIGURE40 = ['Fante','Cavallo','Re'];
+var FIGURE52 = ['Jack','Donna','Re'];
+
+var mazzoN = 40;
+var nEstr  = 3;
+var conRein= false;
+
+var eventiA = [];
+var eventiB = [];
+var lastProbA = NaN;
+
+var idCounter = 0;
+
+// ═══════════════════════════════════════
+// SETUP MAZZO
+// ═══════════════════════════════════════
+function setMazzo(n){
+  mazzoN=n;
+  document.getElementById('btn40').className=n===40?'rbtn sel':'rbtn';
+  document.getElementById('btn52').className=n===52?'rbtn sel':'rbtn';
+  updateMazzoInfo();
+  rebuildAllEvents();
+}
+function setEstr(t){
+  conRein=t==='con';
+  document.getElementById('btnSenza').className=!conRein?'rbtn sel':'rbtn';
+  document.getElementById('btnCon').className= conRein?'rbtn sel':'rbtn';
+  updateMazzoInfo();
+}
+function updateMazzoInfo(){
+  var semi=mazzoN===40?SEMI40:SEMI52;
+  var vals=mazzoN===40?VALORI40:VALORI52;
+  var fig =mazzoN===40?FIGURE40:FIGURE52;
+  document.getElementById('mazzoInfo').textContent=
+    mazzoN+' carte · Semi: '+semi.join(', ')+' · Valori: '+vals.length+' per seme · Figure: '+fig.join(', ')+' ('+fig.length*semi.length+' in totale)';
+}
+document.getElementById('nCarte').oninput=function(){
+  nEstr=+this.value;
+  document.getElementById('nCarteVal').textContent=nEstr;
+};
+
+// ═══════════════════════════════════════
+// TIPI DI EVENTO
+// ═══════════════════════════════════════
+function getTipiEvento(){
+  var semi=mazzoN===40?SEMI40:SEMI52;
+  var vals=mazzoN===40?VALORI40:VALORI52;
+  return [
+    {id:'figura',   label:'Figura'},
+    {id:'seme',     label:'Seme',    param:'seme',   options:semi},
+    {id:'valore',   label:'Valore',  param:'valore', options:vals},
+    {id:'numero',   label:'Numero (non figura)', options:null},
+    {id:'asso',     label:'Asso'},
+    {id:'pari',     label:'Numero pari (non fig.)'},
+    {id:'dispari',  label:'Numero dispari (non fig.)'},
+  ];
+}
+
+// ═══════════════════════════════════════
+// COSTRUISCE UI EVENTO
+// ═══════════════════════════════════════
+function addEvento(gruppo){
+  var id='ev'+(idCounter++);
+  var ev={id:id,gruppo:gruppo,tipo:'figura',seme:null,valore:null,neg:false,conn:'O',quantita:1,modo:'almeno'};
+  if(gruppo==='A') eventiA.push(ev);
+  else eventiB.push(ev);
+  renderEventi(gruppo);
+}
+
+function removeEvento(id,gruppo){
+  if(gruppo==='A') eventiA=eventiA.filter(function(e){return e.id!==id;});
+  else eventiB=eventiB.filter(function(e){return e.id!==id;});
+  renderEventi(gruppo);
+}
+
+function renderEventi(gruppo){
+  var lista=gruppo==='A'?eventiA:eventiB;
+  var cont=document.getElementById('eventi'+gruppo);
+  cont.innerHTML='';
+  lista.forEach(function(ev,idx){
+    var tipi=getTipiEvento();
+    var semi=mazzoN===40?SEMI40:SEMI52;
+    var vals=mazzoN===40?VALORI40:VALORI52;
+    var div=document.createElement('div');
+    div.className='event-block';
+
+    // Connettore (non per il primo)
+    var connHtml='';
+    if(idx>0){
+      connHtml='<button class="connector'+(ev.conn==='E'?' sel':'')+'" onclick="toggleConn(\''+ev.id+'\',\''+gruppo+'\')">'+ev.conn+'</button>';
+    }
+
+    // Selezione tipo
+    var tipoOptions=tipi.map(function(t){
+      return '<option value="'+t.id+'"'+(ev.tipo===t.id?' selected':'')+'>'+t.label+'</option>';
+    }).join('');
+
+    // Parametro aggiuntivo (seme o valore)
+    var paramHtml='';
+    if(ev.tipo==='seme'){
+      paramHtml='<label>Seme:</label><select onchange="setParam(\''+ev.id+'\',\''+gruppo+'\',\'seme\',this.value)">';
+      semi.forEach(function(s){paramHtml+='<option'+(ev.seme===s?' selected':'')+'>'+s+'</option>';});
+      paramHtml+='</select>';
+      if(!ev.seme) ev.seme=semi[0];
+    } else if(ev.tipo==='valore'){
+      paramHtml='<label>Valore:</label><select onchange="setParam(\''+ev.id+'\',\''+gruppo+'\',\'valore\',this.value)">';
+      vals.forEach(function(v){paramHtml+='<option'+(ev.valore===v?' selected':'')+'>'+v+'</option>';});
+      paramHtml+='</select>';
+      if(!ev.valore) ev.valore=vals[0];
+    }
+
+    // Quantità (almeno k carte estratte soddisfano il criterio)
+    var maxQ=Math.min(nEstr,5);
+    var qOptions='';
+    for(var q=1;q<=maxQ;q++) qOptions+='<option value="'+q+'"'+(ev.quantita===q?' selected':'')+'>'+q+'</option>';
+
+    div.innerHTML=
+      '<div class="event-head">'+
+        '<span class="event-label">'+gruppo+(idx+1)+'</span>'+
+        connHtml+
+        '<select onchange="setTipo(\''+ev.id+'\',\''+gruppo+'\',this.value)">'+tipoOptions+'</select>'+
+        '<button class="negbtn'+(ev.neg?' on':'')+'" onclick="toggleNeg(\''+ev.id+'\',\''+gruppo+'\')">NON</button>'+
+      '</div>'+
+      '<div class="sel-row">'+
+        paramHtml+
+        '<select onchange="setModo(\''+ev.id+'\',\''+gruppo+'\',this.value)" style="font-size:11px;padding:3px 6px;border:1px solid #ddd;border-radius:3px;background:#fff">'+
+          '<option value="almeno"'+(ev.modo==='almeno'?' selected':'')+'>Almeno</option>'+
+          '<option value="alpiu"'+(ev.modo==='alpiu'?' selected':'')+'>Al pi\u00f9</option>'+
+          '<option value="esatto"'+(ev.modo==='esatto'?' selected':'')+'>Esattamente</option>'+
+        '</select>'+
+        '<select onchange="setQ(\''+ev.id+'\',\''+gruppo+'\',this.value)" style="width:52px;font-size:11px;padding:3px 5px;border:1px solid #ddd;border-radius:3px;background:#fff">'+qOptions+'</select>'+
+        '<span style="font-size:11px;color:var(--muted)">carte estratte soddisfano questo criterio</span>'+
+      '</div>'+
+      '<button class="delbtn" onclick="removeEvento(\''+ev.id+'\',\''+gruppo+'\')">✕</button>';
+    cont.appendChild(div);
+  });
+}
+
+function rebuildAllEvents(){
+  renderEventi('A');
+  renderEventi('B');
+}
+
+function toggleConn(id,gruppo){
+  var lista=gruppo==='A'?eventiA:eventiB;
+  var ev=lista.find(function(e){return e.id===id;});
+  if(ev) ev.conn=ev.conn==='E'?'O':'E';
+  renderEventi(gruppo);
+}
+function toggleNeg(id,gruppo){
+  var lista=gruppo==='A'?eventiA:eventiB;
+  var ev=lista.find(function(e){return e.id===id;});
+  if(ev){ev.neg=!ev.neg;renderEventi(gruppo);}
+}
+function setTipo(id,gruppo,val){
+  var lista=gruppo==='A'?eventiA:eventiB;
+  var ev=lista.find(function(e){return e.id===id;});
+  if(ev){ev.tipo=val;ev.seme=null;ev.valore=null;renderEventi(gruppo);}
+}
+function setParam(id,gruppo,chiave,val){
+  var lista=gruppo==='A'?eventiA:eventiB;
+  var ev=lista.find(function(e){return e.id===id;});
+  if(ev){ev[chiave]=val;}
+}
+function setModo(id,gruppo,val){
+  var lista=gruppo==='A'?eventiA:eventiB;
+  var ev=lista.find(function(e){return e.id===id;});
+  if(ev) ev.modo=val;
+}
+function setQ(id,gruppo,val){
+  var lista=gruppo==='A'?eventiA:eventiB;
+  var ev=lista.find(function(e){return e.id===id;});
+  if(ev) ev.quantita=+val;
+}
+function toggleB(){
+  document.getElementById('panelB').style.display=
+    document.getElementById('chkB').checked?'block':'none';
+}
+
+// ═══════════════════════════════════════
+// COSTRUISCE IL MAZZO
+// ═══════════════════════════════════════
+function buildMazzo(){
+  var semi=mazzoN===40?SEMI40:SEMI52;
+  var vals=mazzoN===40?VALORI40:VALORI52;
+  var fig =mazzoN===40?FIGURE40:FIGURE52;
+  var mazzo=[];
+  semi.forEach(function(s){
+    vals.forEach(function(v){
+      mazzo.push({seme:s,valore:v,figura:fig.indexOf(v)>=0});
+    });
+  });
+  return mazzo;
+}
+
+// ═══════════════════════════════════════
+// VERIFICA SE UNA CARTA SODDISFA UN CRITERIO
+// ═══════════════════════════════════════
+function cartaSoddisfa(carta,ev){
+  var ok=false;
+  var pari=['2','4','6','8','10'];
+  var dispari=['3','5','7','9'];
+  if(ev.tipo==='figura') ok=carta.figura;
+  else if(ev.tipo==='seme') ok=carta.seme===(ev.seme||(mazzoN===40?SEMI40:SEMI52)[0]);
+  else if(ev.tipo==='valore') ok=carta.valore===(ev.valore||(mazzoN===40?VALORI40:VALORI52)[0]);
+  else if(ev.tipo==='numero') ok=!carta.figura;
+  else if(ev.tipo==='asso') ok=carta.valore==='Asso';
+  else if(ev.tipo==='pari') ok=!carta.figura&&pari.indexOf(carta.valore)>=0;
+  else if(ev.tipo==='dispari') ok=!carta.figura&&dispari.indexOf(carta.valore)>=0;
+  return ev.neg?!ok:ok;
+}
+
+// ═══════════════════════════════════════
+// QUANTE CARTE NEL MAZZO SODDISFANO UN CRITERIO
+// ═══════════════════════════════════════
+function contaCarte(ev){
+  return buildMazzo().filter(function(c){return cartaSoddisfa(c,ev);}).length;
+}
+
+// ═══════════════════════════════════════
+// CALCOLO COMBINATORIO
+// ═══════════════════════════════════════
+function C(n,k){
+  if(k<0||k>n)return 0;
+  if(k===0||k===n)return 1;
+  var r=1;
+  for(var i=0;i<Math.min(k,n-k);i++) r=r*(n-i)/(i+1);
+  return Math.round(r);
+}
+
+// P(esattamente k successi su n estrazioni senza reinserimento)
+// successi disponibili = M, totale = N
+function ipergeometrica(N,M,n,k){
+  return C(M,k)*C(N-M,n-k)/C(N,n);
+}
+// P(almeno k successi)
+function pEsattaK(N,M,n,k,conR){
+  if(conR) return C(n,k)*Math.pow(M/N,k)*Math.pow(1-M/N,n-k);
+  return ipergeometrica(N,M,n,k);
+}
+function pAlmenoK(N,M,n,k,conR){
+  var p=0;
+  for(var j=k;j<=Math.min(n,M);j++) p+=pEsattaK(N,M,n,j,conR);
+  return Math.min(1,Math.max(0,p));
+}
+function pAlPiuK(N,M,n,k,conR){
+  var p=0;
+  for(var j=0;j<=Math.min(k,n,M);j++) p+=pEsattaK(N,M,n,j,conR);
+  return Math.min(1,Math.max(0,p));
+}
+function pConModo(N,M,n,k,conR,modo){
+  if(modo==='alpiu') return pAlPiuK(N,M,n,k,conR);
+  if(modo==='esatto') return pEsattaK(N,M,n,k,conR);
+  return pAlmenoK(N,M,n,k,conR);
+}
+
+// Valuta un insieme di eventi (connessi da E/O) su n estrazioni
+// Restituisce la probabilità e la descrizione testuale
+function valutaEventi(lista,steps){
+  if(lista.length===0) return{p:1,desc:'(nessun criterio = certezza)'};
+  var N=mazzoN;
+  // Calcola P per ogni criterio singolo
+  var probs=lista.map(function(ev){
+    var M=contaCarte(ev);
+    var p=pConModo(N,M,nEstr,ev.quantita,conRein,ev.modo||'almeno');
+    if(steps) steps.push(descrizioneCriterio(ev)+': '+M+'/'+N+' carte → P = '+p.toFixed(6));
+    return{ev:ev,p:p,M:M};
+  });
+  // Combina con E/O
+  // NB: per combinazioni esatte con E si userebbe inclusione-esclusione
+  // qui usiamo approssimazione per eventi semplici (indipendenza)
+  // e calcolo esatto per casi speciali
+  var pTot=probs[0].p;
+  for(var i=1;i<probs.length;i++){
+    var conn=lista[i].conn;
+    if(conn==='E'){
+      // P(A e B) ≈ P(A)·P(B) per approssimazione (o calcolo esatto se criteri disgiunti)
+      pTot=pTot*probs[i].p;
+      if(steps) steps.push('Connettivo E → P = '+pTot.toFixed(6)+' (prodotto)');
+    } else {
+      // P(A o B) = P(A)+P(B)-P(A∩B)
+      pTot=pTot+probs[i].p-pTot*probs[i].p;
+      if(steps) steps.push('Connettivo O → P = '+pTot.toFixed(6)+' (unione)');
+    }
+  }
+  return{p:Math.min(1,Math.max(0,pTot))};
+}
+
+function descrizioneCriterio(ev){
+  var neg=ev.neg?'NON ':'';
+  var t=ev.tipo;
+  var modoStr={'almeno':'almeno','alpiu':'al più','esatto':'esattamente'}[ev.modo||'almeno'];
+  var qStr=modoStr+' '+ev.quantita+' carta'+(ev.quantita>1?'e':'');
+  if(t==='figura')   return neg+'Figura ('+qStr+')';
+  if(t==='seme')     return neg+'Seme '+ev.seme+' ('+qStr+')';
+  if(t==='valore')   return neg+'Valore '+ev.valore+' ('+qStr+')';
+  if(t==='numero')   return neg+'Numero non-figura ('+qStr+')';
+  if(t==='asso')     return neg+'Asso ('+qStr+')';
+  if(t==='pari')     return neg+'Numero pari ('+qStr+')';
+  if(t==='dispari')  return neg+'Numero dispari ('+qStr+')';
+  return neg+t;
+}
+
+// ═══════════════════════════════════════
+// CALCOLA
+// ═══════════════════════════════════════
+function calcola(){
+  if(eventiA.length===0){
+    var r=document.getElementById('risultati');
+    r.className='result-box empty';
+    r.innerHTML='⚠ Aggiungi almeno un criterio per l\'evento A.';
+    return;
+  }
+  var stepsA=[];
+  var resA=valutaEventi(eventiA,stepsA);
+  var pA=resA.p;
+  lastProbA=pA;
+
+  var html='<div class="res-grid">';
+  html+='<div class="res-item hi"><div class="rl">P(A)</div><div class="rv">'+pA.toFixed(6)+'</div></div>';
+  html+='<div class="res-item"><div class="rl">P(A) in %</div><div class="rv">'+(pA*100).toFixed(3)+'%</div></div>';
+  html+='<div class="res-item"><div class="rl">Mazzo</div><div class="rv">'+mazzoN+' carte</div></div>';
+  html+='<div class="res-item"><div class="rl">Estratte</div><div class="rv">n = '+nEstr+(conRein?' (c/rein.)':" (senza rein.")+')</div></div>';
+
+  if(document.getElementById('chkB').checked&&eventiB.length>0){
+    var stepsB=[];
+    var resB=valutaEventi(eventiB,stepsB);
+    var pB=resB.p;
+    // P(A∩B): combina tutti i criteri A e B con E
+    var tuttiAB=eventiA.concat(eventiB.map(function(e){
+      var ec=JSON.parse(JSON.stringify(e));ec.conn='E';return ec;
+    }));
+    var resAB=valutaEventi(tuttiAB,[]);
+    var pAB=resAB.p;
+    var pAgivenB=pB>0?pAB/pB:NaN;
+    html+='<div class="res-item gr"><div class="rl">P(B)</div><div class="rv">'+pB.toFixed(6)+'</div></div>';
+    html+='<div class="res-item gr"><div class="rl">P(A∩B)</div><div class="rv">'+pAB.toFixed(6)+'</div></div>';
+    html+='<div class="res-item hi"><div class="rl">P(A|B)</div><div class="rv">'+(isNaN(pAgivenB)?'—':pAgivenB.toFixed(6))+'</div></div>';
+    html+='<div class="res-item gr"><div class="rl">P(A|B) in %</div><div class="rv">'+(isNaN(pAgivenB)?'—':(pAgivenB*100).toFixed(3)+'%')+'</div></div>';
+    stepsA.push('---');
+    stepsA.push('P(B) = '+pB.toFixed(6));
+    stepsA.push('P(A∩B) = '+pAB.toFixed(6));
+    stepsA.push('P(A|B) = P(A∩B)/P(B) = '+pAB.toFixed(6)+' / '+pB.toFixed(6)+' = '+(isNaN(pAgivenB)?'—':pAgivenB.toFixed(6)));
+  }
+  html+='</div>';
+
+  // Passi
+  html+='<div class="res-steps">';
+  html+='Mazzo: '+mazzoN+' carte | Estratte: n='+nEstr+' | '+( conRein?'Con reinserimento':'Senza reinserimento')+'\n\n';
+  html+='── Criteri evento A ──\n';
+  stepsA.forEach(function(s){html+=s+'\n';});
+  html+='\nRisultato: P(A) = '+pA.toFixed(6)+' = '+(pA*100).toFixed(4)+'%';
+  html+='</div>';
+
+  var rb=document.getElementById('risultati');
+  rb.className='result-box';
+  rb.innerHTML=html;
+
+  // Aggiorna label MC
+  document.getElementById('mcTeo').textContent=pA.toFixed(6);
+}
+
+// ═══════════════════════════════════════
+// MONTE CARLO
+// ═══════════════════════════════════════
+function monteCarlo(){
+  if(eventiA.length===0){alert('Definisci prima l\'evento A.');return;}
+  var N=parseInt(document.getElementById('mcN').value);
+  var mazzo=buildMazzo();
+  var successi=0;
+
+  for(var sim=0;sim<N;sim++){
+    var mazzoCopia=mazzo.slice();
+    var estratte=[];
+    for(var i=0;i<nEstr;i++){
+      if(mazzoCopia.length===0)break;
+      var idx=Math.floor(Math.random()*mazzoCopia.length);
+      estratte.push(mazzoCopia[idx]);
+      if(!conRein) mazzoCopia.splice(idx,1);
+    }
+    if(valutaEstrazione(estratte)) successi++;
+  }
+
+  var pSim=successi/N;
+  var err=Math.abs(pSim-lastProbA);
+
+  document.getElementById('mcSim').textContent=pSim.toFixed(6);
+  document.getElementById('mcErr').textContent=(isNaN(lastProbA)?'—':err.toFixed(6));
+  document.getElementById('mcNres').textContent=N.toLocaleString('it-IT');
+
+  drawMC(pSim,lastProbA,N,successi);
+}
+
+function valutaEstrazione(estratte){
+  // Verifica se l'estrazione soddisfa tutti i criteri A (con connettivi)
+  if(eventiA.length===0)return true;
+  var res=valutaCriterioSuEstrazione(eventiA[0],estratte);
+  for(var i=1;i<eventiA.length;i++){
+    var curr=valutaCriterioSuEstrazione(eventiA[i],estratte);
+    if(eventiA[i].conn==='E') res=res&&curr;
+    else res=res||curr;
+  }
+  return res;
+}
+
+function valutaCriterioSuEstrazione(ev,estratte){
+  var count=estratte.filter(function(c){return cartaSoddisfa(c,ev);}).length;
+  var modo=ev.modo||'almeno';
+  if(modo==='alpiu')  return count<=ev.quantita;
+  if(modo==='esatto') return count===ev.quantita;
+  return count>=ev.quantita;
+}
+
+function drawMC(pSim,pTeo,N,succ){
+  var cv=document.getElementById('cvMC');
+  var W=Math.max(cv.parentElement.clientWidth-36,300);
+  cv.style.width=W+'px';cv.width=W;cv.height=180;
+  var H=180,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+
+  // Barre: simulata vs teorica
+  var pl=60,pr=20,pt=20,pb=50,GW=W-pl-pr,GH=H-pt-pb;
+  var maxP=Math.max(pSim,isNaN(pTeo)?0:pTeo)*1.3||0.1;
+
+  // Barra simulata
+  var bw=Math.min(GW/4,80);
+  var cx1=pl+GW/3;
+  var h1=(pSim/maxP)*GH;
+  var grad1=ctx.createLinearGradient(cx1-bw/2,H-pb-h1,cx1-bw/2,H-pb);
+  grad1.addColorStop(0,'#1a4b8ccc');grad1.addColorStop(1,'#1a4b8c55');
+  ctx.fillStyle=grad1;ctx.fillRect(cx1-bw/2,H-pb-h1,bw,h1);
+  ctx.strokeStyle='#1a4b8c';ctx.lineWidth=1.5;ctx.setLineDash([]);
+  ctx.strokeRect(cx1-bw/2,H-pb-h1,bw,h1);
+
+  // Barra teorica
+  var cx2=pl+2*GW/3;
+  if(!isNaN(pTeo)){
+    var h2=(pTeo/maxP)*GH;
+    var grad2=ctx.createLinearGradient(cx2-bw/2,H-pb-h2,cx2-bw/2,H-pb);
+    grad2.addColorStop(0,'#b5351acc');grad2.addColorStop(1,'#b5351a55');
+    ctx.fillStyle=grad2;ctx.fillRect(cx2-bw/2,H-pb-h2,bw,h2);
+    ctx.strokeStyle='#b5351a';ctx.lineWidth=1.5;
+    ctx.strokeRect(cx2-bw/2,H-pb-h2,bw,h2);
+    ctx.fillStyle='#b5351a';ctx.font='bold 11px monospace';ctx.textAlign='center';
+    ctx.fillText(pTeo.toFixed(4),cx2,H-pb-h2-5);
+  }
+
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText(pSim.toFixed(4),cx1,H-pb-h1-5);
+
+  // Etichette
+  ctx.fillStyle='rgba(0,0,0,0.5)';ctx.font='11px sans-serif';ctx.textAlign='center';
+  ctx.fillText('Simulata',cx1,H-pb+14);
+  ctx.fillText('Teorica',cx2,H-pb+14);
+  ctx.fillText('('+succ.toLocaleString('it-IT')+'/'+N.toLocaleString('it-IT')+')',cx1,H-pb+27);
+
+  // Assi
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,H-pb);ctx.lineTo(W-pr,H-pb);ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='9px monospace';ctx.textAlign='right';
+  [0,0.25,0.5,0.75,1].forEach(function(f){
+    var y=H-pb-(f*maxP/maxP)*GH;
+    ctx.fillText((f*maxP).toFixed(2),pl-3,y+3);
+  });
+}
+
+// ═══════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════
+function resetTutto(){
+  eventiA=[];eventiB=[];lastProbA=NaN;
+  renderEventi('A');renderEventi('B');
+  document.getElementById('risultati').className='result-box empty';
+  document.getElementById('risultati').innerHTML='Definisci l\'evento A e clicca &#9654; Calcola';
+  ['mcTeo','mcSim','mcErr','mcNres'].forEach(function(id){document.getElementById(id).textContent='—';});
+  var cv=document.getElementById('cvMC');
+  var ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+document.getElementById('mcN').oninput=function(){
+  var v=+this.value;
+  document.getElementById('mcNv').textContent=v.toLocaleString('it-IT');
+};
+document.getElementById('panelB').style.display='none';
+updateMazzoInfo();
+addEvento('A');  // evento A di default
+addEvento('B');  // evento B di default
+
+// Resize MC canvas
+window.addEventListener('resize',function(){
+  var cv=document.getElementById('cvMC');
+  var w=Math.max(cv.parentElement.clientWidth-36,300);
+  cv.style.width=w+'px';cv.width=w;
+  ctx2=cv.getContext('2d');ctx2.fillStyle='#fff';ctx2.fillRect(0,0,cv.width,cv.height);
+});
+</script>
+</body>
+</html>
