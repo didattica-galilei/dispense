@@ -110,10 +110,10 @@ footer{text-align:center;font-size:11px;color:rgba(255,255,255,0.15);padding:32p
       <span class="arrow">→</span>
     </a>
 
-    <a class="card c7 soon" href="#">
+    <a class="card c7" href="matematica/analitica_piano.html">
       <div class="num">Mat 04</div>
       <h2>Geometria Analitica</h2>
-      <p>Coniche, curve parametriche e luoghi geometrici con visualizzazione interattiva.</p>
+      <p>rette e Coniche, .</p>
       <div class="tags"><span class="tag">Simulatori</span></div>
       <span class="arrow">→</span>
     </a>
