@@ -208,22 +208,53 @@ let zoom=1,panX=0,panY=0,drag=false,lx=0,ly=0;
 
 function buildSimUI(){
   const cc=document.getElementById('cc_sim');cc.innerHTML='';
-  SIM.forEach((c,i)=>{
+  SIM.forEach(function(c,i){
     const col=c.q>=0?PC[i]:NC[i];
     const d=document.createElement('div');d.className='card';
-    d.innerHTML=`<div class="card-head"><span class="clabel" id="slb${i}" style="color:${col}">${NM[i]} (${c.q>0?'+':''}${c.q})</span><label><input type="checkbox" id="son${i}" ${c.on?'checked':''}> attiva</label></div><div class="row"><label>x</label><input type="number" id="scx${i}" value="${c.x}" step="1" min="-7" max="7"><label>y</label><input type="number" id="scy${i}" value="${c.y}" step="1" min="-7" max="7"></div><div class="row"><label>q</label><input type="range" id="scq${i}" min="-3" max="3" step="1" value="${c.q}"><span class="qval" id="sqv${i}">${c.q>0?'+':''}${c.q}</span></div>`;
-    cc.appendChild(d);
-    document.getElementById('son'+i).onchange=e=>{SIM[i].on=e.target.checked;drawSim()};
-    document.getElementById('scx'+i).oninput=e=>{SIM[i].x=+e.target.value||0;drawSim()};
-    document.getElementById('scy'+i).oninput=e=>{SIM[i].y=+e.target.value||0;drawSim()};
-    document.getElementById('scq'+i).oninput=e=>{
-      SIM[i].q=+e.target.value;
-      document.getElementById('sqv'+i).textContent=(SIM[i].q>0?'+':'')+SIM[i].q;
-      const nc=SIM[i].q>=0?PC[i]:NC[i];
-      document.getElementById('slb'+i).style.color=nc;
-      document.getElementById('slb'+i).textContent=NM[i]+' ('+(SIM[i].q>0?'+':'')+SIM[i].q+')';
+    d.innerHTML=
+      '<div class="card-head">'+
+        '<span class="clabel" style="color:'+col+'">'+NM[i]+' ('+(c.q>0?'+':'')+c.q+')</span>'+
+        '<label><input type="checkbox"'+(c.on?' checked':'')+' data-sim-on="'+i+'"> attiva</label>'+
+      '</div>'+
+      '<div class="row">'+
+        '<label>x</label><input type="number" value="'+c.x+'" step="1" min="-7" max="7" data-sim-x="'+i+'">'+
+        '<label>y</label><input type="number" value="'+c.y+'" step="1" min="-7" max="7" data-sim-y="'+i+'">'+
+      '</div>'+
+      '<div class="row">'+
+        '<label>q</label><input type="range" min="-3" max="3" step="1" value="'+c.q+'" data-sim-q="'+i+'">'+
+        '<span class="qval">'+(c.q>0?'+':'')+c.q+'</span>'+
+      '</div>';
+
+    // Aggiungo i listener PRIMA di appendere al DOM, su riferimenti diretti agli elementi
+    const chk  = d.querySelector('[data-sim-on]');
+    const inpX = d.querySelector('[data-sim-x]');
+    const inpY = d.querySelector('[data-sim-y]');
+    const rng  = d.querySelector('[data-sim-q]');
+    const qval = d.querySelector('.qval');
+    const lbl  = d.querySelector('.clabel');
+
+    chk.addEventListener('change', function(e){
+      SIM[i].on = e.target.checked;
       drawSim();
-    };
+    });
+    inpX.addEventListener('input', function(e){
+      SIM[i].x = +e.target.value || 0;
+      drawSim();
+    });
+    inpY.addEventListener('input', function(e){
+      SIM[i].y = +e.target.value || 0;
+      drawSim();
+    });
+    rng.addEventListener('input', function(e){
+      SIM[i].q = +e.target.value;
+      qval.textContent = (SIM[i].q>0?'+':'') + SIM[i].q;
+      var nc = SIM[i].q>=0 ? PC[i] : NC[i];
+      lbl.style.color = nc;
+      lbl.textContent = NM[i]+' ('+(SIM[i].q>0?'+':'')+SIM[i].q+')';
+      drawSim();
+    });
+
+    cc.appendChild(d);
   });
 }
 
