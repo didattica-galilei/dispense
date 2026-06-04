@@ -593,50 +593,98 @@ function drawDiseq(){
   // Campiona e trova intersezioni e soluzione
   var W=cv.width;
   var solXs=[];
-  // Trova le intersezioni numericamente
+  // Campionamento con passo fine
   var pts=[];
-  for(var px=0;px<=W;px+=1){
+  for(var px=0;px<=W;px+=0.5){
     var x=ax.wx(px);
     var vp=a*x+b;
     var semi=vp>=0?kd+Math.sqrt(vp):null;
     var rettaY=m*x+q;
     pts.push({x:x,semi:semi,retta:rettaY});
   }
-  // Evidenzia la soluzione (sotto la curva semi)
-  ctx.beginPath();
-  var inSol=false;
+  // Evidenzia la soluzione
   for(var i=0;i<pts.length;i++){
     var pt=pts[i];
-    if(pt.semi===null){inSol=false;continue;}
+    if(pt.semi===null){continue;}
     var cond=(tipo==='ge'||tipo==='gt')?(pt.semi>=pt.retta):(pt.semi<=pt.retta);
     if(cond){
-      var ySol=ax.sy(pt.retta);
-      var ySemi=ax.sy(pt.semi);
-      if(!inSol){ctx.beginPath();inSol=true;}
-      // Riempi fascia tra retta e asse x
       ctx.fillStyle='rgba(244,208,63,0.25)';
-      ctx.fillRect(ax.sx(pt.x),Math.min(ySol,ySemi),1.5,Math.max(cv.height-ax.sy(0),1));
+      ctx.fillRect(ax.sx(pt.x),0,0.5,cv.height);
     }
   }
   // Retta
   plotFn(ctx,cv,ax,function(x){return m*x+q;},'#b5351a',2);
-  // Semiparabola √(ax+b)
+  // Semiparabola k+√(ax+b)
   plotFn(ctx,cv,ax,function(x){var v=a*x+b;return v>=0?kd+Math.sqrt(v):null;},'#1a4b8c',2.5);
-  // Punti di intersezione (numerici)
+
+  // ── Trova intersezioni: approccio robusto a 3 punti ────────
   var intersects=[];
-  for(var i2=1;i2<pts.length;i2++){
-    var p0=pts[i2-1],p1=pts[i2];
-    if(p0.semi!==null&&p1.semi!==null){
-      var d0=p0.semi-p0.retta,d1=p1.semi-p1.retta;
-      if(d0*d1<0){
-        var xi=p0.x+(-d0)*(p1.x-p0.x)/(d1-d0);
-        var yi=m*xi+q;
-        intersects.push([xi,yi]);
+  var BEPS=1e-9;
+
+  function bisect(xA,xB){
+    var dA=semiVal(xA)-rettaVal(xA), dB=semiVal(xB)-rettaVal(xB);
+    for(var it=0;it<40;it++){
+      var xM=(xA+xB)/2;
+      var dM=semiVal(xM)-rettaVal(xM);
+      if(Math.abs(dM)<BEPS||Math.abs(xB-xA)<BEPS)return xM;
+      if(dA*dM<0){xB=xM;dB=dM;}else{xA=xM;dA=dM;}
+    }
+    return (xA+xB)/2;
+  }
+  function semiVal(x){var v=a*x+b;return v>=0?kd+Math.sqrt(v):null;}
+  function rettaVal(x){return m*x+q;}
+  function dVal(x){var s=semiVal(x);return s!==null?s-rettaVal(x):null;}
+
+  for(var i2=0;i2<pts.length;i2++){
+    var cur=pts[i2];
+
+    // --- Bordo sinistro del dominio (null→valido): possibile intersezione ---
+    if(i2>0 && pts[i2-1].semi===null && cur.semi!==null){
+      var d=cur.semi-cur.retta;
+      if(Math.abs(d)<0.15) intersects.push([cur.x, rettaVal(cur.x)]);
+      continue;
+    }
+    if(cur.semi===null) continue;
+
+    var d_cur=cur.semi-cur.retta;
+
+    // --- d esattamente (o quasi) zero: finestra a 3 punti ---
+    // Cerco il segno del vicino sinistro e destro validi
+    if(Math.abs(d_cur)<0.008){
+      var dPrev=null, dNext=null;
+      // Cerca il campione precedente valido
+      for(var j=i2-1;j>=0;j--){if(pts[j].semi!==null){dPrev=pts[j].semi-pts[j].retta;break;}}
+      // Cerca il campione successivo valido
+      for(var j2=i2+1;j2<pts.length;j2++){if(pts[j2].semi!==null){dNext=pts[j2].semi-pts[j2].retta;break;}}
+      // Crossing: i vicini hanno segni opposti
+      if(dPrev!==null&&dNext!==null&&dPrev*dNext<0){
+        intersects.push([cur.x, rettaVal(cur.x)]);
       }
-    } else if((p0.semi===null)!=(p1.semi===null)){
-      // Bordo del dominio
+      // Bordo sinistro del dominio (dPrev non disponibile) con d≈0
+      if(dPrev===null && Math.abs(d_cur)<0.008){
+        intersects.push([cur.x, rettaVal(cur.x)]);
+      }
+      continue;
+    }
+
+    // --- Cambio di segno classico tra due campioni adiacenti ---
+    if(i2>0 && pts[i2-1].semi!==null){
+      var d_prev=pts[i2-1].semi-pts[i2-1].retta;
+      if(d_prev*d_cur<0){
+        var xi=bisect(pts[i2-1].x, cur.x);
+        intersects.push([xi, rettaVal(xi)]);
+      }
     }
   }
+
+  // Deduplica
+  var intersects=(function(arr){
+    var out=[];
+    arr.forEach(function(it){
+      if(!out.some(function(u){return Math.abs(u[0]-it[0])<0.15;})) out.push(it);
+    });
+    return out;
+  })(intersects);
   intersects.forEach(function(pt2){
     drawDot(ctx,ax,pt2[0],pt2[1],5,'#f4d03f');
   });
