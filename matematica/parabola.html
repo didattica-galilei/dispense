@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Parabola — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:60px 32px 44px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,46px);font-weight:700;line-height:1.1;margin-bottom:8px}
+.hero h1 em{color:#5dcaa5}
+.hero p{font-size:14px;color:rgba(255,255,255,0.38);font-weight:300;max-width:520px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 18px}
+.nav-inner{max-width:960px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:11px 11px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:960px;margin:0 auto;padding:44px 28px}
+@media(max-width:600px){.page{padding:22px 10px}}
+.sec{margin-bottom:68px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.ssub{font-size:13px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:9px;margin-bottom:14px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:16px 0 6px}
+p{font-size:15px;margin-bottom:10px;color:#2a2a2e}
+ul,ol{margin:5px 0 10px 20px;font-size:15px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+/* FORMULE */
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);text-align:center;padding:12px 16px;margin:11px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:18px;color:var(--a2);margin-bottom:3px;line-height:2}
+.formula .fd{font-size:11px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px}
+.frac .n{border-bottom:1.5px solid var(--a2);padding:0 4px 1px;text-align:center}
+.frac .d{padding:1px 4px 0;text-align:center}
+.oline{text-decoration:overline}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:11px 0}
+@media(max-width:540px){.two{grid-template-columns:1fr}}
+/* BOXES */
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:10px 14px;margin:11px 0;font-size:14px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:10px 14px;margin:11px 0;font-size:14px;border-radius:0 3px 3px 0}
+/* SIMULATORI */
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:16px;margin:18px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;align-items:center;font-size:12px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:100px;accent-color:var(--a2)}
+.ctrl input[type=number]{width:64px;padding:3px 6px;font-size:12px;border:1px solid var(--bo);border-radius:3px;background:#fff;font-family:'Source Code Pro',monospace}
+.vv{font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;min-width:34px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.go{background:var(--a);color:#fff;border-color:var(--a)}
+.btn.go:hover{background:#094f4f}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 14px;margin-top:9px;font-family:'Source Code Pro',monospace;font-size:12px;line-height:1.8;min-height:36px}
+.out.empty{background:var(--su);color:var(--mu);font-family:'Source Sans 3',sans-serif;font-style:italic;font-size:13px}
+.leg{display:flex;gap:10px;flex-wrap:wrap;margin-top:7px;font-size:11px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:18px;height:3px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:48px;padding:20px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+/* Punti cliccabili */
+.hint{font-size:11px;color:var(--mu);font-style:italic;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Matematica &middot; Geometria Analitica del Piano</div>
+  <h1>La <em>Parabola</em></h1>
+  <p>Equazioni, propriet&agrave;, semiparabole, fasci e simulatori interattivi per disequazioni irrazionali</p>
+</div>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#teoria" class="active">Teoria</a>
+    <a href="#formule">Formule</a>
+    <a href="#tre-punti">Sim 1 &mdash; 3 punti</a>
+    <a href="#semipara">Semiparabole</a>
+    <a href="#sim-semi">Sim 2 &mdash; Semiparabole</a>
+    <a href="#diseq">Sim 3 &mdash; Disequazioni</a>
+    <a href="#fascio">Sim 4 &mdash; Fasci</a>
+    <a href="#esercizi">Esercizi</a>
+    <a href="analitica_piano.html">&#8592; Indice</a>
+    <a href="index.html">&#8592; Home</a>
+  </div>
+</nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. La Parabola &mdash; Definizione</h2>
+  <p class="ssub">Luogo geometrico equidistante da fuoco e direttrice</p>
+  <p>La <strong>parabola</strong> &egrave; il luogo geometrico dei punti del piano equidistanti da un punto fisso detto <strong>fuoco</strong> F e da una retta fissa detta <strong>direttrice</strong> d.</p>
+  <h3>Parabola con asse parallelo all'asse y (verticale)</h3>
+  <p>L'equazione generale &egrave; <strong>y = ax&sup2; + bx + c</strong> con a &ne; 0. L'asse di simmetria &egrave; verticale.</p>
+  <div class="formula">
+    <div class="f">y = ax&sup2; + bx + c</div>
+    <div class="fd">a &ne; 0 &nbsp;&middot;&nbsp; apertura verso l'alto se a &gt; 0, verso il basso se a &lt; 0</div>
+  </div>
+  <h3>Parabola con asse parallelo all'asse x (orizzontale)</h3>
+  <p>L'equazione &egrave; <strong>x = ay&sup2; + by + c</strong> con a &ne; 0. L'asse di simmetria &egrave; orizzontale.</p>
+  <div class="formula">
+    <div class="f">x = ay&sup2; + by + c</div>
+    <div class="fd">apertura verso destra se a &gt; 0, verso sinistra se a &lt; 0</div>
+  </div>
+  <ul>
+    <li>La parabola &egrave; simmetrica rispetto al proprio <strong>asse</strong></li>
+    <li>Il <strong>vertice</strong> V &egrave; il punto di minimo (o massimo) della parabola</li>
+    <li>Il fuoco e la direttrice sono equidistanti dal vertice</li>
+    <li>Ogni punto P sulla parabola soddisfa PF = Pd (distanza dal fuoco = distanza dalla direttrice)</li>
+  </ul>
+</div>
+
+<!-- FORMULE -->
+<div class="sec" id="formule">
+  <h2>2. Formule Fondamentali</h2>
+  <p class="ssub">Vertice, fuoco, direttrice e discriminante per parabola verticale y = ax&sup2; + bx + c</p>
+
+  <h3>Discriminante</h3>
+  <div class="formula">
+    <div class="f">&Delta; = b&sup2; &minus; 4ac</div>
+    <div class="fd">&Delta; &gt; 0: due punti con asse x &nbsp;&middot;&nbsp; &Delta; = 0: tangente &nbsp;&middot;&nbsp; &Delta; &lt; 0: nessuna intersezione</div>
+  </div>
+
+  <h3>Vertice</h3>
+  <div class="formula">
+    <div class="f">V = (&minus;<span class="frac"><span class="n">b</span><span class="d">2a</span></span> , &minus;<span class="frac"><span class="n">&Delta;</span><span class="d">4a</span></span>)</div>
+    <div class="fd">x<sub>V</sub> = &minus;b/(2a) &nbsp;&middot;&nbsp; y<sub>V</sub> = &minus;&Delta;/(4a) = c &minus; b&sup2;/(4a)</div>
+  </div>
+
+  <h3>Asse di simmetria</h3>
+  <div class="formula">
+    <div class="f">x = &minus;<span class="frac"><span class="n">b</span><span class="d">2a</span></span></div>
+    <div class="fd">retta verticale passante per il vertice</div>
+  </div>
+
+  <h3>Fuoco e direttrice</h3>
+  <div class="two">
+    <div class="formula">
+      <div class="f">F = (&minus;<span class="frac"><span class="n">b</span><span class="d">2a</span></span> , <span class="frac"><span class="n">1&minus;&Delta;</span><span class="d">4a</span></span>)</div>
+      <div class="fd">Fuoco della parabola verticale</div>
+    </div>
+    <div class="formula">
+      <div class="f">y = &minus;<span class="frac"><span class="n">1+&Delta;</span><span class="d">4a</span></span></div>
+      <div class="fd">Direttrice (retta orizzontale)</div>
+    </div>
+  </div>
+
+  <h3>Parabola con asse orizzontale x = ay&sup2; + by + c</h3>
+  <div class="formula">
+    <div class="f">V = (&minus;<span class="frac"><span class="n">&Delta;</span><span class="d">4a</span></span> , &minus;<span class="frac"><span class="n">b</span><span class="d">2a</span></span>)&nbsp;&nbsp;&nbsp; F = (<span class="frac"><span class="n">1&minus;&Delta;</span><span class="d">4a</span></span> , &minus;<span class="frac"><span class="n">b</span><span class="d">2a</span></span>)</div>
+    <div class="fd">Direttrice: x = &minus;(1+&Delta;)/(4a)</div>
+  </div>
+
+  <div class="bn">&#128161; La forma <strong>y = a(x&minus;h)&sup2; + k</strong> &egrave; la forma col vertice in (h,k): immediata per leggere vertice e apertura.</div>
+  <div class="bw">&#9888; Con a &lt; 0 la parabola &egrave; concava verso il basso e ha un <strong>massimo</strong> (non un minimo).</div>
+</div>
+
+<!-- SIM 1: TRE PUNTI -->
+<div class="sec" id="tre-punti">
+  <h2>3. Simulatore 1 &mdash; Parabola per Tre Punti</h2>
+  <p class="ssub">Inserisci tre punti: il simulatore trova a, b, c risolvendo il sistema lineare</p>
+  <div class="sim">
+    <div class="sim-t">Parabola y = ax&sup2; + bx + c passante per P1, P2, P3</div>
+    <div class="ctrl">
+      <label>P1:</label> x<input type="number" id="p1x" value="-2" step="1">y<input type="number" id="p1y" value="1" step="1">
+      <label style="margin-left:8px">P2:</label> x<input type="number" id="p2x" value="0" step="1">y<input type="number" id="p2y" value="-1" step="1">
+      <label style="margin-left:8px">P3:</label> x<input type="number" id="p3x" value="2" step="1">y<input type="number" id="p3y" value="3" step="1">
+      <button class="btn go" onclick="calcTrePunti()">&#9654; Calcola</button>
+    </div>
+    <canvas id="cv1" style="height:320px"></canvas>
+    <div class="out empty" id="out1">Inserisci tre punti e clicca &#9654; Calcola</div>
+  </div>
+</div>
+
+<!-- SEMIPARABOLE -->
+<div class="sec" id="semipara">
+  <h2>4. Semiparabole &mdash; Funzioni Irrazionali</h2>
+  <p class="ssub">y = k &plusmn; &radic;(ax+b) &mdash; primo grado sotto radice, con termine traslante k</p>
+  <p>La funzione <strong>y = k + &radic;(ax+b)</strong> &egrave; definita solo dove ax+b &ge; 0. Il parametro <strong>k</strong> trasla verticalmente la semiparabola: il vertice si trova in (&minus;b/a, k) invece che in (&minus;b/a, 0).</p>
+  <div class="formula">
+    <div class="f">y = k &plusmn; &radic;(ax + b)</div>
+    <div class="fd">k = traslazione verticale &nbsp;&middot;&nbsp; Dominio: ax+b &ge; 0 &nbsp;&middot;&nbsp; Vertice: (&minus;b/a, k)</div>
+  </div>
+  <h3>Perch&eacute; si chiama semiparabola?</h3>
+  <p>Elevando al quadrato: <strong>y&sup2; = ax + b</strong>, cio&egrave; <strong>x = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">1</span><span class="d">a</span></span>y&sup2; &minus; <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">b</span><span class="d">a</span></span></strong></p>
+  <p>Questa &egrave; l'equazione di una <strong>parabola con asse orizzontale</strong> (asse parallelo all'asse x), con vertice in (&minus;b/a, 0). La funzione y=&radic;(ax+b) ne rappresenta solo la met&agrave; superiore (y &ge; 0).</p>
+  <div class="two">
+    <div class="formula">
+      <div class="f">y = k + &radic;(ax+b)</div>
+      <div class="fd">Met&agrave; superiore &nbsp;&middot;&nbsp; y &ge; k &nbsp;&middot;&nbsp; Codominio [k,+&infin;)</div>
+    </div>
+    <div class="formula">
+      <div class="f">y = k &minus; &radic;(ax+b)</div>
+      <div class="fd">Met&agrave; inferiore &nbsp;&middot;&nbsp; y &le; k &nbsp;&middot;&nbsp; Codominio (&minus;&infin;,k]</div>
+    </div>
+  </div>
+  <h3>Dominio</h3>
+  <ul>
+    <li>Se a &gt; 0: ax+b &ge; 0 &rarr; x &ge; &minus;b/a &nbsp; Dominio = [&minus;b/a, +&infin;)</li>
+    <li>Se a &lt; 0: ax+b &ge; 0 &rarr; x &le; &minus;b/a &nbsp; Dominio = (&minus;&infin;, &minus;b/a]</li>
+    <li>Il vertice della semiparabola &egrave; V = (&minus;b/a, k)</li>
+  </ul>
+  <div class="bn">&#128161; Unendo y=k+&radic;(ax+b) e y=k&minus;&radic;(ax+b) si ottiene la parabola completa (y&minus;k)&sup2;=ax+b con asse orizzontale e vertice in (&minus;b/a, k).</div>
+  <div class="bw">&#9888; Non confondere con y=&radic;(ax&sup2;+bx+c): quella &egrave; una funzione diversa. La <em>semiparabola</em> classica ha un polinomio di <strong>primo grado</strong> sotto radice.</div>
+</div>
+
+<!-- SIM 2: SEMIPARABOLE -->
+<div class="sec" id="sim-semi">
+  <h2>5. Simulatore 2 &mdash; Semiparabole</h2>
+  <p class="ssub">Grafico di y = &plusmn;&radic;(ax&sup2;+bx+c) con dominio e codominio</p>
+  <div class="sim">
+    <div class="sim-t">y = k &plusmn; &radic;(ax + b) &mdash; semiparabola traslata con asse orizzontale</div>
+    <div class="ctrl">
+      <label>a</label><input type="range" id="sa" min="-4" max="4" step="0.5" value="2"><span class="vv" id="sav">2</span>
+      <label>b</label><input type="range" id="sb" min="-8" max="8" step="0.5" value="-2"><span class="vv" id="sbv">−2</span>
+      <label>k</label><input type="range" id="sk" min="-4" max="4" step="0.5" value="0"><span class="vv" id="skv">0</span>
+      <label style="margin-left:8px">Mostra:</label>
+      <button class="btn go" id="btnSup" onclick="toggleSemi('sup')">y=k+&radic;&bull; ON</button>
+      <button class="btn" id="btnInf" onclick="toggleSemi('inf')">y=k&minus;&radic;&bull; OFF</button>
+    </div>
+    <canvas id="cv2" style="height:320px"></canvas>
+    <div class="out empty" id="out2">Sposta i cursori per disegnare la semiparabola</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>y = k+&radic;(ax+b)</span>
+      <span><span class="ld" style="background:#b5351a"></span>y = k&minus;&radic;(ax+b)</span>
+      <span><span class="ld" style="background:#0e6b6b;opacity:.4"></span>parabola completa x=(y&sup2;&minus;b)/a</span>
+      <span><span style="color:#e05252;font-size:13px">&#9679;</span> vertice V=(&minus;b/a, 0)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 3: DISEQUAZIONI IRRAZIONALI -->
+<div class="sec" id="diseq">
+  <h2>6. Simulatore 3 &mdash; Disequazioni Irrazionali</h2>
+  <p class="ssub">Soluzione grafica tramite semiparabole e rette: &radic;(ax&sup2;+bx+c) &ge; mx + q</p>
+  <p>Una <strong>disequazione irrazionale</strong> del tipo &radic;(p(x)) &ge; r(x) si risolve graficamente: si tracciano y = &radic;(p(x)) e y = r(x) e si trovano le x per cui il grafico della semiparabola &egrave; sopra (o sotto) la retta.</p>
+  <div class="formula">
+    <div class="f">k + &radic;(ax + b) &ge; mx + q</div>
+    <div class="fd">Soluzione: x (nel dominio) dove il grafico della semiparabola &egrave; sopra la retta</div>
+  </div>
+  <div class="sim">
+    <div class="sim-t">Disequazione irrazionale &mdash; soluzione grafica: k &plusmn; &radic;(ax+b) &ge; mx+q</div>
+    <div class="ctrl">
+      <label>Semiparabola: a</label>
+      <input type="range" id="da" min="-4" max="4" step="0.5" value="2"><span class="vv" id="dav">2</span>
+      <label>b</label>
+      <input type="range" id="db" min="-8" max="8" step="0.5" value="-2"><span class="vv" id="dbv">−2</span>
+      <label>k</label>
+      <input type="range" id="dk" min="-4" max="4" step="0.5" value="0"><span class="vv" id="dkv">0</span>
+    </div>
+    <div class="ctrl">
+      <label>Retta: m</label>
+      <input type="range" id="dm" min="-4" max="4" step="0.25" value="0.5"><span class="vv" id="dmv">0.5</span>
+      <label>q</label>
+      <input type="range" id="dq" min="-4" max="4" step="0.25" value="-0.5"><span class="vv" id="dqv">−0.5</span>
+      <label style="margin-left:8px">Tipo:</label>
+      <select id="dineq" onchange="drawDiseq()" style="font-size:11px;padding:3px 7px;border:1px solid var(--bo);border-radius:3px">
+        <option value="ge">&ge; (maggiore uguale)</option>
+        <option value="le">&le; (minore uguale)</option>
+        <option value="gt">&gt; (strettamente maggiore)</option>
+        <option value="lt">&lt; (strettamente minore)</option>
+      </select>
+    </div>
+    <canvas id="cv3" style="height:340px"></canvas>
+    <div class="out empty" id="out3">Sposta i cursori per impostare la disequazione</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>k+&radic;(ax+b)</span>
+      <span><span class="ld" style="background:#b5351a"></span>retta mx+q</span>
+      <span><span class="ld" style="background:#f4d03f"></span>soluzione (x dove semipara &ge; retta)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 4: FASCIO DI PARABOLE -->
+<div class="sec" id="fascio">
+  <h2>7. Simulatore 4 &mdash; Fasci di Parabole</h2>
+  <p class="ssub">Fascio di parabole con asse verticale generate da due parabole base</p>
+  <p>Dato due parabole P1: y = a<sub>1</sub>x&sup2;+b<sub>1</sub>x+c<sub>1</sub> e P2: y = a<sub>2</sub>x&sup2;+b<sub>2</sub>x+c<sub>2</sub>, il <strong>fascio</strong> &egrave; la famiglia di parabole:</p>
+  <div class="formula">
+    <div class="f">y = (1&minus;t)&thinsp;P1(x) + t&thinsp;P2(x) &nbsp;&nbsp; con t &isin; &real;</div>
+    <div class="fd">t=0: parabola P1 &nbsp;&middot;&nbsp; t=1: parabola P2 &nbsp;&middot;&nbsp; t intermedii: parabole del fascio</div>
+  </div>
+  <p>Se P1 e P2 si intersecano in due punti, tutte le parabole del fascio passano per quegli stessi due punti (<strong>fascio proprio</strong>).</p>
+  <div class="sim">
+    <div class="sim-t">Fascio di parabole &mdash; due parabole base</div>
+    <div class="ctrl">
+      <label style="color:#1a4b8c;font-weight:700">P1:</label>
+      <label>a</label><input type="range" id="f1a" min="-2" max="2" step="0.5" value="1"><span class="vv" id="f1av">1</span>
+      <label>b</label><input type="range" id="f1b" min="-4" max="4" step="0.5" value="0"><span class="vv" id="f1bv">0</span>
+      <label>c</label><input type="range" id="f1c" min="-4" max="4" step="0.5" value="-2"><span class="vv" id="f1cv">−2</span>
+    </div>
+    <div class="ctrl">
+      <label style="color:#b5351a;font-weight:700">P2:</label>
+      <label>a</label><input type="range" id="f2a" min="-2" max="2" step="0.5" value="-1"><span class="vv" id="f2av">−1</span>
+      <label>b</label><input type="range" id="f2b" min="-4" max="4" step="0.5" value="2"><span class="vv" id="f2bv">2</span>
+      <label>c</label><input type="range" id="f2c" min="-4" max="4" step="0.5" value="1"><span class="vv" id="f2cv">1</span>
+    </div>
+    <div class="ctrl">
+      <label>Numero parabole del fascio</label>
+      <input type="range" id="fnp" min="3" max="15" step="1" value="7"><span class="vv" id="fnpv">7</span>
+      <label style="margin-left:8px">t da</label>
+      <input type="range" id="ft0" min="-2" max="0" step="0.5" value="-1"><span class="vv" id="ft0v">−1</span>
+      <label>a</label>
+      <input type="range" id="ft1" min="1" max="3" step="0.5" value="2"><span class="vv" id="ft1v">2</span>
+    </div>
+    <canvas id="cv4" style="height:360px"></canvas>
+    <div class="out empty" id="out4">Modifica P1 e P2 per vedere il fascio</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c;height:3px"></span>P1</span>
+      <span><span class="ld" style="background:#b5351a;height:3px"></span>P2</span>
+      <span><span class="ld" style="background:#0e6b6b;opacity:.5"></span>parabole del fascio</span>
+      <span><span style="color:#f4d03f;font-size:13px">&#9679;</span> punti comuni (se esistono)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>8. Esercizi Proposti</h2>
+  <p class="ssub">Parabola, semiparabole e disequazioni irrazionali</p>
+  <ol>
+    <li><strong>Tre punti:</strong> trova la parabola per P1=(0,0), P2=(1,1), P3=(−1,3). Verifica con il Sim 1.</li>
+    <li><strong>Vertice e fuoco:</strong> per y=2x&sup2;−4x+1 calcola vertice, fuoco e direttrice.</li>
+    <li><strong>Dominio semiparabola:</strong> qual &egrave; il dominio di y=&radic;(x&sup2;−4)? E di y=&radic;(−x&sup2;+4)?</li>
+    <li><strong>Disequazione irrazionale:</strong> risolvi &radic;(x&sup2;−1) &ge; x+1 graficamente col Sim 3.</li>
+    <li><strong>Fascio:</strong> nel Sim 4 con P1 e P2 che si intersecano, verifica che tutte le parabole del fascio passano per i punti comuni. Cosa succede se P1 e P2 non si intersecano?</li>
+    <li><strong>Asse orizzontale:</strong> per x=y&sup2;−2y+3 calcola vertice e fuoco.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Matematica &middot; Geometria Analitica &middot; La Parabola &nbsp;|&nbsp; <a href="analitica_piano.html" style="color:var(--a)">&#8592; Indice</a></footer>
+</div>
+
+<script>
+// ═══════════ UTILITÀ ═══════════════════════════════
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt(v){return isNaN(v)||!isFinite(v)?'—':Math.round(v*10000)/10000;}
+
+function setupCanvas(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-32,280);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;
+  return cv;
+}
+
+// Trasformazioni coordinate
+function makeAxes(cv,xc,yc,sc){
+  var W=cv.width,H=cv.height;
+  return{
+    sx:function(x){return W/2+(x-xc)*sc;},
+    sy:function(y){return H/2-(y-yc)*sc;},
+    wx:function(px){return xc+(px-W/2)/sc;},
+    wy:function(py){return yc-(py-H/2)/sc;}
+  };
+}
+
+function drawGrid(ctx,cv,ax,sc,color){
+  var W=cv.width,H=cv.height;
+  var xmn=ax.wx(0),xmx=ax.wx(W),ymn=ax.wy(H),ymx=ax.wy(0);
+  function niceStep(r,n){var s=r/n,m=Math.pow(10,Math.floor(Math.log10(Math.abs(s)||1))),t=s/m;return(t<2?1:t<5?2:5)*m;}
+  var gs=niceStep(xmx-xmn,8);
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  for(var x=Math.floor(xmn/gs)*gs;x<=xmx+gs;x+=gs){
+    ctx.beginPath();ctx.moveTo(ax.sx(x),0);ctx.lineTo(ax.sx(x),H);ctx.stroke();
+  }
+  for(var y=Math.floor(ymn/gs)*gs;y<=ymx+gs;y+=gs){
+    ctx.beginPath();ctx.moveTo(0,ax.sy(y));ctx.lineTo(W,ax.sy(y));ctx.stroke();
+  }
+  // Assi principali
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,ax.sy(0));ctx.lineTo(W,ax.sy(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(ax.sx(0),0);ctx.lineTo(ax.sx(0),H);ctx.stroke();
+  // Etichette
+  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.font='9px monospace';ctx.textAlign='center';
+  for(var x2=Math.floor(xmn/gs)*gs;x2<=xmx+gs;x2+=gs){
+    if(Math.abs(x2)<gs*0.01)continue;
+    ctx.fillText(fmt(x2),ax.sx(x2),ax.sy(0)+12);
+  }
+  ctx.textAlign='right';
+  for(var y2=Math.floor(ymn/gs)*gs;y2<=ymx+gs;y2+=gs){
+    if(Math.abs(y2)<gs*0.01)continue;
+    ctx.fillText(fmt(y2),ax.sx(0)-3,ax.sy(y2)+3);
+  }
+}
+
+function plotFn(ctx,cv,ax,fn,color,lw,dash){
+  var W=cv.width;
+  ctx.strokeStyle=color;ctx.lineWidth=lw||1.8;
+  if(dash)ctx.setLineDash(dash);else ctx.setLineDash([]);
+  ctx.beginPath();var first=true;
+  for(var px=0;px<=W;px+=1.5){
+    var x=ax.wx(px);
+    var y=fn(x);
+    if(y===null||isNaN(y)||!isFinite(y)||Math.abs(y)>1e6){first=true;continue;}
+    var py=ax.sy(y);
+    if(py<-10||py>cv.height+10){first=true;continue;}
+    first?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    first=false;
+  }
+  ctx.stroke();ctx.setLineDash([]);
+}
+
+function drawDot(ctx,ax,x,y,r,color){
+  ctx.beginPath();ctx.arc(ax.sx(x),ax.sy(y),r,0,2*Math.PI);
+  ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+// ═══════════ SIM 1: TRE PUNTI ════════════════════
+function calcTrePunti(){
+  var x1=rf('p1x'),y1=rf('p1y');
+  var x2=rf('p2x'),y2=rf('p2y');
+  var x3=rf('p3x'),y3=rf('p3y');
+  // Risolvo il sistema:
+  // a*x1²+b*x1+c=y1
+  // a*x2²+b*x2+c=y2
+  // a*x3²+b*x3+c=y3
+  var A=[[x1*x1,x1,1],[x2*x2,x2,1],[x3*x3,x3,1]];
+  var B=[y1,y2,y3];
+  // Eliminazione di Gauss
+  function solve3(A,B){
+    var M=A.map(function(r,i){return r.concat([B[i]]);});
+    for(var col=0;col<3;col++){
+      var maxRow=col;
+      for(var row=col+1;row<3;row++){if(Math.abs(M[row][col])>Math.abs(M[maxRow][col]))maxRow=row;}
+      var tmp=M[col];M[col]=M[maxRow];M[maxRow]=tmp;
+      if(Math.abs(M[col][col])<1e-12)return null;
+      for(var row2=col+1;row2<3;row2++){
+        var f=M[row2][col]/M[col][col];
+        for(var k=col;k<=3;k++)M[row2][k]-=f*M[col][k];
+      }
+    }
+    var x=[0,0,0];
+    for(var i=2;i>=0;i--){
+      x[i]=M[i][3];
+      for(var j=i+1;j<3;j++)x[i]-=M[i][j]*x[j];
+      x[i]/=M[i][i];
+    }
+    return x;
+  }
+  var sol=solve3(A,B);
+  var o=document.getElementById('out1');
+  if(!sol){o.className='out';o.textContent='⚠ I tre punti sono allineati o due hanno la stessa x — nessuna parabola unica.';return;}
+  var a=sol[0],b=sol[1],c=sol[2];
+  var disc=b*b-4*a*c;
+  var xv=-b/(2*a),yv=-disc/(4*a);
+  var p=1/(4*a);
+  // Disegno
+  var cv=setupCanvas('cv1',320);
+  var allX=[x1,x2,x3,xv];
+  var allY=[y1,y2,y3,yv];
+  var xc=(Math.max.apply(null,allX)+Math.min.apply(null,allX))/2;
+  var yc=(Math.max.apply(null,allY)+Math.min.apply(null,allY))/2;
+  var span=Math.max(Math.max.apply(null,allX)-Math.min.apply(null,allX),Math.max.apply(null,allY)-Math.min.apply(null,allY))||4;
+  var sc=Math.min(cv.width,cv.height)*0.35/span;
+  var ax=makeAxes(cv,xc,yc,sc);
+  var ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  drawGrid(ctx,cv,ax,sc);
+  // Parabola
+  plotFn(ctx,cv,ax,function(x){return a*x*x+b*x+c;},'#1a4b8c',2.4);
+  // Asse di simmetria
+  ctx.strokeStyle='rgba(26,75,140,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(ax.sx(xv),0);ctx.lineTo(ax.sx(xv),cv.height);ctx.stroke();ctx.setLineDash([]);
+  // Fuoco
+  var fy=yv+p;
+  drawDot(ctx,ax,xv,fy,5,'#1a6b3a');
+  // Direttrice
+  var dy=yv-p;
+  ctx.strokeStyle='rgba(26,107,58,0.5)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(0,ax.sy(dy));ctx.lineTo(cv.width,ax.sy(dy));ctx.stroke();ctx.setLineDash([]);
+  // Punti
+  [[x1,y1],[x2,y2],[x3,y3]].forEach(function(pt){drawDot(ctx,ax,pt[0],pt[1],6,'#e05252');});
+  drawDot(ctx,ax,xv,yv,5,'#1a4b8c');
+  // Labels
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 10px monospace';ctx.textAlign='left';
+  ctx.fillText('V=('+fmt(xv)+','+fmt(yv)+')',ax.sx(xv)+5,ax.sy(yv)-5);
+  ctx.fillStyle='#1a6b3a';ctx.fillText('F=('+fmt(xv)+','+fmt(fy)+')',ax.sx(xv)+5,ax.sy(fy)-5);
+  o.className='out';
+  o.textContent='y = '+fmt(a)+'x² + '+fmt(b)+'x + '+fmt(c)+
+    '\na = '+fmt(a)+'   b = '+fmt(b)+'   c = '+fmt(c)+
+    '\n\nVertice V = ('+fmt(xv)+', '+fmt(yv)+')'+
+    '\nFuoco  F = ('+fmt(xv)+', '+fmt(fy)+')'+
+    '\nDirettrice: y = '+fmt(dy)+
+    '\nDiscriminante Δ = '+fmt(disc)+
+    '\nAsse di simmetria: x = '+fmt(xv);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  setupCanvas('cv1',320);
+});
+
+// ═══════════ SIM 2: SEMIPARABOLE ═════════════════
+var semiShowSup=true,semiShowInf=false;
+function toggleSemi(t){
+  if(t==='sup'){semiShowSup=!semiShowSup;document.getElementById('btnSup').className=semiShowSup?'btn go':'btn';document.getElementById('btnSup').textContent='y=+√• '+(semiShowSup?'ON':'OFF');}
+  if(t==='inf'){semiShowInf=!semiShowInf;document.getElementById('btnInf').className=semiShowInf?'btn go':'btn';document.getElementById('btnInf').textContent='y=−√• '+(semiShowInf?'ON':'OFF');}
+  drawSemi();
+}
+['sa','sb','sk'].forEach(function(id){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(id+'v').textContent=v;
+    drawSemi();
+  };
+});
+function drawSemi(){
+  var a=rf('sa'),b=rf('sb'),k=rf('sk');
+  var cv=setupCanvas('cv2',320);
+  var ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  // Centro sul vertice (-b/a, 0) se a!=0
+  var xv2=(a!==0)?-b/a:0;
+  var sc2=50,xc2=xv2,yc2=0;
+  var ax2=makeAxes(cv,xc2,yc2,sc2);
+  drawGrid(ctx,cv,ax2,sc2);
+  // Parabola completa orizzontale x = (y²-b)/a  →  per ogni y, x=(y²+b... wait
+  // y²=ax+b → x=(y²-b)/a  per ogni y (parabola orizzontale)
+  if(a!==0){
+    // Disegno la parabola orizzontale completa (tratteggiata)
+    var ptsOriz=[];
+    var ymin2=ax2.wy(cv.height),ymax2=ax2.wy(0);
+    for(var py2=0;py2<=cv.height;py2+=1.5){
+      var yv3=ax2.wy(py2);
+      var xv3=((yv3-k)*(yv3-k)-b)/a;
+      ptsOriz.push([xv3,yv3]);
+    }
+    ctx.strokeStyle='rgba(14,107,107,0.3)';ctx.lineWidth=1.2;ctx.setLineDash([4,3]);
+    ctx.beginPath();var first3=true;
+    ptsOriz.forEach(function(pt){
+      var px3=ax2.sx(pt[0]),py3=ax2.sy(pt[1]);
+      if(px3<-20||px3>cv.width+20){first3=true;return;}
+      first3?ctx.moveTo(px3,py3):ctx.lineTo(px3,py3);first3=false;
+    });
+    ctx.stroke();ctx.setLineDash([]);
+  }
+  // Semiparabola sup: y = +√(ax+b)
+  if(semiShowSup){
+    plotFn(ctx,cv,ax2,function(x){
+      var v=a*x+b;
+      return v>=0?k+Math.sqrt(v):null;
+    },'#1a4b8c',2.5);
+  }
+  // Semiparabola inf: y = -√(ax+b)
+  if(semiShowInf){
+    plotFn(ctx,cv,ax2,function(x){
+      var v=a*x+b;
+      return v>=0?k-Math.sqrt(v):null;
+    },'#b5351a',2.5);
+  }
+  // Vertice
+  if(a!==0){
+    drawDot(ctx,ax2,xv2,k,6,'#e05252');
+    ctx.fillStyle='#e05252';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    ctx.fillText('V=('+fmt(xv2)+', '+fmt(k)+')',ax2.sx(xv2)+8,ax2.sy(k)-6);
+  }
+  // Dominio
+  var o2=document.getElementById('out2');o2.className='out';
+  var dom2='',cod2='';
+  if(a===0){dom2=b>=0?'ℝ':'vuoto';}
+  else if(a>0){dom2='['+fmt(-b/a)+', +∞)';}
+  else{dom2='(−∞, '+fmt(-b/a)+']';}
+  cod2=(semiShowSup&&semiShowInf)?'ℝ':semiShowSup?'['+fmt(k)+', +∞)':semiShowInf?'(−∞, '+fmt(k)+']':'—';
+  o2.textContent=
+    'y = '+fmt(k)+' ± √('+fmt(a)+'x + '+fmt(b)+')\n'+
+    'Parabola corrispondente: (y−'+fmt(k)+')² = '+fmt(a)+'x + '+fmt(b)+'\n'+
+    'Vertice: V = ('+fmt(a!==0?-b/a:0)+', '+fmt(k)+')\n'+
+    'Dominio: '+dom2+'\n'+
+    'Codominio: '+cod2;
+}
+
+// ═══════════ SIM 3: DISEQUAZIONI IRRAZIONALI ══════
+function setupDiseqListeners(){
+  ['da','db','dk','dm','dq'].forEach(function(id){
+    document.getElementById(id).oninput=function(){
+      var v=parseFloat(this.value);
+      document.getElementById(id+'v').textContent=v;
+      drawDiseq();
+    };
+  });
+}
+function drawDiseq(){
+  var a=rf('da'),b=rf('db'),kd=rf('dk');
+  var m=rf('dm'),q=rf('dq');
+  var tipo=document.getElementById('dineq').value;
+  var cv=setupCanvas('cv3',340);
+  var ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  var sc=40,xc=0,yc=1;
+  var ax=makeAxes(cv,xc,yc,sc);
+  drawGrid(ctx,cv,ax,sc);
+  // Campiona e trova intersezioni e soluzione
+  var W=cv.width;
+  var solXs=[];
+  // Trova le intersezioni numericamente
+  var pts=[];
+  for(var px=0;px<=W;px+=1){
+    var x=ax.wx(px);
+    var vp=a*x+b;
+    var semi=vp>=0?kd+Math.sqrt(vp):null;
+    var rettaY=m*x+q;
+    pts.push({x:x,semi:semi,retta:rettaY});
+  }
+  // Evidenzia la soluzione (sotto la curva semi)
+  ctx.beginPath();
+  var inSol=false;
+  for(var i=0;i<pts.length;i++){
+    var pt=pts[i];
+    if(pt.semi===null){inSol=false;continue;}
+    var cond=(tipo==='ge'||tipo==='gt')?(pt.semi>=pt.retta):(pt.semi<=pt.retta);
+    if(cond){
+      var ySol=ax.sy(pt.retta);
+      var ySemi=ax.sy(pt.semi);
+      if(!inSol){ctx.beginPath();inSol=true;}
+      // Riempi fascia tra retta e asse x
+      ctx.fillStyle='rgba(244,208,63,0.25)';
+      ctx.fillRect(ax.sx(pt.x),Math.min(ySol,ySemi),1.5,Math.max(cv.height-ax.sy(0),1));
+    }
+  }
+  // Retta
+  plotFn(ctx,cv,ax,function(x){return m*x+q;},'#b5351a',2);
+  // Semiparabola √(ax+b)
+  plotFn(ctx,cv,ax,function(x){var v=a*x+b;return v>=0?kd+Math.sqrt(v):null;},'#1a4b8c',2.5);
+  // Punti di intersezione (numerici)
+  var intersects=[];
+  for(var i2=1;i2<pts.length;i2++){
+    var p0=pts[i2-1],p1=pts[i2];
+    if(p0.semi!==null&&p1.semi!==null){
+      var d0=p0.semi-p0.retta,d1=p1.semi-p1.retta;
+      if(d0*d1<0){
+        var xi=p0.x+(-d0)*(p1.x-p0.x)/(d1-d0);
+        var yi=m*xi+q;
+        intersects.push([xi,yi]);
+      }
+    } else if((p0.semi===null)!=(p1.semi===null)){
+      // Bordo del dominio
+    }
+  }
+  intersects.forEach(function(pt2){
+    drawDot(ctx,ax,pt2[0],pt2[1],5,'#f4d03f');
+  });
+  // Output testuale
+  var domStr='';
+  if(a===0){domStr=b>=0?'ℝ':'vuoto';}
+  else if(a>0){domStr='['+fmt(-b/a)+', +∞)';}
+  else{domStr='(−∞, '+fmt(-b/a)+']';}
+  var ineqStr=tipo==='ge'?'≥':tipo==='le'?'≤':tipo==='gt'?'>':'<';
+  var o=document.getElementById('out3');o.className='out';
+  o.textContent=
+    fmt(kd)+' + √('+fmt(a)+'x + '+fmt(b)+') '+ineqStr+' '+fmt(m)+'x + '+fmt(q)+'\n'+
+    'Dominio semiparabola: '+domStr+'\n'+
+    'Intersezioni retta-semiparabola in x ≈ '+(intersects.length?intersects.map(function(p){return fmt(p[0]);}).join(', '):'nessuna trovata nell\'intervallo')+'\n'+
+    '(La soluzione è evidenziata in giallo sul grafico)';
+}
+
+// ═══════════ SIM 4: FASCIO DI PARABOLE ═══════════
+function setupFascioListeners(){
+  ['f1a','f1b','f1c','f2a','f2b','f2c','fnp','ft0','ft1'].forEach(function(id){
+    document.getElementById(id).oninput=function(){
+      var v=parseFloat(this.value);
+      document.getElementById(id+'v').textContent=v;
+      drawFascio();
+    };
+  });
+}
+function drawFascio(){
+  var a1=rf('f1a'),b1=rf('f1b'),c1=rf('f1c');
+  var a2=rf('f2a'),b2=rf('f2b'),c2=rf('f2c');
+  var np=Math.round(rf('fnp'));
+  var t0=rf('ft0'),t1=rf('ft1');
+  var cv=setupCanvas('cv4',360);
+  var ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  var sc=44,xc=0,yc=0;
+  var ax=makeAxes(cv,xc,yc,sc);
+  drawGrid(ctx,cv,ax,sc);
+  // Parabole del fascio (escluse P1 e P2 che disegniamo separatamente)
+  var steps=np>1?(t1-t0)/(np-1):0;
+  for(var k=0;k<np;k++){
+    var t=t0+k*steps;
+    if(Math.abs(t)<0.01||Math.abs(t-1)<0.01)continue; // salto P1 e P2, le disegno dopo
+    var at=(1-t)*a1+t*a2,bt=(1-t)*b1+t*b2,ct=(1-t)*c1+t*c2;
+    (function(at2,bt2,ct2){
+      plotFn(ctx,cv,ax,function(x){return at2*x*x+bt2*x+ct2;},'rgba(14,107,107,0.45)',1.2);
+    })(at,bt,ct);
+  }
+  // P1 e P2 in evidenza
+  plotFn(ctx,cv,ax,function(x){return a1*x*x+b1*x+c1;},'#1a4b8c',2.8);
+  plotFn(ctx,cv,ax,function(x){return a2*x*x+b2*x+c2;},'#b5351a',2.8);
+  // Punti comuni P1∩P2
+  var disc2=(b1-b2)*(b1-b2)-4*(a1-a2)*(c1-c2);
+  var common=[];
+  if(Math.abs(a1-a2)<1e-9&&Math.abs(b1-b2)<1e-9){
+    // stessa forma, nessun punto comune calcolabile così
+  } else if(Math.abs(a1-a2)<1e-9){
+    // lineare
+    if(Math.abs(b1-b2)>1e-9){var xc2=-(c1-c2)/(b1-b2);common.push([xc2,a1*xc2*xc2+b1*xc2+c1]);}
+  } else {
+    if(disc2>0){
+      var x1c=((b2-b1)-Math.sqrt(disc2))/(2*(a1-a2)),x2c=((b2-b1)+Math.sqrt(disc2))/(2*(a1-a2));
+      common.push([x1c,a1*x1c*x1c+b1*x1c+c1]);
+      common.push([x2c,a1*x2c*x2c+b1*x2c+c1]);
+    } else if(Math.abs(disc2)<1e-9){
+      var xcc=(b2-b1)/(2*(a1-a2));
+      common.push([xcc,a1*xcc*xcc+b1*xcc+c1]);
+    }
+  }
+  common.forEach(function(pt){drawDot(ctx,ax,pt[0],pt[1],7,'#f4d03f');});
+  // Labels P1, P2
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 11px monospace';ctx.textAlign='left';
+  ctx.fillText('P1: y='+fmt(a1)+'x²+'+fmt(b1)+'x+'+fmt(c1),8,16);
+  ctx.fillStyle='#b5351a';
+  ctx.fillText('P2: y='+fmt(a2)+'x²+'+fmt(b2)+'x+'+fmt(c2),8,30);
+  var o=document.getElementById('out4');o.className='out';
+  var v1=-(b1)/(2*a1),vv1=-(b1*b1-4*a1*c1)/(4*a1);
+  var v2=-(b2)/(2*a2),vv2=-(b2*b2-4*a2*c2)/(4*a2);
+  o.textContent=
+    'P1: y='+fmt(a1)+'x²+'+fmt(b1)+'x+'+fmt(c1)+' | V1=('+fmt(isFinite(v1)?v1:0)+','+fmt(isFinite(vv1)?vv1:0)+')\n'+
+    'P2: y='+fmt(a2)+'x²+'+fmt(b2)+'x+'+fmt(c2)+' | V2=('+fmt(isFinite(v2)?v2:0)+','+fmt(isFinite(vv2)?vv2:0)+')\n'+
+    (common.length?'Punti comuni: '+common.map(function(p){return '('+fmt(p[0])+','+fmt(p[1])+')'}).join(' — '):'Nessun punto comune tra P1 e P2')+'\n'+
+    'Fascio: y=(1−t)·P1(x)+t·P2(x) con t da '+t0+' a '+t1+' ('+np+' parabole)';
+}
+
+// ═══════════ INIT ═════════════════════════════════
+window.addEventListener('resize',function(){
+  calcTrePunti();
+  drawSemi();
+  drawDiseq();
+  drawFascio();
+});
+document.addEventListener('DOMContentLoaded',function(){
+  // Sim 1: parabola per tre punti
+  calcTrePunti();
+
+  // Sim 2: semiparabola — init slider values
+  document.getElementById('sav').textContent=document.getElementById('sa').value;
+  document.getElementById('sbv').textContent=document.getElementById('sb').value;
+  document.getElementById('skv').textContent=document.getElementById('sk').value;
+  drawSemi();
+
+  // Sim 3: disequazione irrazionale
+  setupDiseqListeners();
+  document.getElementById('dav').textContent=document.getElementById('da').value;
+  document.getElementById('dbv').textContent=document.getElementById('db').value;
+  document.getElementById('dkv').textContent=document.getElementById('dk').value;
+  document.getElementById('dmv').textContent=document.getElementById('dm').value;
+  document.getElementById('dqv').textContent=document.getElementById('dq').value;
+  drawDiseq();
+
+  // Sim 4: fascio di parabole
+  setupFascioListeners();
+  ['f1a','f1b','f1c','f2a','f2b','f2c','fnp','ft0','ft1'].forEach(function(id){
+    var el=document.getElementById(id+'v');
+    if(el)el.textContent=document.getElementById(id).value;
+  });
+  drawFascio();
+});
+
+// Nav attiva
+var secs2=document.querySelectorAll('.sec'),navLinks2=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs2.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks2.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
