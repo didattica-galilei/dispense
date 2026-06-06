@@ -163,7 +163,12 @@ footer{text-align:center;font-size:11px;color:var(--mu);margin-top:48px;padding:
   <h2>3. Simulatore 1 &mdash; Parabola per Tre Punti</h2>
   <p class="ssub">Inserisci tre punti: il simulatore trova a, b, c risolvendo il sistema lineare</p>
   <div class="sim">
-    <div class="sim-t">Parabola y = ax&sup2; + bx + c passante per P1, P2, P3</div>
+    <div class="sim-t" id="sim1title">Parabola y = ax&sup2; + bx + c passante per P1, P2, P3</div>
+    <div class="ctrl" style="margin-bottom:6px">
+      <label>Tipo asse:</label>
+      <button class="btn go" id="btnAseV" onclick="setAsse('v')">Asse verticale</button>
+      <button class="btn" id="btnAseH" onclick="setAsse('h')">Asse orizzontale</button>
+    </div>
     <div class="ctrl">
       <label>P1:</label> x<input type="number" id="p1x" value="-2" step="1">y<input type="number" id="p1y" value="1" step="1">
       <label style="margin-left:8px">P2:</label> x<input type="number" id="p2x" value="0" step="1">y<input type="number" id="p2y" value="-1" step="1">
@@ -409,83 +414,175 @@ function drawDot(ctx,ax,x,y,r,color){
 }
 
 // ═══════════ SIM 1: TRE PUNTI ════════════════════
+var asseCorrente='v'; // 'v'=verticale, 'h'=orizzontale
+
+function setAsse(tipo){
+  asseCorrente=tipo;
+  document.getElementById('btnAseV').className=tipo==='v'?'btn go':'btn';
+  document.getElementById('btnAseH').className=tipo==='h'?'btn go':'btn';
+  var titolo=tipo==='v'
+    ? 'Parabola y = ax&sup2; + bx + c passante per P1, P2, P3'
+    : 'Parabola x = ay&sup2; + by + c passante per P1, P2, P3';
+  document.getElementById('sim1title').innerHTML=titolo;
+  calcTrePunti();
+}
+
+function solve3(A,B){
+  var M=A.map(function(r,i){return r.concat([B[i]]);});
+  for(var col=0;col<3;col++){
+    var maxRow=col;
+    for(var row=col+1;row<3;row++){if(Math.abs(M[row][col])>Math.abs(M[maxRow][col]))maxRow=row;}
+    var tmp=M[col];M[col]=M[maxRow];M[maxRow]=tmp;
+    if(Math.abs(M[col][col])<1e-12)return null;
+    for(var row2=col+1;row2<3;row2++){
+      var f=M[row2][col]/M[col][col];
+      for(var k=col;k<=3;k++)M[row2][k]-=f*M[col][k];
+    }
+  }
+  var x=[0,0,0];
+  for(var i=2;i>=0;i--){
+    x[i]=M[i][3];
+    for(var j=i+1;j<3;j++)x[i]-=M[i][j]*x[j];
+    x[i]/=M[i][i];
+  }
+  return x;
+}
+
 function calcTrePunti(){
   var x1=rf('p1x'),y1=rf('p1y');
   var x2=rf('p2x'),y2=rf('p2y');
   var x3=rf('p3x'),y3=rf('p3y');
-  // Risolvo il sistema:
-  // a*x1²+b*x1+c=y1
-  // a*x2²+b*x2+c=y2
-  // a*x3²+b*x3+c=y3
-  var A=[[x1*x1,x1,1],[x2*x2,x2,1],[x3*x3,x3,1]];
-  var B=[y1,y2,y3];
-  // Eliminazione di Gauss
-  function solve3(A,B){
-    var M=A.map(function(r,i){return r.concat([B[i]]);});
-    for(var col=0;col<3;col++){
-      var maxRow=col;
-      for(var row=col+1;row<3;row++){if(Math.abs(M[row][col])>Math.abs(M[maxRow][col]))maxRow=row;}
-      var tmp=M[col];M[col]=M[maxRow];M[maxRow]=tmp;
-      if(Math.abs(M[col][col])<1e-12)return null;
-      for(var row2=col+1;row2<3;row2++){
-        var f=M[row2][col]/M[col][col];
-        for(var k=col;k<=3;k++)M[row2][k]-=f*M[col][k];
-      }
-    }
-    var x=[0,0,0];
-    for(var i=2;i>=0;i--){
-      x[i]=M[i][3];
-      for(var j=i+1;j<3;j++)x[i]-=M[i][j]*x[j];
-      x[i]/=M[i][i];
-    }
-    return x;
-  }
-  var sol=solve3(A,B);
   var o=document.getElementById('out1');
-  if(!sol){o.className='out';o.textContent='⚠ I tre punti sono allineati o due hanno la stessa x — nessuna parabola unica.';return;}
-  var a=sol[0],b=sol[1],c=sol[2];
-  var disc=b*b-4*a*c;
-  var xv=-b/(2*a),yv=-disc/(4*a);
-  var p=1/(4*a);
-  // Disegno
   var cv=setupCanvas('cv1',320);
-  var allX=[x1,x2,x3,xv];
-  var allY=[y1,y2,y3,yv];
-  var xc=(Math.max.apply(null,allX)+Math.min.apply(null,allX))/2;
-  var yc=(Math.max.apply(null,allY)+Math.min.apply(null,allY))/2;
-  var span=Math.max(Math.max.apply(null,allX)-Math.min.apply(null,allX),Math.max.apply(null,allY)-Math.min.apply(null,allY))||4;
-  var sc=Math.min(cv.width,cv.height)*0.35/span;
-  var ax=makeAxes(cv,xc,yc,sc);
   var ctx=cv.getContext('2d');
   ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
-  drawGrid(ctx,cv,ax,sc);
-  // Parabola
-  plotFn(ctx,cv,ax,function(x){return a*x*x+b*x+c;},'#1a4b8c',2.4);
-  // Asse di simmetria
-  ctx.strokeStyle='rgba(26,75,140,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
-  ctx.beginPath();ctx.moveTo(ax.sx(xv),0);ctx.lineTo(ax.sx(xv),cv.height);ctx.stroke();ctx.setLineDash([]);
-  // Fuoco
-  var fy=yv+p;
-  drawDot(ctx,ax,xv,fy,5,'#1a6b3a');
-  // Direttrice
-  var dy=yv-p;
-  ctx.strokeStyle='rgba(26,107,58,0.5)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
-  ctx.beginPath();ctx.moveTo(0,ax.sy(dy));ctx.lineTo(cv.width,ax.sy(dy));ctx.stroke();ctx.setLineDash([]);
-  // Punti
-  [[x1,y1],[x2,y2],[x3,y3]].forEach(function(pt){drawDot(ctx,ax,pt[0],pt[1],6,'#e05252');});
-  drawDot(ctx,ax,xv,yv,5,'#1a4b8c');
-  // Labels
-  ctx.fillStyle='#1a4b8c';ctx.font='bold 10px monospace';ctx.textAlign='left';
-  ctx.fillText('V=('+fmt(xv)+','+fmt(yv)+')',ax.sx(xv)+5,ax.sy(yv)-5);
-  ctx.fillStyle='#1a6b3a';ctx.fillText('F=('+fmt(xv)+','+fmt(fy)+')',ax.sx(xv)+5,ax.sy(fy)-5);
-  o.className='out';
-  o.textContent='y = '+fmt(a)+'x² + '+fmt(b)+'x + '+fmt(c)+
-    '\na = '+fmt(a)+'   b = '+fmt(b)+'   c = '+fmt(c)+
-    '\n\nVertice V = ('+fmt(xv)+', '+fmt(yv)+')'+
-    '\nFuoco  F = ('+fmt(xv)+', '+fmt(fy)+')'+
-    '\nDirettrice: y = '+fmt(dy)+
-    '\nDiscriminante Δ = '+fmt(disc)+
-    '\nAsse di simmetria: x = '+fmt(xv);
+
+  if(asseCorrente==='v'){
+    // y = ax²+bx+c  →  sistema in a,b,c con variabile x, valore y
+    var A=[[x1*x1,x1,1],[x2*x2,x2,1],[x3*x3,x3,1]];
+    var sol=solve3(A,[y1,y2,y3]);
+    if(!sol){o.className='out';o.textContent='⚠ I tre punti hanno la stessa x o sono allineati — nessuna parabola unica.';return;}
+    var a=sol[0],b=sol[1],cc=sol[2];
+    var disc=b*b-4*a*cc;
+    var xv=-b/(2*a),yv=-disc/(4*a),p=1/(4*a);
+
+    // Scala
+    var allX=[x1,x2,x3,xv,xv];
+    var allY=[y1,y2,y3,yv,yv+p,yv-p];
+    var xcenter=(Math.max.apply(null,allX)+Math.min.apply(null,allX))/2;
+    var ycenter=(Math.max.apply(null,allY)+Math.min.apply(null,allY))/2;
+    var span=Math.max(Math.max.apply(null,allX)-Math.min.apply(null,allX),
+                      Math.max.apply(null,allY)-Math.min.apply(null,allY))||4;
+    var sc=Math.min(cv.width,cv.height)*0.32/Math.max(span,1);
+    var ax=makeAxes(cv,xcenter,ycenter,sc);
+    drawGrid(ctx,cv,ax,sc);
+
+    // Parabola
+    plotFn(ctx,cv,ax,function(x){return a*x*x+b*x+cc;},'#1a4b8c',2.4);
+    // Asse di simmetria (verticale)
+    ctx.strokeStyle='rgba(26,75,140,0.28)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(ax.sx(xv),0);ctx.lineTo(ax.sx(xv),cv.height);ctx.stroke();ctx.setLineDash([]);
+    // Fuoco e direttrice
+    var fy=yv+p,dy=yv-p;
+    drawDot(ctx,ax,xv,fy,5,'#1a6b3a');
+    ctx.strokeStyle='rgba(26,107,58,0.45)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(0,ax.sy(dy));ctx.lineTo(cv.width,ax.sy(dy));ctx.stroke();ctx.setLineDash([]);
+    // Punti e vertice
+    [[x1,y1,'P1'],[x2,y2,'P2'],[x3,y3,'P3']].forEach(function(pt){
+      drawDot(ctx,ax,pt[0],pt[1],6,'#e05252');
+      ctx.fillStyle='#e05252';ctx.font='bold 9px monospace';ctx.textAlign='left';
+      ctx.fillText(pt[2],ax.sx(pt[0])+7,ax.sy(pt[1])-4);
+    });
+    drawDot(ctx,ax,xv,yv,5,'#1a4b8c');
+    ctx.fillStyle='#1a4b8c';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    ctx.fillText('V=('+fmt(xv)+','+fmt(yv)+')',ax.sx(xv)+5,ax.sy(yv)-5);
+    ctx.fillStyle='#1a6b3a';
+    ctx.fillText('F=('+fmt(xv)+','+fmt(fy)+')',ax.sx(xv)+5,ax.sy(fy)-5);
+    ctx.fillStyle='rgba(26,107,58,0.7)';ctx.font='9px monospace';ctx.textAlign='left';
+    ctx.fillText('dir: y='+fmt(dy),ax.sx(xv)+5,ax.sy(dy)-4);
+
+    o.className='out';
+    o.textContent='ASSE VERTICALE: y = ax\u00b2 + bx + c\n'+
+      'y = '+fmt(a)+'x\u00b2 + '+fmt(b)+'x + '+fmt(cc)+'\n'+
+      'a = '+fmt(a)+'   b = '+fmt(b)+'   c = '+fmt(cc)+'\n\n'+
+      'Vertice V  = ('+fmt(xv)+', '+fmt(yv)+')\n'+
+      'Fuoco   F  = ('+fmt(xv)+', '+fmt(fy)+')\n'+
+      'Direttrice : y = '+fmt(dy)+'\n'+
+      'Discriminante \u0394 = '+fmt(disc)+'\n'+
+      'Asse di simmetria: x = '+fmt(xv);
+
+  } else {
+    // x = ay²+by+c  →  sistema in a,b,c con variabile y, valore x
+    var A2=[[y1*y1,y1,1],[y2*y2,y2,1],[y3*y3,y3,1]];
+    var sol2=solve3(A2,[x1,x2,x3]);
+    if(!sol2){o.className='out';o.textContent='⚠ I tre punti hanno la stessa y o sono allineati — nessuna parabola unica.';return;}
+    var a=sol2[0],b=sol2[1],cc=sol2[2];
+    var disc=b*b-4*a*cc;
+    // Vertice: yv = -b/(2a), xv = -disc/(4a)
+    var yv=-b/(2*a),xv=-disc/(4*a),p=1/(4*a);
+
+    // Scala
+    var allX2=[x1,x2,x3,xv,xv+p,xv-p];
+    var allY2=[y1,y2,y3,yv];
+    var xcenter2=(Math.max.apply(null,allX2)+Math.min.apply(null,allX2))/2;
+    var ycenter2=(Math.max.apply(null,allY2)+Math.min.apply(null,allY2))/2;
+    var span2=Math.max(Math.max.apply(null,allX2)-Math.min.apply(null,allX2),
+                       Math.max.apply(null,allY2)-Math.min.apply(null,allY2))||4;
+    var sc=Math.min(cv.width,cv.height)*0.32/Math.max(span2,1);
+    var ax=makeAxes(cv,xcenter2,ycenter2,sc);
+    drawGrid(ctx,cv,ax,sc);
+
+    // Parabola orizzontale: tracciata parametricamente in y
+    var ymin3=ax.wy(cv.height)-1, ymax3=ax.wy(0)+1;
+    var pts3=[];
+    for(var py3=0;py3<=cv.height;py3+=1.5){
+      var yy=ax.wy(py3);
+      var xx=a*yy*yy+b*yy+cc;
+      pts3.push([xx,yy]);
+    }
+    ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2.4;ctx.setLineDash([]);
+    ctx.beginPath();var first4=true;
+    pts3.forEach(function(pt){
+      var px4=ax.sx(pt[0]),py4=ax.sy(pt[1]);
+      if(px4<-20||px4>cv.width+20){first4=true;return;}
+      first4?ctx.moveTo(px4,py4):ctx.lineTo(px4,py4);first4=false;
+    });
+    ctx.stroke();
+
+    // Asse di simmetria (orizzontale)
+    ctx.strokeStyle='rgba(26,75,140,0.28)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(0,ax.sy(yv));ctx.lineTo(cv.width,ax.sy(yv));ctx.stroke();ctx.setLineDash([]);
+
+    // Fuoco e direttrice
+    var fx=xv+p,dx=xv-p;
+    drawDot(ctx,ax,fx,yv,5,'#1a6b3a');
+    ctx.strokeStyle='rgba(26,107,58,0.45)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(ax.sx(dx),0);ctx.lineTo(ax.sx(dx),cv.height);ctx.stroke();ctx.setLineDash([]);
+
+    // Punti e vertice
+    [[x1,y1,'P1'],[x2,y2,'P2'],[x3,y3,'P3']].forEach(function(pt){
+      drawDot(ctx,ax,pt[0],pt[1],6,'#e05252');
+      ctx.fillStyle='#e05252';ctx.font='bold 9px monospace';ctx.textAlign='left';
+      ctx.fillText(pt[2],ax.sx(pt[0])+7,ax.sy(pt[1])-4);
+    });
+    drawDot(ctx,ax,xv,yv,5,'#1a4b8c');
+    ctx.fillStyle='#1a4b8c';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    ctx.fillText('V=('+fmt(xv)+','+fmt(yv)+')',ax.sx(xv)+5,ax.sy(yv)-12);
+    ctx.fillStyle='#1a6b3a';
+    ctx.fillText('F=('+fmt(fx)+','+fmt(yv)+')',ax.sx(fx)+5,ax.sy(yv)-12);
+    ctx.fillStyle='rgba(26,107,58,0.7)';ctx.font='9px monospace';ctx.textAlign='left';
+    ctx.fillText('dir: x='+fmt(dx),ax.sx(dx)+4,ax.sy(yv)+14);
+
+    o.className='out';
+    o.textContent='ASSE ORIZZONTALE: x = ay\u00b2 + by + c\n'+
+      'x = '+fmt(a)+'y\u00b2 + '+fmt(b)+'y + '+fmt(cc)+'\n'+
+      'a = '+fmt(a)+'   b = '+fmt(b)+'   c = '+fmt(cc)+'\n\n'+
+      'Vertice V  = ('+fmt(xv)+', '+fmt(yv)+')\n'+
+      'Fuoco   F  = ('+fmt(fx)+', '+fmt(yv)+')\n'+
+      'Direttrice : x = '+fmt(dx)+'\n'+
+      'Discriminante \u0394 = '+fmt(disc)+'\n'+
+      'Asse di simmetria: y = '+fmt(yv);
+  }
 }
 document.addEventListener('DOMContentLoaded',function(){
   setupCanvas('cv1',320);
