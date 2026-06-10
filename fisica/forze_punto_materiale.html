@@ -1,0 +1,769 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forze sul Punto Materiale</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:52px 32px 38px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,40px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:14px;color:rgba(255,255,255,0.38);font-weight:300;max-width:500px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:40px 24px}
+@media(max-width:600px){.page{padding:18px 10px}}
+.sec{margin-bottom:60px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:14px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:3px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:10px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.9em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+@media(max-width:500px){.two{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 13px;margin:10px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 13px;margin:10px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 13px;margin:10px 0;font-size:13px;border-radius:0 3px 3px 0}
+.fp{color:var(--re);font-weight:600}.fn{color:var(--a2);font-weight:600}.ft{color:var(--gr);font-weight:600}.ff{color:var(--or);font-weight:600}.fa{color:var(--pu);font-weight:600}
+/* SIM */
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:11px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:85px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:38px;color:var(--ink)}
+.btn{padding:3px 10px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+/* Risultati strutturati */
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:11px 14px;margin-top:8px;min-height:32px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 14px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.err{color:#f4a582;font-weight:600}
+.rv.warn{color:#f4d03f}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:18px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Statica</div>
+  <h1>Forze sul <em>Punto Materiale</em></h1>
+  <p>Peso, forza elastica, attrito &mdash; equilibrio con carrucole, piano inclinato e piano orizzontale</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#sim1a">Sim 1a &mdash; Angoli&rarr;Masse</a>
+  <a href="#sim1b">Sim 1b &mdash; Masse&rarr;Angoli</a>
+  <a href="#sim2">Sim 2 &mdash; Piano inclinato</a>
+  <a href="#sim3">Sim 3 &mdash; Piano orizzontale</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Forze sul Punto Materiale &mdash; Teoria</h2>
+  <p class="ssub">Equilibrio, peso, forza elastica, attrito</p>
+  <p>Un punto materiale &egrave; in <strong>equilibrio statico</strong> quando la somma vettoriale di tutte le forze &egrave; nulla: <strong>&Sigma;Fx=0</strong> e <strong>&Sigma;Fy=0</strong>.</p>
+  <div class="two">
+    <div class="formula"><div class="f">P = m &middot; g</div><div class="fd">Peso &nbsp;&middot;&nbsp; g=9.81 m/s&sup2; &nbsp;&middot;&nbsp; verticale verso il basso</div></div>
+    <div class="formula"><div class="f">F<sub>el</sub> = k &middot; x</div><div class="fd">Legge di Hooke &nbsp;&middot;&nbsp; k [N/m] &nbsp;&middot;&nbsp; x = deformazione</div></div>
+  </div>
+  <div class="two">
+    <div class="formula"><div class="f">f<sub>s</sub> &le; &mu;<sub>s</sub> &middot; N</div><div class="fd">Attrito statico &nbsp;&middot;&nbsp; &mu;<sub>s</sub> = coefficiente statico</div></div>
+    <div class="formula"><div class="f">f<sub>d</sub> = &mu;<sub>d</sub> &middot; N</div><div class="fd">Attrito dinamico &nbsp;&middot;&nbsp; &mu;<sub>d</sub> &lt; &mu;<sub>s</sub></div></div>
+  </div>
+  <p>Nelle carrucole fisse ideali la tensione nel filo &egrave; costante: T&nbsp;=&nbsp;m&middot;g per la massa appesa.</p>
+</div>
+
+<!-- SIM 1a -->
+<div class="sec" id="sim1a">
+  <h2>2. Simulatore 1a &mdash; Dati M e gli angoli, trova m&#x2081; e m&#x2082;</h2>
+  <p class="ssub">Il nodo &egrave; in equilibrio sotto il peso P=Mg e le tensioni T&#x2081;=m&#x2081;g, T&#x2082;=m&#x2082;g</p>
+  <div class="bf">
+    <strong>Soluzione dalle equazioni di equilibrio:</strong><br>
+    &Sigma;F<sub>x</sub>=0 &nbsp;&rarr;&nbsp; T<sub>1</sub>cos&alpha;<sub>1</sub> = T<sub>2</sub>cos&alpha;<sub>2</sub><br>
+    &Sigma;F<sub>y</sub>=0 &nbsp;&rarr;&nbsp; T<sub>1</sub>sin&alpha;<sub>1</sub> + T<sub>2</sub>sin&alpha;<sub>2</sub> = Mg
+  </div>
+  <div class="two">
+    <div class="formula">
+      <div class="f">m<sub>1</sub> = M &middot; <span class="frac"><span class="n">cos&alpha;<sub>2</sub></span><span class="d">sin(&alpha;<sub>1</sub>+&alpha;<sub>2</sub>)</span></span></div>
+      <div class="fd">massa che determina la tensione T&#x2081; nel filo sinistro</div>
+    </div>
+    <div class="formula">
+      <div class="f">m<sub>2</sub> = M &middot; <span class="frac"><span class="n">cos&alpha;<sub>1</sub></span><span class="d">sin(&alpha;<sub>1</sub>+&alpha;<sub>2</sub>)</span></span></div>
+      <div class="fd">massa che determina la tensione T&#x2082; nel filo destro</div>
+    </div>
+  </div>
+  <div class="sim">
+    <div class="sim-t">Dati M, &alpha;&#x2081;, &alpha;&#x2082; &rarr; trova m&#x2081;, m&#x2082;</div>
+    <div class="ctrl">
+      <label>M (kg)</label>
+      <input type="range" id="a_M" min="0.2" max="5" step="0.1" value="2">
+      <span class="vv" id="a_Mv">2.0</span>
+      <label>&alpha;&#x2081; (&deg;)</label>
+      <input type="range" id="a_a1" min="5" max="80" step="1" value="40">
+      <span class="vv" id="a_a1v">40</span>
+      <label>&alpha;&#x2082; (&deg;)</label>
+      <input type="range" id="a_a2" min="5" max="80" step="1" value="50">
+      <span class="vv" id="a_a2v">50</span>
+    </div>
+    <canvas id="cv1a" style="height:360px"></canvas>
+    <div class="out empty" id="out1a">Caricamento...</div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin:10px 0 5px;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:var(--a2);display:inline-block"></span>Triangolo delle forze</div>
+    <canvas id="cv1at" style="height:160px"></canvas>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span><span class="fp">P = Mg</span></span>
+      <span><span class="ld" style="background:#1a6b3a"></span><span class="ft">T&#x2081;, T&#x2082;</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 1b -->
+<div class="sec" id="sim1b">
+  <h2>3. Simulatore 1b &mdash; Date le tre masse, trova gli angoli</h2>
+  <p class="ssub">Legge dei coseni nel triangolo delle forze: lati T&#x2081;=m&#x2081;g, T&#x2082;=m&#x2082;g, P=Mg</p>
+  <div class="bf">
+    <strong>Dalla legge dei coseni del triangolo delle forze (lati = T&#x2081;, T&#x2082;, P):</strong>
+  </div>
+  <div class="two">
+    <div class="formula">
+      <div class="f">sin&alpha;<sub>1</sub> = <span class="frac"><span class="n">M&sup2; + m<sub>1</sub>&sup2; &minus; m<sub>2</sub>&sup2;</span><span class="d">2&thinsp;M&thinsp;m<sub>1</sub></span></span></div>
+      <div class="fd">Valido se M &lt; m&#x2081; + m&#x2082;</div>
+    </div>
+    <div class="formula">
+      <div class="f">sin&alpha;<sub>2</sub> = <span class="frac"><span class="n">M&sup2; + m<sub>2</sub>&sup2; &minus; m<sub>1</sub>&sup2;</span><span class="d">2&thinsp;M&thinsp;m<sub>2</sub></span></span></div>
+      <div class="fd">Valido se M &lt; m&#x2081; + m&#x2082;</div>
+    </div>
+  </div>
+  <div class="sim">
+    <div class="sim-t">Date m&#x2081;, m&#x2082;, M &rarr; trova &alpha;&#x2081;, &alpha;&#x2082;</div>
+    <div class="ctrl">
+      <label>M (kg)</label>
+      <input type="range" id="b_M" min="0.2" max="5" step="0.1" value="2">
+      <span class="vv" id="b_Mv">2.0</span>
+      <label>m&#x2081; (kg)</label>
+      <input type="range" id="b_m1" min="0.2" max="5" step="0.1" value="1.8">
+      <span class="vv" id="b_m1v">1.8</span>
+      <label>m&#x2082; (kg)</label>
+      <input type="range" id="b_m2" min="0.2" max="5" step="0.1" value="2.2">
+      <span class="vv" id="b_m2v">2.2</span>
+    </div>
+    <canvas id="cv1b" style="height:360px"></canvas>
+    <div class="out empty" id="out1b">Caricamento...</div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin:10px 0 5px;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:50%;background:var(--a2);display:inline-block"></span>Triangolo delle forze</div>
+    <canvas id="cv1bt" style="height:160px"></canvas>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span><span class="fp">P</span></span>
+      <span><span class="ld" style="background:#1a6b3a"></span><span class="ft">T&#x2081;, T&#x2082;</span></span>
+      <span><span class="ld" style="background:#1a4b8c;border-top:1px dashed"></span>Triangolo chiuso</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2 -->
+<div class="sec" id="sim2">
+  <h2>4. Simulatore 2 &mdash; Piano Inclinato</h2>
+  <p class="ssub">Massa M sul piano con o senza attrito, con carrucole in sommit&agrave; e alla base</p>
+  <div class="sim">
+    <div class="sim-t">Piano inclinato &mdash; equilibrio statico</div>
+    <div class="ctrl">
+      <label>M (kg)</label>
+      <input type="range" id="s2M" min="0.1" max="10" step="0.1" value="3">
+      <span class="vv" id="s2Mv">3.0</span>
+      <label>&alpha; (&deg;)</label>
+      <input type="range" id="s2a" min="5" max="75" step="1" value="30">
+      <span class="vv" id="s2av">30</span>
+      <label>&mu;</label>
+      <input type="range" id="s2mu" min="0" max="1" step="0.05" value="0.3">
+      <span class="vv" id="s2muv">0.30</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn" id="btn2t" onclick="tog2('top')">Carrucola sommit&agrave; OFF</button>
+      <span id="sp2t" style="display:none">
+        <label>m<sub>top</sub></label>
+        <input type="range" id="s2mt" min="0.1" max="8" step="0.1" value="1">
+        <span class="vv" id="s2mtv">1.0</span>
+      </span>
+      <button class="btn" id="btn2b" onclick="tog2('bot')">Carrucola base OFF</button>
+      <span id="sp2b" style="display:none">
+        <label>m<sub>bot</sub></label>
+        <input type="range" id="s2mb" min="0.1" max="8" step="0.1" value="1">
+        <span class="vv" id="s2mbv">1.0</span>
+      </span>
+    </div>
+    <canvas id="cv2" style="height:420px"></canvas>
+    <div class="out empty" id="out2">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span><span class="fp">P</span></span>
+      <span><span class="ld" style="background:#1a4b8c"></span><span class="fn">N</span></span>
+      <span><span class="ld" style="background:#1a6b3a"></span><span class="ft">T</span></span>
+      <span><span class="ld" style="background:#c47a00"></span><span class="ff">f</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 3 -->
+<div class="sec" id="sim3">
+  <h2>5. Simulatore 3 &mdash; Piano Orizzontale con Forza Esterna</h2>
+  <p class="ssub">Data M e la forza applicata F all'angolo &theta;, ricava N e verifica l'equilibrio</p>
+  <div class="bf">
+    <strong>N = Mg &minus; F sin&theta;</strong> (derivata da M, F, &theta;) &nbsp;&middot;&nbsp;
+    Equilibrio se F cos&theta; &le; &mu;&middot;N
+  </div>
+  <div class="sim">
+    <div class="sim-t">Piano orizzontale &mdash; forza applicata ad angolo</div>
+    <div class="ctrl">
+      <label>M (kg)</label>
+      <input type="range" id="s3M" min="0.1" max="10" step="0.1" value="3">
+      <span class="vv" id="s3Mv">3.0</span>
+      <label>F (N)</label>
+      <input type="range" id="s3F" min="0" max="60" step="0.5" value="12">
+      <span class="vv" id="s3Fv">12.0</span>
+      <label>&theta; (&deg;)</label>
+      <input type="range" id="s3t" min="-60" max="60" step="1" value="20">
+      <span class="vv" id="s3tv">20</span>
+      <label>&mu;</label>
+      <input type="range" id="s3mu" min="0" max="1" step="0.05" value="0.4">
+      <span class="vv" id="s3muv">0.40</span>
+    </div>
+    <canvas id="cv3" style="height:310px"></canvas>
+    <div class="out empty" id="out3">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span><span class="fp">P</span></span>
+      <span><span class="ld" style="background:#1a4b8c"></span><span class="fn">N</span></span>
+      <span><span class="ld" style="background:#c47a00"></span><span class="ff">f</span></span>
+      <span><span class="ld" style="background:#7a4fc4"></span><span class="fa">F</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>6. Esercizi Proposti</h2>
+  <p class="ssub">Equilibrio del punto materiale</p>
+  <ol>
+    <li><strong>Sim 1a:</strong> M=3 kg, &alpha;&#x2081;=45&deg;, &alpha;&#x2082;=45&deg;. Calcola m&#x2081; e m&#x2082; a mano e verifica.</li>
+    <li><strong>Sim 1b:</strong> trova il valore massimo di M per cui &egrave; possibile l'equilibrio con m&#x2081;=m&#x2082;=1 kg. Perch&eacute;?</li>
+    <li><strong>Sim 2 liscio:</strong> M=4 kg, &alpha;=30&deg;, &mu;=0. Quale m<sub>top</sub> bilancia M?</li>
+    <li><strong>Sim 2 con attrito:</strong> M=5 kg, &alpha;=40&deg;, &mu;=0.4. Trovare la forza di attrito necessaria e verificare se il corpo &egrave; in equilibrio.</li>
+    <li><strong>Sim 3:</strong> M=4 kg, F=20 N, &theta;=30&deg;. Calcola N manualmente e confronta col simulatore. Con &mu;=0.5, &egrave; in equilibrio?</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Forze sul Punto Materiale &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+var g9=9.81;
+var s2topOn=false,s2botOn=false;
+
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function deg(r){return r*180/Math.PI;}
+function rad(d){return d*Math.PI/180;}
+
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;
+  return cv;
+}
+
+// ── FRECCIA ──────────────────────────────────────────────
+function arrow(ctx,x1,y1,x2,y2,color,lw,lbl,ls){
+  var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy);
+  if(L<2)return;
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var nx=dx/L,ny=dy/L,as=Math.min(10,L*0.32);
+  ctx.fillStyle=color;ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-nx*as+ny*as*0.38,y2-ny*as-nx*as*0.38);
+  ctx.lineTo(x2-nx*as-ny*as*0.38,y2-ny*as+nx*as*0.38);
+  ctx.closePath();ctx.fill();
+  if(lbl){
+    var s=ls||1;
+    ctx.fillStyle=color;ctx.font='bold 11px monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(lbl,(x1+x2)/2-ny*s*13,(y1+y2)/2+nx*s*13);
+    ctx.textBaseline='alphabetic';
+  }
+}
+
+// ── CARRUCOLA (solo cerchio) ─────────────────────────────
+function drawPulley(ctx,cx,cy,r){
+  ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);
+  ctx.fillStyle='#f0f0f0';ctx.fill();
+  ctx.strokeStyle='#555';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,r*0.28,0,2*Math.PI);
+  ctx.fillStyle='#888';ctx.fill();
+}
+
+// ── MASSA (box) ──────────────────────────────────────────
+function massBox(ctx,cx,ty,lbl,color){
+  var bw=28,bh=20;
+  ctx.fillStyle=color+'25';ctx.fillRect(cx-bw/2,ty,bw,bh);
+  ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.strokeRect(cx-bw/2,ty,bw,bh);
+  ctx.fillStyle=color;ctx.font='bold 10px monospace';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(lbl,cx,ty+bh/2);ctx.textBaseline='alphabetic';
+}
+
+// ══════════════════════════════════════════════════════════
+// CARRUCOLA CON FUNI TANGENTI
+// ──────────────────────────────────────────────────────────
+// Punto di tangenza da punto esterno (px,py) al cerchio (cx,cy,r)
+// side: la fune che viene DA DESTRA del cerchio usa side=-1 (tocca sul lato dx-alto)
+//        la fune che viene DA SINISTRA usa side=+1 (tocca sul lato sx-alto)
+// Regola: side = (fromX >= cx) ? -1 : 1
+function tangentPoint(px,py,cx,cy,r,side){
+  var dx=cx-px,dy=cy-py,d2=dx*dx+dy*dy,d=Math.sqrt(d2);
+  if(d<=r){return{x:cx,y:cy};}
+  var theta=Math.atan2(dy,dx);
+  var phi=Math.asin(Math.min(1,r/d));
+  var L=Math.sqrt(Math.max(0,d2-r*r));
+  var a=theta-side*phi;
+  return{x:px+L*Math.cos(a),y:py+L*Math.sin(a)};
+}
+
+// Disegna carrucola completa con fune in entrata da (fromX,fromY)
+// e fune in uscita sul lato exitSide ('left' o 'right') verticale verso il basso
+// Restituisce {hangX, hangBottom, T_in} dove T_in è il punto di tangenza in entrata
+function pulleyWithRopes(ctx,cx,cy,r,fromX,fromY,exitSide,color,hangLen){
+  var col=color||'#444',hl=hangLen||70;
+  var dx=cx-fromX,dy=cy-fromY,d2=dx*dx+dy*dy,d=Math.sqrt(d2);
+  if(d<=r+0.1){
+    drawPulley(ctx,cx,cy,r);
+    var hx=(exitSide==='left')?(cx-r):(cx+r);
+    return{hangX:hx,hangBottom:cy+hl,T_in:{x:cx,y:cy}};
+  }
+  // Punto di tangenza in ENTRATA
+  // Se fromX >= cx (fune arriva da destra): side=-1 → tocca lato destro-alto della carrucola
+  // Se fromX <  cx (fune arriva da sinistra): side=+1 → tocca lato sinistro-alto
+  var sideIn=(fromX>=cx)?-1:1;
+  var T_in=tangentPoint(fromX,fromY,cx,cy,r,sideIn);
+
+  // Punto di tangenza in USCITA: lato sx (x=cx-r) o dx (x=cx+r), alla stessa quota del centro
+  var angOut=(exitSide==='left')?Math.PI:0;
+  var T_out_x=(exitSide==='left')?(cx-r):(cx+r);
+  var T_out={x:T_out_x,y:cy};
+
+  var angIn=Math.atan2(T_in.y-cy,T_in.x-cx);
+
+  // Direzione arco: sempre "sopra" la carrucola
+  // Se uscita a SINISTRA (exitSide='left'): la fune arriva da dx, va a sx passando per l'alto
+  //   → angIn è sul lato dx (≈-50°), angOut=π; percorso: decrescente → anticlockwise=true
+  // Se uscita a DESTRA (exitSide='right'): la fune arriva da sx, va a dx passando per l'alto
+  //   → angIn è sul lato sx (≈-130°), angOut=0; percorso: crescente → anticlockwise=false
+  var ccw=(exitSide==='left');
+
+  ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash([]);
+  // Fune in entrata: fromX,fromY → T_in
+  ctx.beginPath();ctx.moveTo(fromX,fromY);ctx.lineTo(T_in.x,T_in.y);ctx.stroke();
+  // Arco di avvolgimento
+  ctx.beginPath();ctx.arc(cx,cy,r,angIn,angOut,ccw);ctx.stroke();
+  // Fune in uscita: T_out → verticale verso il basso
+  var hangBot=cy+hl;
+  ctx.beginPath();ctx.moveTo(T_out_x,cy);ctx.lineTo(T_out_x,hangBot);ctx.stroke();
+  // Carrucola
+  drawPulley(ctx,cx,cy,r);
+
+  return{hangX:T_out_x,hangBottom:hangBot,T_in:T_in};
+}
+
+// ── TRIANGOLO DELLE FORZE ────────────────────────────────
+function drawTriangle(cvId,T1,T2,P,a1,a2){
+  var cv=document.getElementById(cvId);if(!cv)return;
+  var W=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=W+'px';cv.width=W;cv.height=160;
+  var H=160,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fafafa';ctx.fillRect(0,0,W,H);
+  var maxF=Math.max(T1,T2,P);
+  var tsc=100/maxF;
+  var Bx=W/2-(T2*tsc*Math.cos(a2)-T1*tsc*Math.cos(a1))/2;
+  var By=H*0.84;
+  var Cx=Bx+T2*tsc*Math.cos(a2),Cy=By-T2*tsc*Math.sin(a2);
+  var Ax=Cx-T1*tsc*Math.cos(a1),Ay=Cy-T1*tsc*Math.sin(a1);
+  ctx.fillStyle='rgba(26,75,140,0.06)';
+  ctx.beginPath();ctx.moveTo(Ax,Ay);ctx.lineTo(Bx,By);ctx.lineTo(Cx,Cy);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(26,75,140,0.18)';ctx.lineWidth=0.5;
+  ctx.beginPath();ctx.moveTo(Ax,Ay);ctx.lineTo(Bx,By);ctx.lineTo(Cx,Cy);ctx.closePath();ctx.stroke();
+  arrow(ctx,Bx,By,Cx,Cy,'#1a6b3a',2,'T\u2082='+(T2/g9).toFixed(2)+'kg',-1);
+  arrow(ctx,Cx,Cy,Ax,Ay,'#1a6b3a',2,'T\u2081='+(T1/g9).toFixed(2)+'kg',-1);
+  arrow(ctx,Ax,Ay,Bx,By,'#e05252',2,'P='+(P/g9).toFixed(2)+'kg',1);
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 8px monospace';ctx.textAlign='left';
+  ctx.fillText('\u03a3F=0: triangolo chiuso',6,10);
+}
+
+// ── SIM 1 DISEGNO BASE ───────────────────────────────────
+function drawSim1core(cvId,KX,KY,a1,a2,T1,T2,P,m1,m2){
+  var cv=setupCv(cvId,360);
+  var W=cv.width,H=360,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f8f8ff';ctx.fillRect(0,0,W,H);
+
+  // Soffitto
+  ctx.fillStyle='#ccc';ctx.fillRect(0,0,W,16);
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,16);ctx.lineTo(W,16);ctx.stroke();
+  for(var xi=0;xi<W;xi+=11){ctx.strokeStyle='#bbb';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xi,16);ctx.lineTo(xi-7,0);ctx.stroke();}
+
+  var PR=14,FL=125;
+  var P1X=KX-FL*Math.cos(a1),P1Y=KY-FL*Math.sin(a1);
+  var P2X=KX+FL*Math.cos(a2),P2Y=KY-FL*Math.sin(a2);
+
+  // Staffa al soffitto
+  ctx.strokeStyle='#666';ctx.lineWidth=1.5;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(P1X,16);ctx.lineTo(P1X,P1Y-PR);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(P2X,16);ctx.lineTo(P2X,P2Y-PR);ctx.stroke();
+
+  // Fune peso M
+  ctx.strokeStyle='#555';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(KX,KY);ctx.lineTo(KX,KY+55);ctx.stroke();
+  massBox(ctx,KX,KY+55,'M','#e05252');
+
+  // Carrucola sinistra: fune arriva da destra (KX>P1X), esce a sinistra
+  var pul1=pulleyWithRopes(ctx,P1X,P1Y,PR,KX,KY,'left','#555',70);
+  massBox(ctx,pul1.hangX,pul1.hangBottom,'m\u2081','#1a6b3a');
+
+  // Carrucola destra: fune arriva da sinistra (KX<P2X), esce a destra
+  var pul2=pulleyWithRopes(ctx,P2X,P2Y,PR,KX,KY,'right','#555',70);
+  massBox(ctx,pul2.hangX,pul2.hangBottom,'m\u2082','#1a6b3a');
+
+  // Nodo
+  ctx.beginPath();ctx.arc(KX,KY,9,0,2*Math.PI);
+  ctx.fillStyle='#222';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+
+  // Vettori forza ALLINEATI alla fune (direzione T_in, non verso centro carrucola)
+  var sc=70/P;
+  var d1x=pul1.T_in.x-KX,d1y=pul1.T_in.y-KY,l1=Math.sqrt(d1x*d1x+d1y*d1y);
+  arrow(ctx,KX,KY,KX+d1x/l1*T1*sc,KY+d1y/l1*T1*sc,'#1a6b3a',2.5,'T\u2081',-1);
+  var d2x=pul2.T_in.x-KX,d2y=pul2.T_in.y-KY,l2=Math.sqrt(d2x*d2x+d2y*d2y);
+  arrow(ctx,KX,KY,KX+d2x/l2*T2*sc,KY+d2y/l2*T2*sc,'#1a6b3a',2.5,'T\u2082',1);
+  arrow(ctx,KX,KY,KX,KY+P*sc,'#e05252',2.5,'P',1);
+
+  // Angoli
+  ctx.fillStyle='#333';ctx.font='10px monospace';ctx.textAlign='center';
+  ctx.fillText('\u03b1\u2081='+fmt1(deg(a1))+'\u00b0',KX-30,KY-16);
+  ctx.fillText('\u03b1\u2082='+fmt1(deg(a2))+'\u00b0',KX+30,KY-16);
+  ctx.fillText('m\u2081='+fmt2(m1)+'kg',pul1.hangX,pul1.hangBottom+33);
+  ctx.fillText('m\u2082='+fmt2(m2)+'kg',pul2.hangX,pul2.hangBottom+33);
+}
+
+// ── SIM 1a ──────────────────────────────────────────────
+function drawSim1a(){
+  var M=rf('a_M'),a1=rad(rf('a_a1')),a2=rad(rf('a_a2'));
+  var sum=a1+a2;
+  var o=document.getElementById('out1a');
+  if(sum<=0.01||sum>=Math.PI-0.01){
+    setupCv('cv1a',360);o.className='out';
+    o.innerHTML='<div class="rg"><div class="rl">Errore</div><div class="rv err">\u03b1\u2081+\u03b1\u2082 deve essere tra 0\u00b0 e 180\u00b0</div></div>';
+    return;
+  }
+  var m1=M*Math.cos(a2)/Math.sin(sum);
+  var m2=M*Math.cos(a1)/Math.sin(sum);
+  var T1=m1*g9,T2=m2*g9,P=M*g9;
+  var cv=document.getElementById('cv1a');
+  var W=Math.max(cv.parentElement.clientWidth-28,260);
+  drawSim1core('cv1a',W/2,185,a1,a2,T1,T2,P,m1,m2);
+  drawTriangle('cv1at',T1,T2,P,a1,a2);
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">M</div><div class="rv">'+fmt2(M)+' kg</div>'+
+    '<div class="rl">\u03b1\u2081</div><div class="rv">'+fmt1(deg(a1))+'\u00b0</div>'+
+    '<div class="rl">\u03b1\u2082</div><div class="rv">'+fmt1(deg(a2))+'\u00b0</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">m\u2081</div><div class="rv ok">'+fmt3(m1)+' kg</div>'+
+    '<div class="rl">m\u2082</div><div class="rv ok">'+fmt3(m2)+' kg</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">T\u2081 = m\u2081g</div><div class="rv">'+fmt2(T1)+' N</div>'+
+    '<div class="rl">T\u2082 = m\u2082g</div><div class="rv">'+fmt2(T2)+' N</div>'+
+    '<div class="rl">P = Mg</div><div class="rv">'+fmt2(P)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">\u03a3Fx</div><div class="rv">'+fmt3(T2*Math.cos(a2)-T1*Math.cos(a1))+' N \u2248 0 \u2713</div>'+
+    '<div class="rl">\u03a3Fy</div><div class="rv">'+fmt3(T1*Math.sin(a1)+T2*Math.sin(a2)-P)+' N \u2248 0 \u2713</div>'+
+    '</div>';
+}
+
+// ── SIM 1b ──────────────────────────────────────────────
+function drawSim1b(){
+  var M=rf('b_M'),m1=rf('b_m1'),m2=rf('b_m2');
+  var o=document.getElementById('out1b');
+  if(M>=m1+m2-0.001){
+    setupCv('cv1b',360);o.className='out';
+    o.innerHTML='<div class="rg"><div class="rl">Errore</div><div class="rv err">M \u2265 m\u2081+m\u2082: equilibrio impossibile</div></div>';
+    return;
+  }
+  var sinA1=(M*M+m1*m1-m2*m2)/(2*M*m1);
+  var sinA2=(M*M+m2*m2-m1*m1)/(2*M*m2);
+  if(Math.abs(sinA1)>1||Math.abs(sinA2)>1){
+    o.className='out';o.innerHTML='<div class="rg"><div class="rv err">Configurazione non realizzabile</div></div>';
+    return;
+  }
+  var a1=Math.asin(sinA1),a2=Math.asin(sinA2);
+  var T1=m1*g9,T2=m2*g9,P=M*g9;
+  var cv=document.getElementById('cv1b');
+  var W=Math.max(cv.parentElement.clientWidth-28,260);
+  drawSim1core('cv1b',W/2,185,a1,a2,T1,T2,P,m1,m2);
+  drawTriangle('cv1bt',T1,T2,P,a1,a2);
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">m\u2081 | m\u2082 | M</div><div class="rv">'+fmt2(m1)+' | '+fmt2(m2)+' | '+fmt2(M)+' kg</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">\u03b1\u2081</div><div class="rv ok">'+fmt1(deg(a1))+'\u00b0</div>'+
+    '<div class="rl">\u03b1\u2082</div><div class="rv ok">'+fmt1(deg(a2))+'\u00b0</div>'+
+    '<div class="rl">Angolo tra i fili</div><div class="rv">'+fmt1(180-deg(a1)-deg(a2))+'\u00b0</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">T\u2081 | T\u2082 | P</div><div class="rv">'+fmt2(T1)+' | '+fmt2(T2)+' | '+fmt2(P)+' N</div>'+
+    '</div>';
+}
+
+// ── SIM 2 ────────────────────────────────────────────────
+function tog2(side){
+  if(side==='top'){
+    s2topOn=!s2topOn;
+    document.getElementById('btn2t').className=s2topOn?'btn on':'btn';
+    document.getElementById('btn2t').textContent=s2topOn?'Carrucola sommit\u00e0 ON':'Carrucola sommit\u00e0 OFF';
+    document.getElementById('sp2t').style.display=s2topOn?'':'none';
+  } else {
+    s2botOn=!s2botOn;
+    document.getElementById('btn2b').className=s2botOn?'btn on':'btn';
+    document.getElementById('btn2b').textContent=s2botOn?'Carrucola base ON':'Carrucola base OFF';
+    document.getElementById('sp2b').style.display=s2botOn?'':'none';
+  }
+  drawSim2();
+}
+
+function drawSim2(){
+  var M=rf('s2M'),alphaDeg=rf('s2a'),alpha=rad(alphaDeg),mu=rf('s2mu');
+  var mt=s2topOn?rf('s2mt'):0,mb=s2botOn?rf('s2mb'):0;
+  var cv=setupCv('cv2',440);
+  var W=cv.width,H=440,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f9f9f9';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out2');
+
+  var N=M*g9*Math.cos(alpha);
+  var Fg=M*g9*Math.sin(alpha);
+  var Tt=mt*g9,Tb=mb*g9;
+  var Fnet0=Tt-Tb-Fg;
+  var fReq=-Fnet0,fMax=mu*N;
+  var inEq=Math.abs(fReq)<=fMax+1e-6;
+  var fAct=inEq?fReq:(fReq>0?fMax:-fMax);
+
+  var cosa=Math.cos(alpha),sina=Math.sin(alpha);
+  // Geometria piano
+  var AX=W*0.16,AY=H*0.76;
+  var L=W*0.62;
+  var BX=AX+L*cosa,BY=AY-L*sina; // sommità
+  var CX=BX,CY=AY;
+
+  // Piano
+  ctx.fillStyle='#ddd';
+  ctx.beginPath();ctx.moveTo(AX,AY);ctx.lineTo(BX,BY);ctx.lineTo(CX,CY);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1;ctx.stroke();
+  ctx.strokeStyle='#555';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(AX,AY);ctx.lineTo(BX,BY);ctx.stroke();
+
+  // Angolo
+  ctx.strokeStyle='#666';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(AX,AY,36,0,-alpha,true);ctx.stroke();
+  ctx.fillStyle='#444';ctx.font='11px monospace';ctx.textAlign='left';
+  ctx.fillText('\u03b1='+alphaDeg+'\u00b0',AX+40,AY-7);
+
+  // Blocco massa
+  var t2=0.52;
+  var MX=AX+L*t2*cosa,MY=AY-L*t2*sina;
+  var tx2=cosa,ty2=-sina,nx2=-sina,ny2=-cosa;
+  var bw=38,bh=24;
+  var blx=MX-bw/2*tx2,bly=MY-bw/2*ty2;
+  var brx=MX+bw/2*tx2,bry=MY+bw/2*ty2;
+  var tlx=blx+bh*nx2,tly=bly+bh*ny2;
+  var trx=brx+bh*nx2,try_=bry+bh*ny2;
+  var MCX=(blx+brx+tlx+trx)/4,MCY=(bly+bry+tly+try_)/4;
+  ctx.fillStyle='#1a4b8c18';
+  ctx.beginPath();ctx.moveTo(blx,bly);ctx.lineTo(brx,bry);ctx.lineTo(trx,try_);ctx.lineTo(tlx,tly);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('M',MCX,MCY);ctx.textBaseline='alphabetic';
+
+  // Forze sul blocco
+  var sc=52/(M*g9);
+  arrow(ctx,MCX,MCY,MCX,MCY+M*g9*sc,'#e05252',2.5,'P',1);
+  arrow(ctx,MCX,MCY,MCX+N*sc*nx2,MCY+N*sc*ny2,'#1a4b8c',2.5,'N',-1);
+  ctx.strokeStyle='#e0525255';ctx.lineWidth=1.2;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(MCX,MCY);ctx.lineTo(MCX-Fg*sc*tx2,MCY-Fg*sc*ty2);ctx.stroke();ctx.setLineDash([]);
+  if(mu>0&&Math.abs(fAct)>0.05){
+    var fd=fAct>0?1:-1;
+    arrow(ctx,MCX,MCY,MCX+fd*Math.abs(fAct)*sc*tx2,MCY+fd*Math.abs(fAct)*sc*ty2,'#c47a00',2.5,'f',1);
+  }
+
+  // ── CARRUCOLA SOMMITÀ: centro ESATTAMENTE all'apice del piano (BX,BY) ──
+  // pulleyWithRopes calcola il punto di tangenza sul lato corretto (upper-left del centro),
+  // l'arco CW passa per la cima (-90°) ed esce verticale a destra.
+  // La freccia di tensione punta verso il punto di tangenza = sovrapposta alla fune.
+  if(s2topOn&&mt>0){
+    var Tt2=mt*g9;
+    var PR2=13;
+    var r2=pulleyWithRopes(ctx,BX,BY,PR2,MCX,MCY,'right','#1a6b3a',80);
+    massBox(ctx,r2.hangX,r2.hangBottom,'m\u209C','#1a6b3a');
+    var tDx=r2.T_in.x-MCX,tDy=r2.T_in.y-MCY,tL=Math.sqrt(tDx*tDx+tDy*tDy);
+    arrow(ctx,MCX,MCY,MCX+tDx/tL*Tt2*sc,MCY+tDy/tL*Tt2*sc,'#1a6b3a',2.5,'T\u209C',-1);
+  }
+
+  // ── CARRUCOLA BASE: centro all'angolo basso del piano (AX,AY) ──
+  // L'arco CCW passa per la cima ed esce verticale a sinistra.
+  if(s2botOn&&mb>0){
+    var Tb2=mb*g9;
+    var PR3=13;
+    var r3=pulleyWithRopes(ctx,AX,AY,PR3,MCX,MCY,'left','#b5351a',72);
+    massBox(ctx,r3.hangX,r3.hangBottom,'m\u2087','#b5351a');
+    var bDx=r3.T_in.x-MCX,bDy=r3.T_in.y-MCY,bL=Math.sqrt(bDx*bDx+bDy*bDy);
+    arrow(ctx,MCX,MCY,MCX+bDx/bL*Tb2*sc,MCY+bDy/bL*Tb2*sc,'#b5351a',2,'T\u2087',1);
+  }
+
+  // Stato
+  var stato=inEq?'IN EQUILIBRIO \u2713':'NON IN EQUILIBRIO \u2717';
+  ctx.fillStyle=inEq?'#1a6b3a':'#b5351a';ctx.font='bold 12px monospace';ctx.textAlign='center';
+  ctx.fillText(stato,W/2,20);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Stato</div><div class="rv '+(inEq?'ok':'err')+'">'+stato+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Peso \u2225 piano</div><div class="rv">\u2212'+fmt2(Fg)+' N</div>'+
+    (s2topOn?'<div class="rl">T sommit\u00e0</div><div class="rv">+'+fmt2(Tt)+' N</div>':'')+
+    (s2botOn?'<div class="rl">T base</div><div class="rv">\u2212'+fmt2(Tb)+' N</div>':'')+
+    '<div class="rl">F netta (no attrito)</div><div class="rv '+(Math.abs(Fnet0)<0.01?'ok':'warn')+'">'+fmt2(Fnet0)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">N = Mg cos\u03b1</div><div class="rv">'+fmt2(N)+' N</div>'+
+    '<div class="rl">f_max = \u03bc\u00b7N</div><div class="rv">'+fmt2(fMax)+' N</div>'+
+    '<div class="rl">f richiesta</div><div class="rv '+(inEq?'ok':'err')+'">'+fmt2(fReq)+' N</div>'+
+    (inEq?'<div class="rl">f effettiva</div><div class="rv">'+fmt2(fAct)+' N</div>':
+          '<div class="rl">Eccesso</div><div class="rv err">'+fmt2(Math.abs(fReq)-fMax)+' N \u21d2 scivola</div>')+
+    '</div>';
+}
+
+// ── SIM 3 ────────────────────────────────────────────────
+function drawSim3(){
+  var M=rf('s3M'),F=rf('s3F'),theta=rad(rf('s3t')),mu=rf('s3mu');
+  var cv=setupCv('cv3',310);
+  var W=cv.width,H=310,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f9f9f9';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out3');
+  var P=M*g9,Fy=F*Math.sin(theta),Fx=F*Math.cos(theta);
+  var N=Math.max(0,P-Fy);
+  var fMax=mu*N,inEq=Fx<=fMax+1e-6,fAct=inEq?Fx:fMax;
+  var sollevato=N<0.01&&F>0.5;
+
+  var gY=H*0.68;
+  ctx.fillStyle='#e0e0e0';ctx.fillRect(0,gY,W,H-gY);
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,gY);ctx.lineTo(W,gY);ctx.stroke();
+  for(var xi=0;xi<W;xi+=13){ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xi,gY);ctx.lineTo(xi+7,gY+7);ctx.stroke();}
+
+  var MX=W/2,MY=gY,bw=52,bh=36;
+  ctx.fillStyle='#1a4b8c18';ctx.fillRect(MX-bw/2,MY-bh,bw,bh);
+  ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.strokeRect(MX-bw/2,MY-bh,bw,bh);
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('M',MX,MY-bh/2);ctx.textBaseline='alphabetic';
+  var CY=MY-bh/2;
+
+  var sc=65/Math.max(P,F||1,1);
+  arrow(ctx,MX,CY,MX,CY+P*sc,'#e05252',2.5,'P',1);
+  if(N>0.1)arrow(ctx,MX,MY,MX,MY-N*sc,'#1a4b8c',2.5,'N',-1);
+  if(F>0.1){
+    var fex=F*sc*Math.cos(theta),fey=F*sc*Math.sin(theta);
+    arrow(ctx,MX,CY,MX+fex,CY-fey,'#7a4fc4',2.5,'F',1);
+    if(Math.abs(rf('s3t'))>1){
+      ctx.strokeStyle='#7a4fc4';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+      ctx.beginPath();ctx.moveTo(MX,CY);ctx.lineTo(MX+40,CY);ctx.stroke();ctx.setLineDash([]);
+      var ts=theta>0?-theta:0,te=theta>0?0:-theta;
+      ctx.beginPath();ctx.arc(MX,CY,24,ts,te,theta<0);ctx.stroke();
+      ctx.fillStyle='#7a4fc4';ctx.font='9px monospace';ctx.textAlign='left';
+      ctx.fillText('\u03b8='+rf('s3t')+'\u00b0',MX+28,CY+(theta>0?-5:11));
+    }
+    ctx.strokeStyle='#7a4fc499';ctx.lineWidth=1;ctx.setLineDash([3,2]);
+    ctx.beginPath();ctx.moveTo(MX,CY);ctx.lineTo(MX+fex,CY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(MX+fex,CY);ctx.lineTo(MX+fex,CY-fey);ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  if(mu>0&&Math.abs(fAct)>0.05&&!sollevato){
+    arrow(ctx,MX,MY-bh,MX-Math.sign(Fx||1)*fAct*sc,MY-bh,'#c47a00',2.5,'f',1);
+  }
+  var stato3=sollevato?'IL CORPO SI ALZA DAL PIANO':inEq?'IN EQUILIBRIO \u2713':'NON IN EQUILIBRIO \u2717';
+  ctx.fillStyle=sollevato?'#b5351a':inEq?'#1a6b3a':'#b5351a';
+  ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.fillText(stato3,W/2,20);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Stato</div><div class="rv '+(sollevato?'warn':inEq?'ok':'err')+'">'+stato3+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Peso P = Mg</div><div class="rv">'+fmt2(P)+' N</div>'+
+    '<div class="rl">F a \u03b8='+rf('s3t')+'\u00b0</div><div class="rv">'+fmt1(F)+' N</div>'+
+    '<div class="rl">F_x = F cos\u03b8</div><div class="rv">'+fmt2(Fx)+' N</div>'+
+    '<div class="rl">F_y = F sin\u03b8</div><div class="rv">'+fmt2(Fy)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">N = P \u2212 F_y</div><div class="rv '+(sollevato?'err':'ok')+'">'+fmt2(N)+' N</div>'+
+    '<div class="rl">f_max = \u03bc\u00b7N</div><div class="rv">'+fmt2(fMax)+' N</div>'+
+    '<div class="rl">F_x richiesta</div><div class="rv">'+fmt2(Fx)+' N</div>'+
+    (inEq&&!sollevato?'<div class="rl">f effettiva</div><div class="rv ok">'+fmt2(fAct)+' N</div>':
+     !inEq?'<div class="rl">Eccesso</div><div class="rv err">'+fmt2(Fx-fMax)+' N \u21d2 scivola</div>':'')+
+    '</div>';
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn,d){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(vid).textContent=d===1?fmt1(v):fmt2(v);
+    fn();
+  };
+}
+sl('a_M','a_Mv',drawSim1a,1);sl('a_a1','a_a1v',drawSim1a,1);sl('a_a2','a_a2v',drawSim1a,1);
+sl('b_M','b_Mv',drawSim1b,1);sl('b_m1','b_m1v',drawSim1b,1);sl('b_m2','b_m2v',drawSim1b,1);
+sl('s2M','s2Mv',drawSim2,1);sl('s2a','s2av',drawSim2,1);sl('s2mu','s2muv',drawSim2,2);
+sl('s2mt','s2mtv',drawSim2,1);sl('s2mb','s2mbv',drawSim2,1);
+sl('s3M','s3Mv',drawSim3,1);sl('s3F','s3Fv',drawSim3,1);sl('s3t','s3tv',drawSim3,1);sl('s3mu','s3muv',drawSim3,2);
+
+window.addEventListener('resize',function(){drawSim1a();drawSim1b();drawSim2();drawSim3();});
+document.addEventListener('DOMContentLoaded',function(){drawSim1a();drawSim1b();drawSim2();drawSim3();});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
