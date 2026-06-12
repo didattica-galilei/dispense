@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equilibrio del Corpo Rigido — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:52px 32px 38px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,40px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:500px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:3px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:500px){.two{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+/* SIM */
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:13px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:82px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:36px;color:var(--ink)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.err{color:#f4a582;font-weight:600}
+.rv.warn{color:#f4d03f}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Statica</div>
+  <h1>Equilibrio del<br><em>Corpo Rigido</em></h1>
+  <p>Momento delle forze, condizioni di equilibrio &mdash; trave con vincolo, trave sospesa, scala con attrito</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#sim1">Sim 1 &mdash; Trave vincolata</a>
+  <a href="#sim2">Sim 2 &mdash; Trave sospesa</a>
+  <a href="#sim3">Sim 3 &mdash; Scala</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Equilibrio del Corpo Rigido</h2>
+  <p class="ssub">Condizioni necessarie e sufficienti per l'equilibrio statico</p>
+  <p>Un <strong>corpo rigido</strong> &egrave; un sistema di punti materiali le cui distanze reciproche rimangono costanti. A differenza del punto materiale, pu&ograve; anche ruotare attorno ad un asse, quindi &egrave; necessaria una seconda condizione di equilibrio.</p>
+  <h3>Prima condizione &mdash; equilibrio traslazionale</h3>
+  <div class="formula"><div class="f">&Sigma;<strong>F</strong> = 0 &nbsp;&nbsp;&harr;&nbsp;&nbsp; &Sigma;F<sub>x</sub>=0 &nbsp; e &nbsp; &Sigma;F<sub>y</sub>=0</div><div class="fd">La somma vettoriale di tutte le forze applicate deve essere nulla</div></div>
+  <h3>Seconda condizione &mdash; equilibrio rotazionale</h3>
+  <div class="formula"><div class="f">&Sigma;<strong>M</strong><sub>O</sub> = 0</div><div class="fd">La somma dei momenti rispetto a qualsiasi polo O deve essere nulla</div></div>
+  <h3>Momento di una forza rispetto a un punto</h3>
+  <div class="formula"><div class="f">M = F &middot; d<sub>&perp;</sub> = F &middot; r &middot; sin&theta;</div><div class="fd">d<sub>&perp;</sub> = braccio del momento (distanza perpendicolare dalla retta d'azione di F al polo) &nbsp;&middot;&nbsp; [N&middot;m]</div></div>
+  <ul>
+    <li>Il momento &egrave; <strong>positivo</strong> (antiorario) se tende a ruotare il corpo in senso antiorario</li>
+    <li>Il momento &egrave; <strong>negativo</strong> (orario) se tende a ruotare il corpo in senso orario</li>
+    <li>Il polo O pu&ograve; essere scelto liberamente: sceglierlo in un punto dove agiscono forze incognite semplifica i calcoli</li>
+  </ul>
+  <div class="bn">&#128161; <strong>Strategia:</strong> scegliere il polo dove agisce la forza incognita &rarr; il suo momento &egrave; zero &rarr; si elimina un'incognita dall'equazione.</div>
+  <div class="bw">&#9888; Le reazioni vincolari (cerniera, incastro, appoggio) devono essere incluse nelle equazioni di equilibrio.</div>
+</div>
+
+<!-- SIM 1: TRAVE VINCOLATA -->
+<div class="sec" id="sim1">
+  <h2>2. Simulatore 1 &mdash; Trave con Vincolo e Corda</h2>
+  <p class="ssub">Trave orizzontale incastrata nella parete, con peso proprio, peso aggiuntivo e corda di tensione</p>
+  <div class="bf">
+    <strong>Polo di calcolo: punto di incastro A (elimina Rx e Ry dall'equazione dei momenti)</strong><br>
+    &Sigma;M<sub>A</sub>=0: &nbsp; T&thinsp;sin&theta;&thinsp;d<sub>C</sub> &minus; P&thinsp;(L/2) &minus; W&thinsp;d<sub>W</sub> = 0 &nbsp;&nbsp;
+    &rArr; &nbsp; T = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">P(L/2) + W&thinsp;d<sub>W</sub></span><span class="d">sin&theta;&thinsp;d<sub>C</sub></span></span>
+  </div>
+  <div class="sim">
+    <div class="sim-t">Trave orizzontale &mdash; calcolo tensione e reazioni</div>
+    <div class="ctrl">
+      <label>L (m)</label>
+      <input type="range" id="s1L" min="1" max="3" step="0.1" value="2"><span class="vv" id="s1Lv">2.0</span>
+      <label>M (kg)</label>
+      <input type="range" id="s1M" min="1" max="20" step="0.5" value="5"><span class="vv" id="s1Mv">5.0</span>
+      <label>W (N)</label>
+      <input type="range" id="s1W" min="0" max="100" step="2" value="30"><span class="vv" id="s1Wv">30</span>
+    </div>
+    <div class="ctrl">
+      <label>&phi; (&deg;) incl. trave</label>
+      <input type="range" id="s1phi" min="-30" max="60" step="1" value="0"><span class="vv" id="s1phiv">0</span>
+      <label>d<sub>W</sub> (m) pos. peso</label>
+      <input type="range" id="s1dW" min="0.1" max="3" step="0.05" value="1.5"><span class="vv" id="s1dWv">1.50</span>
+      <label>d<sub>C</sub> (m) pos. corda</label>
+      <input type="range" id="s1dC" min="0.3" max="3" step="0.05" value="1.6"><span class="vv" id="s1dCv">1.60</span>
+      <label>h (m) alt. corda</label>
+      <input type="range" id="s1h" min="0.3" max="2.5" step="0.05" value="1.2"><span class="vv" id="s1hv">1.20</span>
+    </div>
+    <canvas id="cv1" style="height:360px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span>Pesi</span>
+      <span><span class="ld" style="background:#1a4b8c"></span>Reazioni vincolo</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Tensione T</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2: TRAVE SOSPESA -->
+<div class="sec" id="sim2">
+  <h2>3. Simulatore 2 &mdash; Trave Sospesa a Due Corde</h2>
+  <p class="ssub">Trave appesa a due corde (verticali o oblique) con peso proprio e carico aggiuntivo</p>
+  <div class="bf">
+    <strong>Polo = estremit&agrave; sinistra &rarr; T<sub>2</sub> dalla eq. momenti, T<sub>1</sub> dalla eq. forze verticali</strong><br>
+    &Sigma;M<sub>A</sub>=0: &nbsp; T<sub>2</sub>cos&beta;<sub>2</sub>&thinsp;L = P(L/2) + W&thinsp;d<sub>W</sub><br>
+    &Sigma;F<sub>y</sub>=0: &nbsp; T<sub>1</sub>cos&beta;<sub>1</sub> + T<sub>2</sub>cos&beta;<sub>2</sub> = P + W &nbsp;&nbsp;
+    Verifica: &Sigma;F<sub>x</sub> = T<sub>1</sub>sin&beta;<sub>1</sub> &minus; T<sub>2</sub>sin&beta;<sub>2</sub> = 0
+  </div>
+  <div class="sim">
+    <div class="sim-t">Trave sospesa &mdash; calcolo tensioni nelle corde</div>
+    <div class="ctrl">
+      <label>L (m)</label>
+      <input type="range" id="s2L" min="1" max="4" step="0.1" value="2.5"><span class="vv" id="s2Lv">2.5</span>
+      <label>M (kg)</label>
+      <input type="range" id="s2M" min="1" max="20" step="0.5" value="6"><span class="vv" id="s2Mv">6.0</span>
+      <label>W (N)</label>
+      <input type="range" id="s2W" min="0" max="100" step="2" value="40"><span class="vv" id="s2Wv">40</span>
+    </div>
+    <div class="ctrl">
+      <label>d<sub>W</sub> (m)</label>
+      <input type="range" id="s2dW" min="0.1" max="4" step="0.05" value="1.0"><span class="vv" id="s2dWv">1.00</span>
+      <label>&beta;<sub>1</sub> (&deg;) corda sx</label>
+      <input type="range" id="s2b1" min="-45" max="45" step="1" value="0"><span class="vv" id="s2b1v">0</span>
+      <label>&beta;<sub>2</sub> (&deg;) corda dx</label>
+      <input type="range" id="s2b2" min="-45" max="45" step="1" value="0"><span class="vv" id="s2b2v">0</span>
+    </div>
+    <canvas id="cv2" style="height:360px"></canvas>
+    <div class="out empty" id="out2">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span>Pesi</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>T<sub>1</sub></span>
+      <span><span class="ld" style="background:#7a4fc4"></span>T<sub>2</sub></span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 3: SCALA -->
+<div class="sec" id="sim3">
+  <h2>4. Simulatore 3 &mdash; L'Uomo sulla Scala</h2>
+  <p class="ssub">Scala appoggiata a una parete liscia con pavimento con attrito &mdash; condizione di equilibrio</p>
+  <div class="bf">
+    <strong>Polo = base della scala:</strong>
+    &Sigma;M<sub>A</sub>=0: &nbsp; N<sub>P</sub>&thinsp;L sin&alpha; &minus; M<sub>L</sub>g&thinsp;<span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">L</span><span class="d">2</span></span>cos&alpha; &minus; M<sub>u</sub>g&thinsp;f&thinsp;L&thinsp;cos&alpha; = 0<br>
+    &rArr; N<sub>P</sub> = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">(M<sub>L</sub>/2 + M<sub>u</sub>&thinsp;f)&thinsp;g</span><span class="d">tan&alpha;</span></span>
+    &nbsp;&nbsp; Condizione: N<sub>P</sub> &le; &mu;&thinsp;N<sub>s</sub> = &mu;&thinsp;(M<sub>L</sub>+M<sub>u</sub>)g
+  </div>
+  <div class="sim">
+    <div class="sim-t">Scala &mdash; equilibrio con attrito al suolo e parete liscia</div>
+    <div class="ctrl">
+      <label>L (m)</label>
+      <input type="range" id="s3L" min="2" max="6" step="0.1" value="4"><span class="vv" id="s3Lv">4.0</span>
+      <label>M<sub>L</sub> (kg) scala</label>
+      <input type="range" id="s3ML" min="2" max="20" step="0.5" value="8"><span class="vv" id="s3MLv">8.0</span>
+      <label>M<sub>u</sub> (kg) uomo</label>
+      <input type="range" id="s3Mu" min="40" max="120" step="2" value="70"><span class="vv" id="s3Muv">70</span>
+    </div>
+    <div class="ctrl">
+      <label>&alpha; (&deg;) con orizz.</label>
+      <input type="range" id="s3a" min="30" max="80" step="1" value="65"><span class="vv" id="s3av">65</span>
+      <label>&mu; attrito suolo</label>
+      <input type="range" id="s3mu" min="0.05" max="1" step="0.05" value="0.35"><span class="vv" id="s3muv">0.35</span>
+      <label>f posizione uomo</label>
+      <input type="range" id="s3f" min="0.05" max="1" step="0.01" value="0.5"><span class="vv" id="s3fv">0.50</span>
+    </div>
+    <canvas id="cv3" style="height:420px"></canvas>
+    <div class="out empty" id="out3">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span>Pesi</span>
+      <span><span class="ld" style="background:#1a4b8c"></span>N suolo</span>
+      <span><span class="ld" style="background:#c47a00"></span>Attrito f</span>
+      <span><span class="ld" style="background:#7a4fc4"></span>N parete</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>5. Esercizi Proposti</h2>
+  <p class="ssub">Equilibrio del corpo rigido</p>
+  <ol>
+    <li><strong>Trave vincolata:</strong> L=2m, M=4kg, W=50N a d=1.5m. La corda &egrave; attaccata a d<sub>C</sub>=1.8m e h=1.0m sulla parete. Calcola T, Rx, Ry a mano e verifica col simulatore.</li>
+    <li><strong>Polo strategico:</strong> nel simulatore 1, perch&eacute; il polo nel punto di incastro semplifica i calcoli? Cosa succederebbe se si scegliesse il punto di attacco della corda come polo?</li>
+    <li><strong>Trave sospesa simmetrica:</strong> L=3m, M=6kg, W=60N a d=1.0m. Con corde verticali calcola T1 e T2. Verifica che T1+T2=P+W.</li>
+    <li><strong>Corde oblique:</strong> nel sim 2, con &beta;<sub>1</sub>=20&deg; e &beta;<sub>2</sub>=20&deg; la trave &egrave; in equilibrio? Spiega perch&eacute; (o non) &Sigma;F<sub>x</sub>=0.</li>
+    <li><strong>Scala critica:</strong> con M<sub>L</sub>=8kg, M<sub>u</sub>=70kg, &mu;=0.35, &alpha;=65&deg;: qual &egrave; la posizione massima f dell'uomo per mantenere l'equilibrio? Calcola analiticamente f<sub>max</sub>.</li>
+    <li><strong>Angolo critico:</strong> a f=0.7 fisso, quale &egrave; l'angolo minimo &alpha;<sub>min</sub> per cui la scala non scivola?</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Equilibrio del Corpo Rigido &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+var g9=9.81;
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function deg(r){return r*180/Math.PI;}
+function rad(d){return d*Math.PI/180;}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function arrow(ctx,x1,y1,x2,y2,color,lw,lbl,ls){
+  var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy);
+  if(L<2)return;
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var nx=dx/L,ny=dy/L,as=Math.min(10,L*0.3);
+  ctx.fillStyle=color;ctx.beginPath();
+  ctx.moveTo(x2,y2);ctx.lineTo(x2-nx*as+ny*as*0.4,y2-ny*as-nx*as*0.4);
+  ctx.lineTo(x2-nx*as-ny*as*0.4,y2-ny*as+nx*as*0.4);ctx.closePath();ctx.fill();
+  if(lbl){var s=ls||1;ctx.fillStyle=color;ctx.font='bold 11px monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(lbl,(x1+x2)/2-ny*s*13,(y1+y2)/2+nx*s*13);ctx.textBaseline='alphabetic';}
+}
+function lblAt(ctx,x,y,txt,color,align){
+  ctx.fillStyle=color||'#333';ctx.font='10px monospace';
+  ctx.textAlign=align||'center';ctx.textBaseline='middle';
+  ctx.fillText(txt,x,y);ctx.textBaseline='alphabetic';
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+}
+
+function drawMan(ctx,mx,my,alpha){
+  var sa=Math.sin(alpha),ca=Math.cos(alpha);
+  var lx=ca, ly=-sa;   // direzione su per la scala in screen
+  var r=12;
+
+  ctx.save();
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.setLineDash([]);
+
+  // Centro del corpo leggermente spostato verso l'esterno dalla scala
+  var bx=mx-sa*r*0.9;   // x spostato lateralmente (fuori dalla scala)
+  var by=my-ca*r*0.3;   // y quasi invariato
+
+  // Piedi sulla scala (divergenti lungo la scala)
+  var f1x=mx+lx*r*0.6, f1y=my+ly*r*0.6;   // piede sup
+  var f2x=mx-lx*r*0.6, f2y=my-ly*r*0.6;   // piede inf
+
+  // Corpo VERTICALE: tutte le x=bx, y decresce (va su in screen)
+  var hpX=bx, hpY=by-r*1.5;    // fianchi
+  var shX=bx, shY=by-r*3.2;    // spalle
+  var hdX=bx, hdY=by-r*4.6;    // testa
+
+  // Mani sui pioli (sulla retta della scala)
+  var h1x=mx+lx*r*1.5, h1y=my+ly*r*1.5;   // piolo sopra
+  var h2x=mx-lx*r*0.3, h2y=my-ly*r*0.3;   // piolo sotto/stesso livello
+
+  // ── Gambe (fianchi verticali → piedi sulla scala) ──
+  ctx.strokeStyle='#1a3a8a';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(hpX+r*0.18,hpY);ctx.lineTo(f1x,f1y);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(hpX-r*0.18,hpY);ctx.lineTo(f2x,f2y);ctx.stroke();
+
+  // ── Torso verticale ────────────────────────────────
+  ctx.strokeStyle='#111';ctx.lineWidth=3.2;
+  ctx.beginPath();ctx.moveTo(hpX,hpY);ctx.lineTo(shX,shY);ctx.stroke();
+
+  // ── Braccia verso la scala ──────────────────────────
+  ctx.strokeStyle='#1a3a8a';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(shX,shY+r*0.3);ctx.lineTo(h1x,h1y);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(shX,shY+r*0.3);ctx.lineTo(h2x,h2y);ctx.stroke();
+
+  // ── Testa (cerchio con capelli) ────────────────────
+  ctx.beginPath();ctx.arc(hdX,hdY,r*0.76,0,2*Math.PI);
+  ctx.fillStyle='#ffd5a0';ctx.fill();
+  ctx.strokeStyle='#111';ctx.lineWidth=1.8;ctx.stroke();
+  // Capelli: semicerchio superiore
+  ctx.beginPath();ctx.arc(hdX,hdY,r*0.76,Math.PI,2*Math.PI,false);
+  ctx.fillStyle='#3a2005';ctx.fill();
+  // Occhio (verso la scala = verso destra, lato lx)
+  ctx.beginPath();ctx.arc(hdX+r*0.28,hdY+r*0.12,2,0,2*Math.PI);
+  ctx.fillStyle='#222';ctx.fill();
+
+  // ── Mani (pallini sulla scala) ─────────────────────
+  ctx.fillStyle='#3a2005';
+  ctx.beginPath();ctx.arc(h1x,h1y,3.5,0,2*Math.PI);ctx.fill();
+  ctx.beginPath();ctx.arc(h2x,h2y,3.5,0,2*Math.PI);ctx.fill();
+
+  ctx.lineCap='butt';ctx.restore();
+}
+
+// ════════════════════════════════════════════════════════
+// SIM 1 — TRAVE CON ANGOLO VARIABILE
+// ════════════════════════════════════════════════════════
+function drawSim1(){
+  var L=rf('s1L'),M=rf('s1M'),W=rf('s1W');
+  var dW=rf('s1dW'),dC=rf('s1dC'),h=rf('s1h');
+  var phi=rad(rf('s1phi'));
+  dW=Math.min(dW,L); dC=Math.min(dC,L);
+  var P=M*g9;
+  var cosphi=Math.cos(phi),sinphi=Math.sin(phi);
+  // Vettore corda in coordinate reali
+  var mag=Math.sqrt(dC*dC*cosphi*cosphi+(h-dC*sinphi)*(h-dC*sinphi));
+  var T,Rx,Ry;
+  if(Math.abs(cosphi)<0.01||dC<0.01||h<0.01||mag<0.01){
+    T=0;Rx=0;Ry=P+W;
+  } else {
+    T=(P*L/2+W*dW)*mag/(dC*h);
+    Rx=T*dC*cosphi/mag;
+    Ry=P+W-T*(h-dC*sinphi)/mag;
+  }
+  var cv=setupCv('cv1',380);
+  var CW=cv.width,CH=380,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,CW,CH);ctx.fillStyle='#f8f9ff';ctx.fillRect(0,0,CW,CH);
+  // Scala pixel: la proiezione orizzontale deve stare nel canvas
+  var sc=Math.min((CW-130)/Math.max(L*Math.abs(cosphi)+0.2,0.5),80);
+  var wallX=90, pivY=Math.round(CH*0.54);
+  // Parete
+  ctx.fillStyle='#c8c8c8';ctx.fillRect(0,18,wallX,CH-28);
+  ctx.strokeStyle='#888';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(wallX,18);ctx.lineTo(wallX,CH-28);ctx.stroke();
+  for(var yi=18;yi<CH-28;yi+=13){
+    ctx.strokeStyle='#bbb';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(wallX,yi);ctx.lineTo(wallX-9,yi+9);ctx.stroke();
+  }
+  // Vettori direzione trave in screen
+  var bdx=cosphi, bdy=-sinphi;  // direzione trave (screen: y va in basso)
+  var ppx=-bdy,  ppy=bdx;       // perpendicolare (90° CCW)
+  var thick=6;
+  // Posizioni notevoli sulla trave (screen)
+  var pivX=wallX;
+  function bp(s){return{x:pivX+s*sc*bdx, y:pivY+s*sc*bdy};}
+  var endPt=bp(L), midPt=bp(L/2), posW=bp(dW), posC=bp(dC);
+  // Disegna trave come parallelogramma
+  ctx.fillStyle='#c8a060';
+  ctx.beginPath();
+  ctx.moveTo(pivX+ppx*thick, pivY+ppy*thick);
+  ctx.lineTo(endPt.x+ppx*thick,endPt.y+ppy*thick);
+  ctx.lineTo(endPt.x-ppx*thick,endPt.y-ppy*thick);
+  ctx.lineTo(pivX-ppx*thick, pivY-ppy*thick);
+  ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#8a6020';ctx.lineWidth=1.5;ctx.stroke();
+  // Incastro (cerchio + crocetta)
+  ctx.fillStyle='#444';ctx.beginPath();ctx.arc(pivX,pivY,7,0,2*Math.PI);ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(pivX-5,pivY);ctx.lineTo(pivX+5,pivY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pivX,pivY-5);ctx.lineTo(pivX,pivY+5);ctx.stroke();
+  // Angolo con la parete
+  var beamWallAngle=90-deg(phi);
+  var arcX=wallX,arcY=pivY;
+  ctx.strokeStyle='#555';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(arcX,arcY,32,-Math.PI/2,-Math.PI/2+phi,phi<0);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(arcX,arcY);ctx.lineTo(arcX,arcY-35);ctx.stroke();
+  lblAt(ctx,arcX+20,arcY-22,'\u03c6='+fmt1(deg(phi))+'\u00b0','#555');
+  // Corda (verde)
+  var cordWallY=Math.max(25,pivY-h*sc);
+  ctx.strokeStyle='#1a6b3a';ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(posC.x,posC.y);ctx.lineTo(wallX,cordWallY);ctx.stroke();
+  dot(ctx,posC.x,posC.y,4,'#1a6b3a');
+  dot(ctx,wallX,cordWallY,4,'#1a6b3a');
+  // Cubetto peso W (appeso verticalmente da posW)
+  var cs=20,sl2=22;
+  ctx.strokeStyle='#777';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(posW.x,posW.y);ctx.lineTo(posW.x,posW.y+sl2);ctx.stroke();
+  ctx.fillStyle='#f0c8c8';ctx.fillRect(posW.x-cs/2,posW.y+sl2,cs,cs);
+  ctx.strokeStyle='#e05252';ctx.lineWidth=1.5;ctx.strokeRect(posW.x-cs/2,posW.y+sl2,cs,cs);
+  // Trama cubo (linee interne per effetto 3D)
+  ctx.strokeStyle='#e0525244';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(posW.x-cs/2+4,posW.y+sl2);ctx.lineTo(posW.x-cs/2+4+5,posW.y+sl2-5);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(posW.x+cs/2,posW.y+sl2+4);ctx.lineTo(posW.x+cs/2+5,posW.y+sl2+4-5);ctx.stroke();
+  ctx.fillStyle='#e05252';ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('W',posW.x,posW.y+sl2+cs/2);ctx.textBaseline='alphabetic';
+  // Forze (scala visiva)
+  var fsc=55/Math.max(P,W,T,Rx,Math.abs(Ry),1);
+  arrow(ctx,midPt.x,midPt.y,midPt.x,midPt.y+P*fsc,'#e05252',2.5,'P',-1);
+  var cdx=wallX-posC.x, cdy=cordWallY-posC.y, cL=Math.sqrt(cdx*cdx+cdy*cdy);
+  if(cL>1) arrow(ctx,posC.x,posC.y,posC.x+cdx/cL*T*fsc,posC.y+cdy/cL*T*fsc,'#1a6b3a',2.5,'T',1);
+  arrow(ctx,pivX,pivY,pivX+Rx*fsc,pivY,'#1a4b8c',2.5,'Rx',1);
+  arrow(ctx,pivX,pivY,pivX,pivY-Ry*fsc,'#1a4b8c',2.5,'Ry',-1);
+  // Quote tratteggio
+  ctx.strokeStyle='rgba(100,100,100,0.3)';ctx.lineWidth=0.8;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(wallX-24,cordWallY);ctx.lineTo(wallX-24,pivY);ctx.stroke();
+  ctx.setLineDash([]);lblAt(ctx,wallX-38,(cordWallY+pivY)/2,'h='+fmt2(h)+'m','#555');
+  ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(posC.x,posC.y+30);ctx.lineTo(pivX,pivY+30);ctx.stroke();
+  ctx.setLineDash([]);lblAt(ctx,(posC.x+pivX)/2,posC.y+42,'dC='+fmt2(dC)+'m','#1a6b3a');
+  ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(posW.x,posW.y-20);ctx.lineTo(pivX,pivY-20);ctx.stroke();
+  ctx.setLineDash([]);lblAt(ctx,(posW.x+pivX)/2,posW.y-30,'dW='+fmt2(dW)+'m','#e05252');
+  // Angolo corda
+  var theta=Math.atan2(h-dC*sinphi,dC*cosphi);
+  lblAt(ctx,posC.x+25,posC.y-12,'\u03b8='+fmt1(deg(theta))+'\u00b0','#1a6b3a');
+  var o=document.getElementById('out1');o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Inclinazione \u03c6</div><div class="rv">'+fmt1(deg(phi))+'\u00b0 (con orizz.) \u2192 ang. parete = '+fmt1(90-deg(phi))+'\u00b0</div>'+
+    '<div class="rl">Angolo corda \u03b8</div><div class="rv">'+fmt1(deg(theta))+'\u00b0</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Tensione T</div><div class="rv ok">'+fmt2(T)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Reazione Rx</div><div class="rv">'+fmt2(Rx)+' N \u2192</div>'+
+    '<div class="rl">Reazione Ry</div><div class="rv '+(Ry>=0?'':'warn')+'">'+fmt2(Ry)+' N '+(Ry>=0?'\u2191':'\u2193')+'</div>'+
+    '<div class="rl">Risultante vincolo</div><div class="rv">'+fmt2(Math.sqrt(Rx*Rx+Ry*Ry))+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Verifica \u03a3M\u2080</div><div class="rv">'+fmt3(T*dC*cosphi*(h>0?h:0.01)/mag-P*L/2*cosphi-W*dW*cosphi)+' \u2248 0 \u2713</div>'+
+    '</div>';
+}
+
+// ════════════════════════════════════════════════════════
+// SIM 2 — TRAVE SOSPESA (con cubetto)
+// ════════════════════════════════════════════════════════
+function drawSim2(){
+  var L=rf('s2L'),M=rf('s2M'),W=rf('s2W'),dW=rf('s2dW');
+  var b1=rad(rf('s2b1')),b2=rad(rf('s2b2'));
+  dW=Math.min(dW,L);
+  var P=M*g9;
+  var T2y=(P*L/2+W*dW)/L, T1y=P+W-T2y;
+  var T2=(Math.abs(Math.cos(b2))>0.001)?T2y/Math.cos(b2):1e9;
+  var T1=(Math.abs(Math.cos(b1))>0.001)?T1y/Math.cos(b1):1e9;
+  var Fx1=isFinite(T1)?T1*Math.sin(b1):0;
+  var Fx2=isFinite(T2)?T2*Math.sin(b2):0;
+  var dFx=Fx1-Fx2, inEq=Math.abs(dFx)<0.5;
+  var cv=setupCv('cv2',380);
+  var CW=cv.width,CH=380,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,CW,CH);ctx.fillStyle='#f8f9ff';ctx.fillRect(0,0,CW,CH);
+  var sc=Math.min((CW-80)/Math.max(L,0.5),85);
+  var beamY=CH*0.55, beamX=40, beamEnd=beamX+L*sc;
+  // Soffitto
+  ctx.fillStyle='#ccc';ctx.fillRect(0,0,CW,20);
+  ctx.strokeStyle='#888';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,20);ctx.lineTo(CW,20);ctx.stroke();
+  for(var xi=0;xi<CW;xi+=13){ctx.strokeStyle='#bbb';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(xi,20);ctx.lineTo(xi+8,8);ctx.stroke();}
+  // Corde
+  var c1tx=beamX-Math.sin(b1)*(beamY-20), c2tx=beamEnd+Math.sin(b2)*(beamY-20);
+  ctx.strokeStyle='#1a6b3a';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(beamX,beamY);ctx.lineTo(c1tx,20);ctx.stroke();
+  dot(ctx,c1tx,20,4,'#1a6b3a');
+  ctx.strokeStyle='#7a4fc4';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(beamEnd,beamY);ctx.lineTo(c2tx,20);ctx.stroke();
+  dot(ctx,c2tx,20,4,'#7a4fc4');
+  // Trave
+  ctx.fillStyle='#c8a060';ctx.fillRect(beamX,beamY-6,L*sc,12);
+  ctx.strokeStyle='#8a6020';ctx.lineWidth=1.5;ctx.strokeRect(beamX,beamY-6,L*sc,12);
+  // Cubetto peso W
+  var wX=beamX+dW*sc;
+  var cs2=20,sl3=18;
+  ctx.strokeStyle='#777';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(wX,beamY+6);ctx.lineTo(wX,beamY+6+sl3);ctx.stroke();
+  ctx.fillStyle='#f0c8c8';ctx.fillRect(wX-cs2/2,beamY+6+sl3,cs2,cs2);
+  ctx.strokeStyle='#e05252';ctx.lineWidth=1.5;ctx.strokeRect(wX-cs2/2,beamY+6+sl3,cs2,cs2);
+  // effetto 3D cubo
+  ctx.strokeStyle='#e0525244';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(wX-cs2/2+4,beamY+6+sl3);ctx.lineTo(wX-cs2/2+4+5,beamY+6+sl3-5);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(wX+cs2/2,beamY+6+sl3+4);ctx.lineTo(wX+cs2/2+5,beamY+6+sl3-1);ctx.stroke();
+  ctx.fillStyle='#e05252';ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('W',wX,beamY+6+sl3+cs2/2);ctx.textBaseline='alphabetic';
+  // Angoli
+  if(Math.abs(rf('s2b1'))>1){
+    ctx.strokeStyle='#1a6b3a55';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(beamX,beamY-20);ctx.lineTo(beamX,beamY-50);ctx.stroke();
+    ctx.beginPath();ctx.arc(beamX,beamY,28,-Math.PI/2,-Math.PI/2+b1,b1<0);ctx.stroke();
+    lblAt(ctx,beamX+(b1>0?22:-22),beamY-42,'\u03b2\u2081='+rf('s2b1')+'\u00b0','#1a6b3a');
+  }
+  if(Math.abs(rf('s2b2'))>1){
+    ctx.strokeStyle='#7a4fc455';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(beamEnd,beamY-20);ctx.lineTo(beamEnd,beamY-50);ctx.stroke();
+    ctx.beginPath();ctx.arc(beamEnd,beamY,28,-Math.PI/2-b2,-Math.PI/2,b2>0);ctx.stroke();
+    lblAt(ctx,beamEnd+(b2>0?-22:22),beamY-42,'\u03b2\u2082='+rf('s2b2')+'\u00b0','#7a4fc4');
+  }
+  // Forze
+  var fsc=55/Math.max(P,W,isFinite(T1)?T1:0,isFinite(T2)?T2:0,1);
+  arrow(ctx,beamX+L*sc/2,beamY+6,beamX+L*sc/2,beamY+6+P*fsc,'#e05252',2.5,'P',-1);
+  if(isFinite(T1)){
+    var dx1=c1tx-beamX,dy1=20-beamY,d1m=Math.sqrt(dx1*dx1+dy1*dy1);
+    if(d1m>1) arrow(ctx,beamX,beamY,beamX+dx1/d1m*T1*fsc,beamY+dy1/d1m*T1*fsc,'#1a6b3a',2.5,'T\u2081',1);
+  }
+  if(isFinite(T2)){
+    var dx2=c2tx-beamEnd,dy2=20-beamY,d2m=Math.sqrt(dx2*dx2+dy2*dy2);
+    if(d2m>1) arrow(ctx,beamEnd,beamY,beamEnd+dx2/d2m*T2*fsc,beamY+dy2/d2m*T2*fsc,'#7a4fc4',2.5,'T\u2082',-1);
+  }
+  // quote
+  ctx.strokeStyle='rgba(180,0,0,0.3)';ctx.lineWidth=0.8;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(beamX,beamY+55);ctx.lineTo(wX,beamY+55);ctx.stroke();
+  ctx.setLineDash([]);lblAt(ctx,(beamX+wX)/2,beamY+65,'dW='+fmt2(dW)+'m','#e05252');
+  lblAt(ctx,(beamX+beamEnd)/2,beamY-18,'L='+fmt2(L)+'m','#8a6020');
+  var o=document.getElementById('out2');o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Stato</div><div class="rv '+(inEq?'ok':'err')+'">'+(inEq?'IN EQUILIBRIO \u2713':'NON IN EQUILIBRIO \u2717')+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">T\u2081 (corda sx)</div><div class="rv ok">'+fmt2(T1)+' N</div>'+
+    '<div class="rl">T\u2082 (corda dx)</div><div class="rv ok">'+fmt2(T2)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">T\u2081sin\u03b2\u2081</div><div class="rv">'+fmt2(Fx1)+' N</div>'+
+    '<div class="rl">T\u2082sin\u03b2\u2082</div><div class="rv">'+fmt2(Fx2)+' N</div>'+
+    '<div class="rl">\u0394Fx (deve = 0)</div><div class="rv '+(inEq?'ok':'err')+'">'+fmt2(dFx)+' N</div>'+
+    '</div>';
+}
+
+// ════════════════════════════════════════════════════════
+// SIM 3 — SCALA CON FIGURA UMANA
+// ════════════════════════════════════════════════════════
+function drawSim3(){
+  var L=rf('s3L'),ML=rf('s3ML'),Mu=rf('s3Mu');
+  var alpha=rad(rf('s3a')),mu=rf('s3mu'),f=rf('s3f');
+  var cosa=Math.cos(alpha),sina=Math.sin(alpha);
+  var NS=(ML+Mu)*g9, NP=g9*(ML/2+Mu*f)/Math.tan(alpha);
+  var FF=NP, FFmax=mu*NS, inEq=FF<=FFmax+1e-6;
+  var fmax=(mu*NS/g9-ML/2)/Mu;
+  var alpha_min=deg(Math.atan2(ML/2+Mu*f,mu*(ML+Mu)));
+  var cv=setupCv('cv3',430);
+  var CW=cv.width,CH=430,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,CW,CH);ctx.fillStyle='#f8f9ff';ctx.fillRect(0,0,CW,CH);
+  var sc=Math.min((CW-110)/L*0.75,65);
+  var floorY=CH-60, wallX=CW-60;
+  var ladBotX=wallX-L*sc*cosa, ladBotY=floorY;
+  var ladTopX=ladBotX+L*sc*cosa, ladTopY=ladBotY-L*sc*sina;
+  // Pavimento (con attrito)
+  ctx.fillStyle='#ddd';ctx.fillRect(0,floorY,CW,CH-floorY);
+  ctx.strokeStyle='#888';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,floorY);ctx.lineTo(CW,floorY);ctx.stroke();
+  for(var xi=0;xi<CW;xi+=13){ctx.strokeStyle='#ccc';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(xi,floorY);ctx.lineTo(xi+8,floorY+8);ctx.stroke();}
+  ctx.fillStyle='#999';ctx.font='9px monospace';ctx.textAlign='left';
+  ctx.fillText('\u03bc='+fmt2(mu),5,floorY+12);
+  // Parete destra (liscia)
+  ctx.fillStyle='#d8d8d8';ctx.fillRect(wallX,0,CW-wallX,floorY);
+  ctx.strokeStyle='#888';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(wallX,0);ctx.lineTo(wallX,floorY);ctx.stroke();
+  ctx.fillStyle='#aaa';ctx.font='9px monospace';ctx.textAlign='center';
+  ctx.fillText('LISCIA',wallX+(CW-wallX)/2,30);
+  // Scala (con pioli)
+  ctx.strokeStyle='#7a5a20';ctx.lineWidth=7;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(ladBotX,ladBotY);ctx.lineTo(ladTopX,ladTopY);ctx.stroke();
+  ctx.lineWidth=2.5;ctx.strokeStyle='#b08040';
+  var nRung=Math.round(L*2.2);
+  for(var i=1;i<nRung;i++){
+    var tt=i/nRung,rx=ladBotX+tt*(ladTopX-ladBotX),ry=ladBotY+tt*(ladTopY-ladBotY);
+    var perp=8;
+    ctx.beginPath();ctx.moveTo(rx-perp*sina,ry-perp*cosa);ctx.lineTo(rx+perp*sina,ry+perp*cosa);ctx.stroke();
+  }
+  // Angolo alpha
+  ctx.strokeStyle='#555';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(ladBotX,ladBotY);ctx.lineTo(ladBotX+45,ladBotY);ctx.stroke();
+  ctx.beginPath();ctx.arc(ladBotX,ladBotY,38,-alpha,0,true);ctx.stroke();
+  lblAt(ctx,ladBotX+50,ladBotY-16,'\u03b1='+rf('s3a')+'\u00b0','#555');
+  // Figura umana
+  var manX=ladBotX+f*(ladTopX-ladBotX), manY=ladBotY+f*(ladTopY-ladBotY);
+  drawMan(ctx,manX,manY,alpha);
+  // Forze
+  var fsc=60/Math.max(NS,NP,FF,1);
+  arrow(ctx,ladBotX,floorY,ladBotX,floorY-NS*fsc,'#1a4b8c',2.5,'N\u209B',-1);
+  arrow(ctx,ladBotX,floorY-10,ladBotX+FF*fsc,floorY-10,'#c47a00',2.5,inEq?'f':'f\u26a0',1);
+  if(!inEq){
+    ctx.strokeStyle='#c47a0066';ctx.lineWidth=1.5;ctx.setLineDash([4,2]);
+    ctx.beginPath();ctx.moveTo(ladBotX,floorY-10);ctx.lineTo(ladBotX+FFmax*fsc,floorY-10);ctx.stroke();
+    ctx.setLineDash([]);lblAt(ctx,ladBotX+FFmax*fsc/2,floorY-24,'f\u209Bmax','#c47a00');
+  }
+  arrow(ctx,ladTopX,ladTopY,ladTopX-NP*fsc,ladTopY,'#7a4fc4',2.5,'N\u209A',1);
+  var midX=ladBotX+(ladTopX-ladBotX)/2, midY=ladBotY+(ladTopY-ladBotY)/2;
+  arrow(ctx,midX,midY,midX,midY+ML*g9*fsc,'#e05252',2,'M\u1d38g',-1);
+  arrow(ctx,manX,manY,manX,manY+Mu*g9*fsc,'#e05252',2.5,'M\u1d64g',1);
+  // Stato
+  ctx.fillStyle=inEq?'#1a6b3a':'#b5351a';ctx.font='bold 12px monospace';ctx.textAlign='center';
+  ctx.fillText(inEq?'IN EQUILIBRIO \u2713':'SCALA SCIVOLA \u2717',CW/2,20);
+  var o=document.getElementById('out3');o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Stato</div><div class="rv '+(inEq?'ok':'err')+'">'+(inEq?'IN EQUILIBRIO \u2713':'SCALA SCIVOLA \u2717')+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">N suolo N\u209B = (M\u1d38+M\u1d64)g</div><div class="rv">'+fmt2(NS)+' N</div>'+
+    '<div class="rl">N parete N\u209A</div><div class="rv ok">'+fmt2(NP)+' N</div>'+
+    '<div class="rl">Attrito richiesto f = N\u209A</div><div class="rv '+(inEq?'ok':'err')+'">'+fmt2(FF)+' N</div>'+
+    '<div class="rl">Attrito max \u03bc\u00b7N\u209B</div><div class="rv">'+fmt2(FFmax)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">f\u209Bmax uomo</div><div class="rv '+(fmax>0?'ok':'err')+'">'+(fmax>=1?'\u2265 1.00':fmax>0?fmt2(fmax):'\u2264 0')+
+      (fmax>0&&fmax<1?' (x\u2264'+fmt1(fmax*L)+'m)':'')+
+    '</div>'+
+    '<div class="rl">\u03b1\u209Bmin</div><div class="rv '+(rf('s3a')>=alpha_min-0.1?'ok':'err')+'">'+fmt1(alpha_min)+'\u00b0 '+(rf('s3a')>=alpha_min-0.1?'\u2713':'\u2717')+'</div>'+
+    '</div>';
+}
+
+// ── Slider ────────────────────────────────────────────
+function sl(id,vid,fn,d){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(vid).textContent=d===1?v.toFixed(1):d===2?v.toFixed(2):v.toFixed(0);
+    fn();
+  };
+}
+sl('s1L','s1Lv',drawSim1,1);sl('s1M','s1Mv',drawSim1,1);sl('s1W','s1Wv',drawSim1,0);
+sl('s1phi','s1phiv',drawSim1,0);sl('s1dW','s1dWv',drawSim1,2);sl('s1dC','s1dCv',drawSim1,2);sl('s1h','s1hv',drawSim1,2);
+sl('s2L','s2Lv',drawSim2,1);sl('s2M','s2Mv',drawSim2,1);sl('s2W','s2Wv',drawSim2,0);
+sl('s2dW','s2dWv',drawSim2,2);sl('s2b1','s2b1v',drawSim2,0);sl('s2b2','s2b2v',drawSim2,0);
+sl('s3L','s3Lv',drawSim3,1);sl('s3ML','s3MLv',drawSim3,1);sl('s3Mu','s3Muv',drawSim3,0);
+sl('s3a','s3av',drawSim3,0);sl('s3mu','s3muv',drawSim3,2);sl('s3f','s3fv',drawSim3,2);
+
+window.addEventListener('resize',function(){drawSim1();drawSim2();drawSim3();});
+document.addEventListener('DOMContentLoaded',function(){drawSim1();drawSim2();drawSim3();});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
