@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elettrostatica — Dispense Interattive</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:#0f0f13;color:#fff;min-height:100vh;line-height:1.6}
+
+/* ── HERO ─────────────────────────────────────────────── */
+.hero{padding:72px 32px 52px;text-align:center;position:relative;overflow:hidden}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(30,80,160,0.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.breadcrumb{font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,0.28);margin-bottom:18px;font-weight:600}
+.breadcrumb a{color:rgba(255,255,255,0.28);text-decoration:none}
+.breadcrumb a:hover{color:rgba(255,255,255,0.6)}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);
+  font-weight:700;line-height:1.08;margin-bottom:14px;letter-spacing:-0.5px}
+.hero h1 em{color:#5dcaa5;font-style:normal}
+.hero p{font-size:15px;color:rgba(255,255,255,0.40);max-width:480px;
+  margin:0 auto;font-weight:300}
+.divider{width:48px;height:1px;background:rgba(255,255,255,0.12);
+  margin:28px auto 0}
+
+/* ── SEZIONE ──────────────────────────────────────────── */
+.section{max-width:1020px;margin:0 auto;padding:44px 24px 60px}
+.section-label{font-size:10px;font-weight:600;letter-spacing:3px;
+  text-transform:uppercase;color:rgba(255,255,255,0.22);margin-bottom:24px;
+  display:flex;align-items:center;gap:12px}
+.section-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07)}
+
+/* ── GRIGLIA CARD ─────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+
+/* ── CARD ─────────────────────────────────────────────── */
+.card{
+  position:relative;display:flex;flex-direction:column;
+  background:#18181e;border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;padding:26px 24px 22px;
+  text-decoration:none;color:#fff;overflow:hidden;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+  cursor:pointer;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.5)}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;
+  transition:opacity .2s;
+}
+/* Colori accent per la striscia superiore */
+.c1::before{background:linear-gradient(90deg,#e8843a,#f4a55a)}
+.c1:hover{border-color:rgba(232,132,58,0.35);box-shadow:0 12px 40px rgba(232,132,58,0.12)}
+.c2::before{background:linear-gradient(90deg,#d4a020,#f0c040)}
+.c2:hover{border-color:rgba(212,160,32,0.35);box-shadow:0 12px 40px rgba(212,160,32,0.12)}
+.c3::before{background:linear-gradient(90deg,#e0c030,#f5e060)}
+.c3:hover{border-color:rgba(224,192,48,0.35);box-shadow:0 12px 40px rgba(224,192,48,0.12)}
+.c4::before{background:linear-gradient(90deg,#2a8a50,#4ab870)}
+.c4:hover{border-color:rgba(42,138,80,0.35);box-shadow:0 12px 40px rgba(42,138,80,0.12)}
+.c5::before{background:linear-gradient(90deg,#1a8888,#3abcbc)}
+.c5:hover{border-color:rgba(26,136,136,0.35);box-shadow:0 12px 40px rgba(26,136,136,0.12)}
+.c6::before{background:linear-gradient(90deg,#2050b8,#4080e8)}
+.c6:hover{border-color:rgba(32,80,184,0.35);box-shadow:0 12px 40px rgba(32,80,184,0.12)}
+
+/* Card disabilitata (prossimamente) */
+.soon{opacity:0.44;cursor:default;pointer-events:none}
+.soon:hover{transform:none;box-shadow:none}
+
+/* Interni card */
+.num{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,0.28);margin-bottom:12px}
+.card h2{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;
+  line-height:1.2;margin-bottom:10px}
+.card p{font-size:13px;color:rgba(255,255,255,0.50);font-weight:300;
+  line-height:1.6;flex:1;margin-bottom:14px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tag{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 8px;border-radius:20px;background:rgba(255,255,255,0.07);
+  color:rgba(255,255,255,0.40);border:1px solid rgba(255,255,255,0.08)}
+.arrow{font-size:18px;color:rgba(255,255,255,0.20);margin-top:auto;
+  transition:color .2s,transform .2s}
+.card:hover .arrow{color:rgba(255,255,255,0.7);transform:translateX(4px)}
+.soon-badge{font-size:9px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;padding:3px 10px;border-radius:20px;
+  background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.25);
+  border:1px solid rgba(255,255,255,0.08);display:inline-block;margin-top:auto}
+
+/* ── FOOTER ───────────────────────────────────────────── */
+footer{border-top:1px solid rgba(255,255,255,0.06);padding:24px;
+  text-align:center;font-size:11px;color:rgba(255,255,255,0.18);
+  letter-spacing:1px;text-transform:uppercase}
+footer a{color:rgba(255,255,255,0.3);text-decoration:none}
+footer a:hover{color:rgba(255,255,255,0.7)}
+
+@media(max-width:600px){
+  .hero{padding:52px 20px 36px}
+  .section{padding:32px 16px 48px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="breadcrumb">
+    <a href="index.html">&#8592; Tutte le dispense</a>
+    &nbsp;&middot;&nbsp; Fisica &middot; Elettromagnetismo
+  </div>
+  <h1>Campo Elettrico &amp;<br><em>Elettrostatica</em></h1>
+  <p>Dispense interattive con simulatori, grafici e calcolatori numerici</p>
+  <div class="divider"></div>
+</div>
+
+<div class="section">
+  <div class="section-label">6 dispense &middot; 3 disponibili</div>
+  <div class="grid">
+
+    <!-- 1. Campo elettrico -->
+    <a class="card c1" href="https://didattica-galilei.github.io/dispense//simulatore_campo_elettrico.html" target="_blank">
+      <div class="num">Elettrostatica &middot; 01</div>
+      <h2>Il Campo Elettrico</h2>
+      <p>Linee di campo, principio di sovrapposizione e calcolatore numerico per sistemi di cariche puntiformi. Fino a quattro cariche con segno e posizione variabili.</p>
+      <div class="tags">
+        <span class="tag">Linee di campo</span>
+        <span class="tag">Cariche puntiformi</span>
+        <span class="tag">Simulatore</span>
+      </div>
+      <span class="arrow">&#8594;</span>
+    </a>
+
+    <!-- 2. Potenziale elettrico -->
+    <a class="card c2" href="https://didattica-galilei.github.io/dispense//dispensa_potenziale_completa.html" target="_blank">
+      <div class="num">Elettrostatica &middot; 02</div>
+      <h2>Il Potenziale Elettrico</h2>
+      <p>Superfici equipotenziali, visualizzazione 2D e 3D di V(x,y), perpendicolarit&agrave; tra equipotenziali e linee di campo. Toggle ON/OFF delle linee.</p>
+      <div class="tags">
+        <span class="tag">Equipotenziali</span>
+        <span class="tag">Superficie 3D</span>
+        <span class="tag">Simulatore</span>
+      </div>
+      <span class="arrow">&#8594;</span>
+    </a>
+
+    <!-- 3. Distribuzioni di carica -->
+    <a class="card c3" href="https://didattica-galilei.github.io/dispense//dispensa_distribuzioni.html" target="_blank">
+      <div class="num">Elettrostatica &middot; 03</div>
+      <h2>Distribuzioni di Carica</h2>
+      <p>Campo generato da distribuzioni continue: piano infinito, filo infinito, sfera, conduttore irregolare. Confronto tra geometrie e densit&agrave; superficiale.</p>
+      <div class="tags">
+        <span class="tag">Piano</span>
+        <span class="tag">Sfera</span>
+        <span class="tag">Conduttori</span>
+      </div>
+      <span class="arrow">&#8594;</span>
+    </a>
+
+    <!-- 4. Energia potenziale (prossimamente) -->
+    <div class="card c4 soon">
+      <div class="num">Elettrostatica &middot; 04</div>
+      <h2>Energia Potenziale Elettrica</h2>
+      <p>Lavoro del campo elettrico, relazione tra potenziale ed energia, moto di cariche di prova nel campo. Pozzo coulombiano e livelli energetici.</p>
+      <div class="tags">
+        <span class="tag">Lavoro</span>
+        <span class="tag">Energia</span>
+        <span class="tag">Livelli</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+    <!-- 5. Dal modello classico al modello di Bohr (prossimamente) -->
+    <div class="card c5 soon">
+      <div class="num">Elettrostatica &middot; 05</div>
+      <h2>Dal Modello Classico al Modello di Bohr</h2>
+      <p>Limiti del modello classico dell'atomo, postulati di Bohr, onde stazionarie e condizione di quantizzazione. Livelli energetici e spettri atomici.</p>
+      <div class="tags">
+        <span class="tag">Atomo di Bohr</span>
+        <span class="tag">Quantizzazione</span>
+        <span class="tag">Spettri</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+    <!-- 6. Conduttori e isolanti (prossimamente) -->
+    <div class="card c6 soon">
+      <div class="num">Elettrostatica &middot; 06</div>
+      <h2>Conduttori e Isolanti</h2>
+      <p>Comportamento dei materiali nel campo elettrico, schermatura, induzione elettrostatica, capacit&agrave; e condensatori. Bande di energia nei solidi.</p>
+      <div class="tags">
+        <span class="tag">Schermatura</span>
+        <span class="tag">Condensatori</span>
+        <span class="tag">Bande</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Didattica Galilei &middot; Fisica &middot; Elettrostatica &nbsp;|&nbsp;
+  <a href="index.html">&#8592; Tutte le dispense</a>
+</footer>
+
+</body>
+</html>
