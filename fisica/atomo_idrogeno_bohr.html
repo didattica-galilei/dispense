@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dal Modello Classico al Modello di Bohr</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:56px 32px 42px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(30,80,160,0.2),transparent 70%)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.28);margin-bottom:12px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,40px);font-weight:700;line-height:1.1;margin-bottom:8px}
+.hero h1 em{color:#5dcaa5}
+.hero p{font-size:13px;color:rgba(255,255,255,0.36);max-width:500px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:40px 22px}
+@media(max-width:600px){.page{padding:18px 10px}}
+.sec{margin-bottom:62px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:13px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:14px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:5px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 16px;margin:9px 0;border-radius:0 3px 3px 0;text-align:center}
+.formula .f{font-family:'Playfair Display',serif;font-size:17px;color:var(--a2);line-height:2}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace;margin-top:2px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:9px 0}
+@media(max-width:520px){.two{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 13px;margin:10px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 13px;margin:10px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 13px;margin:10px 0;font-size:13px;border-radius:0 3px 3px 0}
+/* SIM */
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:80px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:36px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.leg{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu)}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+/* Tabella livelli */
+.etab{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0}
+.etab th{background:#f0ede6;padding:6px 10px;text-align:left;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu)}
+.etab td{padding:6px 10px;border-bottom:1px solid var(--bo);font-family:'Source Code Pro',monospace;font-size:12px}
+.etab tr:hover td{background:#f8f7f4}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica Atomica &middot; Elettrostatica &middot; Fisica Quantistica</div>
+  <h1>Dal Modello Classico<br>al <em>Modello di Bohr</em></h1>
+  <p>L'atomo di idrogeno tra meccanica classica e quantistica &mdash; orizzonte e postulati di Bohr, onde stazionarie e livelli energetici</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#classico" class="active">Modello classico</a>
+  <a href="#crisi">La crisi</a>
+  <a href="#quantistica">Fisica quantistica</a>
+  <a href="#bohr">Postulati di Bohr</a>
+  <a href="#sim-orbite">Sim &mdash; Orbite</a>
+  <a href="#sim-livelli">Sim &mdash; Livelli</a>
+  <a href="#heisenberg">Heisenberg</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- 1. MODELLO CLASSICO -->
+<div class="sec" id="classico">
+  <h2>1. L'Atomo di Idrogeno — Modello Classico</h2>
+  <p class="ssub">Elettrone in orbita attorno al nucleo: energia potenziale coulombiana</p>
+  <p>Nell'atomo di idrogeno un elettrone (carica &minus;e) orbita attorno a un protone (carica +e). La forza di Coulomb attrattiva funge da forza centripeta.</p>
+  <h3>Energia potenziale</h3>
+  <div class="formula">
+    <div class="f">U = <span class="frac"><span class="n">kQq</span><span class="d">r</span></span> = &minus;<span class="frac"><span class="n">ke&sup2;</span><span class="d">r</span></span></div>
+    <div class="fd">Negativa: nucleo (+) e elettrone (&minus;) si attraggono &nbsp;&middot;&nbsp; U &rarr; 0 per r &rarr; &infin; &nbsp;&middot;&nbsp; U &rarr; &minus;&infin; per r &rarr; 0</div>
+  </div>
+  <h3>Energia totale</h3>
+  <p>L'energia totale &egrave; E = K + U. Per un'orbita circolare la forza di Coulomb fornisce la forza centripeta:</p>
+  <div class="formula">
+    <div class="f"><span class="frac"><span class="n">1</span><span class="d">4&pi;&epsilon;<sub>0</sub></span></span><span class="frac"><span class="n">e&sup2;</span><span class="d">r&sup2;</span></span> = <span class="frac"><span class="n">mv&sup2;</span><span class="d">r</span></span> &nbsp;&nbsp;&rArr;&nbsp;&nbsp; mv&sup2; = <span class="frac"><span class="n">e&sup2;</span><span class="d">4&pi;&epsilon;<sub>0</sub>r</span></span> = ke<span style="font-size:.8em;vertical-align:super">2</span>/r</div>
+    <div class="fd">L'energia cinetica K = &frac12;mv&sup2; = ke&sup2;/(2r)</div>
+  </div>
+  <div class="formula">
+    <div class="f">E<sub>tot</sub> = K + U = <span class="frac"><span class="n">ke&sup2;</span><span class="d">2r</span></span> &minus; <span class="frac"><span class="n">ke&sup2;</span><span class="d">r</span></span> = &minus;<span class="frac"><span class="n">ke&sup2;</span><span class="d">2r</span></span> = &minus;<span class="frac"><span class="n">e&sup2;</span><span class="d">8&pi;&epsilon;<sub>0</sub>r</span></span></div>
+    <div class="fd">L'energia totale è NEGATIVA: il sistema è legato (l'elettrone non è libero)</div>
+  </div>
+  <h3>Orbite permesse</h3>
+  <ul>
+    <li><strong>E &lt; 0:</strong> orbita chiusa (stato legato) &mdash; l'elettrone rimane nell'atomo</li>
+    <li><strong>E = 0:</strong> caso limite, orbita aperta (ionizzazione al minimo)</li>
+    <li><strong>E &gt; 0:</strong> orbita aperta &mdash; l'elettrone &egrave; libero (atomo ionizzato)</li>
+  </ul>
+  <div class="sim">
+    <div class="sim-t">Pozzo di potenziale coulombiano U(r) con livelli di energia</div>
+    <div class="ctrl">
+      <label>n max</label>
+      <input type="range" id="c1n" min="1" max="6" step="1" value="4"><span class="vv" id="c1nv">4</span>
+      <button class="btn on" id="btnU" onclick="toggleU()">U(r) ON</button>
+      <button class="btn on" id="btnK" onclick="toggleK()">K(r) ON</button>
+      <button class="btn on" id="btnE" onclick="toggleE()">E(r) ON</button>
+    </div>
+    <canvas id="cv1" style="height:340px"></canvas>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>U(r) = &minus;ke&sup2;/r</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>K(r) = +ke&sup2;/(2r)</span>
+      <span><span class="ld" style="background:#b5351a"></span>E<sub>tot</sub>(r) = &minus;ke&sup2;/(2r)</span>
+      <span><span class="ld" style="background:#c47a00;border-top:1px dashed"></span>Livelli E<sub>n</sub></span>
+    </div>
+  </div>
+</div>
+
+<!-- 2. LA CRISI -->
+<div class="sec" id="crisi">
+  <h2>2. La Crisi del Modello Classico</h2>
+  <p class="ssub">Perch&eacute; un elettrone classico non pu&ograve; orbitare stabilmente</p>
+  <p>Il modello classico ha un difetto fatale: secondo la teoria elettromagnetica di Maxwell, <strong>una carica che accelera emette onde elettromagnetiche</strong>. Un elettrone in orbita circolare &egrave; continuamente accelerato verso il centro, quindi dovrebbe emettere energia continuamente.</p>
+  <div class="bw">&#9888; <strong>Catastrofe classica:</strong> perdendo energia, l'elettrone si avvicinerebbe a spirale al nucleo e vi colliderebbe in circa 10&minus;¹¹ secondi. La materia sarebbe instabile!</div>
+  <p>Serve un nuovo modello che spieghi la <strong>stabilit&agrave; dell'atomo</strong> e la <strong>discretezza degli spettri</strong> di emissione atomica (righe spettrali, non spettro continuo).</p>
+  <div class="bf">&#128161; Lo spettro di emissione dell'idrogeno mostra righe a frequenze precise, non un continuo. Questo suggerisce che l'elettrone pu&ograve; stare solo a certi livelli di energia discreti.</div>
+</div>
+
+<!-- 3. FONDAMENTI FISICA QUANTISTICA -->
+<div class="sec" id="quantistica">
+  <h2>3. Fondamenti di Fisica Quantistica</h2>
+  <p class="ssub">Le tre idee chiave che cambiano la nostra visione della natura</p>
+  <h3>1 &mdash; Quantizzazione dell'energia (Planck, Einstein)</h3>
+  <p>Le onde elettromagnetiche trasportano energia in pacchetti discreti detti <strong>fotoni</strong>. L'energia di un fotone &egrave; proporzionale alla frequenza:</p>
+  <div class="formula">
+    <div class="f">E = h &middot; f</div>
+    <div class="fd">h = 6,626 &times; 10&minus;³⁴ J&middot;s (costante di Planck) &nbsp;&middot;&nbsp; f = frequenza [Hz]</div>
+  </div>
+  <h3>2 &mdash; Dualismo onda-corpuscolo (De Broglie)</h3>
+  <p>Non solo la luce ha natura duale: anche le <strong>particelle materiali</strong> come l'elettrone si comportano come onde. A una particella di massa m e velocit&agrave; v si associa la <strong>lunghezza d'onda di De Broglie</strong>:</p>
+  <div class="formula">
+    <div class="f">&lambda; = <span class="frac"><span class="n">h</span><span class="d">mv</span></span> = <span class="frac"><span class="n">h</span><span class="d">p</span></span></div>
+    <div class="fd">p = mv = quantit&agrave; di moto &nbsp;&middot;&nbsp; maggiore p, minore &lambda; (particelle veloci = onda corta)</div>
+  </div>
+  <h3>3 &mdash; Postulati di Bohr (1913)</h3>
+  <p>Bohr propose tre postulati che <em>correggono</em> il modello classico pur mantenendone la struttura orbitale:</p>
+  <ol>
+    <li><strong>Orbite stazionarie:</strong> esistono orbite speciali in cui l'elettrone non irradia energia. In queste orbite l'energia &egrave; costante.</li>
+    <li><strong>Salti quantici:</strong> l'elettrone passa da un'orbita all'altra emettendo o assorbendo un fotone. L'energia del fotone eguaglia la differenza tra i livelli: &Delta;E = hf.</li>
+    <li><strong>Quantizzazione del momento angolare:</strong> il momento angolare L = mvr pu&ograve; assumere solo valori multipli interi di h/(2&pi;):
+      <div class="formula" style="margin:8px 0">
+        <div class="f">L<sub>n</sub> = mvr = n &middot; <span class="frac"><span class="n">h</span><span class="d">2&pi;</span></span> = n&hbar; &nbsp;&nbsp;&nbsp; n = 1, 2, 3, ...</div>
+        <div class="fd">n = numero quantico principale &nbsp;&middot;&nbsp; &hbar; = h/(2&pi;) = "h tagliata" = 1,055&times;10&minus;³⁴ J&middot;s</div>
+      </div>
+    </li>
+  </ol>
+</div>
+
+<!-- 4. POSTULATI E FORMULE DI BOHR -->
+<div class="sec" id="bohr">
+  <h2>4. Raggi e Livelli Energetici Quantizzati</h2>
+  <p class="ssub">Derivazione dei raggi r<sub>n</sub> e delle energie E<sub>n</sub> dall'orbita circolare + quantizzazione di L</p>
+  <h3>Raggi delle orbite quantizzate</h3>
+  <p>Dalla quantizzazione L<sub>n</sub> = mvr = n&hbar; ricavo v = n&hbar;/(mr). Sostituendo nella condizione centripeta mv&sup2; = ke&sup2;/r:</p>
+  <div class="formula">
+    <div class="f">r<sub>n</sub> = <span class="frac"><span class="n">&epsilon;<sub>0</sub>h&sup2;</span><span class="d">&pi;me&sup2;</span></span> n&sup2; = a<sub>0</sub> &middot; n&sup2;</div>
+    <div class="fd">a<sub>0</sub> = raggio di Bohr = 0,529 &Aring; = 5,29&times;10&minus;¹¹ m &nbsp;&middot;&nbsp; n = 1,2,3,...</div>
+  </div>
+  <div class="bn">&#128161; Il raggio dell'orbita cresce come n&sup2;: l'orbita n=2 ha raggio 4 volte quello di n=1, l'orbita n=3 ha raggio 9 volte, ecc.</div>
+  <h3>Livelli energetici quantizzati</h3>
+  <p>Sostituendo r<sub>n</sub> in E<sub>tot</sub> = &minus;ke&sup2;/(2r):</p>
+  <div class="formula">
+    <div class="f">E<sub>n</sub> = &minus;<span class="frac"><span class="n">me&sup4;</span><span class="d">8&epsilon;<sub>0</sub>&sup2;h&sup2;</span></span> &middot; <span class="frac"><span class="n">1</span><span class="d">n&sup2;</span></span> = &minus;<span class="frac"><span class="n">13,6 eV</span><span class="d">n&sup2;</span></span></div>
+    <div class="fd">n=1 livello fondamentale E<sub>1</sub> = &minus;13,6 eV &nbsp;&middot;&nbsp; n=&infin; E=0 (ionizzazione)</div>
+  </div>
+  <table class="etab">
+    <tr><th>n</th><th>r<sub>n</sub> (Å)</th><th>E<sub>n</sub> (eV)</th><th>Nome</th></tr>
+    <tr><td>1</td><td>0.529</td><td>&minus;13.60</td><td>Livello fondamentale</td></tr>
+    <tr><td>2</td><td>2.116</td><td>&minus;3.40</td><td>Primo eccitato</td></tr>
+    <tr><td>3</td><td>4.761</td><td>&minus;1.51</td><td>Secondo eccitato</td></tr>
+    <tr><td>4</td><td>8.466</td><td>&minus;0.85</td><td>Terzo eccitato</td></tr>
+    <tr><td>5</td><td>13.23</td><td>&minus;0.54</td><td>Quarto eccitato</td></tr>
+    <tr><td>&infin;</td><td>&infin;</td><td>0</td><td>Ionizzazione</td></tr>
+  </table>
+  <h3>Onde stazionarie e momento angolare</h3>
+  <p>I postulati di Bohr trovano una <em>giustificazione naturale</em> nel dualismo di De Broglie. L'elettrone visto come onda deve formare un'<strong>onda stazionaria</strong> lungo l'orbita: la circonferenza deve contenere un numero intero di lunghezze d'onda.</p>
+  <div class="formula">
+    <div class="f">2&pi;r = n&lambda; &nbsp;&nbsp; e &nbsp;&nbsp; &lambda; = <span class="frac"><span class="n">h</span><span class="d">mv</span></span> &nbsp;&nbsp;&rArr;&nbsp;&nbsp; mvr = n<span class="frac"><span class="n">h</span><span class="d">2&pi;</span></span></div>
+    <div class="fd">La quantizzazione del momento angolare deriva NATURALMENTE dalla condizione di onda stazionaria!</div>
+  </div>
+</div>
+
+<!-- SIM: ORBITE DI BOHR con onda stazionaria -->
+<div class="sec" id="sim-orbite">
+  <h2>5. Simulatore &mdash; Orbite e Onde Stazionarie</h2>
+  <p class="ssub">Visualizzazione dell'orbita n-esima con l'onda stazionaria associata (2&pi;r = n&lambda;)</p>
+  <div class="sim">
+    <div class="sim-t">Orbita di Bohr n &mdash; onda stazionaria dell'elettrone</div>
+    <div class="ctrl">
+      <label>Livello n</label>
+      <input type="range" id="s2n" min="1" max="6" step="1" value="1"><span class="vv" id="s2nv">1</span>
+      <button class="btn on" id="btnOrb" onclick="toggleOrb()">Orbit ON</button>
+      <button class="btn on" id="btnWave" onclick="toggleWave()">Onda ON</button>
+      <button class="btn" id="btnAnim" onclick="toggleAnim()">&#9654; Anima</button>
+    </div>
+    <canvas id="cv2" style="height:380px"></canvas>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>Orbita classica r<sub>n</sub></span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Onda stazionaria 2&pi;r = n&lambda;</span>
+      <span><span style="display:inline-block;width:8px;height:8px;background:#f4d03f;border-radius:50%;margin-right:4px;vertical-align:middle"></span>Elettrone</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM: LIVELLI ENERGETICI -->
+<div class="sec" id="sim-livelli">
+  <h2>6. Simulatore &mdash; Livelli Energetici e Transizioni</h2>
+  <p class="ssub">Clicca su una transizione per calcolare l'energia e la lunghezza d'onda del fotone emesso o assorbito</p>
+  <div class="sim">
+    <div class="sim-t">Diagramma a livelli energetici &mdash; serie di Lyman, Balmer, Paschen</div>
+    <div class="ctrl">
+      <label>Da n</label>
+      <input type="range" id="s3ni" min="1" max="6" step="1" value="3"><span class="vv" id="s3niv">3</span>
+      <label>A n</label>
+      <input type="range" id="s3nf" min="1" max="5" step="1" value="1"><span class="vv" id="s3nfv">1</span>
+      <button class="btn on" id="btnEmiss" onclick="setMode('emiss')">Emissione</button>
+      <button class="btn" id="btnAssorb" onclick="setMode('assorb')">Assorbimento</button>
+    </div>
+    <canvas id="cv3" style="height:400px"></canvas>
+    <div id="out3" style="background:var(--ink);color:#fff;border-radius:3px;padding:10px 14px;margin-top:8px;font-family:'Source Code Pro',monospace;font-size:12px;line-height:1.8;min-height:36px"></div>
+    <div class="leg">
+      <span><span class="ld" style="background:#b5351a"></span>Serie di Lyman (UV, n&rarr;1)</span>
+      <span><span class="ld" style="background:#1a4b8c"></span>Serie di Balmer (visibile, n&rarr;2)</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Serie di Paschen (IR, n&rarr;3)</span>
+    </div>
+  </div>
+</div>
+
+<!-- HEISENBERG -->
+<div class="sec" id="heisenberg">
+  <h2>7. Principio di Indeterminazione di Heisenberg</h2>
+  <p class="ssub">Il limite fondamentale della conoscenza — non tecnologico ma intrinseco alla natura</p>
+  <h3>Le due relazioni di indeterminazione</h3>
+  <div class="two">
+    <div class="formula">
+      <div class="f">&Delta;x &middot; &Delta;p &ge; <span class="frac"><span class="n">&hbar;</span><span class="d">2</span></span></div>
+      <div class="fd">posizione &times; quantit&agrave; di moto &nbsp;&middot;&nbsp; &hbar; = h/(2&pi;)</div>
+    </div>
+    <div class="formula">
+      <div class="f">&Delta;t &middot; &Delta;E &ge; <span class="frac"><span class="n">&hbar;</span><span class="d">2</span></span></div>
+      <div class="fd">tempo &times; energia &nbsp;&middot;&nbsp; misurare con precisione l'energia richiede tempo</div>
+    </div>
+  </div>
+  <h3>Spiegazione con i pacchetti d'onda</h3>
+  <p>De Broglie: &lambda; = h/p, quindi conoscere esattamente &lambda; significa conoscere esattamente p.</p>
+  <ul>
+    <li><strong>Onda perfetta (sinusoide infinita):</strong> &lambda; perfettamente definita &rarr; &Delta;p = 0, ma l'onda occupa tutto lo spazio &rarr; &Delta;x = &infin;</li>
+    <li><strong>Pacchetto d'onda localizzato:</strong> somma di molte sinusoidi con &lambda; diverse &rarr; &Delta;x piccolo, ma &lambda; non &egrave; pi&ugrave; definita &rarr; &Delta;p grande</li>
+    <li><strong>Impulso perfetto (&Delta;x=0):</strong> servono infinite frequenze &rarr; &Delta;p = &infin;</li>
+  </ul>
+  <div class="bw">&#9888; I principi di Heisenberg <strong>non</strong> derivano da limiti tecnici degli strumenti. Sono una propriet&agrave; intrinseca della natura duale onda-particella: una particella non pu&ograve; avere contemporaneamente posizione definita e quantit&agrave; di moto definita.</div>
+  <h3>Conseguenza sull'atomo</h3>
+  <p>Il principio di Heisenberg vieta all'elettrone di stare "fermo sul nucleo": se &Delta;x &rarr; 0 (elettrone nel nucleo), allora &Delta;p &rarr; &infin;, e quindi l'energia cinetica sarebbe enormemente alta — impedendo la caduta!</p>
+  <div class="bn">&#128161; <strong>Sintesi:</strong> nella fisica classica E pu&ograve; avere qualsiasi valore (negativo). Nella fisica quantistica i valori ammessi sono discreti: E<sub>1</sub>, E<sub>2</sub>, E<sub>3</sub>, ... L'elettrone salta tra livelli senza passare per valori intermedi, emettendo o assorbendo fotoni di energia esatta.</div>
+</div>
+
+<footer>Didattica Galilei &middot; Fisica Atomica &middot; Modello di Bohr &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+// ── Costanti fisiche ────────────────────────────────────
+var k=8.99e9, ee=1.6e-19, me=9.109e-31, h=6.626e-34, eps0=8.854e-12;
+var a0=0.529; // raggio di Bohr in Å
+var E1=-13.6; // eV
+var K_E2=14.4; // k*e^2 in eV·Å (per U(r) = -K_E2/r con r in Å)
+
+function En(n){return E1/(n*n);}
+function rn(n){return a0*n*n;} // in Å
+
+function setupCv(id,hh){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=hh;return cv;
+}
+function niceStep(range,n){
+  var r=range/n, m=Math.pow(10,Math.floor(Math.log10(Math.abs(r)||1))), t=r/m;
+  return (t<2?1:t<5?2:5)*m;
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 1 — POZZO COULOMBIANO SIMMETRICO U(r), r da -rMax a +rMax
+// ══════════════════════════════════════════════════════
+var showU=true,showK=true,showE=true;
+function toggleU(){showU=!showU;document.getElementById('btnU').className=showU?'btn on':'btn';drawSim1();}
+function toggleK(){showK=!showK;document.getElementById('btnK').className=showK?'btn on':'btn';drawSim1();}
+function toggleE(){showE=!showE;document.getElementById('btnE').className=showE?'btn on':'btn';drawSim1();}
+document.getElementById('c1n').oninput=function(){document.getElementById('c1nv').textContent=this.value;drawSim1();};
+
+function drawSim1(){
+  var nmax=parseInt(document.getElementById('c1n').value);
+  var cv=setupCv('cv1',360);
+  var W=cv.width,H=360,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+
+  var pl=70,pr=18,pt=26,pb=46;
+  var GW=W-pl-pr, GH=H-pt-pb;
+
+  // Range r simmetrico: -rMax..+rMax (in Å)
+  var rMax = rn(nmax)*2.0;
+  var rMin = 0.06*a0;
+
+  // Range U/K/E (eV)
+  var Umin = En(1)*1.35, Umax = -En(1)*0.18;
+
+  function sx(r){return pl+(r+rMax)/(2*rMax)*GW;}
+  function sy(u){return pt+GH-(Math.max(Umin,Math.min(Umax,u))-Umin)/(Umax-Umin)*GH;}
+  function invSX(px){return (px-pl)/GW*(2*rMax)-rMax;}
+  var y0=sy(0), x0=sx(0);
+
+  // Griglia orizzontale (U)
+  var uStep=niceStep(Umax-Umin,6);
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  for(var u=Math.ceil(Umin/uStep)*uStep; u<=Umax+uStep; u+=uStep){
+    var yy=sy(u); if(yy<pt||yy>H-pb)continue;
+    ctx.beginPath();ctx.moveTo(pl,yy);ctx.lineTo(W-pr,yy);ctx.stroke();
+  }
+  // Griglia verticale (r)
+  var rStep=niceStep(2*rMax,8);
+  for(var r=Math.ceil(-rMax/rStep)*rStep; r<=rMax+rStep; r+=rStep){
+    var xx=sx(r); if(xx<pl||xx>W-pr)continue;
+    ctx.beginPath();ctx.moveTo(xx,pt);ctx.lineTo(xx,H-pb);ctx.stroke();
+  }
+
+  // Asse U=0 (ionizzazione)
+  if(y0>=pt&&y0<=H-pb){
+    ctx.strokeStyle='#1a6b3a';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+    ctx.beginPath();ctx.moveTo(pl,y0);ctx.lineTo(W-pr,y0);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#1a6b3a';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    ctx.fillText('E = 0 (ionizzazione)',pl+4,y0-5);
+  }
+  // Asse verticale r=0 (nucleo)
+  ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x0,pt);ctx.lineTo(x0,H-pb);ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,0.5)';ctx.font='bold 10px monospace';ctx.textAlign='center';
+  ctx.fillText('nucleo',x0,H-pb+14);
+
+  // Etichette assi
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='9px monospace';ctx.textAlign='right';
+  for(var u2=Math.ceil(Umin/uStep)*uStep; u2<=Umax+uStep; u2+=uStep){
+    var yy2=sy(u2); if(yy2<pt||yy2>H-pb)continue;
+    ctx.fillText(u2.toFixed(1)+' eV',pl-4,yy2+3);
+  }
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='9px monospace';ctx.textAlign='center';
+  for(var r2=Math.ceil(-rMax/rStep)*rStep; r2<=rMax+rStep; r2+=rStep){
+    if(Math.abs(r2)<rStep*0.05)continue;
+    var xx2=sx(r2); if(xx2<pl||xx2>W-pr)continue;
+    ctx.fillText(r2.toFixed(1)+'\u00c5',xx2,H-pb+14);
+  }
+  ctx.fillStyle='#555';ctx.font='10px sans-serif';ctx.textAlign='center';
+  ctx.fillText('r (\u00c5)',W/2,H-8);
+
+  // Curve U(r), K(r), E(r) — simmetriche, disegnate per ±r
+  var NP=600;
+  function drawCurve(fn,color,lw,dash,filterFn){
+    [+1,-1].forEach(function(sign){
+      ctx.beginPath();var first=true;
+      for(var i=1;i<=NP;i++){
+        var frac=i/NP;
+        var r=rMin+(rMax-rMin)*frac*frac; // più punti vicino al nucleo
+        var val=fn(r);
+        if(filterFn&&!filterFn(val)){first=true;continue;}
+        if(val<Umin||val>Umax){first=true;continue;}
+        var px=sx(sign*r),py=sy(val);
+        if(px<pl||px>W-pr){first=true;continue;}
+        first?ctx.moveTo(px,py):ctx.lineTo(px,py);
+        first=false;
+      }
+      ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.setLineDash(dash||[]);
+      ctx.stroke();ctx.setLineDash([]);
+    });
+  }
+  if(showU) drawCurve(function(r){return -K_E2/r;},'#1a4b8c',2.5);
+  if(showK) drawCurve(function(r){return K_E2/(2*r);},'#1a6b3a',2,null,function(v){return v>0;});
+  if(showE) drawCurve(function(r){return -K_E2/(2*r);},'#b5351a',2.5,null,function(v){return v<0;});
+
+  // Labels curve
+  if(showU){ctx.fillStyle='#1a4b8c';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    var rl=rMax*0.55; ctx.fillText('U(r)',sx(rl)+4,sy(-K_E2/rl)-4);}
+  if(showK){ctx.fillStyle='#1a6b3a';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    var rl2=rMax*0.3; if(K_E2/(2*rl2)<Umax) ctx.fillText('K(r)',sx(rl2)+4,sy(K_E2/(2*rl2))-4);}
+  if(showE){ctx.fillStyle='#b5351a';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    var rl3=rMax*0.55; ctx.fillText('E(r)',sx(rl3)+4,sy(-K_E2/(2*rl3))-4);}
+
+  // Livelli quantizzati: segmenti orizzontali da -rn*1.8 a +rn*1.8
+  var colors=['#c47a00','#7a4fc4','#0e6b6b','#e0a030','#2a7a2a','#c45a80'];
+  for(var n=1;n<=nmax;n++){
+    var env=En(n), rnv=rn(n);
+    if(env<Umin||env>Umax)continue;
+    var yl=sy(env), col=colors[n-1]||'#888';
+    var x1=Math.max(pl,sx(-rnv*1.8)), x2=Math.min(W-pr,sx(rnv*1.8));
+    ctx.strokeStyle=col;ctx.lineWidth=1.8;ctx.setLineDash([5,3]);
+    ctx.beginPath();ctx.moveTo(x1,yl);ctx.lineTo(x2,yl);ctx.stroke();ctx.setLineDash([]);
+    // Punti su ±rn
+    [-rnv,+rnv].forEach(function(rs){
+      var xr=sx(rs);
+      if(xr>=pl&&xr<=W-pr){
+        ctx.beginPath();ctx.arc(xr,yl,4,0,2*Math.PI);
+        ctx.fillStyle=col;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();
+      }
+    });
+    var lblX=Math.min(sx(rnv*1.8)+6,W-pr-78);
+    ctx.fillStyle=col;ctx.font='bold 9px monospace';ctx.textAlign='left';
+    ctx.fillText('n='+n+'  '+env.toFixed(2)+'eV',lblX,yl-4);
+  }
+  // Simbolo nucleo
+  ctx.beginPath();ctx.arc(x0,y0>=pt&&y0<=H-pb?y0:pt+GH*0.9,5,0,2*Math.PI);
+  ctx.fillStyle='#1a1a1e';ctx.fill();
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 2 — ORBITE CON ONDE STAZIONARIE
+// ══════════════════════════════════════════════════════
+var showOrb=true,showWave=true,animOn=false,animT=0,animId=null;
+var orbColors=['#e05252','#e08030','#d4a020','#1a6b3a','#1a4b8c','#7a4fc4'];
+
+function toggleOrb(){showOrb=!showOrb;document.getElementById('btnOrb').className=showOrb?'btn on':'btn';drawSim2();}
+function toggleWave(){showWave=!showWave;document.getElementById('btnWave').className=showWave?'btn on':'btn';drawSim2();}
+function toggleAnim(){
+  animOn=!animOn;
+  document.getElementById('btnAnim').className=animOn?'btn on':'btn';
+  document.getElementById('btnAnim').textContent=animOn?'\u23f8 Pausa':'\u25b6 Anima';
+  if(animOn)animLoop();else if(animId){cancelAnimationFrame(animId);animId=null;}
+}
+function animLoop(){if(!animOn)return;animT+=0.04;drawSim2();animId=requestAnimationFrame(animLoop);}
+document.getElementById('s2n').oninput=function(){document.getElementById('s2nv').textContent=this.value;drawSim2();};
+
+function drawSim2(){
+  var n=parseInt(document.getElementById('s2n').value);
+  var cv=setupCv('cv2',380);
+  var W=cv.width,H=380,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0a0a14';ctx.fillRect(0,0,W,H);
+
+  var cx=W/2,cy=H/2;
+  var maxR=Math.min(W,H)*0.42;
+  var scR=maxR/36;
+
+  ctx.fillStyle='rgba(255,255,255,0.3)';
+  var seed=42;
+  for(var i=0;i<60;i++){
+    seed=(seed*1664525+1013904223)&0x7fffffff;
+    var sx2=(seed%W),sy2=((seed>>8)%H);
+    ctx.beginPath();ctx.arc(sx2,sy2,0.8,0,2*Math.PI);ctx.fill();
+  }
+
+  var grd=ctx.createRadialGradient(cx,cy,0,cx,cy,14);
+  grd.addColorStop(0,'#fff8e0');grd.addColorStop(0.4,'#f4d03f');grd.addColorStop(1,'#e08020');
+  ctx.beginPath();ctx.arc(cx,cy,10,0,2*Math.PI);
+  ctx.fillStyle=grd;ctx.fill();
+  ctx.strokeStyle='rgba(255,200,0,0.4)';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#fff';ctx.font='bold 10px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('+e',cx,cy);ctx.textBaseline='alphabetic';
+
+  var rPx=n*n*scR;
+  if(showOrb){
+    ctx.strokeStyle=orbColors[n-1]||'#888';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.arc(cx,cy,rPx,0,2*Math.PI);ctx.stroke();ctx.setLineDash([]);
+  }
+  if(showWave){
+    var amp=Math.min(18,rPx*0.18);
+    var steps=360;
+    ctx.strokeStyle=orbColors[n-1]||'#1a6b3a';ctx.lineWidth=2;ctx.setLineDash([]);
+    ctx.beginPath();
+    for(var i2=0;i2<=steps;i2++){
+      var theta=2*Math.PI*i2/steps;
+      var wave=amp*Math.sin(n*theta+animT);
+      var rr=rPx+wave;
+      var px=cx+rr*Math.cos(theta),py=cy+rr*Math.sin(theta);
+      i2===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    }
+    ctx.closePath();ctx.stroke();
+  }
+  var eAngle=animT;
+  var eR=rPx+(showWave?Math.min(18,rPx*0.18)*Math.sin(n*eAngle+animT):0);
+  var ex=cx+eR*Math.cos(eAngle),ey=cy+eR*Math.sin(eAngle);
+  var eg=ctx.createRadialGradient(ex,ey,0,ex,ey,8);
+  eg.addColorStop(0,'#fff');eg.addColorStop(0.5,'#f4d03f');eg.addColorStop(1,'rgba(244,208,63,0)');
+  ctx.beginPath();ctx.arc(ex,ey,8,0,2*Math.PI);ctx.fillStyle=eg;ctx.fill();
+  ctx.beginPath();ctx.arc(ex,ey,4,0,2*Math.PI);ctx.fillStyle='#f4d03f';ctx.fill();
+
+  var rn_A=rn(n).toFixed(3);
+  var enn=En(n).toFixed(2);
+  ctx.fillStyle='rgba(255,255,255,0.85)';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText('n = '+n+'   r\u2099 = '+rn_A+' \u00c5   E\u2099 = '+enn+' eV',W/2,22);
+  ctx.font='10px monospace';ctx.fillStyle='rgba(255,255,255,0.45)';
+  ctx.fillText('Onda stazionaria: 2\u03c0r = n\u03bb  (\u03bb = h/mv)',W/2,H-12);
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 3 — TRANSIZIONI NEL POZZO COULOMBIANO (stesso stile Sim1)
+// ══════════════════════════════════════════════════════
+var transMode='emiss';
+function setMode(m){
+  transMode=m;
+  document.getElementById('btnEmiss').className=m==='emiss'?'btn on':'btn';
+  document.getElementById('btnAssorb').className=m==='assorb'?'btn on':'btn';
+  drawSim3();
+}
+document.getElementById('s3ni').oninput=function(){document.getElementById('s3niv').textContent=this.value;drawSim3();};
+document.getElementById('s3nf').oninput=function(){document.getElementById('s3nfv').textContent=this.value;drawSim3();};
+
+function drawSim3(){
+  var ni=parseInt(document.getElementById('s3ni').value);
+  var nf=parseInt(document.getElementById('s3nf').value);
+  if(transMode==='emiss'&&ni<=nf){nf=ni>1?ni-1:1;document.getElementById('s3nf').value=nf;document.getElementById('s3nfv').textContent=nf;}
+  if(transMode==='assorb'&&ni>=nf){nf=ni<6?ni+1:6;if(nf===ni){ni=Math.max(1,ni-1);document.getElementById('s3ni').value=ni;document.getElementById('s3niv').textContent=ni;}
+    document.getElementById('s3nf').value=nf;document.getElementById('s3nfv').textContent=nf;}
+
+  var nmax=Math.max(ni,nf,5); // assicura range visibile
+  var cv=setupCv('cv3',400);
+  var W=cv.width,H=400,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+
+  var pl=70,pr=18,pt=26,pb=46;
+  var GW=W-pl-pr, GH=H-pt-pb;
+  var rMax=rn(nmax)*2.0, rMin=0.06*a0;
+  var Umin=En(1)*1.35, Umax=-En(1)*0.18;
+
+  function sx(r){return pl+(r+rMax)/(2*rMax)*GW;}
+  function sy(u){return pt+GH-(Math.max(Umin,Math.min(Umax,u))-Umin)/(Umax-Umin)*GH;}
+  var y0=sy(0), x0=sx(0);
+
+  // Griglia
+  var uStep=niceStep(Umax-Umin,6);
+  ctx.strokeStyle='rgba(0,0,0,0.06)';ctx.lineWidth=0.5;
+  for(var u=Math.ceil(Umin/uStep)*uStep; u<=Umax+uStep; u+=uStep){
+    var yy=sy(u); if(yy<pt||yy>H-pb)continue;
+    ctx.beginPath();ctx.moveTo(pl,yy);ctx.lineTo(W-pr,yy);ctx.stroke();
+  }
+  // Asse E=0
+  if(y0>=pt&&y0<=H-pb){
+    ctx.strokeStyle='#1a6b3a';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+    ctx.beginPath();ctx.moveTo(pl,y0);ctx.lineTo(W-pr,y0);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#1a6b3a';ctx.font='bold 10px monospace';ctx.textAlign='left';
+    ctx.fillText('E = 0 (ionizzazione)',pl+4,y0-5);
+  }
+  // Asse nucleo
+  ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x0,pt);ctx.lineTo(x0,H-pb);ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,0.5)';ctx.font='bold 10px monospace';ctx.textAlign='center';
+  ctx.fillText('nucleo',x0,H-pb+14);
+  ctx.fillStyle='#555';ctx.font='10px sans-serif';
+  ctx.fillText('r (\u00c5)',W/2,H-8);
+
+  // Curva U(r) simmetrica
+  var NP=600;
+  [+1,-1].forEach(function(sign){
+    ctx.beginPath();var first=true;
+    for(var i=1;i<=NP;i++){
+      var frac=i/NP;
+      var r=rMin+(rMax-rMin)*frac*frac;
+      var uu=-K_E2/r;
+      if(uu<Umin||uu>Umax){first=true;continue;}
+      var px=sx(sign*r),py=sy(uu);
+      if(px<pl||px>W-pr){first=true;continue;}
+      first?ctx.moveTo(px,py):ctx.lineTo(px,py);first=false;
+    }
+    ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2.2;ctx.setLineDash([]);ctx.stroke();
+  });
+
+  // Tutti i livelli (sottili, grigi se non coinvolti)
+  var colorsAll=['#c47a00','#7a4fc4','#0e6b6b','#e0a030','#2a7a2a','#c45a80'];
+  for(var n=1;n<=nmax;n++){
+    var env=En(n), rnv=rn(n);
+    if(env<Umin||env>Umax)continue;
+    var yl=sy(env);
+    var isInvolved=(n===ni||n===nf);
+    var col=isInvolved?colorsAll[n-1]:'#ccc';
+    var x1=Math.max(pl,sx(-rnv*1.8)), x2=Math.min(W-pr,sx(rnv*1.8));
+    ctx.strokeStyle=col;ctx.lineWidth=isInvolved?2.2:1.2;ctx.setLineDash(isInvolved?[]:[4,3]);
+    ctx.beginPath();ctx.moveTo(x1,yl);ctx.lineTo(x2,yl);ctx.stroke();ctx.setLineDash([]);
+    [-rnv,+rnv].forEach(function(rs){
+      var xr=sx(rs);
+      if(xr>=pl&&xr<=W-pr){
+        ctx.beginPath();ctx.arc(xr,yl,isInvolved?4:2.5,0,2*Math.PI);
+        ctx.fillStyle=col;ctx.fill();
+        if(isInvolved){ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();}
+      }
+    });
+    ctx.fillStyle=col;ctx.font=(isInvolved?'bold ':'')+'9px monospace';ctx.textAlign='left';
+    var lblX=Math.min(x2+6,W-pr-78);
+    ctx.fillText('n='+n+'  '+env.toFixed(2)+'eV',lblX,yl-4);
+  }
+  // Simbolo nucleo
+  ctx.beginPath();ctx.arc(x0,y0>=pt&&y0<=H-pb?y0:pt+GH*0.9,5,0,2*Math.PI);
+  ctx.fillStyle='#1a1a1e';ctx.fill();
+
+  // ── Freccia di transizione verticale a r=0 (sovrapposta all'asse nucleo, leggermente spostata) ──
+  var yi=sy(En(ni)), yf=sy(En(nf));
+  var isEmiss=(transMode==='emiss');
+  var dE=Math.abs(En(ni)-En(nf));
+  var lam=h*3e8/(dE*ee)*1e9; // nm
+  var xArrow=x0+34;
+  var col=Math.min(ni,nf)===1?'#b5351a':Math.min(ni,nf)===2?'#1a4b8c':Math.min(ni,nf)===3?'#1a6b3a':'#7a4fc4';
+
+  ctx.strokeStyle=col;ctx.lineWidth=2.6;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(xArrow,yi);ctx.lineTo(xArrow,yf);ctx.stroke();
+  var dir=(yf>yi)?1:-1, as=8;
+  ctx.fillStyle=col;ctx.beginPath();
+  ctx.moveTo(xArrow,yf);
+  ctx.lineTo(xArrow-as*0.45,yf-dir*as);
+  ctx.lineTo(xArrow+as*0.45,yf-dir*as);
+  ctx.closePath();ctx.fill();
+
+  // Fotone (cerchietti ondulati) accanto alla freccia
+  var fx=xArrow+22, fy=(yi+yf)/2;
+  ctx.strokeStyle=col;ctx.lineWidth=1.4;
+  for(var fi=0;fi<3;fi++){ctx.beginPath();ctx.arc(fx+fi*11,fy,4.5,0,2*Math.PI);ctx.stroke();}
+
+  var serNome=Math.min(ni,nf)===1?'Lyman':Math.min(ni,nf)===2?'Balmer':Math.min(ni,nf)===3?'Paschen':'altra';
+  ctx.fillStyle=col;ctx.font='bold 9px monospace';ctx.textAlign='left';
+  var labY=Math.min(yi,yf)-8;
+  ctx.fillText((isEmiss?'emissione':'assorbimento')+' n='+ni+'\u2192'+nf,fx+38,fy-14);
+  ctx.fillText('\u0394E='+dE.toFixed(2)+'eV  \u03bb='+lam.toFixed(0)+'nm',fx+38,fy);
+  ctx.fillText('serie: '+serNome,fx+38,fy+14);
+
+  var region=lam<380?'Ultravioletto (UV)':lam<750?'Visibile':lam<2500?'Infrarosso (IR)':'IR lontano';
+  var o=document.getElementById('out3');
+  var html='<strong>'+(isEmiss?'Emissione':'Assorbimento')+': n='+ni+' \u2192 n='+nf+'</strong><br>';
+  html+='&Delta;E = |E<sub>'+nf+'</sub> &minus; E<sub>'+ni+'</sub>| = '+dE.toFixed(4)+' eV<br>';
+  html+='Frequenza fotone: f = &Delta;E/h = '+(dE*ee/h/1e12).toFixed(3)+' THz<br>';
+  html+='Lunghezza d\'onda: &lambda; = hc/&Delta;E = '+lam.toFixed(2)+' nm<br>';
+  html+='Regione spettrale: <strong>'+region+'</strong> &mdash; Serie di <strong>'+serNome+'</strong>';
+  o.innerHTML=html;
+}
+
+// ── INIT ─────────────────────────────────────────────
+window.addEventListener('resize',function(){drawSim1();drawSim2();drawSim3();});
+document.addEventListener('DOMContentLoaded',function(){drawSim1();drawSim2();drawSim3();});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
