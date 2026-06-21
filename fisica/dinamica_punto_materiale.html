@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dinamica del Punto Materiale — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,40px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:500px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:500px){.two{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.fp{color:var(--re);font-weight:600}.fn{color:var(--a2);font-weight:600}.ft{color:var(--gr);font-weight:600}.ff{color:var(--or);font-weight:600}.fa{color:var(--pu);font-weight:600}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:82px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:36px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.err{color:#f4a582;font-weight:600}
+.rv.warn{color:#f4d03f}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Dinamica</div>
+  <h1>Dinamica del<br><em>Punto Materiale</em></h1>
+  <p>Secondo principio della dinamica F=ma &mdash; piano orizzontale, piano inclinato con carrucole, macchina di Atwood</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#sim1">Sim 1 &mdash; Piano orizzontale</a>
+  <a href="#sim2">Sim 2 &mdash; Piano inclinato</a>
+  <a href="#sim3">Sim 3 &mdash; Atwood</a>
+  <a href="#sim4">Sim 4 &mdash; Blocchi a contatto</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Dinamica del Punto Materiale</h2>
+  <p class="ssub">Dal secondo principio della dinamica al calcolo dell'accelerazione</p>
+  <p>Mentre la <strong>statica</strong> studia i corpi in equilibrio (&Sigma;F=0), la <strong>dinamica</strong> studia il moto causato da una forza risultante diversa da zero. Il legame tra forza risultante e moto &egrave; dato dal secondo principio della dinamica.</p>
+  <div class="formula">
+    <div class="f">&Sigma;<strong>F</strong> = m&middot;<strong>a</strong></div>
+    <div class="fd">La risultante delle forze applicate è proporzionale all'accelerazione, con costante di proporzionalità la massa m</div>
+  </div>
+  <h3>Sistemi di corpi collegati da fili inestensibili</h3>
+  <p>Quando due o pi&ugrave; corpi sono collegati da un filo (ideale, inestensibile, di massa trascurabile) che passa su una carrucola (ideale, priva di attrito e di massa):</p>
+  <ul>
+    <li>Tutti i corpi collegati hanno la <strong>stessa accelerazione in modulo</strong> (il filo non si allunga)</li>
+    <li>La <strong>tensione si trasmette inalterata</strong> lungo tutto il filo attraverso la carrucola ideale</li>
+    <li>Si scrive l'equazione di Newton per ciascun corpo separatamente, poi si combinano per eliminare le tensioni incognite</li>
+  </ul>
+  <div class="bn">&#128161; <strong>Metodo:</strong> isola ogni corpo, scrivi F=ma lungo la direzione del moto per ciascuno, poi somma le equazioni in modo da eliminare le tensioni intermedie e ricavare l'accelerazione del sistema.</div>
+  <h3>Attrito dinamico</h3>
+  <div class="formula">
+    <div class="f">f = &mu;&middot;N</div>
+    <div class="fd">L'attrito dinamico (cinetico) si opp one sempre al moto relativo, con intensità costante f=&mu;N (N = reazione normale)</div>
+  </div>
+</div>
+
+<!-- SIM 1: PIANO ORIZZONTALE -->
+<div class="sec" id="sim1">
+  <h2>2. Simulatore 1 &mdash; Piano Orizzontale con Forza ad Angolo</h2>
+  <p class="ssub">Massa M, con o senza attrito, soggetta a una forza F applicata con angolo &theta; variabile</p>
+  <div class="bf">
+    <strong>Equazioni:</strong> N = Mg &minus; Fsin&theta; &nbsp;&middot;&nbsp; f<sub>max</sub> = &mu;N &nbsp;&middot;&nbsp;
+    se |Fcos&theta;| &le; f<sub>max</sub> il corpo resta fermo (a=0), altrimenti
+    a = (Fcos&theta; &minus; sgn(Fcos&theta;)&middot;f<sub>max</sub>) / M
+  </div>
+  <div class="sim">
+    <div class="sim-t">Piano orizzontale &mdash; calcolo dell'accelerazione</div>
+    <div class="ctrl">
+      <label>M (kg)</label>
+      <input type="range" id="s1M" min="0.1" max="10" step="0.1" value="3"><span class="vv" id="s1Mv">3.0</span>
+      <label>F (N)</label>
+      <input type="range" id="s1F" min="0" max="60" step="0.5" value="15"><span class="vv" id="s1Fv">15.0</span>
+      <label>&theta; (&deg;)</label>
+      <input type="range" id="s1t" min="-60" max="80" step="1" value="20"><span class="vv" id="s1tv">20</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnAttr1" onclick="toggleAttr1()">Attrito ON</button>
+      <label>&mu;</label>
+      <input type="range" id="s1mu" min="0" max="1" step="0.05" value="0.3"><span class="vv" id="s1muv">0.30</span>
+    </div>
+    <canvas id="cv1" style="height:320px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span><span class="fp">P</span></span>
+      <span><span class="ld" style="background:#1a4b8c"></span><span class="fn">N</span></span>
+      <span><span class="ld" style="background:#c47a00"></span><span class="ff">f</span></span>
+      <span><span class="ld" style="background:#7a4fc4"></span><span class="fa">F</span></span>
+      <span><span class="ld" style="background:#1a1a1e"></span>a (accelerazione)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2: PIANO INCLINATO -->
+<div class="sec" id="sim2">
+  <h2>3. Simulatore 2 &mdash; Piano Inclinato con Carrucole</h2>
+  <p class="ssub">Massa M sul piano, con carrucole superiore e/o inferiore con masse appese &mdash; calcolo di accelerazione e tensioni</p>
+  <div class="bf">
+    <strong>Sistema generale (M + m<sub>top</sub> + m<sub>bot</sub>):</strong><br>
+    a = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">m<sub>top</sub>g &minus; m<sub>bot</sub>g &minus; Mg sin&alpha; &nbsp;&#8723;&nbsp; f</span><span class="d">M + m<sub>top</sub> + m<sub>bot</sub></span></span>
+    &nbsp;&nbsp; T<sub>top</sub> = m<sub>top</sub>(g&minus;a) &nbsp;&nbsp; T<sub>bot</sub> = m<sub>bot</sub>(g+a)
+  </div>
+  <div class="sim">
+    <div class="sim-t">Piano inclinato &mdash; dinamica con carrucole opzionali</div>
+    <div class="ctrl">
+      <label>M (kg)</label>
+      <input type="range" id="s2M" min="0.5" max="10" step="0.1" value="3"><span class="vv" id="s2Mv">3.0</span>
+      <label>&alpha; (&deg;)</label>
+      <input type="range" id="s2a" min="5" max="75" step="1" value="30"><span class="vv" id="s2av">30</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnAttr2" onclick="toggleAttr2()">Attrito ON</button>
+      <label>&mu;</label>
+      <input type="range" id="s2mu" min="0" max="1" step="0.05" value="0.2"><span class="vv" id="s2muv">0.20</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn" id="btn2t" onclick="tog2('top')">Carrucola sommit&agrave; OFF</button>
+      <span id="sp2t" style="display:none">
+        <label>m<sub>top</sub></label>
+        <input type="range" id="s2mt" min="0.1" max="8" step="0.1" value="2">
+        <span class="vv" id="s2mtv">2.0</span>
+      </span>
+      <button class="btn" id="btn2b" onclick="tog2('bot')">Carrucola base OFF</button>
+      <span id="sp2b" style="display:none">
+        <label>m<sub>bot</sub></label>
+        <input type="range" id="s2mb" min="0.1" max="8" step="0.1" value="1">
+        <span class="vv" id="s2mbv">1.0</span>
+      </span>
+    </div>
+    <canvas id="cv2" style="height:420px"></canvas>
+    <div class="out empty" id="out2">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span><span class="fp">P</span></span>
+      <span><span class="ld" style="background:#1a4b8c"></span><span class="fn">N</span></span>
+      <span><span class="ld" style="background:#1a6b3a"></span><span class="ft">T<sub>top</sub></span></span>
+      <span><span class="ld" style="background:#b5351a"></span><span class="ft">T<sub>bot</sub></span></span>
+      <span><span class="ld" style="background:#c47a00"></span><span class="ff">f</span></span>
+      <span><span class="ld" style="background:#1a1a1e"></span>a (accelerazione)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 3: MACCHINA DI ATWOOD -->
+<div class="sec" id="sim3">
+  <h2>4. Simulatore 3 &mdash; Macchina di Atwood</h2>
+  <p class="ssub">Due masse collegate da un filo ideale su una carrucola fissa, sospese verticalmente</p>
+  <div class="bf">
+    <strong>Sistema:</strong> m<sub>1</sub>a = m<sub>1</sub>g &minus; T &nbsp;&middot;&nbsp; m<sub>2</sub>a = T &minus; m<sub>2</sub>g &nbsp;&nbsp;&rArr;&nbsp;&nbsp;
+    a = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">(m<sub>1</sub>&minus;m<sub>2</sub>)g</span><span class="d">m<sub>1</sub>+m<sub>2</sub></span></span>
+    &nbsp;&nbsp; T = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">2m<sub>1</sub>m<sub>2</sub>g</span><span class="d">m<sub>1</sub>+m<sub>2</sub></span></span>
+  </div>
+  <div class="sim">
+    <div class="sim-t">Macchina di Atwood &mdash; calcolo accelerazione e tensione</div>
+    <div class="ctrl">
+      <label>m<sub>1</sub> (kg)</label>
+      <input type="range" id="s3m1" min="0.1" max="10" step="0.1" value="5"><span class="vv" id="s3m1v">5.0</span>
+      <label>m<sub>2</sub> (kg)</label>
+      <input type="range" id="s3m2" min="0.1" max="10" step="0.1" value="3"><span class="vv" id="s3m2v">3.0</span>
+    </div>
+    <canvas id="cv3" style="height:380px"></canvas>
+    <div class="out empty" id="out3">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span>Pesi m<sub>1</sub>g, m<sub>2</sub>g</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Tensione T</span>
+      <span><span class="ld" style="background:#1a1a1e"></span>a (accelerazione)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 4: BLOCCHI A CONTATTO -->
+<div class="sec" id="sim4">
+  <h2>5. Simulatore 4 &mdash; Blocchi a Contatto su Piano Orizzontale</h2>
+  <p class="ssub">Due o tre masse affiancate, forza ad angolo variabile applicata alla prima &mdash; calcolo dell'accelerazione comune e delle forze di contatto</p>
+  <div class="bf">
+    <strong>Sistema (piano liscio, contatto solo orizzontale):</strong><br>
+    a = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">Fcos&theta;</span><span class="d">m<sub>1</sub>+m<sub>2</sub>(+m<sub>3</sub>)</span></span>
+    &nbsp;&nbsp; C<sub>12</sub> = (m<sub>2</sub>+m<sub>3</sub>)&middot;a &nbsp;&nbsp; C<sub>23</sub> = m<sub>3</sub>&middot;a
+  </div>
+  <p>I blocchi sono a contatto e si muovono insieme con la <strong>stessa accelerazione</strong>. La forza di contatto tra due blocchi adiacenti si ricava isolando la "catena" di blocchi successivi: deve fornire a quei blocchi l'accelerazione comune. Essendo un contatto di <em>spinta</em> (non incollati), la forza di contatto pu&ograve; solo essere &ge; 0: se risultasse negativa, i blocchi si separerebbero.</p>
+  <div class="sim">
+    <div class="sim-t">Blocchi a contatto &mdash; forza applicata al primo blocco</div>
+    <div class="ctrl">
+      <button class="btn on" id="btnN2" onclick="setNBlocks(2)">2 masse</button>
+      <button class="btn" id="btnN3" onclick="setNBlocks(3)">3 masse</button>
+    </div>
+    <div class="ctrl">
+      <label>m<sub>1</sub> (kg)</label>
+      <input type="range" id="s4m1" min="0.5" max="10" step="0.1" value="3"><span class="vv" id="s4m1v">3.0</span>
+      <label>m<sub>2</sub> (kg)</label>
+      <input type="range" id="s4m2" min="0.5" max="10" step="0.1" value="2"><span class="vv" id="s4m2v">2.0</span>
+      <span id="sp4m3">
+        <label>m<sub>3</sub> (kg)</label>
+        <input type="range" id="s4m3" min="0.5" max="10" step="0.1" value="1.5"><span class="vv" id="s4m3v">1.5</span>
+      </span>
+    </div>
+    <div class="ctrl">
+      <label>F (N)</label>
+      <input type="range" id="s4F" min="0" max="80" step="0.5" value="25"><span class="vv" id="s4Fv">25.0</span>
+      <label>&theta; (&deg;)</label>
+      <input type="range" id="s4t" min="-40" max="80" step="1" value="15"><span class="vv" id="s4tv">15</span>
+    </div>
+    <canvas id="cv4" style="height:320px"></canvas>
+    <div class="out empty" id="out4">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#e05252"></span><span class="fp">Pesi</span></span>
+      <span><span class="ld" style="background:#1a4b8c"></span><span class="fn">Normali</span></span>
+      <span><span class="ld" style="background:#7a4fc4"></span><span class="fa">F applicata</span></span>
+      <span><span class="ld" style="background:#c47a00"></span>Forze di contatto C</span>
+      <span><span class="ld" style="background:#1a1a1e"></span>a (accelerazione)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>6. Esercizi Proposti</h2>
+  <p class="ssub">Dinamica del punto materiale</p>
+  <ol>
+    <li><strong>Piano orizzontale:</strong> M=4kg, F=20N a &theta;=30&deg;, &mu;=0.25. Calcola N, verifica se il corpo si muove e trova l'accelerazione.</li>
+    <li><strong>Angolo critico:</strong> nel Sim 1, fissati M e F, trova l'angolo &theta; per cui N=0 (il corpo si alza dal piano). Verifica analiticamente &theta;<sub>max</sub>=arcsin(Mg/F).</li>
+    <li><strong>Piano inclinato semplice:</strong> M=5kg, &alpha;=35&deg;, senza carrucole, &mu;=0.2. Il corpo accelera? In che direzione e con quale valore?</li>
+    <li><strong>Piano inclinato con carrucola:</strong> M=3kg, &alpha;=25&deg;, m<sub>top</sub>=2kg, senza attrito. Calcola a e T<sub>top</sub>. Verifica che se m<sub>top</sub>=Msin&alpha; allora a=0.</li>
+    <li><strong>Atwood classica:</strong> m<sub>1</sub>=6kg, m<sub>2</sub>=4kg. Calcola a e T. Cosa succede se m<sub>1</sub>=m<sub>2</sub>?</li>
+    <li><strong>Confronto:</strong> perch&eacute; nella macchina di Atwood l'accelerazione &egrave; sempre minore di g, anche con grande differenza di masse?</li>
+    <li><strong>Blocchi a contatto:</strong> m<sub>1</sub>=2kg, m<sub>2</sub>=3kg, m<sub>3</sub>=1kg, F=18N orizzontale (&theta;=0). Calcola a, C<sub>12</sub> e C<sub>23</sub>. Poi inverti l'ordine dei blocchi (forza applicata al pi&ugrave; pesante): l'accelerazione cambia? E le forze di contatto?</li>
+  </ol>
+</div>
+
+<footer>Didattica Galilei &middot; Fisica &middot; Dinamica del Punto Materiale &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+var g9=9.81;
+var attr1On=true, attr2On=true;
+var s2topOn=false, s2botOn=false;
+
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function deg(r){return r*180/Math.PI;}
+function rad(d){return d*Math.PI/180;}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+
+// ── Freccia vettore ──────────────────────────────────────
+function arrow(ctx,x1,y1,x2,y2,color,lw,lbl,ls){
+  var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy);
+  if(L<2)return;
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var nx=dx/L,ny=dy/L,as=Math.min(10,L*0.32);
+  ctx.fillStyle=color;ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-nx*as+ny*as*0.38,y2-ny*as-nx*as*0.38);
+  ctx.lineTo(x2-nx*as-ny*as*0.38,y2-ny*as+nx*as*0.38);
+  ctx.closePath();ctx.fill();
+  if(lbl){var s=ls||1;ctx.fillStyle=color;ctx.font='bold 11px monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(lbl,(x1+x2)/2-ny*s*13,(y1+y2)/2+nx*s*13);ctx.textBaseline='alphabetic';}
+}
+function drawPulley(ctx,cx,cy,r){
+  ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI);
+  ctx.fillStyle='#f0f0f0';ctx.fill();ctx.strokeStyle='#555';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,r*0.28,0,2*Math.PI);ctx.fillStyle='#888';ctx.fill();
+}
+function massBox(ctx,cx,ty,lbl,color){
+  var bw=28,bh=20;
+  ctx.fillStyle=color+'25';ctx.fillRect(cx-bw/2,ty,bw,bh);
+  ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.strokeRect(cx-bw/2,ty,bw,bh);
+  ctx.fillStyle=color;ctx.font='bold 10px monospace';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(lbl,cx,ty+bh/2);ctx.textBaseline='alphabetic';
+}
+// ── Carrucola con funi tangenti ──────────────────────────
+function tangentPoint(px,py,cx,cy,r,side){
+  var dx=cx-px,dy=cy-py,d2=dx*dx+dy*dy,d=Math.sqrt(d2);
+  if(d<=r)return{x:cx,y:cy};
+  var theta=Math.atan2(dy,dx);
+  var phi=Math.asin(Math.min(1,r/d));
+  var L=Math.sqrt(Math.max(0,d2-r*r));
+  var a=theta-side*phi;
+  return{x:px+L*Math.cos(a),y:py+L*Math.sin(a)};
+}
+function pulleyWithRopes(ctx,cx,cy,r,fromX,fromY,exitSide,color,hangLen){
+  var col=color||'#444',hl=hangLen||70;
+  var dx=cx-fromX,dy=cy-fromY,d2=dx*dx+dy*dy,d=Math.sqrt(d2);
+  if(d<=r+0.1){
+    drawPulley(ctx,cx,cy,r);
+    var hx=(exitSide==='left')?(cx-r):(cx+r);
+    return{hangX:hx,hangBottom:cy+hl,T_in:{x:cx,y:cy}};
+  }
+  var sideIn=(fromX>=cx)?-1:1;
+  var T_in=tangentPoint(fromX,fromY,cx,cy,r,sideIn);
+  var T_out_x=(exitSide==='left')?(cx-r):(cx+r);
+  var angIn=Math.atan2(T_in.y-cy,T_in.x-cx);
+  var angOut=(exitSide==='left')?Math.PI:0;
+  var ccw=(exitSide==='left');
+  ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(fromX,fromY);ctx.lineTo(T_in.x,T_in.y);ctx.stroke();
+  ctx.beginPath();ctx.arc(cx,cy,r,angIn,angOut,ccw);ctx.stroke();
+  var hangBot=cy+hl;
+  ctx.beginPath();ctx.moveTo(T_out_x,cy);ctx.lineTo(T_out_x,hangBot);ctx.stroke();
+  drawPulley(ctx,cx,cy,r);
+  return{hangX:T_out_x,hangBottom:hangBot,T_in:T_in};
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 1 — PIANO ORIZZONTALE
+// ══════════════════════════════════════════════════════
+function toggleAttr1(){
+  attr1On=!attr1On;
+  document.getElementById('btnAttr1').className=attr1On?'btn on':'btn';
+  document.getElementById('btnAttr1').textContent=attr1On?'Attrito ON':'Attrito OFF';
+  drawSim1();
+}
+function drawSim1(){
+  var M=rf('s1M'),F=rf('s1F'),theta=rad(rf('s1t')),mu=attr1On?rf('s1mu'):0;
+  var cv=setupCv('cv1',320);
+  var W=cv.width,H=320,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f9f9f9';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  var P=M*g9, Fy=F*Math.sin(theta), Fx=F*Math.cos(theta);
+  var N=Math.max(0,P-Fy);
+  var fMax=mu*N;
+  var sollevato=(N<0.01&&F>0.5);
+  var moving=Math.abs(Fx)>fMax+1e-9;
+  var a=0,fAtt=0;
+  if(!sollevato){
+    if(moving){
+      fAtt=Math.sign(Fx)*fMax;
+      a=(Fx-fAtt)/M;
+    } else {
+      fAtt=Fx; a=0;
+    }
+  }
+
+  // Piano
+  var gY=H*0.70;
+  ctx.fillStyle='#e0e0e0';ctx.fillRect(0,gY,W,H-gY);
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,gY);ctx.lineTo(W,gY);ctx.stroke();
+  for(var xi=0;xi<W;xi+=13){ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xi,gY);ctx.lineTo(xi+7,gY+7);ctx.stroke();}
+
+  var MX=W/2,MY=gY,bw=52,bh=36;
+  ctx.fillStyle='#1a4b8c18';ctx.fillRect(MX-bw/2,MY-bh,bw,bh);
+  ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.strokeRect(MX-bw/2,MY-bh,bw,bh);
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('M',MX,MY-bh/2);ctx.textBaseline='alphabetic';
+  var CY=MY-bh/2;
+
+  var sc=60/Math.max(P,F||1,Math.abs(M*Math.abs(a))||1,1);
+  arrow(ctx,MX,CY,MX,CY+P*sc,'#e05252',2.5,'P',1);
+  if(N>0.1)arrow(ctx,MX,MY,MX,MY-N*sc,'#1a4b8c',2.5,'N',-1);
+  if(F>0.1){
+    var fex=F*sc*Math.cos(theta),fey=F*sc*Math.sin(theta);
+    arrow(ctx,MX,CY,MX+fex,CY-fey,'#7a4fc4',2.5,'F',1);
+    if(Math.abs(rf('s1t'))>1){
+      ctx.strokeStyle='#7a4fc4';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+      ctx.beginPath();ctx.moveTo(MX,CY);ctx.lineTo(MX+40,CY);ctx.stroke();ctx.setLineDash([]);
+      var ts=theta>0?-theta:0,te=theta>0?0:-theta;
+      ctx.beginPath();ctx.arc(MX,CY,24,ts,te,theta<0);ctx.stroke();
+      ctx.fillStyle='#7a4fc4';ctx.font='9px monospace';ctx.textAlign='left';
+      ctx.fillText('\u03b8='+rf('s1t')+'\u00b0',MX+28,CY+(theta>0?-5:11));
+    }
+  }
+  if(mu>0&&Math.abs(fAtt)>0.05&&!sollevato){
+    arrow(ctx,MX,MY-bh,MX-fAtt*sc,MY-bh,'#c47a00',2.5,'f',1);
+  }
+  // Vettore accelerazione (sotto il blocco, nero)
+  if(!sollevato&&Math.abs(a)>0.02){
+    var ay=MY+20;
+    arrow(ctx,MX,ay,MX+Math.sign(a)*Math.min(Math.abs(a)*8,70),ay,'#1a1a1e',2.5,'a',1);
+  }
+
+  var stato=sollevato?'IL CORPO SI ALZA DAL PIANO':(moving?'IN MOVIMENTO (a\u22600)':'FERMO (a=0)');
+  ctx.fillStyle=sollevato?'#b5351a':moving?'#c47a00':'#1a6b3a';
+  ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.fillText(stato,W/2,20);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Stato</div><div class="rv '+(sollevato?'err':moving?'warn':'ok')+'">'+stato+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Peso P = Mg</div><div class="rv">'+fmt2(P)+' N</div>'+
+    '<div class="rl">F\u2095 = Fcos\u03b8</div><div class="rv">'+fmt2(Fx)+' N</div>'+
+    '<div class="rl">F\u1d67 = Fsin\u03b8</div><div class="rv">'+fmt2(Fy)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">N = P \u2212 F\u1d67</div><div class="rv '+(sollevato?'err':'ok')+'">'+fmt2(N)+' N</div>'+
+    (attr1On?'<div class="rl">f_max = \u03bcN</div><div class="rv">'+fmt2(fMax)+' N</div>':'<div class="rl">Attrito</div><div class="rv">disattivato</div>')+
+    '<div class="rl">Attrito effettivo</div><div class="rv">'+fmt2(fAtt)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Accelerazione a</div><div class="rv '+(sollevato?'err':'ok')+'">'+fmt3(a)+' m/s\u00b2</div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 2 — PIANO INCLINATO CON CARRUCOLE
+// ══════════════════════════════════════════════════════
+function toggleAttr2(){
+  attr2On=!attr2On;
+  document.getElementById('btnAttr2').className=attr2On?'btn on':'btn';
+  document.getElementById('btnAttr2').textContent=attr2On?'Attrito ON':'Attrito OFF';
+  drawSim2();
+}
+function tog2(side){
+  if(side==='top'){
+    s2topOn=!s2topOn;
+    document.getElementById('btn2t').className=s2topOn?'btn on':'btn';
+    document.getElementById('btn2t').textContent=s2topOn?'Carrucola sommit\u00e0 ON':'Carrucola sommit\u00e0 OFF';
+    document.getElementById('sp2t').style.display=s2topOn?'':'none';
+  } else {
+    s2botOn=!s2botOn;
+    document.getElementById('btn2b').className=s2botOn?'btn on':'btn';
+    document.getElementById('btn2b').textContent=s2botOn?'Carrucola base ON':'Carrucola base OFF';
+    document.getElementById('sp2b').style.display=s2botOn?'':'none';
+  }
+  drawSim2();
+}
+function drawSim2(){
+  var M=rf('s2M'),alphaDeg=rf('s2a'),alpha=rad(alphaDeg),mu=attr2On?rf('s2mu'):0;
+  var mt=s2topOn?rf('s2mt'):0, mb=s2botOn?rf('s2mb'):0;
+  var cv=setupCv('cv2',440);
+  var W=cv.width,H=440,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f9f9f9';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out2');
+
+  var N=M*g9*Math.cos(alpha);
+  var Fdrive=mt*g9-mb*g9-M*g9*Math.sin(alpha);
+  var fMax=mu*N;
+  var totMass=M+mt+mb;
+  var staticOK=Math.abs(Fdrive)<=fMax+1e-9;
+  var a=0,fAtt=0;
+  if(staticOK){a=0;fAtt=Fdrive;}
+  else{fAtt=Math.sign(Fdrive)*fMax; a=(Fdrive-fAtt)/totMass;}
+  var Tt=mt>0?mt*(g9-a):0;
+  var Tb=mb>0?mb*(g9+a):0;
+
+  var cosa=Math.cos(alpha),sina=Math.sin(alpha);
+  var AX=W*0.16,AY=H*0.76, L=W*0.62;
+  var BX=AX+L*cosa,BY=AY-L*sina, CX=BX,CY=AY;
+
+  ctx.fillStyle='#ddd';ctx.beginPath();ctx.moveTo(AX,AY);ctx.lineTo(BX,BY);ctx.lineTo(CX,CY);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1;ctx.stroke();
+  ctx.strokeStyle='#555';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(AX,AY);ctx.lineTo(BX,BY);ctx.stroke();
+
+  ctx.strokeStyle='#666';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(AX,AY,36,0,-alpha,true);ctx.stroke();
+  ctx.fillStyle='#444';ctx.font='11px monospace';ctx.textAlign='left';
+  ctx.fillText('\u03b1='+alphaDeg+'\u00b0',AX+40,AY-7);
+
+  var t2=0.52;
+  var MX=AX+L*t2*cosa,MY=AY-L*t2*sina;
+  var tx2=cosa,ty2=-sina,nx2=-sina,ny2=-cosa;
+  var bw=38,bh=24;
+  var blx=MX-bw/2*tx2,bly=MY-bw/2*ty2;
+  var brx=MX+bw/2*tx2,bry=MY+bw/2*ty2;
+  var tlx=blx+bh*nx2,tly=bly+bh*ny2;
+  var trx=brx+bh*nx2,try_=bry+bh*ny2;
+  var MCX=(blx+brx+tlx+trx)/4,MCY=(bly+bry+tly+try_)/4;
+  ctx.fillStyle='#1a4b8c18';
+  ctx.beginPath();ctx.moveTo(blx,bly);ctx.lineTo(brx,bry);ctx.lineTo(trx,try_);ctx.lineTo(tlx,tly);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('M',MCX,MCY);ctx.textBaseline='alphabetic';
+
+  var sc=48/Math.max(M*g9,Tt,Tb,1);
+  arrow(ctx,MCX,MCY,MCX,MCY+M*g9*sc,'#e05252',2.5,'P',1);
+  arrow(ctx,MCX,MCY,MCX+N*sc*nx2,MCY+N*sc*ny2,'#1a4b8c',2.5,'N',-1);
+  ctx.strokeStyle='#e0525255';ctx.lineWidth=1.2;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(MCX,MCY);ctx.lineTo(MCX-M*g9*Math.sin(alpha)*sc*tx2,MCY-M*g9*Math.sin(alpha)*sc*ty2);ctx.stroke();ctx.setLineDash([]);
+
+  // ── Attrito: texture di rugosità sul tratto di contatto + freccia dal punto di contatto reale ──
+  if(mu>0){
+    var hatchLen=bw*1.4, nHatch=9;
+    ctx.strokeStyle='#c47a0099';ctx.lineWidth=1.2;
+    for(var hi=0;hi<nHatch;hi++){
+      var ht=(hi/(nHatch-1)-0.5)*hatchLen;
+      var hx=MX+ht*tx2, hy=MY+ht*ty2;
+      ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(hx-nx2*7,hy-ny2*7);ctx.stroke();
+    }
+  }
+  if(mu>0&&Math.abs(fAtt)>0.05){
+    // La direzione fisica dell'attrito è OPPOSTA al segno di fAtt
+    // (fAtt è il termine sottratto in a=(Fdrive-fAtt)/totMass, quindi il vettore
+    //  fisico della forza di attrito lungo il piano è -fAtt)
+    var fd=fAtt>0?-1:1;
+    // Lunghezza visiva con minimo garantito (così resta visibile anche se f è piccola)
+    var rawLen=Math.abs(fAtt)*sc;
+    var visLen=Math.min(70,Math.max(24,rawLen));
+    // La freccia parte dal punto di CONTATTO REALE (MX,MY sul piano), non dal centro del blocco
+    var fEndX=MX+fd*visLen*tx2, fEndY=MY+fd*visLen*ty2;
+    arrow(ctx,MX,MY,fEndX,fEndY,'#c47a00',3,'f='+fmt2(Math.abs(fAtt))+'N',-1);
+  } else if(mu>0){
+    // Attrito nullo nonostante mu>0 (es. sistema esattamente bilanciato)
+    ctx.fillStyle='#c47a00';ctx.font='10px monospace';ctx.textAlign='center';
+    ctx.fillText('f \u2248 0',MX,MY+18);
+  }
+
+  if(s2topOn&&mt>0){
+    var PR2=13;
+    var r2=pulleyWithRopes(ctx,BX,BY,PR2,MCX,MCY,'right','#1a6b3a',80);
+    massBox(ctx,r2.hangX,r2.hangBottom,'m\u209C','#1a6b3a');
+    var tDx=r2.T_in.x-MCX,tDy=r2.T_in.y-MCY,tL=Math.sqrt(tDx*tDx+tDy*tDy);
+    arrow(ctx,MCX,MCY,MCX+tDx/tL*Tt*sc,MCY+tDy/tL*Tt*sc,'#1a6b3a',2.5,'T\u209C',-1);
+  }
+  if(s2botOn&&mb>0){
+    var PR3=13;
+    var r3=pulleyWithRopes(ctx,AX,AY,PR3,MCX,MCY,'left','#b5351a',72);
+    massBox(ctx,r3.hangX,r3.hangBottom,'m\u2087','#b5351a');
+    var bDx=r3.T_in.x-MCX,bDy=r3.T_in.y-MCY,bL=Math.sqrt(bDx*bDx+bDy*bDy);
+    arrow(ctx,MCX,MCY,MCX+bDx/bL*Tb*sc,MCY+bDy/bL*Tb*sc,'#b5351a',2,'T\u2087',1);
+  }
+
+  // ── Freccia accelerazione: separata dai vettori forza, sopra l'oggetto ──
+  if(Math.abs(a)>0.02){
+    var accLen=Math.min(60,Math.max(22,Math.abs(a)*9));
+    var aOff=bh*2.3;                          // distanza dal blocco, lungo la normale
+    var aSX=MCX+nx2*aOff, aSY=MCY+ny2*aOff;   // punto di partenza, sopra il blocco
+    var aDir=a>=0?1:-1;                       // segno coerente con "su per il piano" positivo
+    var aEX=aSX+aDir*accLen*tx2, aEY=aSY+aDir*accLen*ty2;
+    arrow(ctx,aSX,aSY,aEX,aEY,'#1a1a1e',3,'a = '+fmt2(Math.abs(a))+' m/s\u00b2',1);
+  }
+
+  var stato=staticOK?'SISTEMA FERMO (a=0)':'IN MOVIMENTO (a\u22600)';
+  ctx.fillStyle=staticOK?'#1a6b3a':'#c47a00';ctx.font='bold 12px monospace';ctx.textAlign='center';
+  ctx.fillText(stato,W/2,20);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Stato</div><div class="rv '+(staticOK?'ok':'warn')+'">'+stato+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Forza motrice (no attrito)</div><div class="rv">'+fmt2(Fdrive)+' N</div>'+
+    '<div class="rl">N = Mg cos\u03b1</div><div class="rv">'+fmt2(N)+' N</div>'+
+    (attr2On?'<div class="rl">f_max = \u03bcN</div><div class="rv">'+fmt2(fMax)+' N</div>':'<div class="rl">Attrito</div><div class="rv">disattivato</div>')+
+    '<div class="rl">Attrito effettivo</div><div class="rv">'+fmt2(fAtt)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Massa totale sistema</div><div class="rv">'+fmt2(totMass)+' kg</div>'+
+    '<div class="rl">Accelerazione a</div><div class="rv '+(staticOK?'ok':'warn')+'">'+fmt3(a)+' m/s\u00b2</div>'+
+    (s2topOn?'<div class="rl">Tensione T\u209C</div><div class="rv ok">'+fmt2(Tt)+' N</div>':'')+
+    (s2botOn?'<div class="rl">Tensione T\u2087</div><div class="rv ok">'+fmt2(Tb)+' N</div>':'')+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 3 — MACCHINA DI ATWOOD
+// ══════════════════════════════════════════════════════
+function drawSim3(){
+  var m1=rf('s3m1'),m2=rf('s3m2');
+  var cv=setupCv('cv3',380);
+  var W=cv.width,H=380,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f8f9ff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out3');
+
+  var a=(m1-m2)*g9/(m1+m2);
+  var T=2*m1*m2*g9/(m1+m2);
+
+  // Soffitto + staffa
+  ctx.fillStyle='#ccc';ctx.fillRect(0,0,W,18);
+  ctx.strokeStyle='#888';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,18);ctx.lineTo(W,18);ctx.stroke();
+  for(var xi=0;xi<W;xi+=12){ctx.strokeStyle='#bbb';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xi,18);ctx.lineTo(xi-7,0);ctx.stroke();}
+
+  // Dimensioni masse (calcolate PRIMA per dimensionare la carrucola)
+  function boxSize(m){return Math.max(30,Math.min(70,24+m*4));}
+  var b1=boxSize(m1), b2=boxSize(m2);
+  // Raggio carrucola: garantisce spazio sufficiente perché i blocchi non si sovrappongano
+  var PR=Math.max(20,(b1+b2)/4+10);
+  var pulY=55;
+  var cx=W/2;
+  ctx.strokeStyle='#666';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(cx,18);ctx.lineTo(cx,pulY-PR);ctx.stroke();
+
+  // Punti di tangenza: sinistro (cx-PR,pulY), destro (cx+PR,pulY)
+  // Le masse pendono ESATTAMENTE da questi punti (fune verticale tangente)
+  var x1=cx-PR, x2=cx+PR;
+  var ropeBot=pulY+150;
+
+  // Fune: verticale da ciascun punto di tangenza fino alla massa,
+  // collegate da un arco che avvolge la carrucola passando per la cima
+  ctx.strokeStyle='#444';ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,pulY);ctx.lineTo(x1,ropeBot);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x2,pulY);ctx.lineTo(x2,ropeBot);ctx.stroke();
+  // Arco di avvolgimento sopra la carrucola (da sinistra a destra passando per la cima)
+  ctx.beginPath();ctx.arc(cx,pulY,PR,Math.PI,2*Math.PI,false);ctx.stroke();
+
+  // Carrucola (disegnata DOPO l'arco così il cerchio pieno è visibile sopra)
+  drawPulley(ctx,cx,pulY,PR);
+  ctx.fillStyle='#e0525222';ctx.fillRect(x1-b1/2,ropeBot,b1,b1*0.7);
+  ctx.strokeStyle='#e05252';ctx.lineWidth=2;ctx.strokeRect(x1-b1/2,ropeBot,b1,b1*0.7);
+  ctx.fillStyle='#e05252';ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('m\u2081',x1,ropeBot+b1*0.35);ctx.textBaseline='alphabetic';
+
+  ctx.fillStyle='#1a4b8c22';ctx.fillRect(x2-b2/2,ropeBot,b2,b2*0.7);
+  ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.strokeRect(x2-b2/2,ropeBot,b2,b2*0.7);
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('m\u2082',x2,ropeBot+b2*0.35);ctx.textBaseline='alphabetic';
+
+  // Forze
+  var sc=40/Math.max(m1*g9,m2*g9,T,1);
+  var c1y=ropeBot+b1*0.35, c2y=ropeBot+b2*0.35;
+  arrow(ctx,x1,ropeBot,x1,ropeBot+m1*g9*sc,'#e05252',2.2,'m\u2081g',1);
+  arrow(ctx,x1,ropeBot,x1,ropeBot-T*sc,'#1a6b3a',2.2,'T',-1);
+  arrow(ctx,x2,ropeBot,x2,ropeBot+m2*g9*sc,'#e05252',2.2,'m\u2082g',1);
+  arrow(ctx,x2,ropeBot,x2,ropeBot-T*sc,'#1a6b3a',2.2,'T',-1);
+
+  // Accelerazione: m1 scende se a>0 (m1>m2), m2 sale; freccia nera
+  if(Math.abs(a)>0.02){
+    var dir1=a>0?1:-1; // m1 si muove in basso se a>0
+    arrow(ctx,x1+22,ropeBot+b1*0.35,x1+22,ropeBot+b1*0.35+dir1*Math.min(Math.abs(a)*6,50),'#1a1a1e',2.5,'a',1);
+    arrow(ctx,x2+22,ropeBot+b2*0.35,x2+22,ropeBot+b2*0.35-dir1*Math.min(Math.abs(a)*6,50),'#1a1a1e',2.5,'a',1);
+  }
+
+  var stato=Math.abs(a)<0.01?'SISTEMA IN EQUILIBRIO (m\u2081=m\u2082)':(a>0?'m\u2081 scende, m\u2082 sale':'m\u2082 scende, m\u2081 sale');
+  ctx.fillStyle=Math.abs(a)<0.01?'#1a6b3a':'#1a4b8c';ctx.font='bold 12px monospace';ctx.textAlign='center';
+  ctx.fillText(stato,W/2,38);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Stato</div><div class="rv '+(Math.abs(a)<0.01?'ok':'warn')+'">'+stato+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">m\u2081g</div><div class="rv">'+fmt2(m1*g9)+' N</div>'+
+    '<div class="rl">m\u2082g</div><div class="rv">'+fmt2(m2*g9)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Accelerazione |a|</div><div class="rv ok">'+fmt3(Math.abs(a))+' m/s\u00b2</div>'+
+    '<div class="rl">Tensione T</div><div class="rv ok">'+fmt3(T)+' N</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Verifica m\u2081</div><div class="rv">m\u2081g\u2212T = '+fmt3(m1*g9-T)+' \u2248 m\u2081a = '+fmt3(m1*a)+'</div>'+
+    '<div class="rl">Verifica m\u2082</div><div class="rv">T\u2212m\u2082g = '+fmt3(T-m2*g9)+' \u2248 m\u2082a = '+fmt3(m2*a)+'</div>'+
+    '</div>';
+}
+
+// ── Persona stilizzata che spinge ────────────────────────
+function drawPersonPushing(ctx,anchorX,anchorY,groundY){
+  var standX=anchorX-42;
+  var footBackX=standX-13, footFrontX=standX+9;
+  var hipX=standX, hipY=groundY-32;
+  var shX=standX+9, shY=groundY-55;       // spalla inclinata verso l'avanti (verso il blocco)
+  var headX=shX+5, headY=shY-12, headR=7.5;
+
+  ctx.save();
+  ctx.lineCap='round';ctx.lineJoin='round';ctx.setLineDash([]);
+  ctx.strokeStyle='#2a2a2a';ctx.lineWidth=2.4;
+  // Gambe (in posizione di spinta: una arretrata, una avanzata)
+  ctx.beginPath();ctx.moveTo(hipX,hipY);ctx.lineTo(footBackX,groundY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(hipX,hipY);ctx.lineTo(footFrontX,groundY);ctx.stroke();
+  // Piedi
+  ctx.beginPath();ctx.moveTo(footBackX-6,groundY);ctx.lineTo(footBackX+6,groundY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(footFrontX-6,groundY);ctx.lineTo(footFrontX+6,groundY);ctx.stroke();
+  // Busto inclinato in avanti
+  ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(hipX,hipY);ctx.lineTo(shX,shY);ctx.stroke();
+  // Braccia tese verso il punto di applicazione della forza
+  ctx.lineWidth=2.4;
+  ctx.beginPath();ctx.moveTo(shX,shY+3);ctx.lineTo(anchorX,anchorY-3);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(shX,shY+9);ctx.lineTo(anchorX,anchorY+5);ctx.stroke();
+  // Mani
+  ctx.fillStyle='#2a2a2a';
+  ctx.beginPath();ctx.arc(anchorX,anchorY-3,2.2,0,2*Math.PI);ctx.fill();
+  ctx.beginPath();ctx.arc(anchorX,anchorY+5,2.2,0,2*Math.PI);ctx.fill();
+  // Testa
+  ctx.beginPath();ctx.arc(headX,headY,headR,0,2*Math.PI);
+  ctx.fillStyle='#ffd5a0';ctx.fill();
+  ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1.6;ctx.stroke();
+  ctx.restore();
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 4 — BLOCCHI A CONTATTO SU PIANO ORIZZONTALE
+// ══════════════════════════════════════════════════════
+var nBlocks=2;
+function setNBlocks(n){
+  nBlocks=n;
+  document.getElementById('btnN2').className=n===2?'btn on':'btn';
+  document.getElementById('btnN3').className=n===3?'btn on':'btn';
+  document.getElementById('sp4m3').style.display=n===3?'':'none';
+  drawSim4();
+}
+function drawSim4(){
+  var m1=rf('s4m1'),m2=rf('s4m2'),m3=nBlocks===3?rf('s4m3'):0;
+  var F=rf('s4F'),theta=rad(rf('s4t'));
+  var cv=setupCv('cv4',320);
+  var W=cv.width,H=320,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f9f9f9';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out4');
+
+  var Fx=F*Math.cos(theta), Fy=F*Math.sin(theta);
+  var N1=Math.max(0,m1*g9-Fy), N2=m2*g9, N3=nBlocks===3?m3*g9:0;
+  var sollevato=(N1<0.01&&F>0.5);
+  var Mtot=m1+m2+m3;
+  var a=sollevato?0:Fx/Mtot;
+  var C12=(m2+m3)*a;
+  var C23=nBlocks===3?m3*a:0;
+  var separati12=C12<-0.01, separati23=(nBlocks===3&&C23<-0.01);
+
+  // Piano
+  var gY=H*0.68;
+  ctx.fillStyle='#e0e0e0';ctx.fillRect(0,gY,W,H-gY);
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,gY);ctx.lineTo(W,gY);ctx.stroke();
+  for(var xi=0;xi<W;xi+=13){ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xi,gY);ctx.lineTo(xi+7,gY+7);ctx.stroke();}
+
+  // Disegna blocchi affiancati: m1 a sinistra, poi m2, poi m3
+  function bw_(m){return Math.max(38,Math.min(72,28+m*4));}
+  var bw1=bw_(m1),bw2=bw_(m2),bw3=nBlocks===3?bw_(m3):0;
+  var bh=34;
+  var gap=separati12?14:0, gap2=separati23?14:0;
+  var totW=bw1+bw2+bw3+gap+gap2;
+  var startX=W/2-totW/2;
+  var x1c=startX+bw1/2;
+  var x2c=startX+bw1+gap+bw2/2;
+  var x3c=nBlocks===3?startX+bw1+gap+bw2+gap2+bw3/2:0;
+
+  function drawBlock(cx,bw,lbl,color){
+    ctx.fillStyle=color+'18';ctx.fillRect(cx-bw/2,gY-bh,bw,bh);
+    ctx.strokeStyle=color;ctx.lineWidth=2;ctx.strokeRect(cx-bw/2,gY-bh,bw,bh);
+    ctx.fillStyle=color;ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(lbl,cx,gY-bh/2);ctx.textBaseline='alphabetic';
+  }
+  drawBlock(x1c,bw1,'m\u2081','#1a4b8c');
+  drawBlock(x2c,bw2,'m\u2082','#1a6b3a');
+  if(nBlocks===3) drawBlock(x3c,bw3,'m\u2083','#7a4fc4');
+
+  // Forze
+  var sc=42/Math.max(m1*g9,F||1,Mtot*Math.abs(a)||1,1);
+  var c1y=gY-bh/2;
+  // Pesi
+  arrow(ctx,x1c,gY-bh,x1c,gY-bh+m1*g9*sc,'#e05252',2,'',1);
+  arrow(ctx,x2c,gY-bh,x2c,gY-bh+m2*g9*sc,'#e05252',2,'',1);
+  if(nBlocks===3) arrow(ctx,x3c,gY-bh,x3c,gY-bh+m3*g9*sc,'#e05252',2,'',1);
+  // Normali
+  if(N1>0.1) arrow(ctx,x1c,gY,x1c,gY-N1*sc,'#1a4b8c',2,'N\u2081',-1);
+  arrow(ctx,x2c,gY,x2c,gY-N2*sc,'#1a4b8c',2,'N\u2082',-1);
+  if(nBlocks===3) arrow(ctx,x3c,gY,x3c,gY-N3*sc,'#1a4b8c',2,'N\u2083',-1);
+  // Forza applicata F (su m1) — con persona stilizzata che spinge
+  if(F>0.1){
+    var anchorX=x1c-bw1/2, anchorY=c1y;
+    drawPersonPushing(ctx,anchorX,anchorY,gY);
+    var fex=F*sc*Math.cos(theta),fey=F*sc*Math.sin(theta);
+    arrow(ctx,anchorX,anchorY,anchorX+fex,anchorY-fey,'#7a4fc4',2.5,'F',1);
+    if(Math.abs(rf('s4t'))>1){
+      ctx.strokeStyle='#7a4fc4';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+      ctx.beginPath();ctx.moveTo(anchorX,anchorY);ctx.lineTo(anchorX+34,anchorY);ctx.stroke();ctx.setLineDash([]);
+      var ts=theta>0?-theta:0,te=theta>0?0:-theta;
+      ctx.beginPath();ctx.arc(anchorX,anchorY,22,ts,te,theta<0);ctx.stroke();
+      ctx.fillStyle='#7a4fc4';ctx.font='9px monospace';ctx.textAlign='left';
+      ctx.fillText('\u03b8='+rf('s4t')+'\u00b0',anchorX+26,anchorY+(theta>0?-5:11));
+    }
+  }
+  // Forze di contatto (coppie azione-reazione ai confini)
+  if(!separati12&&Math.abs(C12)>0.05){
+    var xb12=x1c+bw1/2;
+    arrow(ctx,xb12,c1y+10,xb12+Math.min(C12*2,30),c1y+10,'#c47a00',2.2,'C\u2081\u2082',1);
+  }
+  if(nBlocks===3&&!separati23&&Math.abs(C23)>0.05){
+    var xb23=x2c+bw2/2;
+    arrow(ctx,xb23,c1y+10,xb23+Math.min(C23*2,30),c1y+10,'#c47a00',2.2,'C\u2082\u2083',1);
+  }
+  // Accelerazione
+  if(!sollevato&&Math.abs(a)>0.02){
+    arrow(ctx,W/2,gY+20,W/2+Math.sign(a)*Math.min(Math.abs(a)*7,60),gY+20,'#1a1a1e',2.5,'a',1);
+  }
+  if(separati12||separati23){
+    ctx.fillStyle='#b5351a';ctx.font='9px monospace';ctx.textAlign='center';
+    ctx.fillText('(i blocchi si separano)',W/2,gY+38);
+  }
+
+  var stato=sollevato?'BLOCCO 1 SI ALZA DAL PIANO':(separati12||separati23?'CONTATTO IMPOSSIBILE (forza negativa)':'a = '+fmt3(a)+' m/s\u00b2');
+  ctx.fillStyle=sollevato||separati12||separati23?'#b5351a':'#1a6b3a';
+  ctx.font='bold 12px monospace';ctx.textAlign='center';ctx.fillText(stato,W/2,20);
+
+  o.className='out';
+  var html='<div class="rg">';
+  html+='<div class="rl">F\u2095 = Fcos\u03b8</div><div class="rv">'+fmt2(Fx)+' N</div>';
+  html+='<div class="rl">F\u1d67 = Fsin\u03b8</div><div class="rv">'+fmt2(Fy)+' N</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">N\u2081 = m\u2081g \u2212 F\u1d67</div><div class="rv '+(sollevato?'err':'ok')+'">'+fmt2(N1)+' N</div>';
+  html+='<div class="rl">N\u2082 = m\u2082g</div><div class="rv">'+fmt2(N2)+' N</div>';
+  if(nBlocks===3) html+='<div class="rl">N\u2083 = m\u2083g</div><div class="rv">'+fmt2(N3)+' N</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">Massa totale</div><div class="rv">'+fmt2(Mtot)+' kg</div>';
+  html+='<div class="rl">Accelerazione a</div><div class="rv '+(sollevato?'err':'ok')+'">'+fmt3(a)+' m/s\u00b2</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">Contatto C\u2081\u2082</div><div class="rv '+(separati12?'err':'ok')+'">'+fmt2(C12)+' N'+(separati12?' \u2192 impossibile!':'')+'</div>';
+  if(nBlocks===3) html+='<div class="rl">Contatto C\u2082\u2083</div><div class="rv '+(separati23?'err':'ok')+'">'+fmt2(C23)+' N'+(separati23?' \u2192 impossibile!':'')+'</div>';
+  html+='</div>';
+  o.innerHTML=html;
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn,d){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(vid).textContent=d===1?fmt1(v):fmt2(v);
+    fn();
+  };
+}
+sl('s1M','s1Mv',drawSim1,1);sl('s1F','s1Fv',drawSim1,1);sl('s1t','s1tv',drawSim1,1);sl('s1mu','s1muv',drawSim1,2);
+sl('s2M','s2Mv',drawSim2,1);sl('s2a','s2av',drawSim2,1);sl('s2mu','s2muv',drawSim2,2);
+sl('s2mt','s2mtv',drawSim2,1);sl('s2mb','s2mbv',drawSim2,1);
+sl('s3m1','s3m1v',drawSim3,1);sl('s3m2','s3m2v',drawSim3,1);
+sl('s4m1','s4m1v',drawSim4,1);sl('s4m2','s4m2v',drawSim4,1);sl('s4m3','s4m3v',drawSim4,1);
+sl('s4F','s4Fv',drawSim4,1);sl('s4t','s4tv',drawSim4,1);
+
+window.addEventListener('resize',function(){drawSim1();drawSim2();drawSim3();drawSim4();});
+document.addEventListener('DOMContentLoaded',function(){
+  drawSim1();drawSim2();drawSim3();
+  document.getElementById('sp4m3').style.display='none';
+  drawSim4();
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
