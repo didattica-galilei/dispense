@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energia Meccanica — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,40px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:540px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two,.three{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:80px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:36px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.err{color:#f4a582;font-weight:600}
+.rv.warn{color:#f4d03f}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+.lsq{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Energia</div>
+  <h1>Energia<br><em>Meccanica</em></h1>
+  <p>Energia cinetica, potenziale gravitazionale e elastica &mdash; conservazione e trasformazione, con e senza attrito</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#sim1">Sim 1 &mdash; Piano inclinato</a>
+  <a href="#sim2">Sim 2 &mdash; Molla</a>
+  <a href="#sim3">Sim 3 &mdash; Pendolo</a>
+  <a href="#sim4">Sim 4 &mdash; Pallina che rimbalza</a>
+  <a href="#sim5">Sim 5 &mdash; Piano inclinato + molla</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Energia Meccanica</h2>
+  <p class="ssub">Energia cinetica, potenziale gravitazionale (forma semplice), potenziale elastica</p>
+  <p>L'<strong>energia</strong> non si crea n&eacute; si distrugge: si <strong>trasforma</strong> da una forma all'altra. In meccanica, le forme fondamentali sono l'energia cinetica e le energie potenziali (gravitazionale ed elastica).</p>
+  <h3>Energia cinetica</h3>
+  <div class="formula"><div class="f">K = <span class="frac"><span class="n">1</span><span class="d">2</span></span>mv&sup2;</div><div class="fd">Energia associata al moto &nbsp;&middot;&nbsp; [J] &nbsp;&middot;&nbsp; m=massa [kg], v=velocità [m/s]</div></div>
+  <h3>Energia potenziale gravitazionale (forma semplice)</h3>
+  <div class="formula"><div class="f">U<sub>grav</sub> = mgh</div><div class="fd">Valida vicino alla superficie terrestre, con h = altezza rispetto a un riferimento scelto &nbsp;&middot;&nbsp; g=9.81 m/s&sup2;</div></div>
+  <h3>Energia potenziale elastica</h3>
+  <div class="formula"><div class="f">U<sub>el</sub> = <span class="frac"><span class="n">1</span><span class="d">2</span></span>kx&sup2;</div><div class="fd">k = costante elastica [N/m] &nbsp;&middot;&nbsp; x = deformazione dalla posizione di riposo [m]</div></div>
+  <h3>Energia meccanica totale e sua conservazione</h3>
+  <div class="formula"><div class="f">E = K + U<sub>grav</sub> + U<sub>el</sub></div><div class="fd">Somma di tutte le forme di energia meccanica presenti nel sistema</div></div>
+  <div class="two">
+    <div class="formula"><div class="f">E<sub>A</sub> = E<sub>B</sub></div><div class="fd">SENZA attrito: l'energia meccanica si conserva</div></div>
+    <div class="formula"><div class="f">E<sub>A</sub> = E<sub>B</sub> + Q</div><div class="fd">CON attrito: Q = energia dissipata (in calore) = lavoro dell'attrito</div></div>
+  </div>
+  <div class="bn">&#128161; Con l'attrito l'energia meccanica <em>non</em> si conserva, ma l'energia <strong>totale</strong> (meccanica + termica) si conserva sempre: l'energia "persa" si trasforma in calore.</div>
+  <div class="bw">&#9888; Q = f&middot;d, dove f &egrave; la forza di attrito e d la distanza percorsa: dipende dal <strong>percorso</strong>, non solo dagli stati iniziale e finale (a differenza di U<sub>grav</sub> e U<sub>el</sub>, che dipendono solo dalla posizione).</div>
+</div>
+
+<!-- SIM 1: PIANO INCLINATO -->
+<div class="sec" id="sim1">
+  <h2>2. Simulatore 1 &mdash; Piano Inclinato</h2>
+  <p class="ssub">Da U<sub>grav</sub> a K, con o senza attrito &mdash; muovi il cursore lungo il percorso o avvia l'animazione</p>
+  <div class="bf">
+    <strong>Stato A</strong> (in alto, v=0): E<sub>A</sub>=Mgh &nbsp;&nbsp;
+    <strong>Stato B</strong> (in un punto qualsiasi): K(s)+U(s)+Q(s)=Mgh
+  </div>
+  <div class="sim">
+    <div class="sim-t">Blocco che scivola lungo il piano inclinato</div>
+    <div class="ctrl">
+      <label>h (m)</label>
+      <input type="range" id="s1h" min="0.5" max="5" step="0.1" value="2"><span class="vv" id="s1hv">2.0</span>
+      <label>&alpha; (&deg;)</label>
+      <input type="range" id="s1a" min="10" max="70" step="1" value="30"><span class="vv" id="s1av">30</span>
+      <label>M (kg)</label>
+      <input type="range" id="s1M" min="0.5" max="10" step="0.1" value="2"><span class="vv" id="s1Mv">2.0</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn" id="btnAttr1" onclick="toggleAttr1()">Attrito OFF</button>
+      <span id="sp1mu" style="display:none">
+        <label>&mu;</label><input type="range" id="s1mu" min="0" max="1" step="0.05" value="0.2"><span class="vv" id="s1muv">0.20</span>
+      </span>
+      <label>posizione</label>
+      <input type="range" id="s1pos" min="0" max="100" step="1" value="0"><span class="vv" id="s1posv">0%</span>
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Anima</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv1" style="height:380px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="lsq" style="background:#1a4b8c"></span>K (cinetica)</span>
+      <span><span class="lsq" style="background:#e05252"></span>U<sub>grav</sub></span>
+      <span><span class="lsq" style="background:#c47a00"></span>Q (dissipata)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2: MOLLA -->
+<div class="sec" id="sim2">
+  <h2>3. Simulatore 2 &mdash; Sistema Massa-Molla</h2>
+  <p class="ssub">Da K a U<sub>el</sub> e ritorno &mdash; un blocco con velocit&agrave; iniziale che comprime una molla</p>
+  <div class="bf">
+    <strong>Stato A</strong> (velocit&agrave; iniziale v<sub>0</sub>, molla a riposo): E<sub>A</sub>=&frac12;Mv<sub>0</sub>&sup2; &nbsp;&nbsp;
+    <strong>Stato B</strong> (compressione massima, v=0): tutta l'energia rimasta &egrave; U<sub>el</sub>
+  </div>
+  <div class="sim">
+    <div class="sim-t">Blocco lanciato contro una molla &mdash; animazione in tempo reale</div>
+    <div class="ctrl">
+      <label>v<sub>0</sub> (m/s) velocit&agrave; iniziale</label>
+      <input type="range" id="s2v0" min="0.5" max="8" step="0.1" value="3"><span class="vv" id="s2v0v">3.0</span>
+      <label>d (m) distanza dalla molla</label>
+      <input type="range" id="s2d" min="0.2" max="2.5" step="0.1" value="1"><span class="vv" id="s2dv">1.0</span>
+    </div>
+    <div class="ctrl">
+      <label>k (N/m)</label>
+      <input type="range" id="s2k" min="20" max="400" step="5" value="150"><span class="vv" id="s2kv">150</span>
+      <label>M (kg)</label>
+      <input type="range" id="s2M" min="0.2" max="6" step="0.1" value="1.5"><span class="vv" id="s2Mv">1.5</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn" id="btnAttr2" onclick="toggleAttr2()">Attrito OFF</button>
+      <span id="sp2mu" style="display:none">
+        <label>&mu;</label><input type="range" id="s2mu" min="0" max="0.8" step="0.02" value="0.15"><span class="vv" id="s2muv">0.15</span>
+      </span>
+      <button class="btn on" id="btnPlay2" onclick="togglePlay2()">&#9654; Lancia il blocco</button>
+      <button class="btn" onclick="resetSpring2()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv2" style="height:300px"></canvas>
+    <div class="out empty" id="out2">Caricamento...</div>
+    <div class="leg">
+      <span><span class="lsq" style="background:#1a4b8c"></span>K (cinetica)</span>
+      <span><span class="lsq" style="background:#7a4fc4"></span>U<sub>el</sub></span>
+      <span><span class="lsq" style="background:#c47a00"></span>Q (dissipata)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 3: PENDOLO -->
+<div class="sec" id="sim3">
+  <h2>4. Simulatore 3 &mdash; Pendolo Semplice</h2>
+  <p class="ssub">Oscillazione continua tra U<sub>grav</sub> e K &mdash; con resistenza dell'aria l'energia si dissipa gradualmente</p>
+  <div class="bf">
+    U(&theta;)=MgL(1&minus;cos&theta;) &nbsp;&nbsp; K=&frac12;Mv&sup2;=&frac12;ML&sup2;&omega;&sup2; &nbsp;&nbsp;
+    Senza attrito: E=cost. &nbsp;&middot;&nbsp; Con resistenza: E diminuisce ad ogni oscillazione
+  </div>
+  <div class="sim">
+    <div class="sim-t">Pendolo semplice &mdash; animazione dell'oscillazione</div>
+    <div class="ctrl">
+      <label>L (m)</label>
+      <input type="range" id="s3L" min="0.3" max="2.5" step="0.05" value="1"><span class="vv" id="s3Lv">1.00</span>
+      <label>M (kg)</label>
+      <input type="range" id="s3M" min="0.1" max="5" step="0.1" value="1"><span class="vv" id="s3Mv">1.0</span>
+      <label>&theta;<sub>0</sub> (&deg;)</label>
+      <input type="range" id="s3t0" min="5" max="90" step="1" value="45"><span class="vv" id="s3t0v">45</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn" id="btnAttr3" onclick="toggleAttr3()">Resistenza OFF</button>
+      <span id="sp3b" style="display:none">
+        <label>b (resistenza)</label><input type="range" id="s3b" min="0.01" max="0.6" step="0.01" value="0.15"><span class="vv" id="s3bv">0.15</span>
+      </span>
+      <button class="btn on" id="btnPlay3" onclick="togglePlay3()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetPend()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv3" style="height:380px"></canvas>
+    <div class="out empty" id="out3">Caricamento...</div>
+    <div class="leg">
+      <span><span class="lsq" style="background:#1a4b8c"></span>K (cinetica)</span>
+      <span><span class="lsq" style="background:#e05252"></span>U<sub>grav</sub></span>
+      <span><span class="lsq" style="background:#c47a00"></span>Q (dissipata)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 4: PALLINA CHE RIMBALZA -->
+<div class="sec" id="sim4">
+  <h2>5. Simulatore 4 &mdash; Pallina che Rimbalza</h2>
+  <p class="ssub">L'energia si dissipa non con attrito continuo, ma a <strong>scatti</strong>, ad ogni urto col suolo</p>
+  <div class="bf">
+    Coefficiente di restituzione e: v'=e&middot;v &nbsp;&nbsp; h<sub>n+1</sub>=e&sup2;h<sub>n</sub> &nbsp;&nbsp;
+    e=1: nessuna perdita (rimbalza sempre alla stessa altezza) &nbsp;&middot;&nbsp; e&lt;1: altezza decrescente
+  </div>
+  <div class="sim">
+    <div class="sim-t">Caduta e rimbalzi successivi</div>
+    <div class="ctrl">
+      <label>h<sub>0</sub> (m)</label>
+      <input type="range" id="s4h0" min="0.5" max="4" step="0.1" value="2"><span class="vv" id="s4h0v">2.0</span>
+      <label>M (kg)</label>
+      <input type="range" id="s4M" min="0.05" max="3" step="0.05" value="0.5"><span class="vv" id="s4Mv">0.50</span>
+      <label>e (restituzione)</label>
+      <input type="range" id="s4e" min="0.3" max="1" step="0.02" value="0.75"><span class="vv" id="s4ev">0.75</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay4" onclick="togglePlay4()">&#9654; Lascia cadere</button>
+      <button class="btn" onclick="resetBounce()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv4" style="height:380px"></canvas>
+    <div class="out empty" id="out4">Caricamento...</div>
+    <div class="leg">
+      <span><span class="lsq" style="background:#1a4b8c"></span>K (cinetica)</span>
+      <span><span class="lsq" style="background:#e05252"></span>U<sub>grav</sub></span>
+      <span><span class="lsq" style="background:#c47a00"></span>Q (dissipata, cumulativa)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 5: PIANO INCLINATO + MOLLA -->
+<div class="sec" id="sim5">
+  <h2>6. Simulatore 5 &mdash; Piano Inclinato e Molla in Sequenza</h2>
+  <p class="ssub">Tre trasformazioni in cascata: U<sub>grav</sub> &rarr; K (sul piano) &rarr; K (sul piano orizzontale) &rarr; U<sub>el</sub> (comprimendo la molla)</p>
+  <div class="bf">
+    <strong>Stato A</strong> (in cima al piano, v=0): E<sub>A</sub>=Mgh &nbsp;&nbsp;
+    <strong>Stato B</strong> (compressione massima della molla): tutta l'energia rimasta diventa U<sub>el</sub>
+  </div>
+  <p>Il blocco scende il piano inclinato (U<sub>grav</sub>&rarr;K), percorre un tratto orizzontale fino alla molla, poi la comprime (K&rarr;U<sub>el</sub>). Con l'attrito, l'energia dissipata Q cresce in ciascuna delle tre fasi.</p>
+  <div class="sim">
+    <div class="sim-t">Percorso completo: piano inclinato &rarr; tratto orizzontale &rarr; molla</div>
+    <div class="ctrl">
+      <label>h (m)</label>
+      <input type="range" id="s5h" min="0.5" max="4" step="0.1" value="1.5"><span class="vv" id="s5hv">1.5</span>
+      <label>&alpha; (&deg;)</label>
+      <input type="range" id="s5a" min="10" max="70" step="1" value="35"><span class="vv" id="s5av">35</span>
+      <label>d (m) tratto orizzontale</label>
+      <input type="range" id="s5d" min="0.2" max="3" step="0.1" value="1"><span class="vv" id="s5dv">1.0</span>
+    </div>
+    <div class="ctrl">
+      <label>k (N/m)</label>
+      <input type="range" id="s5k" min="20" max="400" step="5" value="120"><span class="vv" id="s5kv">120</span>
+      <label>M (kg)</label>
+      <input type="range" id="s5M" min="0.3" max="8" step="0.1" value="2"><span class="vv" id="s5Mv">2.0</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn" id="btnAttr5" onclick="toggleAttr5()">Attrito OFF</button>
+      <span id="sp5mu" style="display:none">
+        <label>&mu;</label><input type="range" id="s5mu" min="0" max="0.8" step="0.02" value="0.15"><span class="vv" id="s5muv">0.15</span>
+      </span>
+      <button class="btn on" id="btnPlay5" onclick="togglePlay5()">&#9654; Anima A&rarr;B</button>
+      <button class="btn" onclick="resetSim5()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv5" style="height:420px"></canvas>
+    <div class="out empty" id="out5">Caricamento...</div>
+    <div class="leg">
+      <span><span class="lsq" style="background:#1a4b8c"></span>K (cinetica)</span>
+      <span><span class="lsq" style="background:#e05252"></span>U<sub>grav</sub></span>
+      <span><span class="lsq" style="background:#7a4fc4"></span>U<sub>el</sub></span>
+      <span><span class="lsq" style="background:#c47a00"></span>Q (dissipata)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>7. Esercizi Proposti</h2>
+  <p class="ssub">Energia meccanica e sua conservazione</p>
+  <ol>
+    <li><strong>Piano inclinato:</strong> M=3kg, h=2m, senza attrito. Calcola v alla base usando la conservazione dell'energia. Verifica col simulatore.</li>
+    <li><strong>Con attrito:</strong> stesso piano, &alpha;=30&deg;, &mu;=0.2. Calcola Q dissipata lungo tutto il percorso e la velocit&agrave; finale. Di quanto si riduce v rispetto al caso senza attrito?</li>
+    <li><strong>Molla:</strong> k=200N/m, x<sub>0</sub>=0.15m, M=1kg, senza attrito. Calcola la velocit&agrave; del blocco quando la molla raggiunge la lunghezza naturale.</li>
+    <li><strong>Molla con attrito:</strong> stessi dati, &mu;=0.25. Il blocco riesce a separarsi dalla molla? Se s&igrave;, con quale velocit&agrave;? Se no, dove si arresta?</li>
+    <li><strong>Pendolo:</strong> L=1.5m, &theta;<sub>0</sub>=60&deg;. Calcola la velocit&agrave; del pendolo nel punto pi&ugrave; basso usando la conservazione dell'energia.</li>
+    <li><strong>Pallina che rimbalza:</strong> h<sub>0</sub>=3m, e=0.8. Calcola l'altezza dopo il secondo rimbalzo e la frazione di energia dissipata totale dopo due rimbalzi.</li>
+    <li><strong>Piano + molla:</strong> h=2m, &alpha;=40&deg;, d=1.5m, k=150N/m, M=2kg, senza attrito. Calcola la compressione massima della molla. Poi attiva l'attrito con &mu;=0.2: la compressione massima aumenta o diminuisce? Perch&eacute;?</li>
+  </ol>
+</div>
+
+<footer>Didattica Galilei &middot; Fisica &middot; Energia Meccanica &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+var g9=9.81;
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function deg(r){return r*180/Math.PI;}
+function rad(d){return d*Math.PI/180;}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function arrow(ctx,x1,y1,x2,y2,color,lw,lbl,ls){
+  var dx=x2-x1,dy=y2-y1,L=Math.sqrt(dx*dx+dy*dy);
+  if(L<2)return;
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var nx=dx/L,ny=dy/L,as=Math.min(10,L*0.32);
+  ctx.fillStyle=color;ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-nx*as+ny*as*0.38,y2-ny*as-nx*as*0.38);
+  ctx.lineTo(x2-nx*as-ny*as*0.38,y2-ny*as+nx*as*0.38);
+  ctx.closePath();ctx.fill();
+  if(lbl){var s=ls||1;ctx.fillStyle=color;ctx.font='bold 11px monospace';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(lbl,(x1+x2)/2-ny*s*13,(y1+y2)/2+nx*s*13);ctx.textBaseline='alphabetic';}
+}
+function massBox(ctx,cx,cy,lbl,color,bw,bh){
+  bw=bw||30;bh=bh||24;
+  ctx.fillStyle=color+'25';ctx.fillRect(cx-bw/2,cy-bh/2,bw,bh);
+  ctx.strokeStyle=color;ctx.lineWidth=1.8;ctx.strokeRect(cx-bw/2,cy-bh/2,bw,bh);
+  ctx.fillStyle=color;ctx.font='bold 10px monospace';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(lbl,cx,cy);ctx.textBaseline='alphabetic';
+}
+function drawSpring(ctx,x1,y,x2,color){
+  var len=Math.max(2,x2-x1);
+  var coils=Math.max(2,Math.min(10,Math.round(len/14)));
+  var seg=len/(coils*2);
+  var amp=Math.min(9,Math.max(3,len/5)); // ampiezza minima garantita: la molla resta visibile anche compressa
+  ctx.strokeStyle=color;ctx.lineWidth=2.2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y);
+  for(var i=0;i<coils*2;i++){
+    var xx=x1+seg*(i+1);
+    var yy=y+(i%2===0?-amp:amp);
+    ctx.lineTo(xx,yy);
+  }
+  ctx.lineTo(x1+len,y);
+  ctx.stroke();
+}
+// ── Istogramma energie (riusabile in tutti i simulatori) ──
+function drawEnergyBars(ctx,x,y,w,h,bars,maxVal){
+  ctx.strokeStyle='#ddd';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.strokeRect(x,y,w,h);
+  var n=bars.length, gap=10;
+  var bw=(w-(n-1)*gap-10)/n;
+  bars.forEach(function(b,i){
+    var bx=x+5+i*(bw+gap);
+    var bh=Math.max(0,Math.min(h-6,(b.value/maxVal)*(h-6)));
+    ctx.fillStyle=b.color+'30';
+    ctx.fillRect(bx,y+h-3-bh,bw,bh);
+    ctx.strokeStyle=b.color;ctx.lineWidth=2;
+    ctx.strokeRect(bx,y+h-3-bh,bw,bh);
+    ctx.fillStyle=b.color;ctx.font='bold 9px monospace';ctx.textAlign='center';
+    ctx.fillText(b.label,bx+bw/2,y+h+12);
+    ctx.fillStyle='#333';ctx.font='8.5px monospace';
+    ctx.fillText(fmt2(b.value),bx+bw/2,y+h-6-bh<14?y+h-6-bh+12:y+h-6-bh-4);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 1 — PIANO INCLINATO
+// ══════════════════════════════════════════════════════
+var attr1=false, anim1={playing:false,id:null,lastT:null,t:0};
+function toggleAttr1(){
+  attr1=!attr1;
+  document.getElementById('btnAttr1').className=attr1?'btn on':'btn';
+  document.getElementById('btnAttr1').textContent=attr1?'Attrito ON':'Attrito OFF';
+  document.getElementById('sp1mu').style.display=attr1?'':'none';
+  drawSim1();
+}
+function togglePlay1(){
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Anima';
+  anim1.lastT=null;
+  // Riparte dal punto corrente dello slider (utile se l'utente l'ha spostato a mano)
+  var h=rf('s1h'),alpha=rad(rf('s1a')),mu=attr1?rf('s1mu'):0;
+  var aNet=g9*(Math.sin(alpha)-mu*Math.cos(alpha));
+  if(aNet<0)aNet=0;
+  var L=h/Math.sin(alpha);
+  var curPct=rf('s1pos')/100;
+  var sCur=curPct*L;
+  anim1.t=aNet>0?Math.sqrt(2*sCur/aNet):0;
+  if(anim1.playing)loop1();else if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+}
+function resetSim1(){
+  anim1.playing=false;anim1.t=0;
+  document.getElementById('btnPlay1').className='btn on';
+  document.getElementById('btnPlay1').textContent='\u25b6 Anima';
+  if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+  document.getElementById('s1pos').value=0;
+  document.getElementById('s1posv').textContent='0%';
+  drawSim1();
+}
+function loop1(ts){
+  if(!anim1.playing)return;
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dt=(ts-anim1.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012;
+  dt=Math.min(dt,0.04);
+  anim1.lastT=ts;
+  anim1.t+=dt;
+
+  var h=rf('s1h'),alpha=rad(rf('s1a')),mu=attr1?rf('s1mu'):0;
+  var aNet=g9*(Math.sin(alpha)-mu*Math.cos(alpha));
+  if(aNet<0)aNet=0;
+  var L=h/Math.sin(alpha);
+  // Posizione calcolata ANALITICAMENTE dal tempo trascorso (anim1.t),
+  // MAI letta indietro dallo slider: lo slider arrotonda i decimali (step=1)
+  // e leggerlo come stato azzererebbe ogni incremento piccolo tra un frame e l'altro.
+  var s=0.5*aNet*anim1.t*anim1.t;
+  var pctNew=Math.min(100,L>0?(s/L)*100:0);
+  document.getElementById('s1pos').value=pctNew;
+  document.getElementById('s1posv').textContent=Math.round(pctNew)+'%';
+  drawSim1();
+  if(pctNew>=100){anim1.playing=false;document.getElementById('btnPlay1').className='btn on';document.getElementById('btnPlay1').textContent='\u25b6 Anima';return;}
+  anim1.id=requestAnimationFrame(loop1);
+}
+document.getElementById('s1pos').oninput=function(){document.getElementById('s1posv').textContent=this.value+'%';drawSim1();};
+function drawSim1(){
+  var h=rf('s1h'),alphaDeg=rf('s1a'),alpha=rad(alphaDeg),M=rf('s1M');
+  var mu=attr1?rf('s1mu'):0;
+  var L=h/Math.sin(alpha);
+  var pct=rf('s1pos')/100;
+  var s=pct*L;
+
+  var aNet=g9*(Math.sin(alpha)-mu*Math.cos(alpha));
+  var nonScivola=(aNet<=0);
+  if(nonScivola)aNet=0;
+
+  var E0=M*g9*h;
+  var zNow=h-s*Math.sin(alpha);
+  var Unow=M*g9*zNow;
+  var Know=nonScivola?0:M*aNet*s;
+  var Qnow=nonScivola?0:mu*M*g9*Math.cos(alpha)*s;
+  if(Know<0)Know=0;
+  var vNow=Math.sqrt(Math.max(0,2*Know/M));
+
+  var cv=setupCv('cv1',380);
+  var W=cv.width,H=380,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f8f9ff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  var cosa=Math.cos(alpha),sina=Math.sin(alpha);
+  var tx=cosa,ty=-sina, nx=-sina,ny=-cosa;
+  var AX=W*0.10, AY=H*0.74;
+  var trackLenPx=Math.min(W*0.78,(H*0.62)/Math.max(sina,0.05));
+  var BX=AX+trackLenPx*cosa, BY=AY-trackLenPx*sina;
+
+  ctx.fillStyle='#ddd';ctx.beginPath();ctx.moveTo(AX,AY);ctx.lineTo(BX,BY);ctx.lineTo(BX,AY);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1;ctx.stroke();
+  ctx.strokeStyle='#555';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(AX,AY);ctx.lineTo(BX,BY);ctx.stroke();
+  if(mu>0){
+    for(var ti=0.05;ti<1;ti+=0.07){
+      var hx=AX+ti*(BX-AX), hy=AY+ti*(BY-AY);
+      ctx.strokeStyle='#999';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(hx-nx*6,hy-ny*6);ctx.stroke();
+    }
+  }
+  ctx.strokeStyle='#666';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(AX,AY,30,0,-alpha,true);ctx.stroke();
+  ctx.fillStyle='#444';ctx.font='10px monospace';ctx.textAlign='left';
+  ctx.fillText('\u03b1='+alphaDeg+'\u00b0',AX+34,AY-6);
+
+  var sPx=pct*trackLenPx;
+  var blockX=BX-sPx*tx, blockY=BY-sPx*ty;
+  var bw=Math.max(26,Math.min(46,18+M*5)), bh=bw*0.65;
+  // Rettangolo RUOTATO allineato al piano (4 vertici), non un box piatto
+  var blx=blockX-bw/2*tx, bly=blockY-bw/2*ty;     // base sx (sulla superficie)
+  var brx=blockX+bw/2*tx, bry=blockY+bw/2*ty;     // base dx (sulla superficie)
+  var tlx=blx+bh*nx, tly=bly+bh*ny;               // alto sx
+  var trx=brx+bh*nx, try_=bry+bh*ny;              // alto dx
+  var bcx=(blx+brx+tlx+trx)/4, bcy=(bly+bry+tly+try_)/4;
+  ctx.fillStyle='#1a4b8c1f';
+  ctx.beginPath();ctx.moveTo(blx,bly);ctx.lineTo(brx,bry);ctx.lineTo(trx,try_);ctx.lineTo(tlx,tly);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('M',bcx,bcy);ctx.textBaseline='alphabetic';
+
+  if(vNow>0.05){
+    var vScale=Math.min(50,vNow*10);
+    arrow(ctx,bcx,bcy,bcx-vScale*tx,bcy-vScale*ty,'#1a1a1e',2.3,'v',1);
+  }
+
+  ctx.fillStyle='#1a6b3a';ctx.font='bold 9px monospace';ctx.textAlign='center';
+  ctx.fillText('A (h='+fmt1(h)+'m)',BX,BY-14);
+  ctx.fillStyle='#b5351a';
+  ctx.fillText('B',AX,AY+16);
+
+  drawEnergyBars(ctx,W-150,20,130,90,[
+    {label:'K',value:Know,color:'#1a4b8c'},
+    {label:'U',value:Unow,color:'#e05252'},
+    {label:'Q',value:Qnow,color:'#c47a00'}
+  ],E0);
+  ctx.fillStyle='#333';ctx.font='8px monospace';ctx.textAlign='center';
+  ctx.fillText('E\u2080='+fmt2(E0)+'J',W-85,128);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    (nonScivola?'<div class="rl">Stato</div><div class="rv err">NON SCIVOLA (\u03bc \u2265 tan\u03b1)</div>':'')+
+    '<div class="rl">E\u2080 = Mgh</div><div class="rv">'+fmt3(E0)+' J</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Altezza attuale z</div><div class="rv">'+fmt2(zNow)+' m</div>'+
+    '<div class="rl">U<sub>grav</sub> = Mgz</div><div class="rv">'+fmt3(Unow)+' J</div>'+
+    '<div class="rl">K = &frac12;Mv\u00b2</div><div class="rv ok">'+fmt3(Know)+' J</div>'+
+    (mu>0?'<div class="rl">Q dissipata</div><div class="rv warn">'+fmt3(Qnow)+' J</div>':'')+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Velocit\u00e0 v</div><div class="rv ok">'+fmt3(vNow)+' m/s</div>'+
+    '<div class="rl">Verifica K+U+Q</div><div class="rv">'+fmt3(Know+Unow+Qnow)+' J (\u2248E\u2080)</div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 2 — MOLLA (blocco con velocità iniziale, animazione fisica reale)
+// ══════════════════════════════════════════════════════
+var attr2=false;
+// pos: posizione relativa al punto di riposo della molla. pos>0 = molla compressa.
+// pos<=0 = blocco su superficie libera (prima di toccare la molla, o dopo essersene separato).
+var spr2={pos:0,v:0,playing:false,id:null,lastT:null,Qcum:0,maxComp:0,t:0,inited:false};
+
+function toggleAttr2(){
+  attr2=!attr2;
+  document.getElementById('btnAttr2').className=attr2?'btn on':'btn';
+  document.getElementById('btnAttr2').textContent=attr2?'Attrito ON':'Attrito OFF';
+  document.getElementById('sp2mu').style.display=attr2?'':'none';
+  drawSim2();
+}
+function togglePlay2(){
+  spr2.playing=!spr2.playing;
+  document.getElementById('btnPlay2').className=spr2.playing?'btn on':'btn';
+  document.getElementById('btnPlay2').textContent=spr2.playing?'\u23f8 Pausa':'\u25b6 Lancia il blocco';
+  spr2.lastT=null;
+  if(spr2.playing)loopSpring2();else if(spr2.id){cancelAnimationFrame(spr2.id);spr2.id=null;}
+}
+function resetSpring2(){
+  spr2.playing=false;
+  spr2.pos=-rf('s2d');
+  spr2.v=rf('s2v0');
+  spr2.Qcum=0; spr2.maxComp=0; spr2.t=0; spr2.inited=true;
+  document.getElementById('btnPlay2').className='btn on';
+  document.getElementById('btnPlay2').textContent='\u25b6 Lancia il blocco';
+  if(spr2.id){cancelAnimationFrame(spr2.id);spr2.id=null;}
+  drawSim2();
+}
+function syncInitial2(){
+  if(!spr2.playing) resetSpring2();
+}
+function loopSpring2(ts){
+  if(!spr2.playing)return;
+  if(spr2.lastT===null)spr2.lastT=ts;
+  var dt=(ts-spr2.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.01;
+  dt=Math.min(dt,0.02);
+  spr2.lastT=ts;
+
+  var k=rf('s2k'), M=rf('s2M'), mu=attr2?rf('s2mu'):0;
+  var fFricMax=mu*M*g9;
+
+  var subSteps=6, h=dt/subSteps;
+  for(var i=0;i<subSteps;i++){
+    var Fspring = spr2.pos>0 ? -k*spr2.pos : 0;
+    if(Math.abs(spr2.v)<0.01 && Math.abs(Fspring)<=fFricMax){
+      spr2.v=0; continue;
+    }
+    var Ffric = (mu>0 && Math.abs(spr2.v)>1e-6) ? -fFricMax*Math.sign(spr2.v) : 0;
+    var a=(Fspring+Ffric)/M;
+    spr2.v += a*h;
+    var dpos = spr2.v*h;
+    spr2.pos += dpos;
+    if(mu>0) spr2.Qcum += fFricMax*Math.abs(dpos);
+  }
+  if(spr2.pos>spr2.maxComp) spr2.maxComp=spr2.pos;
+  spr2.t+=dt;
+
+  drawSim2();
+  if(spr2.v===0){
+    spr2.playing=false;
+    document.getElementById('btnPlay2').className='btn on';
+    document.getElementById('btnPlay2').textContent='\u25b6 Lancia il blocco';
+    return;
+  }
+  spr2.id=requestAnimationFrame(loopSpring2);
+}
+function drawSim2(){
+  var k=rf('s2k'), M=rf('s2M'), v0=rf('s2v0'), d=rf('s2d');
+  var mu=attr2?rf('s2mu'):0;
+
+  if(!spr2.inited){ spr2.pos=-d; spr2.v=v0; spr2.inited=true; }
+
+  var E0=0.5*M*v0*v0;
+  var Uel=spr2.pos>0?0.5*k*spr2.pos*spr2.pos:0;
+  var K=0.5*M*spr2.v*spr2.v;
+  var Q=spr2.Qcum;
+
+  var cv=setupCv('cv2',300);
+  var W=cv.width,H=300,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f9f9f9';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out2');
+
+  var gY=H*0.62;
+  ctx.fillStyle='#e0e0e0';ctx.fillRect(0,gY,W,H-gY);
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,gY);ctx.lineTo(W,gY);ctx.stroke();
+  if(mu>0){for(var xi=0;xi<W;xi+=13){ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xi,gY);ctx.lineTo(xi+7,gY+7);ctx.stroke();}}
+
+  var wallX=30;
+  ctx.fillStyle='#999';ctx.fillRect(wallX-10,gY-70,10,70);
+
+  // Scala: deve contenere d (avvicinamento) + una stima della compressione massima
+  var estMaxComp=Math.sqrt(Math.max(0.001,M*v0*v0/k));
+  var totalSpan=d+Math.max(estMaxComp,0.1)+0.3;
+  var pxPerM=Math.min(380,(W-wallX-70)/totalSpan);
+
+  var springNatX=wallX+10+Math.max(40,0.18*pxPerM);
+  var blockX=springNatX-spr2.pos*pxPerM;
+
+  var minSpringPx=18;
+  var springEndX=spr2.pos>0?Math.max(blockX,wallX+10+minSpringPx):springNatX;
+  drawSpring(ctx,wallX+10,gY-30,Math.max(wallX+14,springEndX),'#1a6b3a');
+
+  var bw=Math.max(28,Math.min(50,20+M*8));
+  massBox(ctx,blockX+bw/2,gY-30,'M','#1a4b8c',bw,bw*0.75);
+
+  if(Math.abs(spr2.v)>0.05){
+    var vScale=Math.min(45,Math.abs(spr2.v)*8);
+    var vdir=spr2.v>0?-1:1; // v>0 = verso la molla = sullo schermo verso sinistra
+    arrow(ctx,blockX+bw/2,gY-55,blockX+bw/2+vdir*vScale,gY-55,'#1a1a1e',2.3,'v',1);
+  }
+
+  drawEnergyBars(ctx,W-150,18,130,86,[
+    {label:'K',value:K,color:'#1a4b8c'},
+    {label:'Uel',value:Uel,color:'#7a4fc4'},
+    {label:'Q',value:Q,color:'#c47a00'}
+  ],E0>0.001?E0:0.001);
+
+  var fFricMax2=mu*M*g9;
+  var stuckAtSpring = spr2.pos>0.001 && Math.abs(spr2.v)<0.001 && k*spr2.pos<=fFricMax2 && spr2.t>0.05;
+  var stoppedOpen = spr2.pos<=0.001 && Math.abs(spr2.v)<0.001 && spr2.t>0.05;
+
+  o.className='out';
+  var html='<div class="rg">';
+  html+='<div class="rl">E\u2080 = &frac12;Mv\u2080\u00b2</div><div class="rv">'+fmt3(E0)+' J</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">Compressione attuale</div><div class="rv">'+fmt3(Math.max(0,spr2.pos))+' m</div>';
+  html+='<div class="rl">U<sub>el</sub></div><div class="rv">'+fmt3(Uel)+' J</div>';
+  html+='<div class="rl">K</div><div class="rv ok">'+fmt3(K)+' J</div>';
+  if(mu>0)html+='<div class="rl">Q dissipata</div><div class="rv warn">'+fmt3(Q)+' J</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">Velocit\u00e0 |v|</div><div class="rv ok">'+fmt3(Math.abs(spr2.v))+' m/s</div>';
+  html+='<div class="rl">Compressione massima raggiunta</div><div class="rv">'+fmt3(spr2.maxComp)+' m</div>';
+  if(stuckAtSpring)html+='<div class="rl">Stato</div><div class="rv warn">il blocco resta incollato alla molla (attrito &ge; forza elastica)</div>';
+  else if(stoppedOpen && spr2.maxComp<0.001 && d>0)html+='<div class="rl">Stato</div><div class="rv warn">il blocco si ferma prima di raggiungere la molla</div>';
+  else if(stoppedOpen)html+='<div class="rl">Stato</div><div class="rv ok">il blocco si \u00e8 fermato dopo il rimbalzo</div>';
+  html+='</div>';
+  o.innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 3 — PENDOLO
+// ══════════════════════════════════════════════════════
+var attr3=false;
+var pend={theta:rad(45),omega:0,playing:false,id:null,lastT:null,E0:0};
+function toggleAttr3(){
+  attr3=!attr3;
+  document.getElementById('btnAttr3').className=attr3?'btn on':'btn';
+  document.getElementById('btnAttr3').textContent=attr3?'Resistenza ON':'Resistenza OFF';
+  document.getElementById('sp3b').style.display=attr3?'':'none';
+  drawSim3();
+}
+function togglePlay3(){
+  pend.playing=!pend.playing;
+  document.getElementById('btnPlay3').className=pend.playing?'btn on':'btn';
+  document.getElementById('btnPlay3').textContent=pend.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  pend.lastT=null;
+  if(pend.playing)loop3();else if(pend.id){cancelAnimationFrame(pend.id);pend.id=null;}
+}
+function resetPend(){
+  pend.theta=rad(rf('s3t0'));pend.omega=0;pend.playing=false;
+  var L=rf('s3L'),M=rf('s3M');
+  pend.E0=M*g9*L*(1-Math.cos(pend.theta));
+  document.getElementById('btnPlay3').className='btn on';
+  document.getElementById('btnPlay3').textContent='\u25b6 Avvia';
+  if(pend.id){cancelAnimationFrame(pend.id);pend.id=null;}
+  drawSim3();
+}
+function loop3(ts){
+  if(!pend.playing)return;
+  if(pend.lastT===null)pend.lastT=ts;
+  var dt=Math.min((ts-pend.lastT)/1000,0.02)||0.012;
+  pend.lastT=ts;
+  var L=rf('s3L'), b=attr3?rf('s3b'):0;
+  var alphaAcc=-(g9/L)*Math.sin(pend.theta)-b*pend.omega;
+  pend.omega+=alphaAcc*dt;
+  pend.theta+=pend.omega*dt;
+  drawSim3();
+  pend.id=requestAnimationFrame(loop3);
+}
+document.getElementById('s3t0').oninput=function(){
+  document.getElementById('s3t0v').textContent=this.value;
+  if(!pend.playing){
+    pend.theta=rad(parseFloat(this.value));pend.omega=0;
+    var L=rf('s3L'),M=rf('s3M');
+    pend.E0=M*g9*L*(1-Math.cos(pend.theta));
+    drawSim3();
+  }
+};
+function drawSim3(){
+  var L=rf('s3L'),M=rf('s3M');
+  if(pend.E0===0)pend.E0=M*g9*L*(1-Math.cos(pend.theta));
+  var cv=setupCv('cv3',380);
+  var W=cv.width,H=380,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f8f9ff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out3');
+
+  var pivX=W/2, pivY=55;
+  var scL=Math.min((H-130)/L,(W*0.38)/L);
+  var Lpx=L*scL;
+
+  ctx.fillStyle='#ccc';ctx.fillRect(pivX-36,30,72,16);
+  ctx.strokeStyle='#888';ctx.lineWidth=1;ctx.strokeRect(pivX-36,30,72,16);
+  for(var xi=pivX-36;xi<pivX+36;xi+=9){ctx.strokeStyle='#aaa';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xi,46);ctx.lineTo(xi-5,55);ctx.stroke();}
+
+  var bobX=pivX+Lpx*Math.sin(pend.theta), bobY=pivY+Lpx*Math.cos(pend.theta);
+
+  ctx.strokeStyle='rgba(0,0,0,0.12)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  var thetaMax=rad(rf('s3t0'));
+  ctx.beginPath();ctx.arc(pivX,pivY,Lpx,Math.PI/2-thetaMax,Math.PI/2+thetaMax,false);ctx.stroke();ctx.setLineDash([]);
+
+  ctx.strokeStyle='#666';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pivX,pivY);ctx.lineTo(bobX,bobY);ctx.stroke();
+
+  ctx.beginPath();ctx.arc(pivX,pivY,5,0,2*Math.PI);ctx.fillStyle='#444';ctx.fill();
+
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(pivX,pivY);ctx.lineTo(pivX,pivY+Lpx+14);ctx.stroke();ctx.setLineDash([]);
+
+  var bobR=Math.max(10,Math.min(20,8+M*4));
+  ctx.beginPath();ctx.arc(bobX,bobY,bobR,0,2*Math.PI);
+  ctx.fillStyle='#1a4b8c33';ctx.fill();ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 10px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('M',bobX,bobY);ctx.textBaseline='alphabetic';
+
+  var v=Math.abs(pend.omega)*L;
+  if(v>0.05){
+    var tangX=Math.cos(pend.theta), tangY=-Math.sin(pend.theta);
+    var vdir=pend.omega>0?1:-1;
+    var vScale=Math.min(40,v*15);
+    arrow(ctx,bobX,bobY,bobX+vdir*tangX*vScale,bobY+vdir*tangY*vScale,'#1a1a1e',2.3,'v',1);
+  }
+
+  var zNow=L*(1-Math.cos(pend.theta));
+  var Unow=M*g9*zNow;
+  var Know=0.5*M*v*v;
+  var Enow=Unow+Know;
+  var Qnow=Math.max(0,pend.E0-Enow);
+
+  drawEnergyBars(ctx,W-150,16,130,86,[
+    {label:'K',value:Know,color:'#1a4b8c'},
+    {label:'U',value:Unow,color:'#e05252'},
+    {label:'Q',value:Qnow,color:'#c47a00'}
+  ],pend.E0>0.001?pend.E0:0.001);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">E\u2080 (iniziale)</div><div class="rv">'+fmt3(pend.E0)+' J</div>'+
+    '<div class="rl">\u03b8 attuale</div><div class="rv">'+fmt1(deg(pend.theta))+'\u00b0</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">U<sub>grav</sub></div><div class="rv">'+fmt3(Unow)+' J</div>'+
+    '<div class="rl">K</div><div class="rv ok">'+fmt3(Know)+' J</div>'+
+    (attr3?'<div class="rl">Q dissipata (cumulata)</div><div class="rv warn">'+fmt3(Qnow)+' J</div>':'<div class="rl">E = K+U</div><div class="rv ok">'+fmt3(Enow)+' J (costante \u2713)</div>')+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Velocit\u00e0 v</div><div class="rv">'+fmt3(v)+' m/s</div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 4 — PALLINA CHE RIMBALZA
+// ══════════════════════════════════════════════════════
+var bounce={cycles:[],t:0,playing:false,id:null,lastT:null,h0:2,e:0.75};
+function buildCycles(h0,e){
+  var cycles=[];
+  var h=h0, tCum=0;
+  for(var i=0;i<60;i++){
+    if(h<0.008)break;
+    var tFall=Math.sqrt(2*h/g9);
+    var v=Math.sqrt(2*g9*h);
+    var vAfter=e*v;
+    var tRise=vAfter/g9;
+    cycles.push({hStart:h,tFall:tFall,tRise:tRise,tCumStart:tCum,vAfter:vAfter});
+    tCum+=tFall+tRise;
+    h=h*e*e;
+    if(e>=0.999)break; // evita loop infinito se e=1, gestito a parte
+  }
+  return {cycles:cycles,tTotal:tCum};
+}
+function togglePlay4(){
+  bounce.playing=!bounce.playing;
+  document.getElementById('btnPlay4').className=bounce.playing?'btn on':'btn';
+  document.getElementById('btnPlay4').textContent=bounce.playing?'\u23f8 Pausa':'\u25b6 Lascia cadere';
+  bounce.lastT=null;
+  if(bounce.playing)loop4();else if(bounce.id){cancelAnimationFrame(bounce.id);bounce.id=null;}
+}
+function resetBounce(){
+  bounce.t=0;bounce.playing=false;
+  document.getElementById('btnPlay4').className='btn on';
+  document.getElementById('btnPlay4').textContent='\u25b6 Lascia cadere';
+  if(bounce.id){cancelAnimationFrame(bounce.id);bounce.id=null;}
+  drawSim4();
+}
+function loop4(ts){
+  if(!bounce.playing)return;
+  if(bounce.lastT===null)bounce.lastT=ts;
+  var dt=Math.min((ts-bounce.lastT)/1000,0.02)||0.012;
+  bounce.lastT=ts;
+  bounce.t+=dt;
+  drawSim4();
+  var e=rf('s4e');
+  var info=buildCycles(rf('s4h0'),e);
+  if(e<0.999 && bounce.t>info.tTotal+0.3){
+    bounce.playing=false;
+    document.getElementById('btnPlay4').className='btn on';
+    document.getElementById('btnPlay4').textContent='\u25b6 Lascia cadere';
+    return;
+  }
+  bounce.id=requestAnimationFrame(loop4);
+}
+function getBounceState(t,h0,e){
+  var info=buildCycles(h0,e);
+  var cycles=info.cycles;
+  if(e>=0.999){
+    // ciclo singolo ripetuto all'infinito
+    var tFall=Math.sqrt(2*h0/g9), tRise=tFall;
+    var period=tFall+tRise;
+    var tt=t%period;
+    var height,v,cycleApex=h0,cycleLostBefore=0;
+    if(tt<=tFall){height=h0-0.5*g9*tt*tt;v=-g9*tt;}
+    else{var t2=tt-tFall;height=0+Math.sqrt(2*g9*h0)*t2-0.5*g9*t2*t2;v=Math.sqrt(2*g9*h0)-g9*t2;}
+    return{height:Math.max(0,height),v:v,cycleApexEnergy:h0,cumQ:0,bounceN:Math.floor(t/period)};
+  }
+  for(var i=0;i<cycles.length;i++){
+    var c=cycles[i];
+    var tLocal=t-c.tCumStart;
+    if(tLocal<=c.tFall+c.tRise || i===cycles.length-1){
+      if(tLocal<0)tLocal=0;
+      var height,v;
+      if(tLocal<=c.tFall){
+        height=c.hStart-0.5*g9*tLocal*tLocal;
+        v=-g9*tLocal;
+      } else {
+        var t2=tLocal-c.tFall;
+        height=c.vAfter*t2-0.5*g9*t2*t2;
+        v=c.vAfter-g9*t2;
+      }
+      if(height<0)height=0;
+      var cumQ=h0-c.hStart; // energia (in unità di altezza equiv.) già persa nei rimbalzi precedenti
+      return{height:height,v:v,cycleApexEnergy:c.hStart,cumQ:Math.max(0,cumQ),bounceN:i};
+    }
+  }
+  // dopo tutti i cicli: fermo a terra
+  return{height:0,v:0,cycleApexEnergy:0,cumQ:h0,bounceN:cycles.length};
+}
+function drawSim4(){
+  var h0=rf('s4h0'),M=rf('s4M'),e=rf('s4e');
+  var st=getBounceState(bounce.t,h0,e);
+  var E0=M*g9*h0;
+
+  var cv=setupCv('cv4',380);
+  var W=cv.width,H=380,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f8f9ff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out4');
+
+  var groundY=H*0.86;
+  var pxPerM=Math.min(110,(groundY-40)/h0);
+  ctx.fillStyle='#e0e0e0';ctx.fillRect(0,groundY,W,H-groundY);
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,groundY);ctx.lineTo(W,groundY);ctx.stroke();
+
+  var cx=W*0.32;
+  var ballY=groundY-st.height*pxPerM;
+  var ballR=Math.max(10,Math.min(22,8+M*8));
+  ballY=Math.max(ballR+5,ballY);
+
+  // Traccia tratteggiata altezza iniziale
+  ctx.strokeStyle='rgba(0,0,0,0.12)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(cx-40,groundY-h0*pxPerM);ctx.lineTo(cx+40,groundY-h0*pxPerM);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#999';ctx.font='9px monospace';ctx.textAlign='left';
+  ctx.fillText('h\u2080',cx+44,groundY-h0*pxPerM+3);
+
+  ctx.beginPath();ctx.arc(cx,ballY,ballR,0,2*Math.PI);
+  ctx.fillStyle='#7a4fc433';ctx.fill();ctx.strokeStyle='#7a4fc4';ctx.lineWidth=2.2;ctx.stroke();
+
+  if(Math.abs(st.v)>0.1){
+    var vScale=Math.min(50,Math.abs(st.v)*8);
+    var vdir=st.v<0?1:-1; // v negativo (cadendo) -> freccia verso il basso
+    arrow(ctx,cx+ballR+10,ballY,cx+ballR+10,ballY+vdir*vScale,'#1a1a1e',2.3,'v',1);
+  }
+
+  var Know=0.5*M*st.v*st.v;
+  var Unow=M*g9*st.height;
+  var Qnow=M*g9*st.cumQ;
+
+  drawEnergyBars(ctx,W-150,16,130,86,[
+    {label:'K',value:Know,color:'#1a4b8c'},
+    {label:'U',value:Unow,color:'#e05252'},
+    {label:'Q',value:Qnow,color:'#c47a00'}
+  ],E0);
+
+  ctx.fillStyle='#1a1a1e';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText('Rimbalzo n\u00b0 '+st.bounceN,cx,30);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">E\u2080 = Mgh\u2080</div><div class="rv">'+fmt3(E0)+' J</div>'+
+    '<div class="rl">Rimbalzo numero</div><div class="rv">'+st.bounceN+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Altezza attuale</div><div class="rv">'+fmt3(st.height)+' m</div>'+
+    '<div class="rl">Velocit\u00e0 |v|</div><div class="rv">'+fmt3(Math.abs(st.v))+' m/s</div>'+
+    '<div class="rl">K</div><div class="rv ok">'+fmt3(Know)+' J</div>'+
+    '<div class="rl">U<sub>grav</sub></div><div class="rv">'+fmt3(Unow)+' J</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Q dissipata (cumulata)</div><div class="rv warn">'+fmt3(Qnow)+' J</div>'+
+    '<div class="rl">Altezza prossimo apice</div><div class="rv">'+fmt3(st.cycleApexEnergy*e*e)+' m (=e\u00b2&times;h<sub>n</sub>)</div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 5 — PIANO INCLINATO + MOLLA IN SEQUENZA (animato A→B)
+// ══════════════════════════════════════════════════════
+var attr5=false;
+var anim5={s:0,v:0,playing:false,id:null,lastT:null,Qcum:0,t:0,inited:false};
+
+function toggleAttr5(){
+  attr5=!attr5;
+  document.getElementById('btnAttr5').className=attr5?'btn on':'btn';
+  document.getElementById('btnAttr5').textContent=attr5?'Attrito ON':'Attrito OFF';
+  document.getElementById('sp5mu').style.display=attr5?'':'none';
+  drawSim5();
+}
+function togglePlay5(){
+  anim5.playing=!anim5.playing;
+  document.getElementById('btnPlay5').className=anim5.playing?'btn on':'btn';
+  document.getElementById('btnPlay5').textContent=anim5.playing?'\u23f8 Pausa':'\u25b6 Anima A\u2192B';
+  anim5.lastT=null;
+  if(anim5.playing)loop5();else if(anim5.id){cancelAnimationFrame(anim5.id);anim5.id=null;}
+}
+function resetSim5(){
+  anim5.playing=false; anim5.s=0; anim5.v=0; anim5.Qcum=0; anim5.t=0; anim5.inited=true;
+  document.getElementById('btnPlay5').className='btn on';
+  document.getElementById('btnPlay5').textContent='\u25b6 Anima A\u2192B';
+  if(anim5.id){cancelAnimationFrame(anim5.id);anim5.id=null;}
+  drawSim5();
+}
+function loop5(ts){
+  if(!anim5.playing)return;
+  if(anim5.lastT===null)anim5.lastT=ts;
+  var dt=(ts-anim5.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.01;
+  dt=Math.min(dt,0.02);
+  anim5.lastT=ts;
+
+  var h=rf('s5h'),alpha=rad(rf('s5a')),d=rf('s5d'),k=rf('s5k'),M=rf('s5M');
+  var mu=attr5?rf('s5mu'):0;
+  var cosa=Math.cos(alpha), sina=Math.sin(alpha);
+  var L1=h/sina;
+
+  var subSteps=6, hh=dt/subSteps;
+  for(var i=0;i<subSteps;i++){
+    var s=anim5.s, v=anim5.v;
+    var restoring, fricLimitAcc;
+    if(s<=L1){
+      restoring=g9*sina;
+      fricLimitAcc=mu*g9*cosa;
+    } else if(s<=L1+d){
+      restoring=0;
+      fricLimitAcc=mu*g9;
+    } else {
+      var xc=s-L1-d;
+      restoring=-k*xc/M;
+      fricLimitAcc=mu*g9;
+    }
+    if(Math.abs(v)<0.01 && Math.abs(restoring)<=fricLimitAcc){
+      anim5.v=0; continue;
+    }
+    var sgn=v!==0?Math.sign(v):(restoring>=0?1:-1);
+    var fricAcc=(mu>0)?-fricLimitAcc*sgn:0;
+    var a=restoring+fricAcc;
+    anim5.v += a*hh;
+    var ds=anim5.v*hh;
+    anim5.s += ds;
+    if(anim5.s<0){anim5.s=0; if(anim5.v<0)anim5.v=0;}
+    if(mu>0) anim5.Qcum += fricLimitAcc*M*Math.abs(ds);
+  }
+  anim5.t+=dt;
+  drawSim5();
+  if(anim5.v===0){
+    anim5.playing=false;
+    document.getElementById('btnPlay5').className='btn on';
+    document.getElementById('btnPlay5').textContent='\u25b6 Anima A\u2192B';
+    return;
+  }
+  anim5.id=requestAnimationFrame(loop5);
+}
+
+function drawSim5(){
+  var h=rf('s5h'), alphaDeg=rf('s5a'), alpha=rad(alphaDeg), d=rf('s5d'), k=rf('s5k'), M=rf('s5M');
+  var mu=attr5?rf('s5mu'):0;
+  var cosa=Math.cos(alpha), sina=Math.sin(alpha);
+  var L1=h/sina;
+
+  if(!anim5.inited){ anim5.s=0; anim5.v=0; anim5.inited=true; }
+
+  // Stima (solo per dimensionare la scena) della compressione massima possibile,
+  // usata SOLO per il layout grafico, non per guidare la fisica (che è in tempo reale).
+  var aNet1Est=g9*(sina-mu*cosa);
+  var K1Est=aNet1Est>0?M*aNet1Est*L1:0;
+  var K2Est=K1Est-mu*M*g9*d;
+  var xmaxEst=0;
+  if(K2Est>0){
+    xmaxEst = mu>0 ? (-mu*M*g9+Math.sqrt((mu*M*g9)*(mu*M*g9)+2*k*K2Est))/k : Math.sqrt(2*K2Est/k);
+  }
+
+  var s=anim5.s;
+  var z=0,Ugrav=0,Uel=0,phase=1;
+  if(s<=L1){
+    phase=1; z=h-s*sina; Ugrav=M*g9*z; Uel=0;
+  } else if(s<=L1+d){
+    phase=2; z=0; Ugrav=0; Uel=0;
+  } else {
+    phase=3; z=0; Ugrav=0;
+    var xc=s-L1-d;
+    Uel=0.5*k*xc*xc;
+  }
+  var K=0.5*M*anim5.v*anim5.v;
+  var Q=anim5.Qcum;
+  var E0=M*g9*h;
+  var v=anim5.v;
+
+  var cv=setupCv('cv5',420);
+  var W=cv.width,H=420,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f8f9ff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out5');
+
+  var jointX=W*0.38, jointY=H*0.56;
+  var tx=-cosa, ty=-sina;
+  var nx=sina, ny=-cosa;
+
+  var availH=H*0.42, availW=jointX-20;
+  var pxPerM=Math.min(availH/Math.max(h,0.1), availW/Math.max(L1*cosa,0.1), 90);
+  var L1px=L1*pxPerM;
+  var apexX=jointX+L1px*tx, apexY=jointY+L1px*ty;
+
+  ctx.fillStyle='#ddd';
+  ctx.beginPath();ctx.moveTo(jointX,jointY);ctx.lineTo(apexX,apexY);ctx.lineTo(apexX,jointY);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1;ctx.stroke();
+  ctx.strokeStyle='#555';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(jointX,jointY);ctx.lineTo(apexX,apexY);ctx.stroke();
+  if(mu>0){
+    for(var ti=0.05;ti<1;ti+=0.09){
+      var hx=jointX+ti*(apexX-jointX), hy=jointY+ti*(apexY-jointY);
+      ctx.strokeStyle='#999';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(hx-nx*6,hy-ny*6);ctx.stroke();
+    }
+  }
+  ctx.strokeStyle='#666';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(jointX,jointY,26,Math.PI,Math.PI+alpha,false);ctx.stroke();
+  ctx.fillStyle='#444';ctx.font='9px monospace';ctx.textAlign='right';
+  ctx.fillText('\u03b1='+alphaDeg+'\u00b0',jointX-30,jointY-4);
+  ctx.fillStyle='#1a6b3a';ctx.font='bold 9px monospace';ctx.textAlign='center';
+  ctx.fillText('A (h='+fmt1(h)+'m)',apexX,apexY-12);
+
+  var dPx=d*pxPerM;
+  var flatEndX=jointX+dPx;
+  var groundRightX=Math.min(W-15,flatEndX+Math.max(xmaxEst*pxPerM,40)+40);
+  ctx.fillStyle='#e0e0e0';ctx.fillRect(jointX,jointY,groundRightX-jointX,H-jointY);
+  ctx.strokeStyle='#aaa';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(jointX,jointY);ctx.lineTo(groundRightX,jointY);ctx.stroke();
+  if(mu>0){
+    for(var xi=jointX+4;xi<groundRightX;xi+=13){ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(xi,jointY);ctx.lineTo(xi+7,jointY+7);ctx.stroke();}
+  }
+
+  var xmaxPx=Math.max(xmaxEst*pxPerM,30);
+  var wallX=Math.min(groundRightX-4,flatEndX+xmaxPx+10);
+  ctx.fillStyle='#999';ctx.fillRect(wallX,jointY-50,8,50);
+  var springNaturalEndX=flatEndX+xmaxPx;
+
+  var bcx,bcy,dirx,diry;
+  var bw=Math.max(22,Math.min(40,15+M*4)), bh=bw*0.65;
+  if(phase===1){
+    var sPx=s*pxPerM;
+    var lineX=apexX-sPx*tx, lineY=apexY-sPx*ty;
+    bcx=lineX+nx*bh/2; bcy=lineY+ny*bh/2;
+    dirx=cosa*Math.sign(v||1); diry=sina*Math.sign(v||1);
+  } else if(phase===2){
+    var sFlatPx=(s-L1)*pxPerM;
+    bcx=jointX+sFlatPx; bcy=jointY-bh/2;
+    dirx=Math.sign(v||1); diry=0;
+  } else {
+    var xcPx=(s-L1-d)*pxPerM;
+    bcx=flatEndX+xcPx; bcy=jointY-bh/2;
+    dirx=Math.sign(v||1); diry=0;
+  }
+
+  var minSpringPx5=18;
+  var springFarX = phase===3? Math.max(Math.min(bcx,springNaturalEndX),wallX-Math.max(xmaxPx,minSpringPx5)) : springNaturalEndX;
+  springFarX=Math.min(springFarX,wallX-minSpringPx5);
+  drawSpring(ctx, springFarX, jointY-25, wallX, '#1a6b3a');
+
+  if(phase===1){
+    var blx=bcx-bh/2*nx-bw/2*tx, bly=bcy-bh/2*ny-bw/2*ty;
+    var brx=bcx-bh/2*nx+bw/2*tx, bry=bcy-bh/2*ny+bw/2*ty;
+    var tlx=blx+bh*nx, tly=bly+bh*ny;
+    var trx=brx+bh*nx, try_=bry+bh*ny;
+    ctx.fillStyle='#1a4b8c1f';
+    ctx.beginPath();ctx.moveTo(blx,bly);ctx.lineTo(brx,bry);ctx.lineTo(trx,try_);ctx.lineTo(tlx,tly);ctx.closePath();ctx.fill();
+    ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='#1a4b8c';ctx.font='bold 10px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('M',bcx,bcy);ctx.textBaseline='alphabetic';
+  } else {
+    massBox(ctx,bcx,bcy,'M','#1a4b8c',bw,bh);
+  }
+
+  if(Math.abs(v)>0.05){
+    var vScale=Math.min(40,Math.abs(v)*9);
+    arrow(ctx,bcx,bcy,bcx+dirx*vScale,bcy+diry*vScale,'#1a1a1e',2.2,'v',1);
+  }
+
+  drawEnergyBars(ctx,W-160,16,145,90,[
+    {label:'K',value:K,color:'#1a4b8c'},
+    {label:'Ug',value:Ugrav,color:'#e05252'},
+    {label:'Uel',value:Uel,color:'#7a4fc4'},
+    {label:'Q',value:Q,color:'#c47a00'}
+  ],E0>0.001?E0:0.001);
+
+  var stuck = Math.abs(v)<0.001 && anim5.t>0.05;
+
+  o.className='out';
+  var html='<div class="rg">';
+  html+='<div class="rl">E\u2080 = Mgh</div><div class="rv">'+fmt3(E0)+' J</div>';
+  html+='<div class="rl">Fase attuale</div><div class="rv">'+(phase===1?'1: piano inclinato':phase===2?'2: tratto orizzontale':'3: compressione molla')+'</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">U<sub>grav</sub></div><div class="rv">'+fmt3(Ugrav)+' J</div>';
+  html+='<div class="rl">U<sub>el</sub></div><div class="rv">'+fmt3(Uel)+' J</div>';
+  html+='<div class="rl">K</div><div class="rv ok">'+fmt3(K)+' J</div>';
+  if(mu>0)html+='<div class="rl">Q dissipata</div><div class="rv warn">'+fmt3(Q)+' J</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">Velocit\u00e0 |v|</div><div class="rv">'+fmt3(Math.abs(v))+' m/s</div>';
+  if(stuck){
+    if(phase===1&&s<0.01)html+='<div class="rl">Stato</div><div class="rv err">il blocco non scivola (\u03bc \u2265 tan\u03b1)</div>';
+    else if(phase===3&&Uel>0.001)html+='<div class="rl">Stato</div><div class="rv warn">fermo: incollato alla molla compressa</div>';
+    else html+='<div class="rl">Stato</div><div class="rv ok">fermo</div>';
+  }
+  html+='</div>';
+  o.innerHTML=html;
+}
+
+// ── SLIDER GENERICI ───────────────────────────────────
+function sl(id,vid,fn,d){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(vid).textContent=d===1?fmt1(v):d===3?fmt3(v):fmt2(v);
+    fn();
+  };
+}
+sl('s1h','s1hv',drawSim1,1);sl('s1a','s1av',drawSim1,1);sl('s1M','s1Mv',drawSim1,1);sl('s1mu','s1muv',drawSim1,2);
+sl('s2k','s2kv',drawSim2,1);sl('s2M','s2Mv',drawSim2,1);sl('s2mu','s2muv',drawSim2,2);
+sl('s2v0','s2v0v',syncInitial2,1);sl('s2d','s2dv',syncInitial2,1);
+sl('s3L','s3Lv',function(){pend.theta=rad(rf('s3t0'));pend.omega=0;var L=rf('s3L'),M=rf('s3M');pend.E0=M*g9*L*(1-Math.cos(pend.theta));drawSim3();},2);
+sl('s3M','s3Mv',function(){var L=rf('s3L'),M=rf('s3M');pend.E0=M*g9*L*(1-Math.cos(pend.theta));drawSim3();},1);
+sl('s3b','s3bv',drawSim3,2);
+sl('s4h0','s4h0v',drawSim4,1);sl('s4M','s4Mv',drawSim4,1);sl('s4e','s4ev',drawSim4,2);
+function syncInitial5(){
+  if(!anim5.playing) resetSim5();
+}
+sl('s5h','s5hv',syncInitial5,1);sl('s5a','s5av',syncInitial5,1);sl('s5d','s5dv',syncInitial5,1);
+sl('s5k','s5kv',syncInitial5,1);sl('s5M','s5Mv',syncInitial5,1);sl('s5mu','s5muv',drawSim5,2);
+
+window.addEventListener('resize',function(){drawSim1();drawSim2();drawSim3();drawSim4();drawSim5();});
+document.addEventListener('DOMContentLoaded',function(){
+  drawSim1();drawSim2();
+  pend.theta=rad(rf('s3t0'));pend.omega=0;
+  var L=rf('s3L'),M=rf('s3M');
+  pend.E0=M*g9*L*(1-Math.cos(pend.theta));
+  drawSim3();
+  drawSim4();
+  drawSim5();
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
