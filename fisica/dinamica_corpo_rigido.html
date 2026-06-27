@@ -85,7 +85,7 @@ footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:
   <a href="#sim4">Sim 4 &mdash; Asta che cade</a>
   <a href="#sim5">Sim 5 &mdash; Forza ad altezza variabile</a>
   <a href="#esercizi">Esercizi</a>
-  <a href="../index.html">&#8592; Home</a>
+  <a href="index.html">&#8592; Home</a>
 </div></nav>
 <div class="page">
 
@@ -265,16 +265,16 @@ footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:
 
 <!-- SIM 5: FORZA AD ALTEZZA VARIABILE -->
 <div class="sec" id="sim5">
-  <h2>6. Simulatore 5 &mdash; Rotolamento su Piano Orizzontale con Forza ad Altezza e Angolo Variabili</h2>
-  <p class="ssub">Una forza applicata a un punto qualsiasi del corpo: come cambia l'accelerazione e l'attrito necessario?</p>
+  <h2>6. Simulatore 5 &mdash; Rotolamento su Piano Orizzontale con Forza ad Altezza e Distanza dal Centro Variabili</h2>
+  <p class="ssub">Una forza applicata a un punto qualsiasi del corpo, non solo sull'asse verticale: come cambiano accelerazione e attrito necessario?</p>
   <div class="bf">
-    <strong>Risultato notevole (h = altezza dal suolo del punto di applicazione, 0&le;h&le;2R):</strong><br>
-    a = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">F cos&theta; &middot; h</span><span class="d">MR(1+&beta;)</span></span>
-    &nbsp;&nbsp; f = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">Fcos&theta;</span><span class="d">R</span></span>&middot;&#91;(h&minus;R) &minus; &beta;h/(1+&beta;)&#93;
+    <strong>Risultato generale (h = altezza dal suolo, d<sub>x</sub> = distanza orizzontale dal centro):</strong><br>
+    a = <span class="frac" style="display:inline-flex;font-size:.85em"><span class="n">F cos&theta;&middot;h &minus; d<sub>x</sub>&middot;Fsin&theta;</span><span class="d">MR(1+&beta;)</span></span>
+    &nbsp;&nbsp; f = Ma &minus; Fcos&theta;
   </div>
-  <p>Risultati notevoli: se <strong>h=0</strong> (spinta esattamente sul punto di contatto) l'accelerazione &egrave; <strong>nulla</strong>! Se <strong>h=R</strong> (spinta al centro) si ha il caso classico. Esiste un'altezza speciale <strong>h=R(1+&beta;)</strong> per cui il corpo rotola <strong>senza bisogno di attrito</strong> (centro di percussione).</p>
+  <p>Con d<sub>x</sub>=0 (punto di applicazione sull'asse verticale del centro) si ritrova il caso particolare a=Fcos&theta;&middot;h/[MR(1+&beta;)]. Se invece la forza ha una componente verticale Fsin&theta; applicata <strong>fuori asse</strong> (d<sub>x</sub>&ne;0), questa genera un <strong>momento aggiuntivo</strong> che pu&ograve; accelerare o frenare la rotazione, a seconda dei segni di d<sub>x</sub> e &theta;.</p>
   <div class="sim">
-    <div class="sim-t">Corpo che rotola &mdash; forza applicata a altezza e angolo qualsiasi</div>
+    <div class="sim-t">Corpo che rotola &mdash; forza applicata a altezza e distanza dal centro qualsiasi</div>
     <div class="ctrl">
       <label>Forma</label>
       <select id="s5shape" onchange="drawSim5()">
@@ -293,8 +293,12 @@ footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:
       <input type="range" id="s5F" min="0" max="60" step="0.5" value="20"><span class="vv" id="s5Fv">20.0</span>
       <label>&theta; (&deg;)</label>
       <input type="range" id="s5t" min="-60" max="80" step="1" value="0"><span class="vv" id="s5tv">0</span>
+    </div>
+    <div class="ctrl">
       <label>h/R (altezza)</label>
       <input type="range" id="s5h" min="0" max="2" step="0.05" value="1"><span class="vv" id="s5hv">1.00</span>
+      <label>d<sub>x</sub>/R (distanza dal centro)</label>
+      <input type="range" id="s5dx" min="-1" max="1" step="0.05" value="0"><span class="vv" id="s5dxv">0.00</span>
       <label>&mu;</label>
       <input type="range" id="s5mu" min="0" max="1" step="0.05" value="0.3"><span class="vv" id="s5muv">0.30</span>
     </div>
@@ -797,18 +801,22 @@ function drawSim5(){
   var shapeKey=document.getElementById('s5shape').value;
   var beta=BETA[shapeKey];
   var solid=(shapeKey==='disco'||shapeKey==='sfera_piena');
-  var M=rf('s5M'),R=rf('s5R'),F=rf('s5F'),theta=rad(rf('s5t')),hOverR=rf('s5h'),mu=rf('s5mu');
+  var M=rf('s5M'),R=rf('s5R'),F=rf('s5F'),theta=rad(rf('s5t')),hOverR=rf('s5h'),dxOverR=rf('s5dx'),mu=rf('s5mu');
   var h=hOverR*R;
-  var d=h-R;
+  var dx=dxOverR*R; // distanza orizzontale del punto di applicazione dal centro
 
   var Fx=F*Math.cos(theta), Fy=F*Math.sin(theta);
   var N=Math.max(0,M*g9-Fy);
   var sollevato=(N<0.01&&F>0.5);
-  var a=Fx*h/(M*R*(1+beta));
+  // Formula generale: il momento di F rispetto al centro ha due contributi:
+  // -dy*Fx (come prima, dy=h-R) E +dx*Fy (nuovo, dovuto all'offset orizzontale)
+  var a=(Fx*h-dx*Fy)/(M*R*(1+beta));
   var alphaAng=R>0.001?-a/R:0;
-  var f=(Fx/R)*(d-beta*h/(1+beta));
+  var f=M*a-Fx; // dalla equazione di traslazione: Ma=Fx+f
   var fMax=mu*N;
   var puro=Math.abs(f)<=fMax+1e-9;
+  // Altezza per attrito nullo (caso generale, dipende anche da dx e θ)
+  var hZeroFric = Math.abs(Fx)>0.001 ? R*(1+beta)+dx*Fy/Fx : NaN;
 
   var cv=setupCv('cv5',340);
   var W=cv.width,H=340,ctx=cv.getContext('2d');
@@ -826,14 +834,20 @@ function drawSim5(){
 
   // Corpo
   drawWheel(ctx,cx,cy,Rpx,solid,'#1a4b8c',0);
-  // Linea verticale guida (asse di applicazione)
+  // Linea verticale guida (asse del centro)
   ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=1;ctx.setLineDash([3,2]);
   ctx.beginPath();ctx.moveTo(cx,gY);ctx.lineTo(cx,cy-Rpx-20);ctx.stroke();ctx.setLineDash([]);
 
-  // Punto di applicazione (altezza h)
+  // Punto di applicazione (altezza h, distanza dx dal centro)
+  var dxPx=dxOverR*Rpx;
   var appY=gY-h*(Rpx/R);
   appY=Math.max(cy-Rpx,Math.min(gY,appY));
-  var appX=cx;
+  var appX=cx+dxPx;
+  // Linea sottile dal centro al punto di applicazione (per mostrare l'offset)
+  if(Math.abs(dxPx)>1){
+    ctx.strokeStyle='rgba(122,79,196,0.35)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+    ctx.beginPath();ctx.moveTo(cx,appY);ctx.lineTo(appX,appY);ctx.stroke();ctx.setLineDash([]);
+  }
   ctx.beginPath();ctx.arc(appX,appY,4,0,2*Math.PI);ctx.fillStyle='#7a4fc4';ctx.fill();
   ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();
 
@@ -877,6 +891,7 @@ function drawSim5(){
     '<div class="rg">'+
     '<div class="rl">Forma</div><div class="rv">'+BETA_NAME[shapeKey]+' (\u03b2='+fmt2(beta)+')</div>'+
     '<div class="rl">h (altezza appl.)</div><div class="rv">'+fmt3(h)+' m &nbsp;(h/R='+fmt2(hOverR)+')</div>'+
+    '<div class="rl">d<sub>x</sub> (distanza dal centro)</div><div class="rv">'+fmt3(dx)+' m &nbsp;(d<sub>x</sub>/R='+fmt2(dxOverR)+')</div>'+
     '<div class="rsep"></div>'+
     '<div class="rl">Stato</div><div class="rv '+(sollevato||!puro?'err':'ok')+'">'+stato+'</div>'+
     '<div class="rl">N = Mg \u2212 Fsin\u03b8</div><div class="rv">'+fmt2(N)+' N</div>'+
@@ -886,7 +901,7 @@ function drawSim5(){
     '<div class="rl">Attrito richiesto f</div><div class="rv '+(puro?'ok':'err')+'">'+fmt3(f)+' N</div>'+
     '<div class="rl">Attrito massimo \u03bcN</div><div class="rv">'+fmt2(fMax)+' N</div>'+
     '<div class="rsep"></div>'+
-    '<div class="rl">h senza attrito (h=R(1+\u03b2))</div><div class="rv">'+fmt3(R*(1+beta))+' m</div>'+
+    '<div class="rl">h per attrito nullo (con questi d<sub>x</sub>,&theta;)</div><div class="rv">'+(isNaN(hZeroFric)?'&mdash; (Fcos&theta;=0)':fmt3(hZeroFric)+' m')+'</div>'+
     '</div>';
 }
 
@@ -905,7 +920,7 @@ sl('s3a','s3av',drawSim3,1);sl('s3mu','s3muv',drawSim3,2);
 sl('s4L','s4Lv',drawSim4,2);sl('s4M','s4Mv',drawSim4,1);
 sl('s5M','s5Mv',drawSim5,1);sl('s5R','s5Rv',drawSim5,2);
 sl('s5F','s5Fv',drawSim5,1);sl('s5t','s5tv',drawSim5,1);
-sl('s5h','s5hv',drawSim5,2);sl('s5mu','s5muv',drawSim5,2);
+sl('s5h','s5hv',drawSim5,2);sl('s5dx','s5dxv',drawSim5,2);sl('s5mu','s5muv',drawSim5,2);
 
 window.addEventListener('resize',function(){drawSim1();drawSim2();drawSim3();drawSim4();drawSim5();});
 document.addEventListener('DOMContentLoaded',function(){
