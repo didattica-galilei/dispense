@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinematica — Dispense Interattive</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:#0f0f13;color:#fff;min-height:100vh;line-height:1.6}
+
+/* ── HERO ─────────────────────────────────────────────── */
+.hero{padding:72px 32px 52px;text-align:center;position:relative;overflow:hidden}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(160,90,30,0.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.breadcrumb{font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(255,255,255,0.28);margin-bottom:18px;font-weight:600}
+.breadcrumb a{color:rgba(255,255,255,0.28);text-decoration:none}
+.breadcrumb a:hover{color:rgba(255,255,255,0.6)}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,52px);
+  font-weight:700;line-height:1.08;margin-bottom:14px;letter-spacing:-0.5px}
+.hero h1 em{color:#f0a050;font-style:normal}
+.hero p{font-size:15px;color:rgba(255,255,255,0.40);max-width:480px;
+  margin:0 auto;font-weight:300}
+.divider{width:48px;height:1px;background:rgba(255,255,255,0.12);
+  margin:28px auto 0}
+
+/* ── SEZIONE ──────────────────────────────────────────── */
+.section{max-width:1020px;margin:0 auto;padding:44px 24px 60px}
+.section-label{font-size:10px;font-weight:600;letter-spacing:3px;
+  text-transform:uppercase;color:rgba(255,255,255,0.22);margin-bottom:24px;
+  display:flex;align-items:center;gap:12px}
+.section-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07)}
+
+/* ── GRIGLIA CARD ─────────────────────────────────────── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+
+/* ── CARD ─────────────────────────────────────────────── */
+.card{
+  position:relative;display:flex;flex-direction:column;
+  background:#18181e;border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;padding:26px 24px 22px;
+  text-decoration:none;color:#fff;overflow:hidden;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+  cursor:pointer;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.5)}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;
+  transition:opacity .2s;
+}
+/* Colori accent per la striscia superiore */
+.c1::before{background:linear-gradient(90deg,#e8843a,#f4a55a)}
+.c1:hover{border-color:rgba(232,132,58,0.35);box-shadow:0 12px 40px rgba(232,132,58,0.12)}
+.c2::before{background:linear-gradient(90deg,#d4a020,#f0c040)}
+.c2:hover{border-color:rgba(212,160,32,0.35);box-shadow:0 12px 40px rgba(212,160,32,0.12)}
+.c3::before{background:linear-gradient(90deg,#e0c030,#f5e060)}
+.c3:hover{border-color:rgba(224,192,48,0.35);box-shadow:0 12px 40px rgba(224,192,48,0.12)}
+.c4::before{background:linear-gradient(90deg,#2a8a50,#4ab870)}
+.c4:hover{border-color:rgba(42,138,80,0.35);box-shadow:0 12px 40px rgba(42,138,80,0.12)}
+.c5::before{background:linear-gradient(90deg,#1a8888,#3abcbc)}
+.c5:hover{border-color:rgba(26,136,136,0.35);box-shadow:0 12px 40px rgba(26,136,136,0.12)}
+.c6::before{background:linear-gradient(90deg,#2050b8,#4080e8)}
+.c6:hover{border-color:rgba(32,80,184,0.35);box-shadow:0 12px 40px rgba(32,80,184,0.12)}
+.c7::before{background:linear-gradient(90deg,#7a4fc4,#a47ae0)}
+.c7:hover{border-color:rgba(122,79,196,0.35);box-shadow:0 12px 40px rgba(122,79,196,0.12)}
+
+/* Card disabilitata (prossimamente) */
+.soon{opacity:0.44;cursor:default;pointer-events:none}
+.soon:hover{transform:none;box-shadow:none}
+
+/* Interni card */
+.num{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,0.28);margin-bottom:12px}
+.card h2{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;
+  line-height:1.2;margin-bottom:10px}
+.card p{font-size:13px;color:rgba(255,255,255,0.50);font-weight:300;
+  line-height:1.6;flex:1;margin-bottom:14px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tag{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 8px;border-radius:20px;background:rgba(255,255,255,0.07);
+  color:rgba(255,255,255,0.40);border:1px solid rgba(255,255,255,0.08)}
+.arrow{font-size:18px;color:rgba(255,255,255,0.20);margin-top:auto;
+  transition:color .2s,transform .2s}
+.card:hover .arrow{color:rgba(255,255,255,0.7);transform:translateX(4px)}
+.soon-badge{font-size:9px;font-weight:700;letter-spacing:1.5px;
+  text-transform:uppercase;padding:3px 10px;border-radius:20px;
+  background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.25);
+  border:1px solid rgba(255,255,255,0.08);display:inline-block;margin-top:auto}
+
+/* ── FOOTER ───────────────────────────────────────────── */
+footer{border-top:1px solid rgba(255,255,255,0.06);padding:24px;
+  text-align:center;font-size:11px;color:rgba(255,255,255,0.18);
+  letter-spacing:1px;text-transform:uppercase}
+footer a{color:rgba(255,255,255,0.3);text-decoration:none}
+footer a:hover{color:rgba(255,255,255,0.7)}
+
+@media(max-width:600px){
+  .hero{padding:52px 20px 36px}
+  .section{padding:32px 16px 48px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="breadcrumb">
+    <a href="index.html">&#8592; Tutte le dispense</a>
+    &nbsp;&middot;&nbsp; Fisica &middot; Meccanica
+  </div>
+  <h1>Cinematica<br><em>del Punto Materiale</em></h1>
+  <p>Dal moto rettilineo al moto relativo: descrivere il movimento prima di spiegarne le cause</p>
+  <div class="divider"></div>
+</div>
+
+<div class="section">
+  <div class="section-label">7 dispense &middot; in preparazione</div>
+  <div class="grid">
+
+    <!-- 1. Moto rettilineo uniforme -->
+    <div class="card c1 soon">
+      <div class="num">Cinematica &middot; 01</div>
+      <h2>Moto Rettilineo Uniforme</h2>
+      <p>Velocit&agrave; costante, legge orari s=s&#8320;+vt, grafici spazio-tempo e velocit&agrave;-tempo. Il caso pi&ugrave; semplice da cui partire.</p>
+      <div class="tags">
+        <span class="tag">Velocit&agrave; costante</span>
+        <span class="tag">Grafici s-t</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+    <!-- 2. Moto rettilineo uniformemente accelerato -->
+    <div class="card c2 soon">
+      <div class="num">Cinematica &middot; 02</div>
+      <h2>Moto Rettilineo Uniformemente Accelerato</h2>
+      <p>Accelerazione costante, leggi orarie di v(t) e s(t), caduta libera come caso particolare. Grafici v-t e s-t a confronto.</p>
+      <div class="tags">
+        <span class="tag">Accelerazione</span>
+        <span class="tag">Caduta libera</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+    <!-- 3. Moto curvilineo -->
+    <div class="card c3 soon">
+      <div class="num">Cinematica &middot; 03</div>
+      <h2>Moto Curvilineo</h2>
+      <p>Traiettoria qualsiasi nel piano, vettore posizione, velocit&agrave; e accelerazione vettoriali, componenti tangenziale e centripeta.</p>
+      <div class="tags">
+        <span class="tag">Vettori</span>
+        <span class="tag">Acc. centripeta</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+    <!-- 4. Moto circolare uniforme -->
+    <div class="card c4 soon">
+      <div class="num">Cinematica &middot; 04</div>
+      <h2>Moto Circolare Uniforme</h2>
+      <p>Velocit&agrave; angolare costante, periodo e frequenza, relazione tra grandezze lineari e angolari, accelerazione centripeta.</p>
+      <div class="tags">
+        <span class="tag">&omega; costante</span>
+        <span class="tag">Periodo</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+    <!-- 5. Moto circolare uniformemente accelerato -->
+    <div class="card c5 soon">
+      <div class="num">Cinematica &middot; 05</div>
+      <h2>Moto Circolare Uniformemente Accelerato</h2>
+      <p>Accelerazione angolare costante, leggi orarie di &omega;(t) e &theta;(t), accelerazione tangenziale e centripeta combinate.</p>
+      <div class="tags">
+        <span class="tag">Acc. angolare</span>
+        <span class="tag">Acc. tangenziale</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+    <!-- 6. Moto parabolico -->
+    <div class="card c6 soon">
+      <div class="num">Cinematica &middot; 06</div>
+      <h2>Moto Parabolico</h2>
+      <p>Composizione di moto rettilineo uniforme orizzontale e uniformemente accelerato verticale. Gittata, altezza massima, tempo di volo.</p>
+      <div class="tags">
+        <span class="tag">Proiettili</span>
+        <span class="tag">Gittata</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+    <!-- 7. Moti relativi -->
+    <div class="card c7 soon">
+      <div class="num">Cinematica &middot; 07</div>
+      <h2>Moti Relativi</h2>
+      <p>Composizione di velocit&agrave; tra sistemi di riferimento diversi, trasformazioni di Galileo, il classico problema della barca che attraversa il fiume.</p>
+      <div class="tags">
+        <span class="tag">Sistemi di riferimento</span>
+        <span class="tag">Galileo</span>
+      </div>
+      <span class="soon-badge">Prossimamente</span>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Didattica Galilei &middot; Fisica &middot; Cinematica &nbsp;|&nbsp;
+  <a href="index.html">&#8592; Tutte le dispense</a>
+</footer>
+
+</body>
+</html>
