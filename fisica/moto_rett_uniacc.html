@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moto Rettilineo Uniformemente Accelerato — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,38px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:540px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:74px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:34px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.err{color:#f4a582;font-weight:600}
+.rv.warn{color:#f4d03f}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Cinematica</div>
+  <h1>Moto Rettilineo Uniformemente<br><em>Accelerato</em></h1>
+  <p>Accelerazione costante, legge oraria parabolica &mdash; e il confronto tra moto uniforme e accelerato</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#sim1">Sim 1 &mdash; Spazio-tempo</a>
+  <a href="#sim2">Sim 2 &mdash; Due corpi accelerati</a>
+  <a href="#sim3">Sim 3 &mdash; Uniforme vs accelerato</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="cinematica.html">&#8592; Cinematica</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Moto Rettilineo Uniformemente Accelerato</h2>
+  <p class="ssub">Quando la velocit&agrave; cambia in modo costante nel tempo</p>
+  <p>Un punto materiale si muove con <strong>moto rettilineo uniformemente accelerato</strong> (M.R.U.A.) quando la sua <strong>accelerazione</strong> &egrave; costante: la velocit&agrave; cambia sempre della stessa quantit&agrave; in intervalli di tempo uguali.</p>
+  <h3>Accelerazione e legge della velocit&agrave;</h3>
+  <div class="formula">
+    <div class="f">v(t) = v<sub>0</sub> + a&middot;(t&minus;t<sub>0</sub>)</div>
+    <div class="fd">a &gt; 0: velocit&agrave; crescente &nbsp;&middot;&nbsp; a &lt; 0: velocit&agrave; decrescente (decelerazione, se v&gt;0)</div>
+  </div>
+  <h3>Legge oraria (posizione)</h3>
+  <div class="formula">
+    <div class="f">s(t) = s<sub>0</sub> + v<sub>0</sub>&middot;(t&minus;t<sub>0</sub>) + <span class="frac"><span class="n">1</span><span class="d">2</span></span>a&middot;(t&minus;t<sub>0</sub>)&sup2;</div>
+    <div class="fd">Per t&lt;t<sub>0</sub> il punto non si è ancora mosso: s(t)=s<sub>0</sub>, v(t)=0</div>
+  </div>
+  <h3>Formula senza il tempo</h3>
+  <div class="formula">
+    <div class="f">v&sup2; = v<sub>0</sub>&sup2; + 2a&middot;&Delta;s</div>
+    <div class="fd">Utile quando non si conosce (o non interessa) il tempo trascorso</div>
+  </div>
+  <div class="formula">
+    <div class="f">&Delta;s = <span class="frac"><span class="n">v&sup2; &minus; v<sub>0</sub>&sup2;</span><span class="d">2a</span></span></div>
+    <div class="fd">la stessa formula, risolta rispetto allo spostamento &Delta;s = s&minus;s<sub>0</sub> &nbsp;&middot;&nbsp; non compare il tempo t</div>
+  </div>
+  <h3>Formula senza l'accelerazione</h3>
+  <div class="formula">
+    <div class="f">&Delta;s = <span class="frac"><span class="n">v<sub>0</sub>+v</span><span class="d">2</span></span>&middot;&Delta;t</div>
+    <div class="fd">lo spostamento &egrave; la velocit&agrave; media (v<sub>0</sub>+v)/2 moltiplicata per il tempo trascorso &nbsp;&middot;&nbsp; non compare l'accelerazione a</div>
+  </div>
+  <h3>Grafici</h3>
+  <div class="two">
+    <div class="formula"><div class="f">Grafico s&minus;t</div><div class="fd">una PARABOLA: concavit&agrave; verso l'alto se a&gt;0, verso il basso se a&lt;0</div></div>
+    <div class="formula"><div class="f">Grafico v&minus;t</div><div class="fd">una RETTA inclinata: la pendenza &egrave; l'accelerazione a</div></div>
+  </div>
+  <div class="bn">&#128161; La formula &Delta;s = (v<sub>0</sub>+v)/2&middot;&Delta;t si ricava osservando che l'<strong>area</strong> sotto il grafico v-t (un trapezio) &egrave; lo spostamento.</div>
+  <div class="bw">&#9888; La <strong>caduta libera</strong> &egrave; il caso particolare con a=g&asymp;9.81 m/s&sup2; (verso il basso) e di solito v<sub>0</sub>=0.</div>
+</div>
+
+<!-- SIM 1: SPAZIO-TEMPO -->
+<div class="sec" id="sim1">
+  <h2>2. Simulatore 1 &mdash; Spazio-Tempo</h2>
+  <p class="ssub">Osserva come la parabola (posizione) e la retta inclinata (velocit&agrave;) si formano mentre il punto accelera</p>
+  <div class="sim">
+    <div class="sim-t">Un punto materiale in moto uniformemente accelerato</div>
+    <div class="ctrl">
+      <label>s<sub>0</sub> (m)</label>
+      <input type="range" id="s1s0" min="-20" max="20" step="1" value="-15"><span class="vv" id="s1s0v">-15</span>
+      <label>v<sub>0</sub> (m/s)</label>
+      <input type="range" id="s1v0" min="-8" max="8" step="0.5" value="0"><span class="vv" id="s1v0v">0.0</span>
+      <label>a (m/s&sup2;)</label>
+      <input type="range" id="s1a" min="-4" max="4" step="0.2" value="1.4"><span class="vv" id="s1av">1.4</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+      <label>tempo massimo (s)</label>
+      <input type="range" id="s1Tmax" min="5" max="30" step="1" value="10"><span class="vv" id="s1Tmaxv">10</span>
+    </div>
+    <canvas id="cv1" style="height:480px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>Posizione s(t)</span>
+      <span><span class="ld" style="background:#c47a00"></span>Velocit&agrave; v(t)</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2: DUE CORPI ACCELERATI -->
+<div class="sec" id="sim2">
+  <h2>3. Simulatore 2 &mdash; Due Corpi Accelerati: il Problema dell'Incontro</h2>
+  <p class="ssub">Posizione, velocit&agrave; iniziale, accelerazione e istante di partenza diversi: quando si incontrano?</p>
+  <div class="sim">
+    <div class="sim-t">Due corpi in moto uniformemente accelerato</div>
+    <div class="ctrl">
+      <label style="color:#1a4b8c">Corpo A:</label>
+      <label>s<sub>0,A</sub></label>
+      <input type="range" id="s2s0A" min="-30" max="30" step="1" value="-20"><span class="vv" id="s2s0Av">-20</span>
+      <label>v<sub>0,A</sub></label>
+      <input type="range" id="s2v0A" min="-8" max="8" step="0.5" value="0"><span class="vv" id="s2v0Av">0.0</span>
+      <label>a<sub>A</sub></label>
+      <input type="range" id="s2aA" min="-4" max="4" step="0.2" value="2"><span class="vv" id="s2aAv">2.0</span>
+      <label>t<sub>0,A</sub></label>
+      <input type="range" id="s2t0A" min="0" max="10" step="0.5" value="0"><span class="vv" id="s2t0Av">0.0</span>
+    </div>
+    <div class="ctrl">
+      <label style="color:#b5351a">Corpo B:</label>
+      <label>s<sub>0,B</sub></label>
+      <input type="range" id="s2s0B" min="-30" max="30" step="1" value="20"><span class="vv" id="s2s0Bv">20</span>
+      <label>v<sub>0,B</sub></label>
+      <input type="range" id="s2v0B" min="-8" max="8" step="0.5" value="-3"><span class="vv" id="s2v0Bv">-3.0</span>
+      <label>a<sub>B</sub></label>
+      <input type="range" id="s2aB" min="-4" max="4" step="0.2" value="-0.4"><span class="vv" id="s2aBv">-0.4</span>
+      <label>t<sub>0,B</sub></label>
+      <input type="range" id="s2t0B" min="0" max="10" step="0.5" value="1"><span class="vv" id="s2t0Bv">1.0</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay2" onclick="togglePlay2()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim2()">&#8634; Reset</button>
+      <label>tempo massimo (s)</label>
+      <input type="range" id="s2Tmax" min="5" max="40" step="1" value="15"><span class="vv" id="s2Tmaxv">15</span>
+    </div>
+    <canvas id="cv2" style="height:660px"></canvas>
+    <div class="out empty" id="out2">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>Corpo A</span>
+      <span><span class="ld" style="background:#b5351a"></span>Corpo B</span>
+      <span><span style="color:#f4a020;font-size:13px">&#9679;</span> punto di incontro</span>
+      <span style="color:rgba(0,0,0,0.4)">grafico superiore: s&minus;t &nbsp;&middot;&nbsp; grafico inferiore: v&minus;t</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 3: UNIFORME VS ACCELERATO -->
+<div class="sec" id="sim3">
+  <h2>4. Simulatore 3 &mdash; Moto Uniforme contro Moto Accelerato</h2>
+  <p class="ssub">Il classico "inseguimento": un corpo a velocit&agrave; costante, l'altro che accelera da fermo (o no). Chi raggiunge chi?</p>
+  <div class="bf">
+    <strong>Corpo A</strong> (retta): s<sub>A</sub>(t)=s<sub>0,A</sub>+v<sub>A</sub>(t&minus;t<sub>0,A</sub>) &nbsp;&nbsp;
+    <strong>Corpo B</strong> (parabola): s<sub>B</sub>(t)=s<sub>0,B</sub>+v<sub>0,B</sub>(t&minus;t<sub>0,B</sub>)+&frac12;a<sub>B</sub>(t&minus;t<sub>0,B</sub>)&sup2;
+  </div>
+  <div class="sim">
+    <div class="sim-t">Corpo A (moto uniforme) contro Corpo B (moto uniformemente accelerato)</div>
+    <div class="ctrl">
+      <label style="color:#1a4b8c">Corpo A (uniforme):</label>
+      <label>s<sub>0,A</sub></label>
+      <input type="range" id="s3s0A" min="-30" max="30" step="1" value="0"><span class="vv" id="s3s0Av">0</span>
+      <label>v<sub>A</sub></label>
+      <input type="range" id="s3vA" min="-8" max="8" step="0.5" value="5"><span class="vv" id="s3vAv">5.0</span>
+      <label>t<sub>0,A</sub></label>
+      <input type="range" id="s3t0A" min="0" max="10" step="0.5" value="0"><span class="vv" id="s3t0Av">0.0</span>
+    </div>
+    <div class="ctrl">
+      <label style="color:#b5351a">Corpo B (accelerato):</label>
+      <label>s<sub>0,B</sub></label>
+      <input type="range" id="s3s0B" min="-30" max="30" step="1" value="-30"><span class="vv" id="s3s0Bv">-30</span>
+      <label>v<sub>0,B</sub></label>
+      <input type="range" id="s3v0B" min="-8" max="8" step="0.5" value="0"><span class="vv" id="s3v0Bv">0.0</span>
+      <label>a<sub>B</sub></label>
+      <input type="range" id="s3aB" min="-4" max="4" step="0.2" value="2"><span class="vv" id="s3aBv">2.0</span>
+      <label>t<sub>0,B</sub></label>
+      <input type="range" id="s3t0B" min="0" max="10" step="0.5" value="0"><span class="vv" id="s3t0Bv">0.0</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay3" onclick="togglePlay3()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim3()">&#8634; Reset</button>
+      <label>tempo massimo (s)</label>
+      <input type="range" id="s3Tmax" min="5" max="40" step="1" value="15"><span class="vv" id="s3Tmaxv">15</span>
+    </div>
+    <canvas id="cv3" style="height:660px"></canvas>
+    <div class="out empty" id="out3">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>Corpo A (uniforme)</span>
+      <span><span class="ld" style="background:#b5351a"></span>Corpo B (accelerato)</span>
+      <span><span style="color:#f4a020;font-size:13px">&#9679;</span> punto di incontro</span>
+      <span style="color:rgba(0,0,0,0.4)">grafico superiore: s&minus;t &nbsp;&middot;&nbsp; grafico inferiore: v&minus;t</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>5. Esercizi Proposti</h2>
+  <p class="ssub">Moto rettilineo uniformemente accelerato</p>
+  <ol>
+    <li><strong>Legge oraria:</strong> un corpo parte da s&#8320;=0 con v&#8320;=2m/s e a=3m/s&sup2;. Calcola s e v a t=4s. Verifica col Sim 1.</li>
+    <li><strong>Formula senza tempo:</strong> stesso corpo, usa v&sup2;=v&#8320;&sup2;+2a&Delta;s per trovare v quando ha percorso 20m. Confronta col valore letto sul grafico.</li>
+    <li><strong>Caduta libera:</strong> imposta nel Sim 1: v&#8320;=0, a=&minus;9.81 m/s&sup2; (verso il basso, asse positivo verso l'alto), s&#8320;=20m. Dopo quanto tempo s(t)=0?</li>
+    <li><strong>Incontro tra due moti accelerati:</strong> nel Sim 2, trova dei parametri per cui i due corpi si incontrano DUE volte nell'intervallo visibile (suggerimento: le parabole possono intersecarsi in due punti).</li>
+    <li><strong>Inseguimento classico:</strong> nel Sim 3, un'auto A passa a velocit&agrave; costante v<sub>A</sub>=20m/s davanti a un autovelox. Una pattuglia B parte da ferma (v&#8320;<sub>B</sub>=0) con a<sub>B</sub>=4m/s&sup2; nello stesso istante e dalla stessa posizione. Dopo quanto tempo lo raggiunge? A quale velocit&agrave; viaggia in quel momento la pattuglia?</li>
+    <li><strong>Vantaggio iniziale:</strong> stessa situazione, ma A ha 3 secondi di vantaggio (t<sub>0,A</sub>=0, t<sub>0,B</sub>=3s). La pattuglia riesce comunque a raggiungerlo? Cambia il tempo di inseguimento?</li>
+  </ol>
+</div>
+
+<footer>Didattica Galilei &middot; Fisica &middot; Moto Rettilineo Uniformemente Accelerato &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function niceStep(range,n){
+  var s=range/Math.max(n,1), m=Math.pow(10,Math.floor(Math.log10(Math.abs(s)||1))), t=s/m;
+  return(t<2?1:t<5?2:5)*m;
+}
+function drawAxes(ctx,x,y,w,h,xmin,xmax,ymin,ymax,xlabel,ylabel){
+  function sx(vx){return x+(vx-xmin)/(xmax-xmin)*w;}
+  function sy(vy){return y+h-(vy-ymin)/(ymax-ymin)*h;}
+  var gx=niceStep(xmax-xmin,6), gy=niceStep(ymax-ymin,5);
+  ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.6;ctx.setLineDash([]);
+  for(var vx=Math.ceil(xmin/gx)*gx; vx<=xmax; vx+=gx){
+    ctx.beginPath();ctx.moveTo(sx(vx),y);ctx.lineTo(sx(vx),y+h);ctx.stroke();
+  }
+  for(var vy=Math.ceil(ymin/gy)*gy; vy<=ymax; vy+=gy){
+    ctx.beginPath();ctx.moveTo(x,sy(vy));ctx.lineTo(x+w,sy(vy));ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=1;
+  if(0>=ymin&&0<=ymax){ctx.beginPath();ctx.moveTo(x,sy(0));ctx.lineTo(x+w,sy(0));ctx.stroke();}
+  if(0>=xmin&&0<=xmax){ctx.beginPath();ctx.moveTo(sx(0),y);ctx.lineTo(sx(0),y+h);ctx.stroke();}
+  ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='8.5px monospace';ctx.textAlign='center';
+  for(var vx2=Math.ceil(xmin/gx)*gx; vx2<=xmax; vx2+=gx){
+    ctx.fillText(fmt1(vx2),sx(vx2),y+h+11);
+  }
+  ctx.textAlign='right';
+  for(var vy2=Math.ceil(ymin/gy)*gy; vy2<=ymax; vy2+=gy){
+    ctx.fillText(fmt1(vy2),x-4,sy(vy2)+3);
+  }
+  ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='left';
+  ctx.fillText(xlabel,x+w-22,y+h+11);
+  ctx.fillText(ylabel,x-22,y+10);
+  return {sx:sx,sy:sy};
+}
+// Disegna una funzione generica fn(t) campionandola (curva qualsiasi, anche non lineare)
+function plotFn(ctx,sxFn,syFn,fn,tmin,tmax,color,lw){
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();var first=true;
+  var N=120;
+  for(var i=0;i<=N;i++){
+    var tt=tmin+(tmax-tmin)*i/N;
+    var yy=fn(tt);
+    if(!isFinite(yy)){first=true;continue;}
+    var px=sxFn(tt),py=syFn(yy);
+    first?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    first=false;
+  }
+  ctx.stroke();
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+}
+// Trova zeri di d(t)=fA(t)-fB(t) campionando+bisezione
+function findMeetingsGeneric(fA,fB,Tmax){
+  var N=2500, prevT=0, prevD=fA(0)-fB(0);
+  var results=[];
+  for(var i=1;i<=N;i++){
+    var tt=Tmax*i/N;
+    var dd=fA(tt)-fB(tt);
+    if(prevD===0){
+      results.push(prevT);
+    } else if(prevD*dd<0){
+      var lo=prevT,hi=tt,dlo=prevD;
+      for(var k=0;k<40;k++){
+        var mid=(lo+hi)/2, dmid=fA(mid)-fB(mid);
+        if(Math.abs(dmid)<1e-9||(hi-lo)<1e-9)break;
+        if(dlo*dmid<0){hi=mid;}else{lo=mid;dlo=dmid;}
+      }
+      results.push((lo+hi)/2);
+    }
+    prevT=tt;prevD=dd;
+  }
+  var out=[];
+  results.forEach(function(t){if(!out.some(function(u){return Math.abs(u-t)<0.05;}))out.push(t);});
+  return out;
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 1 — SPAZIO-TEMPO (MRUA)
+// ══════════════════════════════════════════════════════
+var anim1={t:0,playing:false,id:null,lastT:null};
+function togglePlay1(){
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim1.lastT=null;
+  if(anim1.playing)loop1();else if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+}
+function resetSim1(){
+  anim1.playing=false; anim1.t=0;
+  document.getElementById('btnPlay1').className='btn on';
+  document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+  if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+  drawSim1();
+}
+function loop1(ts){
+  if(!anim1.playing)return;
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dt=(ts-anim1.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012; dt=Math.min(dt,0.04);
+  anim1.lastT=ts;
+  var Tmax=rf('s1Tmax');
+  anim1.t=Math.min(Tmax,anim1.t+dt);
+  drawSim1();
+  if(anim1.t>=Tmax){
+    anim1.playing=false;
+    document.getElementById('btnPlay1').className='btn on';
+    document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+    return;
+  }
+  anim1.id=requestAnimationFrame(loop1);
+}
+function drawSim1(){
+  var s0=rf('s1s0'), v0=rf('s1v0'), a=rf('s1a'), Tmax=rf('s1Tmax');
+  var t=anim1.t;
+  var s=s0+v0*t+0.5*a*t*t;
+  var v=v0+a*t;
+  function sFn(tt){return s0+v0*tt+0.5*a*tt*tt;}
+  function vFn(tt){return v0+a*tt;}
+
+  var cv=setupCv('cv1',480);
+  var W=cv.width,H=480,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  var trackY=45, trackX1=20, trackX2=W-20;
+  ctx.strokeStyle='#999';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(trackX1,trackY);ctx.lineTo(trackX2,trackY);ctx.stroke();
+
+  // range posizione: valuta s(t) su tutto [0,Tmax] per il min/max reale (può non essere monotona)
+  var smin=s0, smax=s0;
+  for(var i=0;i<=60;i++){var ss=sFn(Tmax*i/60); if(ss<smin)smin=ss; if(ss>smax)smax=ss;}
+  smin=Math.min(smin,0)-2; smax=Math.max(smax,0)+2;
+  function trackX(pos){return trackX1+(pos-smin)/(smax-smin)*(trackX2-trackX1);}
+  var tstep=niceStep(smax-smin,8);
+  ctx.fillStyle='#888';ctx.font='8px monospace';ctx.textAlign='center';
+  for(var p=Math.ceil(smin/tstep)*tstep;p<=smax;p+=tstep){
+    ctx.beginPath();ctx.moveTo(trackX(p),trackY-5);ctx.lineTo(trackX(p),trackY+5);ctx.strokeStyle='#bbb';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillText(fmt1(p),trackX(p),trackY+16);
+  }
+  if(0>=smin&&0<=smax){
+    ctx.strokeStyle='#555';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(trackX(0),trackY-8);ctx.lineTo(trackX(0),trackY+8);ctx.stroke();
+  }
+  dot(ctx,trackX(s),trackY,7,'#1a4b8c');
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 9px monospace';ctx.textAlign='center';
+  ctx.fillText('P',trackX(s),trackY-14);
+
+  var gTop=78, gH=160;
+  var ax1=drawAxes(ctx,55,gTop,W-85,gH,0,Tmax,smin,smax,'t (s)','s (m)');
+  plotFn(ctx,ax1.sx,ax1.sy,sFn,0,Tmax,'#1a4b8c',2.3);
+  dot(ctx,ax1.sx(t),ax1.sy(s),5,'#1a4b8c');
+  ctx.strokeStyle='rgba(26,75,140,0.3)';ctx.lineWidth=1;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(ax1.sx(t),gTop);ctx.lineTo(ax1.sx(t),gTop+gH);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('s(t) = s\u2080 + v\u2080t + \u00bdat\u00b2  (parabola)',60,gTop+14);
+
+  var g2Top=gTop+gH+44, g2H=120;
+  var vAtTmax=v0+a*Tmax;
+  var vmin=Math.min(v0,vAtTmax,0)-2, vmax=Math.max(v0,vAtTmax,0)+2;
+  var ax2=drawAxes(ctx,55,g2Top,W-85,g2H,0,Tmax,vmin,vmax,'t (s)','v (m/s)');
+  plotFn(ctx,ax2.sx,ax2.sy,vFn,0,Tmax,'#c47a00',2.3);
+  dot(ctx,ax2.sx(t),ax2.sy(v),5,'#c47a00');
+  ctx.fillStyle='rgba(196,122,0,0.12)';
+  ctx.beginPath();
+  ctx.moveTo(ax2.sx(0),ax2.sy(0));
+  ctx.lineTo(ax2.sx(0),ax2.sy(v0));
+  ctx.lineTo(ax2.sx(t),ax2.sy(v));
+  ctx.lineTo(ax2.sx(t),ax2.sy(0));
+  ctx.closePath();ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax2.sx(t),g2Top);ctx.lineTo(ax2.sx(t),g2Top+g2H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#c47a00';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('v(t) = v\u2080 + at  (retta)',60,g2Top+14);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Legge oraria</div><div class="rv">s(t) = '+fmt1(s0)+' + '+fmt1(v0)+'t + \u00bd('+fmt1(a)+')t\u00b2</div>'+
+    '<div class="rl">Legge velocit\u00e0</div><div class="rv">v(t) = '+fmt1(v0)+' + ('+fmt1(a)+')t</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Tempo t</div><div class="rv">'+fmt2(t)+' s</div>'+
+    '<div class="rl">Posizione s(t)</div><div class="rv ok">'+fmt2(s)+' m</div>'+
+    '<div class="rl">Velocit\u00e0 v(t)</div><div class="rv ok">'+fmt2(v)+' m/s</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Spostamento da t=0</div><div class="rv">'+fmt2(s-s0)+' m</div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 2 — DUE CORPI ACCELERATI: INCONTRO
+// ══════════════════════════════════════════════════════
+var anim2={t:0,playing:false,id:null,lastT:null};
+function posA2(t){
+  var s0=rf('s2s0A'),v0=rf('s2v0A'),a=rf('s2aA'),t0=rf('s2t0A');
+  if(t<t0)return s0;
+  var dt=t-t0; return s0+v0*dt+0.5*a*dt*dt;
+}
+function posB2(t){
+  var s0=rf('s2s0B'),v0=rf('s2v0B'),a=rf('s2aB'),t0=rf('s2t0B');
+  if(t<t0)return s0;
+  var dt=t-t0; return s0+v0*dt+0.5*a*dt*dt;
+}
+function velA2(t){
+  var v0=rf('s2v0A'),a=rf('s2aA'),t0=rf('s2t0A');
+  return t<t0?0:v0+a*(t-t0);
+}
+function velB2(t){
+  var v0=rf('s2v0B'),a=rf('s2aB'),t0=rf('s2t0B');
+  return t<t0?0:v0+a*(t-t0);
+}
+function togglePlay2(){
+  anim2.playing=!anim2.playing;
+  document.getElementById('btnPlay2').className=anim2.playing?'btn on':'btn';
+  document.getElementById('btnPlay2').textContent=anim2.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim2.lastT=null;
+  if(anim2.playing)loop2();else if(anim2.id){cancelAnimationFrame(anim2.id);anim2.id=null;}
+}
+function resetSim2(){
+  anim2.playing=false; anim2.t=0;
+  document.getElementById('btnPlay2').className='btn on';
+  document.getElementById('btnPlay2').textContent='\u25b6 Avvia';
+  if(anim2.id){cancelAnimationFrame(anim2.id);anim2.id=null;}
+  drawSim2();
+}
+function loop2(ts){
+  if(!anim2.playing)return;
+  if(anim2.lastT===null)anim2.lastT=ts;
+  var dt=(ts-anim2.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012; dt=Math.min(dt,0.04);
+  anim2.lastT=ts;
+  var Tmax=rf('s2Tmax');
+  anim2.t=Math.min(Tmax,anim2.t+dt);
+  drawSim2();
+  if(anim2.t>=Tmax){
+    anim2.playing=false;
+    document.getElementById('btnPlay2').className='btn on';
+    document.getElementById('btnPlay2').textContent='\u25b6 Avvia';
+    return;
+  }
+  anim2.id=requestAnimationFrame(loop2);
+}
+function drawSim2(){
+  var t=anim2.t, Tmax=rf('s2Tmax');
+  var sA=posA2(t), sB=posB2(t);
+  var t0A=rf('s2t0A'),t0B=rf('s2t0B');
+
+  var meetings=findMeetingsGeneric(posA2,posB2,Tmax);
+
+  var cv=setupCv('cv2',660);
+  var W=cv.width,H=660,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out2');
+
+  var trackY=48, trackX1=20, trackX2=W-20;
+  ctx.strokeStyle='#999';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(trackX1,trackY);ctx.lineTo(trackX2,trackY);ctx.stroke();
+
+  var allPos=[]; for(var i=0;i<=60;i++){var tt=Tmax*i/60;allPos.push(posA2(tt));allPos.push(posB2(tt));}
+  var smin=Math.min.apply(null,allPos)-2, smax=Math.max.apply(null,allPos)+2;
+  function trackX(pos){return trackX1+(pos-smin)/(smax-smin)*(trackX2-trackX1);}
+  var tstep=niceStep(smax-smin,8);
+  ctx.fillStyle='#888';ctx.font='8px monospace';ctx.textAlign='center';
+  for(var p=Math.ceil(smin/tstep)*tstep;p<=smax;p+=tstep){
+    ctx.beginPath();ctx.moveTo(trackX(p),trackY-5);ctx.lineTo(trackX(p),trackY+5);ctx.strokeStyle='#bbb';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillText(fmt1(p),trackX(p),trackY+16);
+  }
+  if(0>=smin&&0<=smax){
+    ctx.strokeStyle='#555';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(trackX(0),trackY-8);ctx.lineTo(trackX(0),trackY+8);ctx.stroke();
+  }
+  dot(ctx,trackX(sA),trackY-9,6,'#1a4b8c');
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.fillText('A',trackX(sA),trackY-20);
+  dot(ctx,trackX(sB),trackY+9,6,'#b5351a');
+  ctx.fillStyle='#b5351a';ctx.fillText('B',trackX(sB),trackY+28);
+
+  var gTop=80, gH=230;
+  var ax=drawAxes(ctx,55,gTop,W-85,gH,0,Tmax,smin,smax,'t (s)','s (m)');
+  plotFn(ctx,ax.sx,ax.sy,posA2,0,Tmax,'#1a4b8c',2.3);
+  plotFn(ctx,ax.sx,ax.sy,posB2,0,Tmax,'#b5351a',2.3);
+
+  meetings.forEach(function(tm){
+    if(tm>=0&&tm<=Tmax){dot(ctx,ax.sx(tm),ax.sy(posA2(tm)),6,'#f4a020');}
+  });
+
+  ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=1;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(ax.sx(t),gTop);ctx.lineTo(ax.sx(t),gTop+gH);ctx.stroke();ctx.setLineDash([]);
+  dot(ctx,ax.sx(t),ax.sy(sA),4,'#1a4b8c');
+  dot(ctx,ax.sx(t),ax.sy(sB),4,'#b5351a');
+  ctx.fillStyle='#444';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('Grafico s\u2212t (posizione)',60,gTop+14);
+
+  var stato=Math.abs(sA-sB)<0.3?'I CORPI SONO INSIEME (incontro!) \u2713':'distanza: '+fmt2(Math.abs(sA-sB))+' m';
+  ctx.fillStyle=Math.abs(sA-sB)<0.3?'#1a6b3a':'#444';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText(stato,W/2,20);
+
+  // grafico v-t
+  var g2Top=gTop+gH+48, g2H=200;
+  var allVel=[]; for(var i=0;i<=60;i++){var tt=Tmax*i/60;allVel.push(velA2(tt));allVel.push(velB2(tt));}
+  var vmin=Math.min(0,Math.min.apply(null,allVel))-2, vmax=Math.max(0,Math.max.apply(null,allVel))+2;
+  var ax2=drawAxes(ctx,55,g2Top,W-85,g2H,0,Tmax,vmin,vmax,'t (s)','v (m/s)');
+  plotFn(ctx,ax2.sx,ax2.sy,velA2,0,Tmax,'#1a4b8c',2.3);
+  plotFn(ctx,ax2.sx,ax2.sy,velB2,0,Tmax,'#b5351a',2.3);
+  var vA=velA2(t), vB=velB2(t);
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax2.sx(t),g2Top);ctx.lineTo(ax2.sx(t),g2Top+g2H);ctx.stroke();ctx.setLineDash([]);
+  dot(ctx,ax2.sx(t),ax2.sy(vA),4,'#1a4b8c');
+  dot(ctx,ax2.sx(t),ax2.sy(vB),4,'#b5351a');
+  ctx.fillStyle='#444';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('Grafico v\u2212t (velocit\u00e0)',60,g2Top+14);
+
+  o.className='out';
+  var html='<div class="rg">';
+  html+='<div class="rl">t attuale</div><div class="rv">'+fmt2(t)+' s</div>';
+  html+='<div class="rl">s<sub>A</sub>(t)</div><div class="rv">'+fmt2(sA)+' m</div>';
+  html+='<div class="rl">s<sub>B</sub>(t)</div><div class="rv">'+fmt2(sB)+' m</div>';
+  html+='<div class="rl">v<sub>A</sub>(t)</div><div class="rv">'+fmt2(vA)+' m/s</div>';
+  html+='<div class="rl">v<sub>B</sub>(t)</div><div class="rv">'+fmt2(vB)+' m/s</div>';
+  html+='<div class="rl">Distanza |s<sub>A</sub>&minus;s<sub>B</sub>|</div><div class="rv">'+fmt2(Math.abs(sA-sB))+' m</div>';
+  html+='<div class="rsep"></div>';
+  if(meetings.length===0){
+    html+='<div class="rl">Incontro</div><div class="rv warn">nessun incontro in [0, '+fmt1(Tmax)+'s]</div>';
+  } else {
+    meetings.forEach(function(tm,i){
+      html+='<div class="rl">Incontro '+(meetings.length>1?(i+1):'')+'</div><div class="rv ok">t='+fmt2(tm)+'s, s='+fmt2(posA2(tm))+'m</div>';
+    });
+  }
+  html+='</div>';
+  o.innerHTML=html;
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 3 — UNIFORME VS ACCELERATO: INSEGUIMENTO
+// ══════════════════════════════════════════════════════
+var anim3={t:0,playing:false,id:null,lastT:null};
+function posA3(t){
+  var s0=rf('s3s0A'),v=rf('s3vA'),t0=rf('s3t0A');
+  return t<t0 ? s0 : s0+v*(t-t0);
+}
+function posB3(t){
+  var s0=rf('s3s0B'),v0=rf('s3v0B'),a=rf('s3aB'),t0=rf('s3t0B');
+  if(t<t0)return s0;
+  var dt=t-t0; return s0+v0*dt+0.5*a*dt*dt;
+}
+function velA3(t){
+  var v=rf('s3vA'),t0=rf('s3t0A');
+  return t<t0?0:v;
+}
+function velB3(t){
+  var v0=rf('s3v0B'),a=rf('s3aB'),t0=rf('s3t0B');
+  return t<t0?0:v0+a*(t-t0);
+}
+function togglePlay3(){
+  anim3.playing=!anim3.playing;
+  document.getElementById('btnPlay3').className=anim3.playing?'btn on':'btn';
+  document.getElementById('btnPlay3').textContent=anim3.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim3.lastT=null;
+  if(anim3.playing)loop3();else if(anim3.id){cancelAnimationFrame(anim3.id);anim3.id=null;}
+}
+function resetSim3(){
+  anim3.playing=false; anim3.t=0;
+  document.getElementById('btnPlay3').className='btn on';
+  document.getElementById('btnPlay3').textContent='\u25b6 Avvia';
+  if(anim3.id){cancelAnimationFrame(anim3.id);anim3.id=null;}
+  drawSim3();
+}
+function loop3(ts){
+  if(!anim3.playing)return;
+  if(anim3.lastT===null)anim3.lastT=ts;
+  var dt=(ts-anim3.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012; dt=Math.min(dt,0.04);
+  anim3.lastT=ts;
+  var Tmax=rf('s3Tmax');
+  anim3.t=Math.min(Tmax,anim3.t+dt);
+  drawSim3();
+  if(anim3.t>=Tmax){
+    anim3.playing=false;
+    document.getElementById('btnPlay3').className='btn on';
+    document.getElementById('btnPlay3').textContent='\u25b6 Avvia';
+    return;
+  }
+  anim3.id=requestAnimationFrame(loop3);
+}
+function drawSim3(){
+  var t=anim3.t, Tmax=rf('s3Tmax');
+  var sA=posA3(t), sB=posB3(t);
+  var t0A=rf('s3t0A'),t0B=rf('s3t0B'),v0B=rf('s3v0B'),aB=rf('s3aB');
+
+  var meetings=findMeetingsGeneric(posA3,posB3,Tmax);
+
+  var cv=setupCv('cv3',660);
+  var W=cv.width,H=660,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out3');
+
+  var trackY=48, trackX1=20, trackX2=W-20;
+  ctx.strokeStyle='#999';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(trackX1,trackY);ctx.lineTo(trackX2,trackY);ctx.stroke();
+
+  var allPos=[]; for(var i=0;i<=60;i++){var tt=Tmax*i/60;allPos.push(posA3(tt));allPos.push(posB3(tt));}
+  var smin=Math.min.apply(null,allPos)-2, smax=Math.max.apply(null,allPos)+2;
+  function trackX(pos){return trackX1+(pos-smin)/(smax-smin)*(trackX2-trackX1);}
+  var tstep=niceStep(smax-smin,8);
+  ctx.fillStyle='#888';ctx.font='8px monospace';ctx.textAlign='center';
+  for(var p=Math.ceil(smin/tstep)*tstep;p<=smax;p+=tstep){
+    ctx.beginPath();ctx.moveTo(trackX(p),trackY-5);ctx.lineTo(trackX(p),trackY+5);ctx.strokeStyle='#bbb';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillText(fmt1(p),trackX(p),trackY+16);
+  }
+  if(0>=smin&&0<=smax){
+    ctx.strokeStyle='#555';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(trackX(0),trackY-8);ctx.lineTo(trackX(0),trackY+8);ctx.stroke();
+  }
+  dot(ctx,trackX(sA),trackY-9,6,'#1a4b8c');
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.fillText('A',trackX(sA),trackY-20);
+  dot(ctx,trackX(sB),trackY+9,6,'#b5351a');
+  ctx.fillStyle='#b5351a';ctx.fillText('B',trackX(sB),trackY+28);
+
+  var gTop=80, gH=230;
+  var ax=drawAxes(ctx,55,gTop,W-85,gH,0,Tmax,smin,smax,'t (s)','s (m)');
+  plotFn(ctx,ax.sx,ax.sy,posA3,0,Tmax,'#1a4b8c',2.3);
+  plotFn(ctx,ax.sx,ax.sy,posB3,0,Tmax,'#b5351a',2.3);
+
+  meetings.forEach(function(tm){
+    if(tm>=0&&tm<=Tmax){dot(ctx,ax.sx(tm),ax.sy(posA3(tm)),6,'#f4a020');}
+  });
+
+  ctx.strokeStyle='rgba(0,0,0,0.25)';ctx.lineWidth=1;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(ax.sx(t),gTop);ctx.lineTo(ax.sx(t),gTop+gH);ctx.stroke();ctx.setLineDash([]);
+  dot(ctx,ax.sx(t),ax.sy(sA),4,'#1a4b8c');
+  dot(ctx,ax.sx(t),ax.sy(sB),4,'#b5351a');
+  ctx.fillStyle='#444';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('Grafico s\u2212t (posizione)',60,gTop+14);
+
+  var stato=Math.abs(sA-sB)<0.3?'I CORPI SONO INSIEME (incontro!) \u2713':'distanza: '+fmt2(Math.abs(sA-sB))+' m';
+  ctx.fillStyle=Math.abs(sA-sB)<0.3?'#1a6b3a':'#444';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText(stato,W/2,20);
+
+  // grafico v-t
+  var g2Top=gTop+gH+48, g2H=200;
+  var allVel=[]; for(var i=0;i<=60;i++){var tt=Tmax*i/60;allVel.push(velA3(tt));allVel.push(velB3(tt));}
+  var vmin=Math.min(0,Math.min.apply(null,allVel))-2, vmax=Math.max(0,Math.max.apply(null,allVel))+2;
+  var ax2=drawAxes(ctx,55,g2Top,W-85,g2H,0,Tmax,vmin,vmax,'t (s)','v (m/s)');
+  plotFn(ctx,ax2.sx,ax2.sy,velA3,0,Tmax,'#1a4b8c',2.3);
+  plotFn(ctx,ax2.sx,ax2.sy,velB3,0,Tmax,'#b5351a',2.3);
+  var vA=velA3(t), vB=velB3(t);
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax2.sx(t),g2Top);ctx.lineTo(ax2.sx(t),g2Top+g2H);ctx.stroke();ctx.setLineDash([]);
+  dot(ctx,ax2.sx(t),ax2.sy(vA),4,'#1a4b8c');
+  dot(ctx,ax2.sx(t),ax2.sy(vB),4,'#b5351a');
+  ctx.fillStyle='#444';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('Grafico v\u2212t (velocit\u00e0)',60,g2Top+14);
+
+  // Velocità di B al momento dell'incontro (utile per esercizi tipo "a che velocità arriva la pattuglia")
+  var vBatMeet=meetings.length>0?(t0B<=meetings[0]? v0B+aB*(meetings[0]-t0B) : 0):null;
+
+  o.className='out';
+  var html='<div class="rg">';
+  html+='<div class="rl">t attuale</div><div class="rv">'+fmt2(t)+' s</div>';
+  html+='<div class="rl">s<sub>A</sub>(t) [uniforme]</div><div class="rv">'+fmt2(sA)+' m</div>';
+  html+='<div class="rl">s<sub>B</sub>(t) [accelerato]</div><div class="rv">'+fmt2(sB)+' m</div>';
+  html+='<div class="rl">v<sub>A</sub>(t)</div><div class="rv">'+fmt2(vA)+' m/s</div>';
+  html+='<div class="rl">v<sub>B</sub>(t)</div><div class="rv">'+fmt2(vB)+' m/s</div>';
+  html+='<div class="rl">Distanza |s<sub>A</sub>&minus;s<sub>B</sub>|</div><div class="rv">'+fmt2(Math.abs(sA-sB))+' m</div>';
+  html+='<div class="rsep"></div>';
+  if(meetings.length===0){
+    html+='<div class="rl">Incontro</div><div class="rv warn">nessun incontro in [0, '+fmt1(Tmax)+'s]</div>';
+  } else {
+    meetings.forEach(function(tm,i){
+      html+='<div class="rl">Incontro '+(meetings.length>1?(i+1):'')+'</div><div class="rv ok">t='+fmt2(tm)+'s, s='+fmt2(posA3(tm))+'m</div>';
+    });
+    html+='<div class="rl">Velocit\u00e0 di B all\'incontro</div><div class="rv">'+fmt2(vBatMeet)+' m/s</div>';
+  }
+  html+='</div>';
+  o.innerHTML=html;
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn,d){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(vid).textContent=d===1?fmt1(v):fmt2(v);
+    fn();
+  };
+}
+sl('s1s0','s1s0v',function(){if(!anim1.playing)resetSim1();},1);
+sl('s1v0','s1v0v',function(){if(!anim1.playing)resetSim1();},1);
+sl('s1a','s1av',function(){if(!anim1.playing)resetSim1();},1);
+sl('s1Tmax','s1Tmaxv',function(){if(!anim1.playing)resetSim1();},1);
+
+sl('s2s0A','s2s0Av',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2v0A','s2v0Av',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2aA','s2aAv',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2t0A','s2t0Av',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2s0B','s2s0Bv',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2v0B','s2v0Bv',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2aB','s2aBv',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2t0B','s2t0Bv',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2Tmax','s2Tmaxv',function(){if(!anim2.playing)resetSim2();},1);
+
+sl('s3s0A','s3s0Av',function(){if(!anim3.playing)resetSim3();},1);
+sl('s3vA','s3vAv',function(){if(!anim3.playing)resetSim3();},1);
+sl('s3t0A','s3t0Av',function(){if(!anim3.playing)resetSim3();},1);
+sl('s3s0B','s3s0Bv',function(){if(!anim3.playing)resetSim3();},1);
+sl('s3v0B','s3v0Bv',function(){if(!anim3.playing)resetSim3();},1);
+sl('s3aB','s3aBv',function(){if(!anim3.playing)resetSim3();},1);
+sl('s3t0B','s3t0Bv',function(){if(!anim3.playing)resetSim3();},1);
+sl('s3Tmax','s3Tmaxv',function(){if(!anim3.playing)resetSim3();},1);
+
+window.addEventListener('resize',function(){drawSim1();drawSim2();drawSim3();});
+document.addEventListener('DOMContentLoaded',function(){
+  drawSim1();
+  drawSim2();
+  drawSim3();
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
