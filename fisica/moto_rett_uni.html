@@ -407,6 +407,20 @@ function loop2(ts){
   }
   anim2.id=requestAnimationFrame(loop2);
 }
+// Calcola l'istante "teorico" di incontro tra le due rette COMPLETE (ignorando i vincoli
+// t<t0 → fermo), risolvendo s0A+vA(t-t0A) = s0B+vB(t-t0B). Serve solo per diagnosticare
+// perché non c'è incontro nel range visibile: rette davvero parallele, oppure
+// incontro che cadrebbe a t<0 ("nel passato") o oltre Tmax.
+function theoreticalMeetingTime(){
+  var s0A=rf('s2s0A'),vA=rf('s2vA'),t0A=rf('s2t0A');
+  var s0B=rf('s2s0B'),vB=rf('s2vB'),t0B=rf('s2t0B');
+  if(Math.abs(vA-vB)<1e-9) return null; // davvero parallele: nessuna soluzione, mai
+  // s0A+vA(t-t0A) = s0B+vB(t-t0B)
+  // s0A-vA*t0A + vA*t = s0B-vB*t0B + vB*t
+  // t(vA-vB) = (s0B-vB*t0B) - (s0A-vA*t0A)
+  var t = ((s0B-vB*t0B)-(s0A-vA*t0A))/(vA-vB);
+  return t;
+}
 // Trova istanti di incontro campionando d(t)=posA(t)-posB(t) e rifinendo con bisezione
 function findMeetings(Tmax){
   var N=2000, prevT=0, prevD=posA(0)-posB(0);
@@ -510,7 +524,18 @@ function drawSim2(){
   html+='<div class="rl">Distanza |s<sub>A</sub>&minus;s<sub>B</sub>|</div><div class="rv">'+fmt2(Math.abs(sA-sB))+' m</div>';
   html+='<div class="rsep"></div>';
   if(meetings.length===0){
-    html+='<div class="rl">Incontro</div><div class="rv warn">nessun incontro in [0, '+fmt1(Tmax)+'s] &mdash; prova ad aumentare il tempo massimo, o le rette sono parallele (v<sub>A</sub>=v<sub>B</sub>)</div>';
+    var tTheo=theoreticalMeetingTime();
+    var msg;
+    if(tTheo===null){
+      msg='le due rette sono parallele (v<sub>A</sub>=v<sub>B</sub>): nessun incontro possibile, a nessun tempo';
+    } else if(tTheo<0){
+      msg='le rette si incrocerebbero nel passato, a t='+fmt2(tTheo)+'s (prima di t=0): nessun incontro nel futuro';
+    } else if(tTheo>Tmax){
+      msg='l\'incontro avverrebbe a t\u2248'+fmt2(tTheo)+'s, oltre il tempo massimo mostrato ('+fmt1(Tmax)+'s) &mdash; prova ad aumentarlo';
+    } else {
+      msg='nessun incontro rilevato in [0, '+fmt1(Tmax)+'s]';
+    }
+    html+='<div class="rl">Incontro</div><div class="rv warn">'+msg+'</div>';
   } else {
     meetings.forEach(function(tm,i){
       html+='<div class="rl">Incontro '+(meetings.length>1?(i+1):'')+'</div><div class="rv ok">t='+fmt2(tm)+'s, s='+fmt2(posA(tm))+'m</div>';
