@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moto Circolare Uniforme — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,38px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:540px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:74px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:34px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.err{color:#f4a582;font-weight:600}
+.rv.warn{color:#f4d03f}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Cinematica</div>
+  <h1>Moto Circolare<br><em>Uniforme</em></h1>
+  <p>Velocit&agrave; angolare costante, traiettoria circolare &mdash; dal punto mobile alle pulegge collegate da una cinghia</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#sim1">Sim 1 &mdash; Punto mobile</a>
+  <a href="#sim2">Sim 2 &mdash; Cinghia tra due pulegge</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="moto_circolare_uniacc.html">M.C.U.A. &#8594;</a>
+  <a href="cinematica.html">&#8592; Cinematica</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Moto Circolare Uniforme</h2>
+  <p class="ssub">Quando un punto percorre una circonferenza a velocit&agrave; (in modulo) costante</p>
+  <p>Un punto materiale si muove di <strong>moto circolare uniforme</strong> (M.C.U.) quando percorre una traiettoria circolare con <strong>velocit&agrave; angolare costante</strong>: descrive angoli uguali in tempi uguali. Il modulo della velocit&agrave; (tangenziale) resta costante, ma la sua <strong>direzione cambia continuamente</strong> &mdash; per questo motivo, anche se "uniforme", il moto &egrave; comunque accelerato.</p>
+
+  <h3>Velocit&agrave; angolare</h3>
+  <div class="formula">
+    <div class="f">&omega; = <span class="frac"><span class="n">&Delta;&theta;</span><span class="d">&Delta;t</span></span> &nbsp; (rad/s)</div>
+    <div class="fd">l'angolo descritto nell'unit&agrave; di tempo &middot; nel M.C.U. &egrave; costante</div>
+  </div>
+
+  <h3>Legge oraria angolare</h3>
+  <div class="formula">
+    <div class="f">&theta;(t) = &theta;<sub>0</sub> + &omega;&middot;(t&minus;t<sub>0</sub>)</div>
+    <div class="fd">identica nella forma a x(t)=x&#8320;+vt del moto rettilineo uniforme, ma per l'angolo &theta; al posto della posizione</div>
+  </div>
+  <div class="bn">&#128161; &theta;(t) cresce (o decresce) indefinitamente nel tempo, anche se la posizione del punto si ripete identica ad ogni giro: &theta; "conta i giri", non si azzera.</div>
+
+  <h3>Periodo e frequenza</h3>
+  <div class="two">
+    <div class="formula"><div class="f">T = <span class="frac"><span class="n">2&pi;</span><span class="d">&omega;</span></span> &nbsp;(s)</div><div class="fd">tempo per compiere un giro completo (2&pi; rad)</div></div>
+    <div class="formula"><div class="f">f = <span class="frac"><span class="n">1</span><span class="d">T</span></span> = <span class="frac"><span class="n">&omega;</span><span class="d">2&pi;</span></span> &nbsp;(Hz)</div><div class="fd">numero di giri al secondo</div></div>
+  </div>
+
+  <h3>Velocit&agrave; tangenziale</h3>
+  <div class="formula">
+    <div class="f">v = &omega;&middot;R</div>
+    <div class="fd">modulo costante, direzione sempre tangente alla circonferenza (cambia istante per istante)</div>
+  </div>
+
+  <h3>Accelerazione centripeta</h3>
+  <div class="formula">
+    <div class="f">a<sub>c</sub> = &omega;&sup2;R = <span class="frac"><span class="n">v&sup2;</span><span class="d">R</span></span></div>
+    <div class="fd">sempre diretta verso il centro &middot; cambia la direzione di v, non il suo modulo</div>
+  </div>
+  <div class="bw">&#9888; 360&deg; = 2&pi; rad. Per convertire: rad = gradi&middot;&pi;/180, gradi = rad&middot;180/&pi;.</div>
+
+  <h3>Numero di giri compiuti</h3>
+  <div class="two">
+    <div class="formula">
+      <div class="f">n = <span class="frac"><span class="n">&Delta;&theta;</span><span class="d">2&pi;</span></span></div>
+      <div class="fd">numero di giri compiuti in un angolo &Delta;&theta; (in rad) &middot; ogni giro corrisponde a 2&pi; rad</div>
+    </div>
+    <div class="formula">
+      <div class="f">n = <span class="frac"><span class="n">&Delta;t</span><span class="d">T</span></span> = f&middot;&Delta;t</div>
+      <div class="fd">numero di giri compiuti in un tempo &Delta;t &middot; equivalente a &Delta;&theta;/(2&pi;), essendo &Delta;&theta;=&omega;&Delta;t</div>
+    </div>
+  </div>
+  <div class="bn">&#128161; Il numero di giri n non deve essere necessariamente intero: n=2.5 significa "due giri e mezzo".</div>
+
+  <h3>Cinghie e pulegge</h3>
+  <div class="bf">Se due ruote (pulegge) sono collegate da una <strong>cinghia che non slitta</strong>, il punto di contatto si muove alla stessa velocit&agrave; lineare su entrambe: &omega;<sub>1</sub>R<sub>1</sub> = &omega;<sub>2</sub>R<sub>2</sub> = v<sub>cinghia</sub>. Di conseguenza la puleggia <strong>pi&ugrave; piccola gira pi&ugrave; veloce</strong> (in &omega;) di quella grande, in proporzione inversa ai raggi: &omega;<sub>1</sub>/&omega;<sub>2</sub> = R<sub>2</sub>/R<sub>1</sub>.</div>
+</div>
+
+<!-- SIM 1: PUNTO MOBILE -->
+<div class="sec" id="sim1">
+  <h2>2. Simulatore 1 &mdash; Punto Mobile su una Circonferenza</h2>
+  <p class="ssub">Osserva come variano posizione angolare, velocit&agrave; tangenziale e accelerazione centripeta</p>
+  <div class="sim">
+    <div class="sim-t">Un punto materiale in moto circolare uniforme</div>
+    <div class="ctrl">
+      <label>R (m)</label>
+      <input type="range" id="s1R" min="1" max="8" step="0.5" value="4"><span class="vv" id="s1Rv">4.0</span>
+      <label>&omega; (rad/s)</label>
+      <input type="range" id="s1omega" min="-3" max="3" step="0.1" value="1.2"><span class="vv" id="s1omegav">1.2</span>
+      <label>&theta;<sub>0</sub> (&deg;)</label>
+      <input type="range" id="s1theta0" min="0" max="350" step="10" value="0"><span class="vv" id="s1theta0v">0</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+      <label>tempo massimo (s)</label>
+      <input type="range" id="s1Tmax" min="5" max="30" step="1" value="12"><span class="vv" id="s1Tmaxv">12</span>
+    </div>
+    <canvas id="cv1" style="height:700px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>Raggio O&minus;P</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Velocit&agrave; tangenziale v</span>
+      <span><span class="ld" style="background:#b5351a"></span>Accelerazione centripeta a<sub>c</sub></span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2: CINGHIA TRA DUE PULEGGE -->
+<div class="sec" id="sim2">
+  <h2>3. Simulatore 2 &mdash; Cinghia tra Due Pulegge</h2>
+  <p class="ssub">Due ruote di raggio diverso collegate da una cinghia che non slitta: quando una gira, gira anche l'altra</p>
+  <div class="sim">
+    <div class="sim-t">Due pulegge collegate da una cinghia (trasmissione senza slittamento)</div>
+    <div class="ctrl">
+      <label style="color:#1a4b8c">Puleggia 1:</label>
+      <label>R<sub>1</sub> (m)</label>
+      <input type="range" id="s2R1" min="1" max="6" step="0.5" value="4"><span class="vv" id="s2R1v">4.0</span>
+      <label>&omega;<sub>1</sub> (rad/s)</label>
+      <input type="range" id="s2omega1" min="-3" max="3" step="0.1" value="1.5"><span class="vv" id="s2omega1v">1.5</span>
+    </div>
+    <div class="ctrl">
+      <label style="color:#b5351a">Puleggia 2:</label>
+      <label>R<sub>2</sub> (m)</label>
+      <input type="range" id="s2R2" min="0.5" max="6" step="0.5" value="1.5"><span class="vv" id="s2R2v">1.5</span>
+      <label>distanza centri D (m)</label>
+      <input type="range" id="s2D" min="6" max="20" step="0.5" value="12"><span class="vv" id="s2Dv">12.0</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay2" onclick="togglePlay2()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim2()">&#8634; Reset</button>
+      <label>tempo massimo (s)</label>
+      <input type="range" id="s2Tmax" min="5" max="30" step="1" value="15"><span class="vv" id="s2Tmaxv">15</span>
+    </div>
+    <canvas id="cv2" style="height:460px"></canvas>
+    <div class="out empty" id="out2">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>Puleggia 1</span>
+      <span><span class="ld" style="background:#b5351a"></span>Puleggia 2</span>
+      <span><span class="ld" style="background:#444"></span>Cinghia</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>4. Esercizi Proposti</h2>
+  <p class="ssub">Moto circolare uniforme e trasmissione tramite cinghia</p>
+  <ol>
+    <li><strong>Giostra:</strong> una giostra ruota con periodo T=8s. Calcola &omega;. Sapendo che il raggio &egrave; R=4m, trova la velocit&agrave; tangenziale e l'accelerazione centripeta di un passeggero seduto al bordo. Verifica i risultati nel Sim 1.</li>
+    <li><strong>Le lancette dell'orologio:</strong> calcola &omega; (in rad/s) della lancetta dei minuti (periodo 60 min) e di quella delle ore (periodo 12h). Quale delle due ha velocit&agrave; angolare maggiore?</li>
+    <li><strong>Trasmissione a cinghia:</strong> una puleggia motrice di raggio R<sub>1</sub>=15cm ruota a 4 giri/s. Calcola prima &omega;<sub>1</sub> in rad/s, poi, sapendo che &egrave; collegata senza slittamento a una puleggia condotta di raggio R<sub>2</sub>=5cm, trova &omega;<sub>2</sub> e i giri al secondo della seconda puleggia. Verifica nel Sim 2.</li>
+    <li><strong>Bicicletta a scatto fisso:</strong> la corona (raggio 10cm) &egrave; collegata tramite catena (assimilabile a una cinghia) al pignone sulla ruota posteriore (raggio 4cm). Pedalando, la corona compie 2 giri/s. A quanti giri/s gira il pignone (e quindi la ruota)? Se la ruota ha raggio 33cm, qual &egrave; la velocit&agrave; del ciclista, in km/h?</li>
+    <li><strong>Satellite in orbita:</strong> un satellite percorre un'orbita circolare di raggio 7000km con periodo 90 minuti. Calcola &omega; (rad/s), la velocit&agrave; v (in km/s) e l'accelerazione centripeta (confrontala con g=9.81 m/s&sup2;, convertendo le unit&agrave; in m e s).</li>
+    <li><strong>Dimostrazione:</strong> a partire da &omega;<sub>1</sub>R<sub>1</sub>=&omega;<sub>2</sub>R<sub>2</sub> (velocit&agrave; della cinghia uguale su entrambe le pulegge), ricava che &omega;<sub>1</sub>/&omega;<sub>2</sub> = R<sub>2</sub>/R<sub>1</sub>: il rapporto tra le velocit&agrave; angolari &egrave; l'inverso del rapporto tra i raggi. Verifica con due coppie di valori diverse nel Sim 2.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Moto Circolare Uniforme &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function niceStep(range,n){
+  var s=range/Math.max(n,1), m=Math.pow(10,Math.floor(Math.log10(Math.abs(s)||1))), t=s/m;
+  return(t<2?1:t<5?2:5)*m;
+}
+function drawAxes(ctx,x,y,w,h,xmin,xmax,ymin,ymax,xlabel,ylabel){
+  function sx(vx){return x+(vx-xmin)/(xmax-xmin)*w;}
+  function sy(vy){return y+h-(vy-ymin)/(ymax-ymin)*h;}
+  var gx=niceStep(xmax-xmin,6), gy=niceStep(ymax-ymin,5);
+  ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.6;ctx.setLineDash([]);
+  for(var vx=Math.ceil(xmin/gx)*gx; vx<=xmax; vx+=gx){
+    ctx.beginPath();ctx.moveTo(sx(vx),y);ctx.lineTo(sx(vx),y+h);ctx.stroke();
+  }
+  for(var vy=Math.ceil(ymin/gy)*gy; vy<=ymax; vy+=gy){
+    ctx.beginPath();ctx.moveTo(x,sy(vy));ctx.lineTo(x+w,sy(vy));ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=1;
+  if(0>=ymin&&0<=ymax){ctx.beginPath();ctx.moveTo(x,sy(0));ctx.lineTo(x+w,sy(0));ctx.stroke();}
+  if(0>=xmin&&0<=xmax){ctx.beginPath();ctx.moveTo(sx(0),y);ctx.lineTo(sx(0),y+h);ctx.stroke();}
+  ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='8.5px monospace';ctx.textAlign='center';
+  for(var vx2=Math.ceil(xmin/gx)*gx; vx2<=xmax; vx2+=gx){
+    ctx.fillText(fmt1(vx2),sx(vx2),y+h+11);
+  }
+  ctx.textAlign='right';
+  for(var vy2=Math.ceil(ymin/gy)*gy; vy2<=ymax; vy2+=gy){
+    ctx.fillText(fmt1(vy2),x-4,sy(vy2)+3);
+  }
+  ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='left';
+  ctx.fillText(xlabel,x+w-22,y+h+11);
+  ctx.fillText(ylabel,x-22,y+10);
+  return {sx:sx,sy:sy};
+}
+function plotFn(ctx,sxFn,syFn,fn,tmin,tmax,color,lw){
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();var first=true;
+  var N=120;
+  for(var i=0;i<=N;i++){
+    var tt=tmin+(tmax-tmin)*i/N;
+    var yy=fn(tt);
+    if(!isFinite(yy)){first=true;continue;}
+    var px=sxFn(tt),py=syFn(yy);
+    first?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    first=false;
+  }
+  ctx.stroke();
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+}
+function drawArrow(ctx,x1,y1,x2,y2,color,lw){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lw||2.4;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var ang=Math.atan2(y2-y1,x2-x1), hl=8;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(ang-Math.PI/6), y2-hl*Math.sin(ang-Math.PI/6));
+  ctx.lineTo(x2-hl*Math.cos(ang+Math.PI/6), y2-hl*Math.sin(ang+Math.PI/6));
+  ctx.closePath();ctx.fill();
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 1 — PUNTO MOBILE SU UNA CIRCONFERENZA
+// ══════════════════════════════════════════════════════
+var anim1={t:0,playing:false,id:null,lastT:null};
+function togglePlay1(){
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim1.lastT=null;
+  if(anim1.playing)loop1();else if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+}
+function resetSim1(){
+  anim1.playing=false; anim1.t=0;
+  document.getElementById('btnPlay1').className='btn on';
+  document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+  if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+  drawSim1();
+}
+function loop1(ts){
+  if(!anim1.playing)return;
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dt=(ts-anim1.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012; dt=Math.min(dt,0.04);
+  anim1.lastT=ts;
+  var Tmax=rf('s1Tmax');
+  anim1.t=Math.min(Tmax,anim1.t+dt);
+  drawSim1();
+  if(anim1.t>=Tmax){
+    anim1.playing=false;
+    document.getElementById('btnPlay1').className='btn on';
+    document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+    return;
+  }
+  anim1.id=requestAnimationFrame(loop1);
+}
+function drawSim1(){
+  var R=rf('s1R'), om=rf('s1omega'), th0=rf('s1theta0')*Math.PI/180, Tmax=rf('s1Tmax');
+  var t=anim1.t;
+  function thetaFn(tt){return th0+om*tt;}
+  var theta=thetaFn(t);
+  var x=R*Math.cos(theta), y=R*Math.sin(theta);
+  var vMag=Math.abs(om)*R;
+  var aMag=om*om*R;
+
+  var cv=setupCv('cv1',700);
+  var W=cv.width,H=700,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  // ── area circolare ──
+  var circTop=10, circH=320;
+  var cx=W/2, cy=circTop+circH/2;
+  var pxR=Math.max(40,Math.min(circH/2-50,W/2-70));
+
+  ctx.strokeStyle='rgba(0,0,0,0.12)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(cx-pxR-22,cy);ctx.lineTo(cx+pxR+22,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,cy-pxR-22);ctx.lineTo(cx,cy+pxR+22);ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.beginPath();ctx.arc(cx,cy,pxR,0,2*Math.PI);ctx.strokeStyle='#bbb';ctx.lineWidth=1.6;ctx.stroke();
+
+  var px=cx+pxR*Math.cos(theta), py=cy-pxR*Math.sin(theta);
+
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);ctx.strokeStyle='#1a4b8c';ctx.lineWidth=1.8;ctx.setLineDash([3,2]);ctx.stroke();ctx.setLineDash([]);
+
+  var sgn=om>=0?1:-1;
+  var vDirX=-Math.sin(theta)*sgn, vDirY=Math.cos(theta)*sgn;
+  var vLen=Math.min(70,18+vMag*8);
+  drawArrow(ctx,px,py,px+vDirX*vLen,py-vDirY*vLen,'#1a6b3a',2.6);
+
+  var aDirX=(cx-px), aDirY=(cy-py); var aNorm=Math.sqrt(aDirX*aDirX+aDirY*aDirY)||1; aDirX/=aNorm; aDirY/=aNorm;
+  var aLen=Math.min(60,16+aMag*6);
+  drawArrow(ctx,px,py,px+aDirX*aLen,py+aDirY*aLen,'#b5351a',2.6);
+
+  dot(ctx,cx,cy,4,'#555');
+  dot(ctx,px,py,7,'#1a4b8c');
+  ctx.fillStyle='#555';ctx.font='bold 9px monospace';ctx.textAlign='right';
+  ctx.fillText('O',cx-9,cy+12);
+  ctx.fillStyle='#1a4b8c';ctx.textAlign='left';
+  ctx.fillText('P',px+10,py-6);
+  ctx.fillStyle='#1a6b3a';
+  ctx.fillText('v',px+vDirX*vLen+8,py-vDirY*vLen);
+  ctx.fillStyle='#b5351a';
+  ctx.fillText('a\u2080',px+aDirX*aLen+8,py+aDirY*aLen+10);
+
+  ctx.fillStyle='#444';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText('\u03b8(t) = '+fmt1(theta*180/Math.PI)+'\u00b0  ('+fmt2(theta)+' rad)',W/2,circTop+14);
+
+  // ── grafico θ-t ──
+  var g1Top=circTop+circH+30, g1H=140;
+  var thAtTmax=thetaFn(Tmax);
+  var thmin=Math.min(th0,thAtTmax)-0.3, thmax=Math.max(th0,thAtTmax)+0.3;
+  if(thmax-thmin<0.5){thmin-=0.5;thmax+=0.5;}
+  var ax1=drawAxes(ctx,55,g1Top,W-85,g1H,0,Tmax,thmin,thmax,'t (s)','\u03b8 (rad)');
+  plotFn(ctx,ax1.sx,ax1.sy,thetaFn,0,Tmax,'#1a4b8c',2.3);
+  dot(ctx,ax1.sx(t),ax1.sy(theta),5,'#1a4b8c');
+  ctx.strokeStyle='rgba(26,75,140,0.3)';ctx.lineWidth=1;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(ax1.sx(t),g1Top);ctx.lineTo(ax1.sx(t),g1Top+g1H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('\u03b8(t) = \u03b8\u2080 + \u03c9t  (retta — come s(t) nel moto rettilineo uniforme!)',60,g1Top+14);
+
+  // ── grafico v-t ──
+  var g2Top=g1Top+g1H+44, g2H=110;
+  function vFn(){return vMag;}
+  var ax2=drawAxes(ctx,55,g2Top,W-85,g2H,0,Tmax,0,Math.max(vMag*1.3,1),'t (s)','v (m/s)');
+  plotFn(ctx,ax2.sx,ax2.sy,vFn,0,Tmax,'#1a6b3a',2.3);
+  dot(ctx,ax2.sx(t),ax2.sy(vMag),5,'#1a6b3a');
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax2.sx(t),g2Top);ctx.lineTo(ax2.sx(t),g2Top+g2H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1a6b3a';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('v(t) = \u03c9R = costante  (come v(t) nel moto rettilineo uniforme)',60,g2Top+14);
+
+  var Tperiod=om!==0?2*Math.PI/Math.abs(om):Infinity;
+  var freq=om!==0?Math.abs(om)/(2*Math.PI):0;
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Tempo t</div><div class="rv">'+fmt2(t)+' s</div>'+
+    '<div class="rl">&theta;(t)</div><div class="rv ok">'+fmt2(theta)+' rad ('+fmt1(theta*180/Math.PI)+'&deg;)</div>'+
+    '<div class="rl">Posizione (x,y)</div><div class="rv">('+fmt2(x)+', '+fmt2(y)+') m</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Velocit\u00e0 tangenziale v</div><div class="rv ok">'+fmt2(vMag)+' m/s</div>'+
+    '<div class="rl">Accelerazione centripeta a<sub>c</sub></div><div class="rv ok">'+fmt2(aMag)+' m/s\u00b2</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Periodo T</div><div class="rv">'+(isFinite(Tperiod)?fmt2(Tperiod)+' s':'&#8734;')+'</div>'+
+    '<div class="rl">Frequenza f</div><div class="rv">'+fmt3(freq)+' Hz</div>'+
+    '</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 2 — CINGHIA TRA DUE PULEGGE
+// ══════════════════════════════════════════════════════
+var anim2={t:0,playing:false,id:null,lastT:null};
+function togglePlay2(){
+  anim2.playing=!anim2.playing;
+  document.getElementById('btnPlay2').className=anim2.playing?'btn on':'btn';
+  document.getElementById('btnPlay2').textContent=anim2.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim2.lastT=null;
+  if(anim2.playing)loop2();else if(anim2.id){cancelAnimationFrame(anim2.id);anim2.id=null;}
+}
+function resetSim2(){
+  anim2.playing=false; anim2.t=0;
+  document.getElementById('btnPlay2').className='btn on';
+  document.getElementById('btnPlay2').textContent='\u25b6 Avvia';
+  if(anim2.id){cancelAnimationFrame(anim2.id);anim2.id=null;}
+  drawSim2();
+}
+function loop2(ts){
+  if(!anim2.playing)return;
+  if(anim2.lastT===null)anim2.lastT=ts;
+  var dt=(ts-anim2.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012; dt=Math.min(dt,0.04);
+  anim2.lastT=ts;
+  var Tmax=rf('s2Tmax');
+  anim2.t=Math.min(Tmax,anim2.t+dt);
+  drawSim2();
+  if(anim2.t>=Tmax){
+    anim2.playing=false;
+    document.getElementById('btnPlay2').className='btn on';
+    document.getElementById('btnPlay2').textContent='\u25b6 Avvia';
+    return;
+  }
+  anim2.id=requestAnimationFrame(loop2);
+}
+function drawSim2(){
+  var R1=rf('s2R1'), R2=rf('s2R2'), om1=rf('s2omega1'), D=rf('s2D'), Tmax=rf('s2Tmax');
+  var t=anim2.t;
+  var om2=om1*R1/R2;
+  var theta1=om1*t, theta2=om2*t;
+  var vBelt=Math.abs(om1)*R1;
+
+  var cv=setupCv('cv2',460);
+  var W=cv.width,H=460,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out2');
+
+  var marginPx=50, topMargin=60, bottomMargin=66;
+  var availW=W-2*marginPx, availH=H-topMargin-bottomMargin;
+  var worldW=D+R1+R2, worldH=2*Math.max(R1,R2);
+  var scale=Math.min(availW/worldW, availH/worldH);
+  var originX=marginPx+R1*scale, centerY=topMargin+availH/2;
+  function toCv(wx,wy){return {x:originX+wx*scale, y:centerY-wy*scale};}
+
+  var C1=toCv(0,0), C2=toCv(D,0);
+  var r1px=R1*scale, r2px=R2*scale;
+
+  var ratio=(R1-R2)/D; ratio=Math.max(-1,Math.min(1,ratio));
+  var beta=Math.acos(ratio);
+  var T1a=toCv(R1*Math.cos(beta), R1*Math.sin(beta));
+  var T2a=toCv(D+R2*Math.cos(beta), R2*Math.sin(beta));
+  var T1b=toCv(R1*Math.cos(beta), -R1*Math.sin(beta));
+  var T2b=toCv(D+R2*Math.cos(beta), -R2*Math.sin(beta));
+
+  ctx.strokeStyle='#444';ctx.lineWidth=4;ctx.lineCap='round';ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(T1a.x,T1a.y);ctx.lineTo(T2a.x,T2a.y);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(T1b.x,T1b.y);ctx.lineTo(T2b.x,T2b.y);ctx.stroke();
+  ctx.lineCap='butt';
+
+  // freccette di direzione sulla cinghia
+  var sgn=om1>=0?1:-1;
+  var dirUx=-Math.sin(beta)*sgn, dirUy=Math.cos(beta)*sgn;
+  var dirLx=Math.sin(beta)*sgn, dirLy=Math.cos(beta)*sgn;
+  var midU={x:(T1a.x+T2a.x)/2,y:(T1a.y+T2a.y)/2};
+  var midL={x:(T1b.x+T2b.x)/2,y:(T1b.y+T2b.y)/2};
+  drawArrow(ctx,midU.x-dirUx*14,midU.y+dirUy*14,midU.x+dirUx*14,midU.y-dirUy*14,'#888',2);
+  drawArrow(ctx,midL.x-dirLx*14,midL.y+dirLy*14,midL.x+dirLx*14,midL.y-dirLy*14,'#888',2);
+
+  ctx.lineWidth=2.4;
+  ctx.beginPath();ctx.arc(C1.x,C1.y,r1px,0,2*Math.PI);ctx.fillStyle='rgba(26,75,140,0.05)';ctx.fill();ctx.strokeStyle='#1a4b8c';ctx.stroke();
+  ctx.beginPath();ctx.arc(C2.x,C2.y,r2px,0,2*Math.PI);ctx.fillStyle='rgba(181,53,26,0.05)';ctx.fill();ctx.strokeStyle='#b5351a';ctx.stroke();
+
+  dot(ctx,C1.x,C1.y,3,'#1a4b8c'); dot(ctx,C2.x,C2.y,3,'#b5351a');
+
+  var p1=toCv(R1*Math.cos(theta1),R1*Math.sin(theta1));
+  ctx.beginPath();ctx.moveTo(C1.x,C1.y);ctx.lineTo(p1.x,p1.y);ctx.strokeStyle='#1a4b8c';ctx.lineWidth=2;ctx.stroke();
+  dot(ctx,p1.x,p1.y,6,'#1a4b8c');
+
+  var p2=toCv(D+R2*Math.cos(theta2),R2*Math.sin(theta2));
+  ctx.beginPath();ctx.moveTo(C2.x,C2.y);ctx.lineTo(p2.x,p2.y);ctx.strokeStyle='#b5351a';ctx.lineWidth=2;ctx.stroke();
+  dot(ctx,p2.x,p2.y,6,'#b5351a');
+
+  ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+  ctx.fillStyle='#1a4b8c';
+  ctx.fillText('R\u2081='+fmt1(R1)+'m',C1.x,C1.y+r1px+18);
+  ctx.fillStyle='#b5351a';
+  ctx.fillText('R\u2082='+fmt1(R2)+'m',C2.x,C2.y+r2px+18);
+
+  ctx.fillStyle='#444';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText('v cinghia = '+fmt2(vBelt)+' m/s  (uguale su entrambe le pulegge)',W/2,22);
+
+  var T1p=om1!==0?2*Math.PI/Math.abs(om1):Infinity;
+  var T2p=om2!==0?2*Math.PI/Math.abs(om2):Infinity;
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">t attuale</div><div class="rv">'+fmt2(t)+' s</div>'+
+    '<div class="rl">&omega;<sub>1</sub></div><div class="rv ok">'+fmt2(om1)+' rad/s</div>'+
+    '<div class="rl">&omega;<sub>2</sub></div><div class="rv ok">'+fmt2(om2)+' rad/s</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">v cinghia (comune)</div><div class="rv ok">'+fmt2(vBelt)+' m/s</div>'+
+    '<div class="rl">T<sub>1</sub> (periodo pul. 1)</div><div class="rv">'+(isFinite(T1p)?fmt2(T1p)+' s':'&#8734;')+'</div>'+
+    '<div class="rl">T<sub>2</sub> (periodo pul. 2)</div><div class="rv">'+(isFinite(T2p)?fmt2(T2p)+' s':'&#8734;')+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Rapporto R<sub>1</sub>/R<sub>2</sub></div><div class="rv">'+fmt2(R1/R2)+'</div>'+
+    '<div class="rl">Rapporto &omega;<sub>2</sub>/&omega;<sub>1</sub></div><div class="rv">'+fmt2(om1!==0?om2/om1:NaN)+'</div>'+
+    '</div>';
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn,d){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(vid).textContent=d===1?fmt1(v):fmt2(v);
+    fn();
+  };
+}
+sl('s1R','s1Rv',function(){if(!anim1.playing)resetSim1();},1);
+sl('s1omega','s1omegav',function(){if(!anim1.playing)resetSim1();},1);
+sl('s1theta0','s1theta0v',function(){if(!anim1.playing)resetSim1();},1);
+sl('s1Tmax','s1Tmaxv',function(){if(!anim1.playing)resetSim1();},1);
+
+sl('s2R1','s2R1v',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2R2','s2R2v',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2omega1','s2omega1v',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2D','s2Dv',function(){if(!anim2.playing)resetSim2();},1);
+sl('s2Tmax','s2Tmaxv',function(){if(!anim2.playing)resetSim2();},1);
+
+window.addEventListener('resize',function(){drawSim1();drawSim2();});
+document.addEventListener('DOMContentLoaded',function(){
+  drawSim1();
+  drawSim2();
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moto Circolare Uniformemente Accelerato — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,38px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:540px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:74px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:34px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.err{color:#f4a582;font-weight:600}
+.rv.warn{color:#f4d03f}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Cinematica</div>
+  <h1>Moto Circolare Uniformemente<br><em>Accelerato</em></h1>
+  <p>Velocit&agrave; angolare non costante, accelerazione angolare costante &mdash; il parallelo circolare del moto rettilineo uniformemente accelerato</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#sim1">Simulatore</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="moto_circolare_uniforme.html">&#8592; M.C.U.</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Moto Circolare Uniformemente Accelerato</h2>
+  <p class="ssub">Quando la velocit&agrave; angolare cambia in modo costante nel tempo</p>
+  <p>Un punto materiale si muove di <strong>moto circolare uniformemente accelerato</strong> (M.C.U.A.) quando percorre una traiettoria circolare con <strong>accelerazione angolare costante</strong> &alpha;: la velocit&agrave; angolare &omega; cambia sempre della stessa quantit&agrave; in intervalli di tempo uguali. &Egrave; l'esatto analogo circolare del moto rettilineo uniformemente accelerato: baster&agrave; sostituire s&rarr;&theta;, v&rarr;&omega;, a&rarr;&alpha; nelle formule gi&agrave; note.</p>
+
+  <h3>Accelerazione angolare</h3>
+  <div class="formula">
+    <div class="f">&alpha; = <span class="frac"><span class="n">&Delta;&omega;</span><span class="d">&Delta;t</span></span> &nbsp; (rad/s&sup2;)</div>
+    <div class="fd">variazione di velocit&agrave; angolare nell'unit&agrave; di tempo &middot; costante nel M.C.U.A.</div>
+  </div>
+
+  <h3>Legge oraria della velocit&agrave; angolare</h3>
+  <div class="formula">
+    <div class="f">&omega;(t) = &omega;<sub>0</sub> + &alpha;&middot;(t&minus;t<sub>0</sub>)</div>
+    <div class="fd">identica a v(t)=v&#8320;+at del moto rettilineo &middot; grafico &omega;-t: una retta di pendenza &alpha;</div>
+  </div>
+
+  <h3>Legge oraria angolare</h3>
+  <div class="formula">
+    <div class="f">&theta;(t) = &theta;<sub>0</sub> + &omega;<sub>0</sub>&middot;(t&minus;t<sub>0</sub>) + <span class="frac"><span class="n">1</span><span class="d">2</span></span>&alpha;&middot;(t&minus;t<sub>0</sub>)&sup2;</div>
+    <div class="fd">identica a x(t)=x&#8320;+v&#8320;t+&frac12;at&sup2; &middot; grafico &theta;-t: una parabola</div>
+  </div>
+
+  <h3>Formula senza il tempo</h3>
+  <div class="formula">
+    <div class="f">&omega;&sup2; = &omega;<sub>0</sub>&sup2; + 2&alpha;&middot;&Delta;&theta;</div>
+    <div class="fd">utile quando non si conosce il tempo trascorso, ma si conosce l'angolo percorso &Delta;&theta;</div>
+  </div>
+
+  <h3>Formula senza l'accelerazione angolare</h3>
+  <div class="formula">
+    <div class="f">&Delta;&theta; = <span class="frac"><span class="n">&omega;<sub>0</sub>+&omega;</span><span class="d">2</span></span>&middot;&Delta;t</div>
+    <div class="fd">l'angolo percorso &egrave; la velocit&agrave; angolare media moltiplicata per il tempo &middot; non compare &alpha;</div>
+  </div>
+
+  <h3>Due tipi di accelerazione: tangenziale e centripeta</h3>
+  <p>A differenza del M.C.U., ora il modulo della velocit&agrave; <strong>non</strong> &egrave; costante: il punto accelera (o rallenta) lungo la traiettoria. L'accelerazione totale ha quindi <strong>due componenti</strong>, sempre perpendicolari tra loro:</p>
+  <div class="two">
+    <div class="formula">
+      <div class="f">a<sub>t</sub> = &alpha;&middot;R</div>
+      <div class="fd">accelerazione TANGENZIALE: tangente alla traiettoria, responsabile del cambiamento del MODULO di v</div>
+    </div>
+    <div class="formula">
+      <div class="f">a<sub>c</sub> = &omega;&sup2;R = <span class="frac"><span class="n">v&sup2;</span><span class="d">R</span></span></div>
+      <div class="fd">accelerazione CENTRIPETA: verso il centro, responsabile del cambiamento della DIREZIONE di v</div>
+    </div>
+  </div>
+  <div class="formula">
+    <div class="f">a = &radic;(a<sub>t</sub>&sup2; + a<sub>c</sub>&sup2;)</div>
+    <div class="fd">modulo dell'accelerazione totale, somma vettoriale delle due componenti (perpendicolari)</div>
+  </div>
+  <div class="bn">&#128161; Nel M.C.U. (&alpha;=0) resta solo a<sub>c</sub>: si ritrova il caso particolare gi&agrave; visto. Nel M.C.U.A. compare anche a<sub>t</sub>, sempre presente quando la velocit&agrave; angolare cambia.</div>
+
+  <h3>Velocit&agrave; tangenziale</h3>
+  <div class="formula">
+    <div class="f">v(t) = &omega;(t)&middot;R</div>
+    <div class="fd">modulo della velocit&agrave;, variabile nel tempo come &omega;(t) &middot; direzione sempre tangente alla circonferenza</div>
+  </div>
+
+  <h3>Numero di giri compiuti</h3>
+  <div class="formula">
+    <div class="f">n = <span class="frac"><span class="n">&Delta;&theta;</span><span class="d">2&pi;</span></span></div>
+    <div class="fd">numero di giri compiuti in un angolo &Delta;&theta; (in rad), come nel M.C.U. &middot; qui &Delta;&theta; si calcola con la legge oraria quadratica</div>
+  </div>
+</div>
+
+<!-- SIM 1 -->
+<div class="sec" id="sim1">
+  <h2>2. Simulatore &mdash; Punto in Moto Circolare Uniformemente Accelerato</h2>
+  <p class="ssub">Osserva come variano posizione angolare, velocit&agrave; angolare e le due componenti dell'accelerazione</p>
+  <div class="sim">
+    <div class="sim-t">Un punto materiale con accelerazione angolare costante</div>
+    <div class="ctrl">
+      <label>R (m)</label>
+      <input type="range" id="s1R" min="1" max="8" step="0.5" value="4"><span class="vv" id="s1Rv">4.0</span>
+      <label>&omega;<sub>0</sub> (rad/s)</label>
+      <input type="range" id="s1omega0" min="-4" max="4" step="0.1" value="0"><span class="vv" id="s1omega0v">0.0</span>
+      <label>&alpha; (rad/s&sup2;)</label>
+      <input type="range" id="s1alpha" min="-2" max="2" step="0.05" value="0.5"><span class="vv" id="s1alphav">0.50</span>
+    </div>
+    <div class="ctrl">
+      <label>&theta;<sub>0</sub> (&deg;)</label>
+      <input type="range" id="s1theta0" min="0" max="350" step="10" value="0"><span class="vv" id="s1theta0v">0</span>
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+      <label>tempo massimo (s)</label>
+      <input type="range" id="s1Tmax" min="5" max="30" step="1" value="12"><span class="vv" id="s1Tmaxv">12</span>
+    </div>
+    <canvas id="cv1" style="height:760px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a4b8c"></span>Raggio O&minus;P</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Velocit&agrave; tangenziale v</span>
+      <span><span class="ld" style="background:#b5351a"></span>Accelerazione centripeta a<sub>c</sub></span>
+      <span><span class="ld" style="background:#c47a00"></span>Accelerazione tangenziale a<sub>t</sub></span>
+      <span><span class="ld" style="background:#7a4fc4"></span>Accelerazione totale a</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>3. Esercizi Proposti</h2>
+  <p class="ssub">Moto circolare uniformemente accelerato</p>
+  <ol>
+    <li><strong>Ventola che parte da ferma:</strong> una ventola parte da &omega;<sub>0</sub>=0 e raggiunge &omega;=20rad/s in 4s con accelerazione angolare costante. Calcola &alpha;, l'angolo percorso &Delta;&theta; e il numero di giri compiuti in quei 4s. Verifica nel simulatore.</li>
+    <li><strong>Frenata di una ruota:</strong> una ruota che gira a &omega;<sub>0</sub>=15rad/s decelera con &alpha;=&minus;3rad/s&sup2; fino a fermarsi. Quanto tempo impiega? Quanti giri compie prima di fermarsi? (Usa la formula senza il tempo.)</li>
+    <li><strong>Le due accelerazioni:</strong> un punto a distanza R=0.5m dal centro ha, in un certo istante, &omega;=4rad/s e &alpha;=1.5rad/s&sup2;. Calcola a<sub>t</sub>, a<sub>c</sub> e il modulo dell'accelerazione totale a. In quell'istante, a<sub>t</sub> o a<sub>c</sub> &egrave; maggiore?</li>
+    <li><strong>Confronto con il moto rettilineo:</strong> scrivi la tabella di corrispondenza tra le grandezze del moto rettilineo uniformemente accelerato (x, v, a) e quelle del moto circolare uniformemente accelerato (&theta;, &omega;, &alpha;), e verifica che le formule si trasformano l'una nell'altra sostituendo le variabili.</li>
+    <li><strong>Disco che accelera:</strong> un disco parte da &theta;<sub>0</sub>=0, &omega;<sub>0</sub>=2rad/s con &alpha;=0.8rad/s&sup2;. Calcola &theta;(t) e &omega;(t) dopo 5s. Quanti giri ha compiuto? Verifica i valori nel simulatore impostando gli stessi parametri.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Moto Circolare Uniformemente Accelerato &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function niceStep(range,n){
+  var s=range/Math.max(n,1), m=Math.pow(10,Math.floor(Math.log10(Math.abs(s)||1))), t=s/m;
+  return(t<2?1:t<5?2:5)*m;
+}
+function drawAxes(ctx,x,y,w,h,xmin,xmax,ymin,ymax,xlabel,ylabel){
+  function sx(vx){return x+(vx-xmin)/(xmax-xmin)*w;}
+  function sy(vy){return y+h-(vy-ymin)/(ymax-ymin)*h;}
+  var gx=niceStep(xmax-xmin,6), gy=niceStep(ymax-ymin,5);
+  ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.6;ctx.setLineDash([]);
+  for(var vx=Math.ceil(xmin/gx)*gx; vx<=xmax; vx+=gx){
+    ctx.beginPath();ctx.moveTo(sx(vx),y);ctx.lineTo(sx(vx),y+h);ctx.stroke();
+  }
+  for(var vy=Math.ceil(ymin/gy)*gy; vy<=ymax; vy+=gy){
+    ctx.beginPath();ctx.moveTo(x,sy(vy));ctx.lineTo(x+w,sy(vy));ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=1;
+  if(0>=ymin&&0<=ymax){ctx.beginPath();ctx.moveTo(x,sy(0));ctx.lineTo(x+w,sy(0));ctx.stroke();}
+  if(0>=xmin&&0<=xmax){ctx.beginPath();ctx.moveTo(sx(0),y);ctx.lineTo(sx(0),y+h);ctx.stroke();}
+  ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='8.5px monospace';ctx.textAlign='center';
+  for(var vx2=Math.ceil(xmin/gx)*gx; vx2<=xmax; vx2+=gx){
+    ctx.fillText(fmt1(vx2),sx(vx2),y+h+11);
+  }
+  ctx.textAlign='right';
+  for(var vy2=Math.ceil(ymin/gy)*gy; vy2<=ymax; vy2+=gy){
+    ctx.fillText(fmt1(vy2),x-4,sy(vy2)+3);
+  }
+  ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='left';
+  ctx.fillText(xlabel,x+w-22,y+h+11);
+  ctx.fillText(ylabel,x-22,y+10);
+  return {sx:sx,sy:sy};
+}
+function plotFn(ctx,sxFn,syFn,fn,tmin,tmax,color,lw){
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();var first=true;
+  var N=120;
+  for(var i=0;i<=N;i++){
+    var tt=tmin+(tmax-tmin)*i/N;
+    var yy=fn(tt);
+    if(!isFinite(yy)){first=true;continue;}
+    var px=sxFn(tt),py=syFn(yy);
+    first?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    first=false;
+  }
+  ctx.stroke();
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+}
+function drawArrow(ctx,x1,y1,x2,y2,color,lw){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lw||2.4;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var ang=Math.atan2(y2-y1,x2-x1), hl=8;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(ang-Math.PI/6), y2-hl*Math.sin(ang-Math.PI/6));
+  ctx.lineTo(x2-hl*Math.cos(ang+Math.PI/6), y2-hl*Math.sin(ang+Math.PI/6));
+  ctx.closePath();ctx.fill();
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 1 — PUNTO IN M.C.U.A.
+// ══════════════════════════════════════════════════════
+var anim1={t:0,playing:false,id:null,lastT:null};
+function togglePlay1(){
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim1.lastT=null;
+  if(anim1.playing)loop1();else if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+}
+function resetSim1(){
+  anim1.playing=false; anim1.t=0;
+  document.getElementById('btnPlay1').className='btn on';
+  document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+  if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+  drawSim1();
+}
+function loop1(ts){
+  if(!anim1.playing)return;
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dt=(ts-anim1.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012; dt=Math.min(dt,0.04);
+  anim1.lastT=ts;
+  var Tmax=rf('s1Tmax');
+  anim1.t=Math.min(Tmax,anim1.t+dt);
+  drawSim1();
+  if(anim1.t>=Tmax){
+    anim1.playing=false;
+    document.getElementById('btnPlay1').className='btn on';
+    document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+    return;
+  }
+  anim1.id=requestAnimationFrame(loop1);
+}
+function drawSim1(){
+  var R=rf('s1R'), om0=rf('s1omega0'), alpha=rf('s1alpha'), th0=rf('s1theta0')*Math.PI/180, Tmax=rf('s1Tmax');
+  var t=anim1.t;
+  function thetaFn(tt){return th0+om0*tt+0.5*alpha*tt*tt;}
+  function omegaFn(tt){return om0+alpha*tt;}
+  var theta=thetaFn(t);
+  var omega=omegaFn(t);
+  var vMag=Math.abs(omega)*R;
+  var aC=omega*omega*R;
+  var aT=Math.abs(alpha)*R;
+  var aTot=Math.sqrt(aT*aT+aC*aC);
+
+  var cv=setupCv('cv1',760);
+  var W=cv.width,H=760,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  // ── area circolare ──
+  var circTop=10, circH=340;
+  var cx=W/2, cy=circTop+circH/2;
+  var pxR=Math.max(40,Math.min(circH/2-56,W/2-78));
+
+  ctx.strokeStyle='rgba(0,0,0,0.12)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(cx-pxR-24,cy);ctx.lineTo(cx+pxR+24,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,cy-pxR-24);ctx.lineTo(cx,cy+pxR+24);ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.beginPath();ctx.arc(cx,cy,pxR,0,2*Math.PI);ctx.strokeStyle='#bbb';ctx.lineWidth=1.6;ctx.stroke();
+
+  var px=cx+pxR*Math.cos(theta), py=cy-pxR*Math.sin(theta);
+
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);ctx.strokeStyle='#1a4b8c';ctx.lineWidth=1.8;ctx.setLineDash([3,2]);ctx.stroke();ctx.setLineDash([]);
+
+  var sgn=omega>=0?1:-1;
+  var tanDirX=-Math.sin(theta)*sgn, tanDirY=Math.cos(theta)*sgn;
+  var radInDirX=-Math.cos(theta), radInDirY=Math.sin(theta);
+
+  // velocità tangenziale (verde)
+  var vLen=Math.min(70,14+vMag*7);
+  drawArrow(ctx,px,py,px+tanDirX*vLen,py-tanDirY*vLen,'#1a6b3a',2.6);
+
+  // accelerazione centripeta (rossa) — verso il centro
+  var aCLen=Math.min(50,12+aC*6);
+  drawArrow(ctx,px,py,px+radInDirX*aCLen,py+radInDirY*aCLen,'#b5351a',2.4);
+
+  // accelerazione tangenziale (arancio) — lungo la tangente, verso se alpha concorde a omega
+  var alphaSgn=alpha>=0?1:-1;
+  var atDirX=-Math.sin(theta)*alphaSgn, atDirY=Math.cos(theta)*alphaSgn;
+  var aTLen=Math.min(50,12+aT*7);
+  drawArrow(ctx,px,py,px+atDirX*aTLen,py-atDirY*aTLen,'#c47a00',2.4);
+
+  // accelerazione totale (viola) — somma vettoriale delle due componenti
+  var aTotVecX=radInDirX*aCLen+atDirX*aTLen, aTotVecY=radInDirY*aCLen-atDirY*aTLen;
+  if(aTot>0.001){
+    drawArrow(ctx,px,py,px+aTotVecX,py+aTotVecY,'#7a4fc4',2);
+  }
+
+  dot(ctx,cx,cy,4,'#555');
+  dot(ctx,px,py,7,'#1a4b8c');
+  ctx.fillStyle='#555';ctx.font='bold 9px monospace';ctx.textAlign='right';
+  ctx.fillText('O',cx-9,cy+12);
+  ctx.fillStyle='#1a4b8c';ctx.textAlign='left';
+  ctx.fillText('P',px+10,py-6);
+  ctx.fillStyle='#1a6b3a';
+  ctx.fillText('v',px+tanDirX*vLen+8,py-tanDirY*vLen);
+  ctx.fillStyle='#b5351a';
+  ctx.fillText('a\u1d04',px+radInDirX*aCLen+8,py+radInDirY*aCLen+2);
+  ctx.fillStyle='#c47a00';
+  ctx.fillText('a\u209c',px+atDirX*aTLen+8,py-atDirY*aTLen+14);
+
+  ctx.fillStyle='#444';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText('\u03b8(t) = '+fmt1(theta*180/Math.PI)+'\u00b0  ('+fmt2(theta)+' rad)   \u03c9(t) = '+fmt2(omega)+' rad/s',W/2,circTop+14);
+
+  // ── grafico θ-t ──
+  var g1Top=circTop+circH+30, g1H=150;
+  var thAll=[]; for(var i=0;i<=60;i++){thAll.push(thetaFn(Tmax*i/60));}
+  var thmin=Math.min.apply(null,thAll.concat([th0]))-0.3, thmax=Math.max.apply(null,thAll.concat([th0]))+0.3;
+  if(thmax-thmin<0.5){thmin-=0.5;thmax+=0.5;}
+  var ax1=drawAxes(ctx,55,g1Top,W-85,g1H,0,Tmax,thmin,thmax,'t (s)','\u03b8 (rad)');
+  plotFn(ctx,ax1.sx,ax1.sy,thetaFn,0,Tmax,'#1a4b8c',2.3);
+  dot(ctx,ax1.sx(t),ax1.sy(theta),5,'#1a4b8c');
+  ctx.strokeStyle='rgba(26,75,140,0.3)';ctx.lineWidth=1;ctx.setLineDash([3,2]);
+  ctx.beginPath();ctx.moveTo(ax1.sx(t),g1Top);ctx.lineTo(ax1.sx(t),g1Top+g1H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1a4b8c';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('\u03b8(t) = \u03b8\u2080+\u03c9\u2080t+\u00bd\u03b1t\u00b2  (parabola — come s(t) nel M.R.U.A.)',60,g1Top+14);
+
+  // ── grafico ω-t ──
+  var g2Top=g1Top+g1H+44, g2H=130;
+  var omAll=[]; for(var j=0;j<=60;j++){omAll.push(omegaFn(Tmax*j/60));}
+  var ommin=Math.min(0,Math.min.apply(null,omAll))-0.5, ommax=Math.max(0,Math.max.apply(null,omAll))+0.5;
+  var ax2=drawAxes(ctx,55,g2Top,W-85,g2H,0,Tmax,ommin,ommax,'t (s)','\u03c9 (rad/s)');
+  plotFn(ctx,ax2.sx,ax2.sy,omegaFn,0,Tmax,'#1a6b3a',2.3);
+  dot(ctx,ax2.sx(t),ax2.sy(omega),5,'#1a6b3a');
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax2.sx(t),g2Top);ctx.lineTo(ax2.sx(t),g2Top+g2H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1a6b3a';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('\u03c9(t) = \u03c9\u2080+\u03b1t  (retta — come v(t) nel M.R.U.A. — pendenza = \u03b1)',60,g2Top+14);
+
+  var nGiri=(theta-th0)/(2*Math.PI);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Tempo t</div><div class="rv">'+fmt2(t)+' s</div>'+
+    '<div class="rl">&theta;(t)</div><div class="rv ok">'+fmt2(theta)+' rad ('+fmt1(theta*180/Math.PI)+'&deg;)</div>'+
+    '<div class="rl">Giri compiuti n</div><div class="rv">'+fmt2(nGiri)+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">&omega;(t)</div><div class="rv ok">'+fmt2(omega)+' rad/s</div>'+
+    '<div class="rl">Velocit\u00e0 tangenziale v</div><div class="rv ok">'+fmt2(vMag)+' m/s</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Acc. centripeta a<sub>c</sub></div><div class="rv ok">'+fmt2(aC)+' m/s\u00b2</div>'+
+    '<div class="rl">Acc. tangenziale a<sub>t</sub></div><div class="rv ok">'+fmt2(aT)+' m/s\u00b2</div>'+
+    '<div class="rl">Acc. totale a</div><div class="rv ok">'+fmt2(aTot)+' m/s\u00b2</div>'+
+    '</div>';
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn,d){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(vid).textContent=d===1?fmt1(v):fmt2(v);
+    fn();
+  };
+}
+sl('s1R','s1Rv',function(){if(!anim1.playing)resetSim1();},1);
+sl('s1omega0','s1omega0v',function(){if(!anim1.playing)resetSim1();},2);
+sl('s1alpha','s1alphav',function(){if(!anim1.playing)resetSim1();},2);
+sl('s1theta0','s1theta0v',function(){if(!anim1.playing)resetSim1();},1);
+sl('s1Tmax','s1Tmaxv',function(){if(!anim1.playing)resetSim1();},1);
+
+window.addEventListener('resize',function(){drawSim1();});
+document.addEventListener('DOMContentLoaded',function(){
+  drawSim1();
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
