@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moto Curvilineo — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,38px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:560px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two{grid-template-columns:1fr}.three{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.fig{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:12px;margin:14px 0;text-align:center}
+.fig svg{width:100%;height:auto;max-width:640px}
+.fig-cap{font-size:11px;color:var(--mu);margin-top:6px;font-style:italic}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:74px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:34px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+.btn.cv{background:var(--s2)}
+.btn.cv.on{background:var(--a2);color:#fff;border-color:var(--a2)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Cinematica</div>
+  <h1>Moto<br><em>Curvilineo</em></h1>
+  <p>Velocit&agrave; tangenziale, accelerazione tangenziale e centripeta lungo una traiettoria qualsiasi &mdash; il caso generale di cui moto rettilineo e circolare sono casi particolari</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#componenti">Componenti di a</a>
+  <a href="#sim1">Simulatore</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="moto_circolare_uniforme.html">M.C.U.</a>
+  <a href="moto_circolare_uniacc.html">M.C.U.A.</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Il Moto Curvilineo</h2>
+  <p class="ssub">Quando la traiettoria non &egrave; n&eacute; una retta n&eacute; una circonferenza</p>
+  <p>Finora abbiamo studiato due casi particolari: il <strong>moto rettilineo</strong> (traiettoria una retta) e il <strong>moto circolare</strong> (traiettoria una circonferenza di raggio costante). Nella realt&agrave;, per&ograve;, un punto materiale pu&ograve; muoversi lungo una traiettoria di forma qualsiasi: una parabola, una spirale, un'ellisse, o una curva qualunque. Questo caso generale si chiama <strong>moto curvilineo</strong>, e moto rettilineo e circolare ne sono semplicemente casi particolari.</p>
+
+  <h3>Il vettore posizione e la traiettoria</h3>
+  <p>La posizione del punto &egrave; descritta da un vettore <strong>r</strong>(t) che varia nel tempo. L'insieme di tutte le posizioni occupate dal punto forma la <strong>traiettoria</strong>: una curva nello spazio (o nel piano) che pu&ograve; avere forma arbitraria.</p>
+
+  <h3>Velocit&agrave; vettoriale: sempre tangente</h3>
+  <div class="formula">
+    <div class="f"><b>v</b>(t) = <span class="frac"><span class="n">d<b>r</b></span><span class="d">dt</span></span></div>
+    <div class="fd">il vettore velocit&agrave; &egrave; SEMPRE tangente alla traiettoria, in ogni suo punto, qualunque sia la forma della curva</div>
+  </div>
+  <div class="bn">&#128161; Questa &egrave; la propriet&agrave; fondamentale da ricordare: qualunque sia la traiettoria &mdash; retta, cerchio, parabola, curva qualsiasi &mdash; il vettore velocit&agrave; punta sempre nella direzione tangente alla curva in quell'istante, mai altrove.</div>
+
+  <h3>Accelerazione vettoriale</h3>
+  <div class="formula">
+    <div class="f"><b>a</b>(t) = <span class="frac"><span class="n">d<b>v</b></span><span class="d">dt</span></span></div>
+    <div class="fd">l'accelerazione misura quanto velocemente cambia il vettore velocit&agrave; &mdash; sia in modulo, sia in direzione</div>
+  </div>
+  <p>Ed &egrave; proprio qui il punto cruciale: il vettore velocit&agrave; pu&ograve; cambiare in due modi <strong>indipendenti</strong> &mdash; pu&ograve; cambiare il suo <strong>modulo</strong> (il punto accelera o rallenta lungo la curva) e pu&ograve; cambiare la sua <strong>direzione</strong> (la curva volta). L'accelerazione totale tiene conto di entrambi gli effetti, ed &egrave; utile scomporla in due componenti separate.</p>
+</div>
+
+<!-- COMPONENTI -->
+<div class="sec" id="componenti">
+  <h2>2. Le Due Componenti dell'Accelerazione</h2>
+  <p class="ssub">Scomposizione intrinseca: componente tangenziale e componente centripeta (normale)</p>
+
+  <div class="fig">
+    <svg viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+      <!-- traiettoria -->
+      <path d="M120,260 Q320,20 520,260" fill="none" stroke="#333" stroke-width="2.6"/>
+      <!-- cerchio osculatore -->
+      <circle cx="320" cy="240" r="100" fill="none" stroke="#999" stroke-width="1.3" stroke-dasharray="4,3"/>
+      <!-- guida tangente -->
+      <line x1="150" y1="140" x2="500" y2="140" stroke="#bbb" stroke-width="1" stroke-dasharray="3,3"/>
+      <!-- asse normale (raggio) -->
+      <line x1="320" y1="140" x2="320" y2="280" stroke="#bbb" stroke-width="1" stroke-dasharray="3,3"/>
+      <!-- rettangolo di costruzione -->
+      <line x1="400" y1="140" x2="400" y2="190" stroke="#ccc" stroke-width="1" stroke-dasharray="2,2"/>
+      <line x1="320" y1="190" x2="400" y2="190" stroke="#ccc" stroke-width="1" stroke-dasharray="2,2"/>
+      <!-- vettore v (tangente), verde -->
+      <line x1="320" y1="140" x2="410" y2="140" stroke="#1a6b3a" stroke-width="2.6"/>
+      <polygon points="410,140 400,136 400,144" fill="#1a6b3a"/>
+      <!-- vettore a totale, viola -->
+      <line x1="320" y1="140" x2="400" y2="190" stroke="#7a4fc4" stroke-width="2.6"/>
+      <polygon points="400,190 389,188 394,181" fill="#7a4fc4"/>
+      <!-- componente a_t, arancio -->
+      <line x1="320" y1="140" x2="400" y2="140" stroke="#c47a00" stroke-width="2.6"/>
+      <polygon points="400,140 391,136 391,144" fill="#c47a00"/>
+      <!-- componente a_c, rosso -->
+      <line x1="320" y1="140" x2="320" y2="190" stroke="#b5351a" stroke-width="2.6"/>
+      <polygon points="320,190 316,181 324,181" fill="#b5351a"/>
+      <!-- punti -->
+      <circle cx="320" cy="140" r="4.5" fill="#222"/>
+      <circle cx="320" cy="240" r="4" fill="#666"/>
+      <!-- etichette -->
+      <text x="303" y="126" font-size="14" font-weight="700" fill="#222">P</text>
+      <text x="331" y="245" font-size="13" font-weight="700" fill="#666">C</text>
+      <text x="336" y="196" font-size="12" fill="#888" font-style="italic">&#961; (raggio di curvatura)</text>
+      <text x="155" y="132" font-size="11" fill="#999" font-style="italic">retta tangente</text>
+      <text x="418" y="133" font-size="14" font-weight="700" fill="#1a6b3a">v</text>
+      <text x="406" y="203" font-size="14" font-weight="700" fill="#7a4fc4">a</text>
+      <text x="401" y="130" font-size="14" font-weight="700" fill="#c47a00">a<tspan baseline-shift="sub" font-size="10">t</tspan></text>
+      <text x="292" y="196" font-size="14" font-weight="700" fill="#b5351a">a<tspan baseline-shift="sub" font-size="10">c</tspan></text>
+    </svg>
+    <div class="fig-cap">In ogni punto P della traiettoria si definisce una circonferenza osculatrice di raggio &rho; (raggio di curvatura locale, in generale diverso punto per punto). L'accelerazione <b>a</b> si scompone in una componente tangenziale a<sub>t</sub> (lungo la tangente) e una componente centripeta a<sub>c</sub> (lungo il raggio, verso C).</div>
+  </div>
+
+  <h3>Accelerazione tangenziale</h3>
+  <div class="formula">
+    <div class="f">a<sub>t</sub> = <span class="frac"><span class="n">dv</span><span class="d">dt</span></span></div>
+    <div class="fd">variazione del MODULO della velocit&agrave; &middot; diretta come la tangente (concorde a v se il punto accelera, discorde se rallenta) &middot; nulla se il modulo di v &egrave; costante</div>
+  </div>
+
+  <h3>Accelerazione centripeta (normale)</h3>
+  <div class="formula">
+    <div class="f">a<sub>c</sub> = <span class="frac"><span class="n">v&sup2;</span><span class="d">&rho;</span></span></div>
+    <div class="fd">variazione della DIREZIONE della velocit&agrave; &middot; sempre diretta verso il centro di curvatura C &middot; nulla solo se la traiettoria &egrave; localmente rettilinea (&rho;&rarr;&infin;)</div>
+  </div>
+
+  <h3>Accelerazione totale</h3>
+  <div class="formula">
+    <div class="f">a = &radic;(a<sub>t</sub>&sup2; + a<sub>c</sub>&sup2;)</div>
+    <div class="fd">le due componenti sono sempre perpendicolari tra loro, quindi si sommano "a triangolo rettangolo" (Pitagora)</div>
+  </div>
+
+  <h3>Il raggio di curvatura &rho;</h3>
+  <p>A differenza del moto circolare, dove il raggio R &egrave; lo stesso in ogni punto della traiettoria, nel moto curvilineo generico il <strong>raggio di curvatura &rho; cambia punto per punto</strong>: &egrave; grande dove la curva &egrave; "quasi dritta" (poco curva) e piccolo dove la curva "volta stretto". Un tratto rettilineo ha &rho;=&infin; (a<sub>c</sub>=0); una curva molto stretta ha &rho; piccolo (a<sub>c</sub> grande anche a bassa velocit&agrave;).</p>
+
+  <h3>Casi particolari: una tabella riassuntiva</h3>
+  <div class="three">
+    <div class="formula"><div class="f">Moto rettilineo</div><div class="fd">&rho;=&infin; sempre &middot; a<sub>c</sub>=0 sempre &middot; a=a<sub>t</sub></div></div>
+    <div class="formula"><div class="f">Moto circolare uniforme</div><div class="fd">&rho;=R costante &middot; a<sub>t</sub>=0 &middot; a=a<sub>c</sub>=&omega;&sup2;R</div></div>
+    <div class="formula"><div class="f">Moto circolare vario</div><div class="fd">&rho;=R costante &middot; a<sub>t</sub>&ne;0 e a<sub>c</sub>&ne;0 &middot; a=&radic;(a<sub>t</sub>&sup2;+a<sub>c</sub>&sup2;)</div></div>
+  </div>
+  <div class="bw">&#9888; Il moto curvilineo generico &egrave; il caso pi&ugrave; ampio: &rho; NON &egrave; costante, e in generale sia a<sub>t</sub> che a<sub>c</sub> sono diversi da zero e cambiano continuamente lungo il percorso.</div>
+</div>
+
+<!-- SIM 1 -->
+<div class="sec" id="sim1">
+  <h2>3. Simulatore &mdash; Accelerazione su una Traiettoria Curva</h2>
+  <p class="ssub">Scegli una traiettoria: il simulatore calcola, istante per istante, velocit&agrave; e le due componenti dell'accelerazione</p>
+  <div class="sim">
+    <div class="sim-t">Punto mobile lungo una curva scelta, con scomposizione dell'accelerazione in tempo reale</div>
+    <div class="ctrl">
+      <label>Traiettoria:</label>
+      <button class="btn cv on" id="btnCvParabola" onclick="selectCurve('parabola')">Parabola</button>
+      <button class="btn cv" id="btnCvSinusoide" onclick="selectCurve('sinusoide')">Sinusoide</button>
+      <button class="btn cv" id="btnCvEllisse" onclick="selectCurve('ellisse')">Ellisse</button>
+      <button class="btn cv" id="btnCvSpirale" onclick="selectCurve('spirale')">Spirale</button>
+    </div>
+    <div class="ctrl">
+      <label>Velocit&agrave; del parametro &omega; </label>
+      <input type="range" id="s1omega" min="-2" max="2" step="0.05" value="0.6"><span class="vv" id="s1omegav">0.60</span>
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+      <label>tempo massimo (s)</label>
+      <input type="range" id="s1Tmax" min="5" max="25" step="1" value="12"><span class="vv" id="s1Tmaxv">12</span>
+    </div>
+    <canvas id="cv1" style="height:780px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a6b3a"></span>Velocit&agrave; tangenziale v</span>
+      <span><span class="ld" style="background:#c47a00"></span>Accelerazione tangenziale a<sub>t</sub></span>
+      <span><span class="ld" style="background:#b5351a"></span>Accelerazione centripeta a<sub>c</sub></span>
+      <span><span class="ld" style="background:#7a4fc4"></span>Accelerazione totale a</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>4. Esercizi Proposti</h2>
+  <p class="ssub">Moto curvilineo, componenti dell'accelerazione</p>
+  <ol>
+    <li><strong>Automobile in curva:</strong> un'automobile percorre una curva di raggio di curvatura &rho;=50m a velocit&agrave; costante v=15m/s. Calcola a<sub>c</sub>. Poich&eacute; la velocit&agrave; &egrave; costante, quanto vale a<sub>t</sub>? Quanto vale l'accelerazione totale?</li>
+    <li><strong>Frenata in curva:</strong> la stessa automobile, mentre percorre la curva a v=15m/s, inizia a frenare con a<sub>t</sub>=&minus;2m/s&sup2;. Calcola il modulo dell'accelerazione totale in quell'istante (usa lo stesso &rho;=50m).</li>
+    <li><strong>Tratto rettilineo:</strong> spiega perch&eacute;, lungo un tratto di strada perfettamente rettilineo, l'accelerazione centripeta a<sub>c</sub> &egrave; sempre nulla, indipendentemente dalla velocit&agrave; del veicolo (anche se accelera o frena bruscamente).</li>
+    <li><strong>Osserva il simulatore:</strong> scegli la traiettoria "Parabola" e osserva come cambiano a<sub>t</sub> e a<sub>c</sub> mentre il punto attraversa il vertice della parabola rispetto a quando si trova nei tratti pi&ugrave; "aperti" lontani dal vertice. Dove il raggio di curvatura &rho; &egrave; minore?</li>
+    <li><strong>Ellisse:</strong> seleziona "Ellisse" nel simulatore. Un'ellisse ha raggio di curvatura variabile: minimo alle estremit&agrave; dell'asse maggiore, massimo alle estremit&agrave; dell'asse minore. Verifica osservando dove a<sub>c</sub> risulta pi&ugrave; grande.</li>
+    <li><strong>Confronto:</strong> spiega con parole tue perch&eacute; il moto circolare uniforme &egrave; un caso particolare del moto curvilineo in cui &rho; &egrave; costante e a<sub>t</sub>=0, mentre il moto rettilineo (anche accelerato) &egrave; il caso in cui &rho;=&infin; sempre.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Moto Curvilineo &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function niceStep(range,n){
+  var s=range/Math.max(n,1), m=Math.pow(10,Math.floor(Math.log10(Math.abs(s)||1))), t=s/m;
+  return(t<2?1:t<5?2:5)*m;
+}
+function drawAxes(ctx,x,y,w,h,xmin,xmax,ymin,ymax,xlabel,ylabel){
+  function sx(vx){return x+(vx-xmin)/(xmax-xmin)*w;}
+  function sy(vy){return y+h-(vy-ymin)/(ymax-ymin)*h;}
+  var gx=niceStep(xmax-xmin,6), gy=niceStep(ymax-ymin,5);
+  ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.6;ctx.setLineDash([]);
+  for(var vx=Math.ceil(xmin/gx)*gx; vx<=xmax; vx+=gx){
+    ctx.beginPath();ctx.moveTo(sx(vx),y);ctx.lineTo(sx(vx),y+h);ctx.stroke();
+  }
+  for(var vy=Math.ceil(ymin/gy)*gy; vy<=ymax; vy+=gy){
+    ctx.beginPath();ctx.moveTo(x,sy(vy));ctx.lineTo(x+w,sy(vy));ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=1;
+  if(0>=ymin&&0<=ymax){ctx.beginPath();ctx.moveTo(x,sy(0));ctx.lineTo(x+w,sy(0));ctx.stroke();}
+  if(0>=xmin&&0<=xmax){ctx.beginPath();ctx.moveTo(sx(0),y);ctx.lineTo(sx(0),y+h);ctx.stroke();}
+  ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='8.5px monospace';ctx.textAlign='center';
+  for(var vx2=Math.ceil(xmin/gx)*gx; vx2<=xmax; vx2+=gx){
+    ctx.fillText(fmt1(vx2),sx(vx2),y+h+11);
+  }
+  ctx.textAlign='right';
+  for(var vy2=Math.ceil(ymin/gy)*gy; vy2<=ymax; vy2+=gy){
+    ctx.fillText(fmt1(vy2),x-4,sy(vy2)+3);
+  }
+  ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='left';
+  ctx.fillText(xlabel,x+w-22,y+h+11);
+  ctx.fillText(ylabel,x-22,y+10);
+  return {sx:sx,sy:sy};
+}
+function plotFn(ctx,sxFn,syFn,fn,tmin,tmax,color,lw){
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();var first=true;
+  var N=100;
+  for(var i=0;i<=N;i++){
+    var tt=tmin+(tmax-tmin)*i/N;
+    var yy=fn(tt);
+    if(!isFinite(yy)){first=true;continue;}
+    var px=sxFn(tt),py=syFn(yy);
+    first?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    first=false;
+  }
+  ctx.stroke();
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+}
+function drawArrow(ctx,x1,y1,x2,y2,color,lw){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lw||2.4;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var dx=x2-x1,dy=y2-y1; if(Math.hypot(dx,dy)<1)return;
+  var ang=Math.atan2(dy,dx), hl=8;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(ang-Math.PI/6), y2-hl*Math.sin(ang-Math.PI/6));
+  ctx.lineTo(x2-hl*Math.cos(ang+Math.PI/6), y2-hl*Math.sin(ang+Math.PI/6));
+  ctx.closePath();ctx.fill();
+}
+
+// ══════════════════════════════════════════════════════
+// TRAIETTORIE PARAMETRICHE
+// ══════════════════════════════════════════════════════
+var CURVES={
+  parabola:{ label:'Parabola', r:function(u){return {x:u, y:0.16*u*u};}, u0:-5.2, pad:1.3 },
+  sinusoide:{ label:'Sinusoide', r:function(u){return {x:u, y:2.3*Math.sin(0.65*u)};}, u0:-7, pad:1.3 },
+  ellisse:{ label:'Ellisse', r:function(u){return {x:5.2*Math.cos(u), y:2.9*Math.sin(u)};}, u0:0, pad:0.55 },
+  spirale:{ label:'Spirale', r:function(u){return {x:0.27*u*Math.cos(u), y:0.27*u*Math.sin(u)};}, u0:0.4, pad:0.55 }
+};
+var curCurveKey='parabola';
+var H_DERIV=0.001;
+
+function rp(curve,u){
+  var a=curve.r(u-H_DERIV), b=curve.r(u+H_DERIV);
+  return {x:(b.x-a.x)/(2*H_DERIV), y:(b.y-a.y)/(2*H_DERIV)};
+}
+function rpp(curve,u){
+  var a=curve.r(u-H_DERIV), c=curve.r(u), b=curve.r(u+H_DERIV);
+  return {x:(b.x-2*c.x+a.x)/(H_DERIV*H_DERIV), y:(b.y-2*c.y+a.y)/(H_DERIV*H_DERIV)};
+}
+function kinematics(curve,u0,omega,t){
+  var u=u0+omega*t;
+  var Rp=rp(curve,u), Rpp=rpp(curve,u);
+  var V={x:Rp.x*omega, y:Rp.y*omega};
+  var A={x:Rpp.x*omega*omega, y:Rpp.y*omega*omega};
+  var vMag=Math.hypot(V.x,V.y);
+  var vHat=vMag>1e-6 ? {x:V.x/vMag,y:V.y/vMag} : {x:1,y:0};
+  var at=A.x*vHat.x+A.y*vHat.y;
+  var atVec={x:at*vHat.x, y:at*vHat.y};
+  var anVec={x:A.x-atVec.x, y:A.y-atVec.y};
+  var an=Math.hypot(anVec.x,anVec.y);
+  var aTot=Math.hypot(A.x,A.y);
+  var rho=an>1e-5 ? vMag*vMag/an : Infinity;
+  return {u:u,pos:curve.r(u),V:V,A:A,vMag:vMag,at:at,atVec:atVec,an:an,anVec:anVec,aTot:aTot,rho:rho};
+}
+
+// ══════════════════════════════════════════════════════
+// SIM 1 — ANIMAZIONE
+// ══════════════════════════════════════════════════════
+var anim1={t:0,playing:false,id:null,lastT:null};
+function selectCurve(key){
+  curCurveKey=key;
+  ['parabola','sinusoide','ellisse','spirale'].forEach(function(k){
+    document.getElementById('btnCv'+k.charAt(0).toUpperCase()+k.slice(1)).className='btn cv'+(k===key?' on':'');
+  });
+  resetSim1();
+}
+function togglePlay1(){
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim1.lastT=null;
+  if(anim1.playing)loop1();else if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+}
+function resetSim1(){
+  anim1.playing=false; anim1.t=0;
+  document.getElementById('btnPlay1').className='btn on';
+  document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+  if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+  drawSim1();
+}
+function loop1(ts){
+  if(!anim1.playing)return;
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dt=(ts-anim1.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012; dt=Math.min(dt,0.04);
+  anim1.lastT=ts;
+  var Tmax=rf('s1Tmax');
+  anim1.t=Math.min(Tmax,anim1.t+dt);
+  drawSim1();
+  if(anim1.t>=Tmax){
+    anim1.playing=false;
+    document.getElementById('btnPlay1').className='btn on';
+    document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+    return;
+  }
+  anim1.id=requestAnimationFrame(loop1);
+}
+
+function drawSim1(){
+  var curve=CURVES[curCurveKey];
+  var omega=rf('s1omega'), Tmax=rf('s1Tmax'), u0=curve.u0;
+  var t=anim1.t;
+  var k=kinematics(curve,u0,omega,t);
+
+  var cv=setupCv('cv1',780);
+  var W=cv.width,H=780,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  // ── area traiettoria (scala uniforme x/y) ──
+  var areaTop=34, areaH=380, areaX=18, areaW=W-36;
+  var uNow=u0+omega*t;
+  var uLo=Math.min(u0,uNow)-curve.pad, uHi=Math.max(u0,uNow)+curve.pad;
+  var N=160, pts=[];
+  for(var i=0;i<=N;i++){ pts.push(curve.r(uLo+(uHi-uLo)*i/N)); }
+  var xs=pts.map(function(p){return p.x;}), ys=pts.map(function(p){return p.y;});
+  var xmin=Math.min.apply(null,xs), xmax=Math.max.apply(null,xs);
+  var ymin=Math.min.apply(null,ys), ymax=Math.max.apply(null,ys);
+  var wx=Math.max(xmax-xmin,0.8), wy=Math.max(ymax-ymin,0.8);
+  var padF=0.16;
+  xmin-=wx*padF; xmax+=wx*padF; ymin-=wy*padF; ymax+=wy*padF;
+  wx=xmax-xmin; wy=ymax-ymin;
+  var scale=Math.min((areaW-20)/wx, (areaH-20)/wy);
+  var cxw=(xmin+xmax)/2, cyw=(ymin+ymax)/2;
+  var originX=areaX+areaW/2, originY=areaTop+areaH/2;
+  function toCv(wxp,wyp){return {x:originX+(wxp-cxw)*scale, y:originY-(wyp-cyw)*scale};}
+
+  // disegno traiettoria
+  ctx.strokeStyle='#999';ctx.lineWidth=2.2;ctx.setLineDash([]);
+  ctx.beginPath();
+  for(var j=0;j<pts.length;j++){
+    var cp=toCv(pts[j].x,pts[j].y);
+    j===0?ctx.moveTo(cp.x,cp.y):ctx.lineTo(cp.x,cp.y);
+  }
+  ctx.stroke();
+
+  var P=toCv(k.pos.x,k.pos.y);
+
+  // scala unica per i vettori di accelerazione → parallelogramma corretto
+  var accPxMax=95;
+  var accScale=accPxMax/Math.max(k.aTot,0.06);
+  var atTip={x:P.x+k.atVec.x*accScale, y:P.y-k.atVec.y*accScale};
+  var anTip={x:P.x+k.anVec.x*accScale, y:P.y-k.anVec.y*accScale};
+  var aTip={x:P.x+k.A.x*accScale, y:P.y-k.A.y*accScale};
+
+  // linee di costruzione (parallelogramma)
+  ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(atTip.x,atTip.y);ctx.lineTo(aTip.x,aTip.y);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(anTip.x,anTip.y);ctx.lineTo(aTip.x,aTip.y);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // velocità (verde) — scala satura, indipendente
+  var vLen=Math.min(75,16+k.vMag*9);
+  var vHatPx = k.vMag>1e-6? {x:k.V.x/k.vMag,y:k.V.y/k.vMag} : {x:1,y:0};
+  drawArrow(ctx,P.x,P.y,P.x+vHatPx.x*vLen,P.y-vHatPx.y*vLen,'#1a6b3a',2.6);
+
+  // a_t, a_c, a_tot — stessa scala (parallelogramma coerente)
+  if(k.at!==0) drawArrow(ctx,P.x,P.y,atTip.x,atTip.y,'#c47a00',2.4);
+  if(k.an>0.001) drawArrow(ctx,P.x,P.y,anTip.x,anTip.y,'#b5351a',2.4);
+  if(k.aTot>0.001) drawArrow(ctx,P.x,P.y,aTip.x,aTip.y,'#7a4fc4',2.2);
+
+  dot(ctx,P.x,P.y,6.5,'#1a1a1e');
+
+  ctx.font='bold 9px sans-serif';
+  ctx.fillStyle='#1a6b3a';ctx.textAlign='left';
+  ctx.fillText('v',P.x+vHatPx.x*vLen+7,P.y-vHatPx.y*vLen);
+  if(k.at!==0){ctx.fillStyle='#c47a00';ctx.fillText('a\u209c',atTip.x+6,atTip.y-4);}
+  if(k.an>0.001){ctx.fillStyle='#b5351a';ctx.fillText('a\u1d04',anTip.x+6,anTip.y+4);}
+  if(k.aTot>0.001){ctx.fillStyle='#7a4fc4';ctx.fillText('a',aTip.x+6,aTip.y+10);}
+
+  ctx.fillStyle='#444';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText(curve.label+'  \u00b7  '+fmt2(t)+' s',W/2,18);
+
+  // ── grafico v(t) ──
+  var g1Top=areaTop+areaH+34, g1H=140;
+  function vFn(tt){return kinematics(curve,u0,omega,tt).vMag;}
+  var vAll=[]; for(var q=0;q<=50;q++){vAll.push(vFn(Tmax*q/50));}
+  var vmax=Math.max.apply(null,vAll)*1.25+0.2;
+  var ax1=drawAxes(ctx,55,g1Top,W-85,g1H,0,Tmax,0,vmax,'t (s)','v (m/s)');
+  plotFn(ctx,ax1.sx,ax1.sy,vFn,0,Tmax,'#1a6b3a',2.2);
+  dot(ctx,ax1.sx(t),ax1.sy(k.vMag),5,'#1a6b3a');
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax1.sx(t),g1Top);ctx.lineTo(ax1.sx(t),g1Top+g1H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#1a6b3a';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('v(t) \u2014 modulo della velocit\u00e0 (varia anche con \u03c9 costante, per curve non circolari)',60,g1Top+14);
+
+  // ── grafico a_t(t) e a_c(t) ──
+  var g2Top=g1Top+g1H+44, g2H=150;
+  function atFn(tt){return kinematics(curve,u0,omega,tt).at;}
+  function anFn(tt){return kinematics(curve,u0,omega,tt).an;}
+  var atAll=[],anAll=[]; for(var q2=0;q2<=50;q2++){var tt2=Tmax*q2/50; atAll.push(atFn(tt2)); anAll.push(anFn(tt2));}
+  var amin=Math.min(0,Math.min.apply(null,atAll))*1.2-0.2;
+  var amax=Math.max(Math.max.apply(null,atAll),Math.max.apply(null,anAll))*1.2+0.2;
+  var ax2=drawAxes(ctx,55,g2Top,W-85,g2H,0,Tmax,amin,amax,'t (s)','a (m/s\u00b2)');
+  plotFn(ctx,ax2.sx,ax2.sy,atFn,0,Tmax,'#c47a00',2.2);
+  plotFn(ctx,ax2.sx,ax2.sy,anFn,0,Tmax,'#b5351a',2.2);
+  dot(ctx,ax2.sx(t),ax2.sy(k.at),5,'#c47a00');
+  dot(ctx,ax2.sx(t),ax2.sy(k.an),5,'#b5351a');
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax2.sx(t),g2Top);ctx.lineTo(ax2.sx(t),g2Top+g2H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#444';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('a\u209c(t) arancio  \u00b7  a\u1d04(t) rosso \u2014 osserva come cambiano lungo la curva',60,g2Top+14);
+
+  var rhoDisp = isFinite(k.rho) ? (k.rho>999?'> 999 m (quasi rettilineo)':fmt2(k.rho)+' m') : '&#8734; (rettilineo)';
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Tempo t</div><div class="rv">'+fmt2(t)+' s</div>'+
+    '<div class="rl">Posizione</div><div class="rv">('+fmt2(k.pos.x)+', '+fmt2(k.pos.y)+')</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Velocit\u00e0 v</div><div class="rv ok">'+fmt2(k.vMag)+' m/s</div>'+
+    '<div class="rl">Acc. tangenziale a<sub>t</sub></div><div class="rv ok">'+fmt2(k.at)+' m/s\u00b2</div>'+
+    '<div class="rl">Acc. centripeta a<sub>c</sub></div><div class="rv ok">'+fmt2(k.an)+' m/s\u00b2</div>'+
+    '<div class="rl">Acc. totale a</div><div class="rv ok">'+fmt2(k.aTot)+' m/s\u00b2</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Raggio di curvatura &rho;</div><div class="rv">'+rhoDisp+'</div>'+
+    '</div>';
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn,d){
+  document.getElementById(id).oninput=function(){
+    var v=parseFloat(this.value);
+    document.getElementById(vid).textContent=d===1?fmt1(v):fmt2(v);
+    fn();
+  };
+}
+sl('s1omega','s1omegav',function(){if(!anim1.playing)resetSim1();},2);
+sl('s1Tmax','s1Tmaxv',function(){if(!anim1.playing)resetSim1();},1);
+
+window.addEventListener('resize',function(){drawSim1();});
+document.addEventListener('DOMContentLoaded',function(){
+  drawSim1();
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
