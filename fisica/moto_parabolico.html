@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moto Parabolico — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,38px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:560px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two{grid-template-columns:1fr}.three{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:74px;accent-color:var(--a2)}
+.ctrl input[type=range]:disabled{opacity:0.4}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:34px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+.btn.g{background:var(--s2)}
+.btn.g.on{background:var(--a2);color:#fff;border-color:var(--a2)}
+.btn.tg{background:var(--s2)}
+.btn.tg.on{background:var(--or);color:#fff;border-color:var(--or)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Cinematica</div>
+  <h1>Moto<br><em>Parabolico</em></h1>
+  <p>Un proiettile lanciato con velocit&agrave; iniziale obliqua &mdash; la somma di un moto orizzontale uniforme e uno verticale uniformemente accelerato</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#teoria" class="active">Teoria</a>
+  <a href="#leggi">Leggi orarie</a>
+  <a href="#formule">Gittata &amp; quota</a>
+  <a href="#sim1">Simulatore</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="moto_curvilineo.html">&#8592; Curvilineo</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- TEORIA -->
+<div class="sec" id="teoria">
+  <h2>1. Il Moto Parabolico</h2>
+  <p class="ssub">Un caso particolare di moto curvilineo: la composizione di due moti rettilinei indipendenti</p>
+  <p>Il <strong>moto parabolico</strong> (o moto del proiettile) descrive un corpo lanciato con una velocit&agrave; iniziale <b>v</b><sub>0</sub> obliqua rispetto all'orizzontale, soggetto alla sola accelerazione di gravit&agrave; g (si trascura l'attrito dell'aria). La traiettoria che ne risulta &egrave; una <strong>parabola</strong>.</p>
+
+  <h3>Il principio di indipendenza dei moti (Galileo)</h3>
+  <p>L'idea chiave, dovuta a Galileo, &egrave; che il moto si pu&ograve; studiare scomponendolo in <strong>due moti indipendenti</strong> che avvengono simultaneamente lungo gli assi x e y:</p>
+  <div class="two">
+    <div class="formula">
+      <div class="f">Asse x: <b>M.R.U.</b></div>
+      <div class="fd">orizzontale, velocit&agrave; costante &middot; nessuna forza orizzontale agisce sul proiettile</div>
+    </div>
+    <div class="formula">
+      <div class="f">Asse y: <b>M.R.U.A.</b></div>
+      <div class="fd">verticale, accelerazione costante &minus;g &middot; identico alla caduta libera</div>
+    </div>
+  </div>
+  <div class="bn">&#128161; I due moti non si influenzano a vicenda: un proiettile lanciato orizzontalmente e uno lasciato cadere dalla stessa altezza, nello stesso istante, toccano terra insieme &mdash; la componente orizzontale della velocit&agrave; non altera la caduta verticale.</div>
+
+  <h3>Scomposizione della velocit&agrave; iniziale</h3>
+  <div class="two">
+    <div class="formula"><div class="f">v<sub>0x</sub> = v<sub>0</sub>&middot;cos&theta;</div><div class="fd">componente orizzontale, costante per tutto il volo</div></div>
+    <div class="formula"><div class="f">v<sub>0y</sub> = v<sub>0</sub>&middot;sen&theta;</div><div class="fd">componente verticale iniziale, si riduce nel tempo per effetto di g</div></div>
+  </div>
+</div>
+
+<!-- LEGGI ORARIE -->
+<div class="sec" id="leggi">
+  <h2>2. Leggi Orarie e Grafici</h2>
+  <p class="ssub">Le equazioni del moto lungo i due assi, e la forma che assumono nei grafici</p>
+
+  <h3>Posizione</h3>
+  <div class="two">
+    <div class="formula">
+      <div class="f">x(t) = x<sub>0</sub> + v<sub>0x</sub>&middot;t</div>
+      <div class="fd">retta nel grafico x&minus;t &middot; identica a x(t) del moto rettilineo uniforme</div>
+    </div>
+    <div class="formula">
+      <div class="f">y(t) = y<sub>0</sub> + v<sub>0y</sub>&middot;t &minus; <span class="frac"><span class="n">1</span><span class="d">2</span></span>g&middot;t&sup2;</div>
+      <div class="fd">parabola nel grafico y&minus;t &middot; identica a x(t) del moto uniformemente accelerato con a=&minus;g</div>
+    </div>
+  </div>
+
+  <h3>Velocit&agrave;</h3>
+  <div class="two">
+    <div class="formula">
+      <div class="f">v<sub>x</sub>(t) = v<sub>0x</sub></div>
+      <div class="fd">costante &middot; retta orizzontale nel grafico v<sub>x</sub>&minus;t</div>
+    </div>
+    <div class="formula">
+      <div class="f">v<sub>y</sub>(t) = v<sub>0y</sub> &minus; g&middot;t</div>
+      <div class="fd">decresce linearmente &middot; retta di pendenza &minus;g nel grafico v<sub>y</sub>&minus;t &middot; si annulla nel punto pi&ugrave; alto</div>
+    </div>
+  </div>
+  <div class="bf">Nel punto pi&ugrave; alto della traiettoria v<sub>y</sub>=0: la velocit&agrave; del proiettile &egrave; puramente orizzontale (minima in modulo, ma non nulla, a meno che il lancio non sia verticale).</div>
+
+  <h3>Equazione della traiettoria y(x)</h3>
+  <p>Eliminando il tempo t dalle due leggi orarie (ricavando t=(x&minus;x<sub>0</sub>)/v<sub>0x</sub> dalla prima e sostituendo nella seconda) si ottiene l'equazione della traiettoria, che lega direttamente y a x senza pi&ugrave; comparire il tempo:</p>
+  <div class="formula">
+    <div class="f">y = y<sub>0</sub> + (x&minus;x<sub>0</sub>)&middot;tan&theta; &minus; <span class="frac"><span class="n">g</span><span class="d">2v<sub>0</sub>&sup2;cos&sup2;&theta;</span></span>&middot;(x&minus;x<sub>0</sub>)&sup2;</div>
+    <div class="fd">una parabola con la concavit&agrave; rivolta verso il basso (coefficiente del termine quadratico negativo)</div>
+  </div>
+</div>
+
+<!-- FORMULE GITTATA -->
+<div class="sec" id="formule">
+  <h2>3. Gittata, Quota Massima, Tempo di Volo</h2>
+  <p class="ssub">Le tre grandezze pi&ugrave; utili per risolvere gli esercizi (caso y<sub>0</sub>=0: lancio e atterraggio alla stessa quota)</p>
+
+  <div class="two">
+    <div class="formula">
+      <div class="f">T = <span class="frac"><span class="n">2v<sub>0</sub>sen&theta;</span><span class="d">g</span></span></div>
+      <div class="fd">tempo di volo (totale), se il proiettile atterra alla stessa quota di partenza</div>
+    </div>
+    <div class="formula">
+      <div class="f">R = <span class="frac"><span class="n">v<sub>0</sub>&sup2;sen(2&theta;)</span><span class="d">g</span></span></div>
+      <div class="fd">gittata (distanza orizzontale totale) &middot; massima per &theta;=45&deg;</div>
+    </div>
+  </div>
+  <div class="formula">
+    <div class="f">H = <span class="frac"><span class="n">v<sub>0</sub>&sup2;sen&sup2;&theta;</span><span class="d">2g</span></span> &nbsp; (+y<sub>0</sub> se il lancio parte da una quota iniziale)</div>
+    <div class="fd">altezza massima raggiunta, nell'istante t<sub>h</sub>=v<sub>0y</sub>/g (met&agrave; del tempo di volo, se y<sub>0</sub>=0)</div>
+  </div>
+  <div class="bn">&#128161; A parit&agrave; di v<sub>0</sub>, la gittata &egrave; massima per &theta;=45&deg;. Due angoli complementari (es. 30&deg; e 60&deg;) danno la <strong>stessa gittata</strong>, ma tempi di volo e quote massime diverse: pi&ugrave; l'angolo &egrave; ripido, pi&ugrave; il proiettile sale in alto e resta a lungo in volo.</div>
+
+  <h3>Caso generale: lancio da quota y<sub>0</sub>&ne;0</h3>
+  <p>Se il lancio parte da un'altezza y<sub>0</sub> diversa da zero (es. da una torre, da un dirupo), il tempo di volo si trova risolvendo l'equazione di secondo grado y(t)=0:</p>
+  <div class="formula">
+    <div class="f">t<sub>volo</sub> = <span class="frac"><span class="n">v<sub>0y</sub> + &radic;(v<sub>0y</sub>&sup2; + 2g&middot;y<sub>0</sub>)</span><span class="d">g</span></span></div>
+    <div class="fd">si sceglie la soluzione con il segno + davanti alla radice, l'unica fisicamente accettabile (t&gt;0)</div>
+  </div>
+</div>
+
+<!-- SIM 1 -->
+<div class="sec" id="sim1">
+  <h2>4. Simulatore &mdash; Lancio del Proiettile</h2>
+  <p class="ssub">Imposta i parametri del lancio, scegli cosa visualizzare, poi premi Lancia</p>
+  <div class="sim">
+    <div class="sim-t">Configura il lancio (i controlli si bloccano durante il volo)</div>
+    <div class="ctrl">
+      <label>v<sub>0</sub> (m/s)</label>
+      <input type="range" id="s1v0" min="5" max="45" step="1" value="22"><span class="vv" id="s1v0v">22</span>
+      <label>&theta; (&deg;)</label>
+      <input type="range" id="s1theta" min="5" max="85" step="1" value="50"><span class="vv" id="s1thetav">50</span>
+      <label>y<sub>0</sub> (m)</label>
+      <input type="range" id="s1y0" min="0" max="40" step="1" value="0"><span class="vv" id="s1y0v">0</span>
+    </div>
+    <div class="ctrl">
+      <label>Gravit&agrave;:</label>
+      <button class="btn g on" id="btnGTerra" onclick="selectG(9.81,'btnGTerra')">Terra (9.81)</button>
+      <button class="btn g" id="btnGLuna" onclick="selectG(1.62,'btnGLuna')">Luna (1.62)</button>
+      <button class="btn g" id="btnGMarte" onclick="selectG(3.71,'btnGMarte')">Marte (3.71)</button>
+    </div>
+    <div class="ctrl">
+      <label>Mostra:</label>
+      <button class="btn tg on" id="btnShowV" onclick="toggleShowV()">Vettore v</button>
+      <button class="btn tg on" id="btnShowComp" onclick="toggleShowComp()">Componenti v<sub>x</sub>, v<sub>y</sub></button>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Lancia</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv1" style="height:760px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#1a6b3a"></span>Velocit&agrave; v (totale)</span>
+      <span><span class="ld" style="background:#1a4b8c"></span>Componente v<sub>x</sub></span>
+      <span><span class="ld" style="background:#c47a00"></span>Componente v<sub>y</sub></span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>5. Esercizi Proposti</h2>
+  <p class="ssub">Moto parabolico, gittata, quota massima, tempo di volo</p>
+  <ol>
+    <li><strong>Calcio d'angolo:</strong> un pallone viene calciato con v<sub>0</sub>=18m/s a &theta;=35&deg;. Calcola tempo di volo, gittata e altezza massima (assumi partenza e atterraggio alla stessa quota, g=9.81m/s&sup2;). Verifica nel simulatore.</li>
+    <li><strong>Lancio da una torre:</strong> da una torre alta y<sub>0</sub>=25m, un oggetto viene lanciato orizzontalmente (&theta;=0&deg;) con v<sub>0</sub>=12m/s. Calcola il tempo di caduta usando la formula generale, e la distanza orizzontale percorsa prima di toccare terra.</li>
+    <li><strong>Angoli complementari:</strong> dimostra algebricamente, usando la formula della gittata, che due lanci con angoli &theta; e (90&deg;&minus;&theta;) e stessa v<sub>0</sub> hanno la stessa gittata R. (Suggerimento: sen(2(90&deg;&minus;&theta;))=sen(180&deg;&minus;2&theta;)=sen(2&theta;).)</li>
+    <li><strong>Angolo di gittata massima:</strong> usando il simulatore, prova diversi angoli mantenendo v<sub>0</sub> fissa e trova sperimentalmente l'angolo che d&agrave; la gittata pi&ugrave; lunga. Il risultato conferma la teoria?</li>
+    <li><strong>Sulla Luna:</strong> ripeti l'esercizio 1 (v<sub>0</sub>=18m/s, &theta;=35&deg;) ma con g lunare (1.62m/s&sup2;). Di quanto aumentano gittata e tempo di volo rispetto alla Terra? Verifica nel simulatore.</li>
+    <li><strong>Nel punto più alto:</strong> spiega perch&eacute; nel punto pi&ugrave; alto della traiettoria la velocit&agrave; non &egrave; mai zero (tranne nel caso di lancio verticale), e quanto vale in quell'istante in funzione di v<sub>0</sub> e &theta;. Osserva la componente v<sub>x</sub> nel simulatore: cambia durante il volo?</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Moto Parabolico &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function niceStep(range,n){
+  var s=range/Math.max(n,1), m=Math.pow(10,Math.floor(Math.log10(Math.abs(s)||1))), t=s/m;
+  return(t<2?1:t<5?2:5)*m;
+}
+function drawAxes(ctx,x,y,w,h,xmin,xmax,ymin,ymax,xlabel,ylabel){
+  function sx(vx){return x+(vx-xmin)/(xmax-xmin)*w;}
+  function sy(vy){return y+h-(vy-ymin)/(ymax-ymin)*h;}
+  var gx=niceStep(xmax-xmin,6), gy=niceStep(ymax-ymin,5);
+  ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.6;ctx.setLineDash([]);
+  for(var vx=Math.ceil(xmin/gx)*gx; vx<=xmax; vx+=gx){
+    ctx.beginPath();ctx.moveTo(sx(vx),y);ctx.lineTo(sx(vx),y+h);ctx.stroke();
+  }
+  for(var vy=Math.ceil(ymin/gy)*gy; vy<=ymax; vy+=gy){
+    ctx.beginPath();ctx.moveTo(x,sy(vy));ctx.lineTo(x+w,sy(vy));ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=1;
+  if(0>=ymin&&0<=ymax){ctx.beginPath();ctx.moveTo(x,sy(0));ctx.lineTo(x+w,sy(0));ctx.stroke();}
+  if(0>=xmin&&0<=xmax){ctx.beginPath();ctx.moveTo(sx(0),y);ctx.lineTo(sx(0),y+h);ctx.stroke();}
+  ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='8.5px monospace';ctx.textAlign='center';
+  for(var vx2=Math.ceil(xmin/gx)*gx; vx2<=xmax; vx2+=gx){
+    ctx.fillText(fmt1(vx2),sx(vx2),y+h+11);
+  }
+  ctx.textAlign='right';
+  for(var vy2=Math.ceil(ymin/gy)*gy; vy2<=ymax; vy2+=gy){
+    ctx.fillText(fmt1(vy2),x-4,sy(vy2)+3);
+  }
+  ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='left';
+  ctx.fillText(xlabel,x+w-22,y+h+11);
+  ctx.fillText(ylabel,x-22,y+10);
+  return {sx:sx,sy:sy};
+}
+function plotFn(ctx,sxFn,syFn,fn,tmin,tmax,color,lw){
+  ctx.strokeStyle=color;ctx.lineWidth=lw||2;ctx.setLineDash([]);
+  ctx.beginPath();var first=true;
+  var N=100;
+  for(var i=0;i<=N;i++){
+    var tt=tmin+(tmax-tmin)*i/N;
+    var yy=fn(tt);
+    if(!isFinite(yy)){first=true;continue;}
+    var px=sxFn(tt),py=syFn(yy);
+    first?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    first=false;
+  }
+  ctx.stroke();
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();
+}
+function drawArrow(ctx,x1,y1,x2,y2,color,lw){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lw||2.4;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var dx=x2-x1,dy=y2-y1; if(Math.hypot(dx,dy)<1)return;
+  var ang=Math.atan2(dy,dx), hl=8;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(ang-Math.PI/6), y2-hl*Math.sin(ang-Math.PI/6));
+  ctx.lineTo(x2-hl*Math.cos(ang+Math.PI/6), y2-hl*Math.sin(ang+Math.PI/6));
+  ctx.closePath();ctx.fill();
+}
+
+// ══════════════════════════════════════════════════════
+// STATO
+// ══════════════════════════════════════════════════════
+var gVal=9.81;
+var showV=true, showComp=true;
+var anim1={t:0,playing:false,id:null,lastT:null};
+
+function selectG(g,btnId){
+  if(anim1.playing)return;
+  gVal=g;
+  ['btnGTerra','btnGLuna','btnGMarte'].forEach(function(id){
+    document.getElementById(id).className='btn g'+(id===btnId?' on':'');
+  });
+  resetSim1();
+}
+function toggleShowV(){
+  showV=!showV;
+  document.getElementById('btnShowV').className='btn tg'+(showV?' on':'');
+  drawSim1();
+}
+function toggleShowComp(){
+  showComp=!showComp;
+  document.getElementById('btnShowComp').className='btn tg'+(showComp?' on':'');
+  drawSim1();
+}
+function setControlsEnabled(en){
+  ['s1v0','s1theta','s1y0'].forEach(function(id){document.getElementById(id).disabled=!en;});
+  ['btnGTerra','btnGLuna','btnGMarte'].forEach(function(id){document.getElementById(id).disabled=!en;});
+}
+
+// ══════════════════════════════════════════════════════
+// CINEMATICA
+// ══════════════════════════════════════════════════════
+function launchParams(){
+  var v0=rf('s1v0'), thetaDeg=rf('s1theta'), y0=rf('s1y0'), g=gVal;
+  var th=thetaDeg*Math.PI/180;
+  var v0x=v0*Math.cos(th), v0y=v0*Math.sin(th);
+  var tVolo=(v0y+Math.sqrt(v0y*v0y+2*g*y0))/g;
+  var R=v0x*tVolo;
+  var tH=v0y/g;
+  var H=y0+(v0y>0?(v0y*v0y)/(2*g):0);
+  return {v0:v0,thetaDeg:thetaDeg,y0:y0,g:g,v0x:v0x,v0y:v0y,tVolo:Math.max(tVolo,0.001),R:R,tH:Math.max(tH,0),H:H};
+}
+function stateAt(P,t){
+  var tc=Math.min(t,P.tVolo);
+  var x=P.v0x*tc;
+  var y=P.y0+P.v0y*tc-0.5*P.g*tc*tc;
+  var vx=P.v0x;
+  var vy=P.v0y-P.g*tc;
+  return {x:x,y:Math.max(y,0),vx:vx,vy:vy,t:tc};
+}
+
+function togglePlay1(){
+  if(!anim1.playing && anim1.t>=launchParams().tVolo-0.001) anim1.t=0;
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Lancia';
+  setControlsEnabled(!anim1.playing);
+  anim1.lastT=null;
+  if(anim1.playing)loop1();else if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+}
+function resetSim1(){
+  anim1.playing=false; anim1.t=0;
+  document.getElementById('btnPlay1').className='btn on';
+  document.getElementById('btnPlay1').textContent='\u25b6 Lancia';
+  setControlsEnabled(true);
+  if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+  drawSim1();
+}
+function loop1(ts){
+  if(!anim1.playing)return;
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dt=(ts-anim1.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.012; dt=Math.min(dt,0.03);
+  anim1.lastT=ts;
+  var P=launchParams();
+  anim1.t=Math.min(P.tVolo,anim1.t+dt);
+  drawSim1();
+  if(anim1.t>=P.tVolo){
+    anim1.playing=false;
+    document.getElementById('btnPlay1').className='btn on';
+    document.getElementById('btnPlay1').textContent='\u25b6 Lancia';
+    setControlsEnabled(true);
+    return;
+  }
+  anim1.id=requestAnimationFrame(loop1);
+}
+
+function drawSim1(){
+  var P=launchParams();
+  var t=anim1.t;
+  var s=stateAt(P,t);
+
+  var cv=setupCv('cv1',760);
+  var W=cv.width,H=760,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  // ── scena (scala uniforme) ──
+  var areaTop=32, areaH=380, areaX=18, areaW=W-36;
+  var xmin=0, xmax=Math.max(P.R,1)*1.08;
+  var ymin=0, ymax=Math.max(P.H,P.y0,1)*1.18;
+  var wx=xmax-xmin, wy=Math.max(ymax-ymin,1);
+  var scale=Math.min((areaW-24)/wx, (areaH-24)/wy);
+  var originX=areaX+12, groundY=areaTop+areaH-12;
+  function toCv(wxp,wyp){return {x:originX+wxp*scale, y:groundY-wyp*scale};}
+
+  // terreno
+  ctx.strokeStyle='#888';ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.moveTo(areaX,groundY);ctx.lineTo(areaX+areaW,groundY);ctx.stroke();
+  ctx.fillStyle='rgba(0,0,0,0.04)';
+  ctx.fillRect(areaX,groundY,areaW,areaTop+areaH-groundY+14);
+
+  // traiettoria completa (tratteggiata leggera)
+  ctx.strokeStyle='rgba(122,79,196,0.35)';
+  ctx.lineWidth=2; ctx.setLineDash([5,4]);
+  ctx.beginPath();
+  var NN=100;
+  for(var i=0;i<=NN;i++){
+    var tt=P.tVolo*i/NN;
+    var st=stateAt(P,tt);
+    var cp=toCv(st.x,st.y);
+    i===0?ctx.moveTo(cp.x,cp.y):ctx.lineTo(cp.x,cp.y);
+  }
+  ctx.stroke();ctx.setLineDash([]);
+
+  // linea quota massima
+  var Hc=toCv(0,P.H);
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,3]);
+  ctx.beginPath();ctx.moveTo(areaX,Hc.y);ctx.lineTo(areaX+areaW,Hc.y);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='rgba(0,0,0,0.4)';ctx.font='9px monospace';ctx.textAlign='left';
+  ctx.fillText('H = '+fmt2(P.H)+' m',areaX+4,Hc.y-4);
+
+  // punto di lancio e atterraggio
+  var launchP=toCv(0,P.y0), landP=toCv(P.R,0);
+  dot(ctx,launchP.x,launchP.y,4,'#555');
+  dot(ctx,landP.x,landP.y,4,'#555');
+  ctx.fillStyle='#555';ctx.font='9px monospace';ctx.textAlign='center';
+  ctx.fillText('R = '+fmt2(P.R)+' m',(launchP.x+landP.x)/2,groundY+16);
+
+  // punto mobile
+  var Pc=toCv(s.x,s.y);
+
+  // scala unica per i vettori velocità (parallelogramma coerente)
+  var speedMax=Math.max(Math.hypot(P.v0x,P.v0y), Math.hypot(P.v0x,P.v0y-P.g*P.tVolo));
+  var velScale=88/Math.max(speedMax,0.5);
+  var vxTip={x:Pc.x+s.vx*velScale, y:Pc.y};
+  var vyTip={x:Pc.x, y:Pc.y-s.vy*velScale};
+  var vTip={x:Pc.x+s.vx*velScale, y:Pc.y-s.vy*velScale};
+
+  if(showComp){
+    ctx.strokeStyle='rgba(0,0,0,0.18)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+    ctx.beginPath();ctx.moveTo(vxTip.x,vxTip.y);ctx.lineTo(vTip.x,vTip.y);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(vyTip.x,vyTip.y);ctx.lineTo(vTip.x,vTip.y);ctx.stroke();
+    ctx.setLineDash([]);
+    drawArrow(ctx,Pc.x,Pc.y,vxTip.x,vxTip.y,'#1a4b8c',2.4);
+    drawArrow(ctx,Pc.x,Pc.y,vyTip.x,vyTip.y,'#c47a00',2.4);
+    ctx.font='bold 9px sans-serif';ctx.textAlign='left';
+    ctx.fillStyle='#1a4b8c';ctx.fillText('v\u2093',vxTip.x+5,vxTip.y+11);
+    ctx.fillStyle='#c47a00';ctx.fillText('v\u1d67',vyTip.x+5,vyTip.y-4);
+  }
+  if(showV){
+    drawArrow(ctx,Pc.x,Pc.y,vTip.x,vTip.y,'#1a6b3a',2.6);
+    ctx.font='bold 9px sans-serif';ctx.fillStyle='#1a6b3a';ctx.textAlign='left';
+    ctx.fillText('v',vTip.x+6,vTip.y-4);
+  }
+
+  dot(ctx,Pc.x,Pc.y,6.5,'#7a4fc4');
+
+  ctx.fillStyle='#444';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText('v\u2080='+fmt1(P.v0)+'m/s   \u03b8='+fmt1(P.thetaDeg)+'\u00b0   t='+fmt2(t)+'s / '+fmt2(P.tVolo)+'s',W/2,16);
+
+  // ── grafico vx(t), vy(t) ──
+  var g1Top=areaTop+areaH+30, g1H=140;
+  function vxFn(tt){return stateAt(P,tt).vx;}
+  function vyFn(tt){return stateAt(P,tt).vy;}
+  var vymin=Math.min(0,P.v0y-P.g*P.tVolo)-1, vymax=Math.max(P.v0x,P.v0y)*1.15+1;
+  var ax1=drawAxes(ctx,55,g1Top,W-85,g1H,0,P.tVolo,vymin,vymax,'t (s)','v (m/s)');
+  plotFn(ctx,ax1.sx,ax1.sy,vxFn,0,P.tVolo,'#1a4b8c',2.2);
+  plotFn(ctx,ax1.sx,ax1.sy,vyFn,0,P.tVolo,'#c47a00',2.2);
+  dot(ctx,ax1.sx(s.t),ax1.sy(s.vx),5,'#1a4b8c');
+  dot(ctx,ax1.sx(s.t),ax1.sy(s.vy),5,'#c47a00');
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax1.sx(s.t),g1Top);ctx.lineTo(ax1.sx(s.t),g1Top+g1H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#444';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('v\u2093(t) blu (costante) \u00b7 v\u1d67(t) arancio (retta, pendenza \u2212g)',60,g1Top+14);
+
+  // ── grafico x(t), y(t) ──
+  var g2Top=g1Top+g1H+44, g2H=150;
+  function xFn(tt){return stateAt(P,tt).x;}
+  function yFn(tt){return stateAt(P,tt).y;}
+  var posmax=Math.max(P.R,P.H,P.y0)*1.15+1;
+  var ax2=drawAxes(ctx,55,g2Top,W-85,g2H,0,P.tVolo,0,posmax,'t (s)','x , y (m)');
+  plotFn(ctx,ax2.sx,ax2.sy,xFn,0,P.tVolo,'#0e6b6b',2.2);
+  plotFn(ctx,ax2.sx,ax2.sy,yFn,0,P.tVolo,'#7a4fc4',2.2);
+  dot(ctx,ax2.sx(s.t),ax2.sy(s.x),5,'#0e6b6b');
+  dot(ctx,ax2.sx(s.t),ax2.sy(s.y),5,'#7a4fc4');
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+  ctx.beginPath();ctx.moveTo(ax2.sx(s.t),g2Top);ctx.lineTo(ax2.sx(s.t),g2Top+g2H);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#444';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('x(t) verde acqua (retta) \u00b7 y(t) viola (parabola)',60,g2Top+14);
+
+  o.className='out';
+  o.innerHTML=
+    '<div class="rg">'+
+    '<div class="rl">Tempo t</div><div class="rv">'+fmt2(t)+' s</div>'+
+    '<div class="rl">Posizione (x,y)</div><div class="rv">('+fmt2(s.x)+', '+fmt2(s.y)+') m</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">v<sub>x</sub>(t)</div><div class="rv ok">'+fmt2(s.vx)+' m/s</div>'+
+    '<div class="rl">v<sub>y</sub>(t)</div><div class="rv ok">'+fmt2(s.vy)+' m/s</div>'+
+    '<div class="rl">Velocit\u00e0 totale v</div><div class="rv ok">'+fmt2(Math.hypot(s.vx,s.vy))+' m/s</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Gittata R</div><div class="rv">'+fmt2(P.R)+' m</div>'+
+    '<div class="rl">Quota massima H</div><div class="rv">'+fmt2(P.H)+' m</div>'+
+    '<div class="rl">Tempo di volo</div><div class="rv">'+fmt2(P.tVolo)+' s</div>'+
+    '</div>';
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn){
+  document.getElementById(id).oninput=function(){
+    document.getElementById(vid).textContent=this.value;
+    fn();
+  };
+}
+sl('s1v0','s1v0v',function(){resetSim1();});
+sl('s1theta','s1thetav',function(){resetSim1();});
+sl('s1y0','s1y0v',function(){resetSim1();});
+
+window.addEventListener('resize',function(){drawSim1();});
+document.addEventListener('DOMContentLoaded',function(){
+  drawSim1();
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
