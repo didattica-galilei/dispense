@@ -186,13 +186,14 @@ footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:
 <div class="sec" id="sim1">
   <h2>4. Simulatore &mdash; Lancio del Proiettile</h2>
   <p class="ssub">Imposta i parametri del lancio, scegli cosa visualizzare, poi premi Lancia</p>
+  <div class="bn" style="margin-bottom:0">&#128161; Con &theta; negativo il lancio &egrave; verso il basso (es. da una torre o da un dirupo): imposta anche una quota iniziale y<sub>0</sub>&gt;0, altrimenti il proiettile "atterra" subito.</div>
   <div class="sim">
     <div class="sim-t">Configura il lancio (i controlli si bloccano durante il volo)</div>
     <div class="ctrl">
       <label>v<sub>0</sub> (m/s)</label>
       <input type="range" id="s1v0" min="5" max="45" step="1" value="22"><span class="vv" id="s1v0v">22</span>
       <label>&theta; (&deg;)</label>
-      <input type="range" id="s1theta" min="5" max="85" step="1" value="50"><span class="vv" id="s1thetav">50</span>
+      <input type="range" id="s1theta" min="-80" max="85" step="1" value="50"><span class="vv" id="s1thetav">50</span>
       <label>y<sub>0</sub> (m)</label>
       <input type="range" id="s1y0" min="0" max="40" step="1" value="0"><span class="vv" id="s1y0v">0</span>
     </div>
