@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravitazione — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,38px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4d03f}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:580px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two{grid-template-columns:1fr}.three{grid-template-columns:1fr}}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.fig{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:12px;margin:14px 0;text-align:center}
+.fig svg{width:100%;height:auto;max-width:640px}
+.fig-cap{font-size:11px;color:var(--mu);margin-top:6px;font-style:italic;text-align:left}
+.tbl-wrap{overflow-x:auto;margin:9px 0}
+table.kt{border-collapse:collapse;width:100%;font-size:12.5px;font-family:'Source Code Pro',monospace}
+table.kt th{background:var(--ink);color:#fff;padding:6px 10px;text-align:right;font-weight:600;font-size:10.5px;letter-spacing:.3px}
+table.kt th:first-child{text-align:left}
+table.kt td{padding:5px 10px;text-align:right;border-bottom:1px solid var(--bo)}
+table.kt td:first-child{text-align:left;font-family:'Source Sans 3',sans-serif;font-weight:600}
+table.kt tr:nth-child(even){background:var(--su)}
+table.kt td.kconst{color:var(--a);font-weight:700}
+.tbl-cap{font-size:11px;color:var(--mu);margin:4px 0 14px;font-style:italic}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:74px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:34px;color:var(--ink)}
+.ref{font-family:'Source Code Pro',monospace;font-size:10.5px;color:var(--mu)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+.btn.g{background:var(--s2)}
+.btn.g:hover{background:var(--su)}
+.btn.orb{background:var(--s2);opacity:0.5}
+.btn.orb.on{opacity:1;color:#fff}
+.btn.orb.c-iss.on{background:#e05a8a;border-color:#e05a8a}
+.btn.orb.c-leo.on{background:#5ac9c9;border-color:#5ac9c9}
+.btn.orb.c-meo.on{background:#e0a05a;border-color:#e0a05a}
+.btn.orb.c-geo.on{background:#7a4fc4;border-color:#7a4fc4}
+.btn.orb.c-moon.on{background:#9aa0a8;border-color:#9aa0a8}
+.btn.rad{background:var(--s2)}
+.btn.rad.on{background:var(--a2);color:#fff;border-color:var(--a2)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#0e1425;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.warn{color:#f4d03f;font-weight:600}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+.dd{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Meccanica &middot; Gravitazione</div>
+  <h1>Gravitazione<br><em>Universale</em></h1>
+  <p>Da Keplero a Newton: le orbite dei pianeti, l'energia gravitazionale, la velocit&agrave; di fuga &mdash; e perch&eacute; alcune orbite si richiudono su s&eacute; stesse mentre altre no</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#keplero" class="active">Leggi di Keplero</a>
+  <a href="#newton">Legge di Newton</a>
+  <a href="#energia">Energia gravitazionale</a>
+  <a href="#apsidi">Perielio &amp; afelio</a>
+  <a href="#fuga">Velocit&agrave; di fuga</a>
+  <a href="#satelliti">Satelliti terrestri</a>
+  <a href="#sim1">Simulatore orbite</a>
+  <a href="#sim2">Simulatore satelliti</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- KEPLERO -->
+<div class="sec" id="keplero">
+  <h2>1. Le Tre Leggi di Keplero</h2>
+  <p class="ssub">Leggi empiriche, dedotte dall'osservazione dei pianeti, prima ancora di conoscerne la causa fisica</p>
+  <p>Tra il 1609 e il 1619, studiando i dati osservativi di Tycho Brahe sul moto di Marte, Keplero formul&ograve; tre leggi che descrivono il moto dei pianeti attorno al Sole. Sono leggi puramente <strong>osservative</strong>: Keplero non sapeva ancora perch&eacute; i pianeti si muovessero cos&igrave; &mdash; sar&agrave; Newton, decenni dopo, a spiegarne la causa.</p>
+
+  <h3>Prima legge &mdash; legge delle orbite</h3>
+  <div class="formula">
+    <div class="f">Ogni pianeta percorre un'orbita ellittica, con il Sole in uno dei due fuochi</div>
+    <div class="fd">non al centro dell'ellisse, ma in un fuoco &mdash; una distinzione cruciale</div>
+  </div>
+
+  <div class="fig">
+    <svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="320" cy="200" rx="210" ry="182" fill="none" stroke="#333" stroke-width="2.6"/>
+      <!-- semiasse maggiore a (centro → afelio) -->
+      <line x1="320" y1="200" x2="530" y2="200" stroke="#1a4b8c" stroke-width="2.2"/>
+      <!-- semiasse minore b (centro → co-vertice) -->
+      <line x1="320" y1="200" x2="320" y2="18" stroke="#1a6b3a" stroke-width="2.2"/>
+      <!-- distanza focale c (centro → fuoco) -->
+      <line x1="320" y1="200" x2="215" y2="200" stroke="#c47a00" stroke-width="3.2"/>
+      <!-- assi tratteggiati di riferimento -->
+      <line x1="110" y1="200" x2="530" y2="200" stroke="#ccc" stroke-width="1" stroke-dasharray="3,3"/>
+      <!-- Sole -->
+      <circle cx="215" cy="200" r="10" fill="#f4d03f"/>
+      <circle cx="425" cy="200" r="4" fill="#999"/>
+      <circle cx="320" cy="200" r="3.5" fill="#333"/>
+      <circle cx="110" cy="200" r="5" fill="#5ac9c9"/>
+      <circle cx="530" cy="200" r="5" fill="#e05a8a"/>
+      <!-- etichette -->
+      <text x="215" y="182" font-size="13" font-weight="700" fill="#a67c00" text-anchor="middle">Sole (F&#8321;)</text>
+      <text x="425" y="217" font-size="11" fill="#888" text-anchor="middle">F&#8322; (fuoco vuoto)</text>
+      <text x="320" y="215" font-size="11" fill="#333" text-anchor="middle">C</text>
+      <text x="425" y="190" font-size="12" fill="#1a4b8c" font-weight="700" text-anchor="middle">a</text>
+      <text x="300" y="105" font-size="12" fill="#1a6b3a" font-weight="700" text-anchor="end">b</text>
+      <text x="267" y="190" font-size="12" fill="#c47a00" font-weight="700" text-anchor="middle">c</text>
+      <text x="110" y="222" font-size="11" fill="#0a7a7a" text-anchor="middle">perielio</text>
+      <text x="530" y="222" font-size="11" fill="#a02060" text-anchor="middle">afelio</text>
+    </svg>
+    <div class="fig-cap">a = semiasse maggiore &middot; b = semiasse minore &middot; c = distanza focale (semidistanza tra i due fuochi) &middot; il Sole occupa il fuoco F&#8321;, l'altro fuoco F&#8322; &egrave; vuoto (non c'&egrave; nulla)</div>
+  </div>
+
+  <h3>Le misure dell'ellisse</h3>
+  <div class="two">
+    <div class="formula">
+      <div class="f">e = <span class="frac"><span class="n">c</span><span class="d">a</span></span></div>
+      <div class="fd">eccentricit&agrave; &middot; 0&le;e&lt;1 &middot; e=0 &egrave; una circonferenza, e vicino a 1 un'ellisse molto schiacciata</div>
+    </div>
+    <div class="formula">
+      <div class="f">b = a&radic;(1&minus;e&sup2;)</div>
+      <div class="fd">relazione tra i due semiassi e l'eccentricit&agrave; &middot; equivalente a b&sup2;=a&sup2;&minus;c&sup2;</div>
+    </div>
+  </div>
+  <div class="two">
+    <div class="formula">
+      <div class="f">r<sub>perielio</sub> = a(1&minus;e)</div>
+      <div class="fd">distanza minima dal fuoco occupato (dove sta il Sole)</div>
+    </div>
+    <div class="formula">
+      <div class="f">r<sub>afelio</sub> = a(1+e)</div>
+      <div class="fd">distanza massima dal fuoco occupato</div>
+    </div>
+  </div>
+
+  <h3>Seconda legge &mdash; legge delle aree</h3>
+  <div class="formula">
+    <div class="f"><span class="frac"><span class="n">dA</span><span class="d">dt</span></span> = costante</div>
+    <div class="fd">il raggio vettore che unisce il Sole al pianeta spazza aree uguali in tempi uguali</div>
+  </div>
+  <div class="bn">&#128161; Conseguenza diretta: un pianeta si muove <strong>pi&ugrave; velocemente</strong> quando &egrave; vicino al Sole (perielio) e <strong>pi&ugrave; lentamente</strong> quando ne &egrave; lontano (afelio). Come vedremo, questa legge equivale alla conservazione del momento angolare.</div>
+
+  <div class="fig">
+    <svg viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="320" cy="200" rx="210" ry="182" fill="none" stroke="#333" stroke-width="2.2"/>
+      <!-- settore ampio vicino al perielio (area A) -->
+      <path d="M215,200 L124.3,134.1 L117.9,150.5 L113.5,167.0 L110.9,183.5 L110.0,200.0 L110.9,216.5 L113.5,233.0 L117.9,249.5 L124.3,265.9 Z" fill="rgba(90,201,201,0.35)" stroke="#0a7a7a" stroke-width="1.3"/>
+      <!-- settore stretto vicino all'afelio (area A, uguale alla precedente) -->
+      <path d="M215,200 L528.5,221.9 L529.6,211.0 L530.0,200.0 L529.6,189.0 L528.5,178.1 Z" fill="rgba(224,90,138,0.35)" stroke="#a02060" stroke-width="1.3"/>
+      <circle cx="215" cy="200" r="9" fill="#f4d03f"/>
+      <text x="215" y="182" font-size="12" font-weight="700" fill="#a67c00" text-anchor="middle">Sole</text>
+      <text x="150" y="130" font-size="12" font-weight="700" fill="#0a7a7a">Area A</text>
+      <text x="536" y="196" font-size="12" font-weight="700" fill="#a02060">Area A</text>
+      <text x="124" y="290" font-size="10.5" fill="#0a7a7a" text-anchor="middle">tratto veloce (vicino al Sole)</text>
+      <text x="529" y="245" font-size="10.5" fill="#a02060" text-anchor="middle">tratto lento (lontano dal Sole)</text>
+    </svg>
+    <div class="fig-cap">Le due aree colorate sono uguali (A=A), ma vengono spazzate nello <strong>stesso intervallo di tempo</strong>: vicino al perielio il pianeta &egrave; veloce e percorre un arco ampio in poco tempo (settore corto e largo); vicino all'afelio &egrave; lento e percorre un arco breve (settore lungo e stretto). Questo &egrave; il significato fisico della legge delle aree.</div>
+  </div>
+
+  <h3>Terza legge &mdash; legge armonica</h3>
+  <div class="formula">
+    <div class="f"><span class="frac"><span class="n">T&sup2;</span><span class="d">a&sup3;</span></span> = costante (per tutti i pianeti dello stesso sistema)</div>
+    <div class="fd">T = periodo di rivoluzione &middot; a = semiasse maggiore dell'orbita</div>
+  </div>
+  <p>La costante &egrave; la stessa per tutti i corpi che orbitano attorno allo stesso oggetto centrale (tutti i pianeti attorno al Sole, o tutti i satelliti attorno alla Terra): pi&ugrave; un'orbita &egrave; grande, tanto pi&ugrave; lento &egrave; il periodo, ma secondo una proporzione precisa. La costante per&ograve; <strong>cambia da sistema a sistema</strong>, perch&eacute; dipende dalla massa del corpo centrale (&mu;=GM): stessa legge, tre corpi centrali diversi, tre costanti diverse.</p>
+
+  <div class="tbl-wrap">
+  <table class="kt">
+    <tr><th>Pianeta (attorno al Sole)</th><th>a (U.A.)</th><th>T (anni)</th><th>T&sup2;/a&sup3;</th></tr>
+    <tr><td>Mercurio</td><td>0.387</td><td>0.241</td><td class="kconst">1.002</td></tr>
+    <tr><td>Venere</td><td>0.723</td><td>0.615</td><td class="kconst">1.001</td></tr>
+    <tr><td>Terra</td><td>1.000</td><td>1.000</td><td class="kconst">1.000</td></tr>
+    <tr><td>Marte</td><td>1.524</td><td>1.881</td><td class="kconst">1.000</td></tr>
+    <tr><td>Giove</td><td>5.203</td><td>11.86</td><td class="kconst">0.999</td></tr>
+    <tr><td>Saturno</td><td>9.537</td><td>29.46</td><td class="kconst">1.001</td></tr>
+    <tr><td>Urano</td><td>19.191</td><td>84.01</td><td class="kconst">0.999</td></tr>
+    <tr><td>Nettuno</td><td>30.069</td><td>164.8</td><td class="kconst">0.999</td></tr>
+  </table>
+  </div>
+  <div class="tbl-cap">Unit&agrave; astronomiche (U.A.) e anni: la costante vale circa <strong>1</strong> per costruzione (&egrave; cos&igrave; che si definiscono queste unit&agrave;, calibrate sulla Terra).</div>
+
+  <div class="tbl-wrap">
+  <table class="kt">
+    <tr><th>Satellite (attorno a Giove)</th><th>a (km)</th><th>T (giorni)</th><th>T&sup2;/a&sup3; (&times;10<sup>&minus;17</sup>)</th></tr>
+    <tr><td>Io</td><td>421 700</td><td>1.769</td><td class="kconst">4.173</td></tr>
+    <tr><td>Europa</td><td>671 034</td><td>3.551</td><td class="kconst">4.173</td></tr>
+    <tr><td>Ganimede</td><td>1 070 412</td><td>7.155</td><td class="kconst">4.174</td></tr>
+    <tr><td>Callisto</td><td>1 882 709</td><td>16.69</td><td class="kconst">4.174</td></tr>
+  </table>
+  </div>
+  <div class="tbl-cap">Km e giorni: la costante vale circa <strong>4.17&times;10<sup>&minus;17</sup></strong> &mdash; un valore completamente diverso da quello del Sole, perch&eacute; Giove ha una massa (e quindi un &mu;) diversa.</div>
+
+  <div class="tbl-wrap">
+  <table class="kt">
+    <tr><th>Satellite (attorno alla Terra)</th><th>a (km)</th><th>T (ore)</th><th>T&sup2;/a&sup3; (&times;10<sup>&minus;7</sup>, a in 10<sup>4</sup>km)</th></tr>
+    <tr><td>ISS</td><td>6 779</td><td>1.543</td><td class="kconst">7.642</td></tr>
+    <tr><td>GPS (MEO)</td><td>26 571</td><td>11.97</td><td class="kconst">7.642</td></tr>
+    <tr><td>Geostazionario</td><td>42 164</td><td>23.93</td><td class="kconst">7.642</td></tr>
+    <tr><td>Luna</td><td>384 400</td><td>658.8</td><td class="kconst">7.642</td></tr>
+  </table>
+  </div>
+  <div class="tbl-cap">Km e ore: la costante vale circa <strong>7.64&times;10<sup>&minus;7</sup></strong> (nelle unit&agrave; indicate) &mdash; ancora diversa dalle prime due, perch&eacute; ora il corpo centrale &egrave; la Terra. Nota come persino la Luna (satellite naturale) rispetti la stessa costante dei satelliti artificiali: la legge non distingue tra naturale e artificiale, solo il corpo centrale conta.</div>
+</div>
+
+<!-- NEWTON -->
+<div class="sec" id="newton">
+  <h2>2. La Legge di Gravitazione Universale di Newton</h2>
+  <p class="ssub">La causa fisica dietro le leggi di Keplero</p>
+  <p>Newton dimostr&ograve; che le tre leggi di Keplero sono conseguenza di un'unica legge di forza, valida non solo per i pianeti ma per <strong>due corpi qualsiasi</strong> dotati di massa:</p>
+  <div class="formula">
+    <div class="f">F = G&middot;<span class="frac"><span class="n">m<sub>1</sub>m<sub>2</sub></span><span class="d">r&sup2;</span></span></div>
+    <div class="fd">forza attrattiva, diretta lungo la congiungente le due masse &middot; G = 6.674&times;10<sup>&minus;11</sup> N&middot;m&sup2;/kg&sup2; (costante di gravitazione universale)</div>
+  </div>
+  <p>&Egrave; una forza <strong>centrale</strong> (diretta sempre verso il centro attrattore) e <strong>inversamente proporzionale al quadrato della distanza</strong>. Proprio perch&eacute; &egrave; centrale, il momento angolare del pianeta rispetto al Sole si conserva &mdash; ed &egrave; questo, matematicamente, il motivo della seconda legge di Keplero (legge delle aree).</p>
+
+  <h3>Il parametro gravitazionale &mu;=GM</h3>
+  <p>Nei problemi orbitali conviene spesso raggruppare G e la massa del corpo centrale M in un unico parametro, indicato con &mu;:</p>
+  <div class="formula">
+    <div class="f">&mu; = G&middot;M</div>
+    <div class="fd">"parametro gravitazionale standard" del corpo centrale &middot; per il Sole &mu;&#8857;&asymp;1.327&times;10&sup2;&sup0; m&sup3;/s&sup2; &middot; per la Terra &mu;&#8853;&asymp;3.986&times;10&sup1;&sup4; m&sup3;/s&sup2;</div>
+  </div>
+  <div class="bf">Da F=GMm/r&sup2;=ma segue a=GM/r&sup2;=&mu;/r&sup2;: l'accelerazione di gravit&agrave; a una data distanza dipende solo da &mu; (cio&egrave; dalla massa del corpo centrale), non dalla massa del corpo che orbita &mdash; per questo tutti i pianeti, indipendentemente dalla propria massa, seguono la stessa orbita se partono con le stesse condizioni iniziali attorno allo stesso Sole.</div>
+
+  <h3>Orbita circolare: la terza legge di Keplero dimostrata</h3>
+  <p>Per un'orbita circolare di raggio r, la forza di gravit&agrave; fa da forza centripeta:</p>
+  <div class="formula">
+    <div class="f">G<span class="frac"><span class="n">Mm</span><span class="d">r&sup2;</span></span> = m&omega;&sup2;r &nbsp;&nbsp;&#8658;&nbsp;&nbsp; T&sup2; = <span class="frac"><span class="n">4&pi;&sup2;</span><span class="d">GM</span></span>r&sup3;</div>
+    <div class="fd">ecco comparire esattamente la proporzionalit&agrave; T&sup2;&#8733;r&sup3; della terza legge di Keplero, con la costante di proporzionalit&agrave; ora nota esplicitamente</div>
+  </div>
+</div>
+
+<!-- ENERGIA -->
+<div class="sec" id="energia">
+  <h2>3. Energia Potenziale Gravitazionale</h2>
+  <p class="ssub">Energia potenziale ed energia meccanica totale nel campo gravitazionale</p>
+  <div class="formula">
+    <div class="f">U(r) = &minus;G<span class="frac"><span class="n">Mm</span><span class="d">r</span></span></div>
+    <div class="fd">energia potenziale gravitazionale, con la convenzione U(&infin;)=0 &middot; sempre negativa a distanza finita, tende a zero per r&rarr;&infin;</div>
+  </div>
+  <div class="bw">&#9888; Attenzione al segno: questa formula &egrave; diversa da quella usata vicino alla superficie terrestre (U=mgh), che &egrave; solo un'approssimazione locale valida per piccole altezze. La formula generale U=&minus;GMm/r vale a qualunque distanza.</div>
+
+  <h3>Energia meccanica totale</h3>
+  <div class="formula">
+    <div class="f">E = K + U = <span class="frac"><span class="n">1</span><span class="d">2</span></span>mv&sup2; &minus; G<span class="frac"><span class="n">Mm</span><span class="d">r</span></span></div>
+    <div class="fd">si conserva lungo tutta l'orbita (la forza gravitazionale &egrave; conservativa)</div>
+  </div>
+  <p>Per un'orbita ellittica, l'energia totale si pu&ograve; esprimere in modo compatto usando il semiasse maggiore a:</p>
+  <div class="formula">
+    <div class="f">E = &minus;<span class="frac"><span class="n">GMm</span><span class="d">2a</span></span></div>
+    <div class="fd">dipende solo dal semiasse maggiore, non dall'eccentricit&agrave; dell'orbita</div>
+  </div>
+
+  <h3>Il segno dell'energia decide il tipo di orbita</h3>
+  <div class="three">
+    <div class="formula"><div class="f">E &lt; 0</div><div class="fd">orbita CHIUSA (ellisse, o cerchio come caso particolare) &middot; il corpo resta legato</div></div>
+    <div class="formula"><div class="f">E = 0</div><div class="fd">orbita APERTA parabolica &middot; caso limite, fuga con velocit&agrave; residua nulla all'infinito</div></div>
+    <div class="formula"><div class="f">E &gt; 0</div><div class="fd">orbita APERTA iperbolica &middot; fuga con velocit&agrave; residua non nulla all'infinito</div></div>
+  </div>
+</div>
+
+<!-- APSIDI -->
+<div class="sec" id="apsidi">
+  <h2>4. Velocit&agrave; al Perielio e all'Afelio</h2>
+  <p class="ssub">I due punti dell'orbita a distanza minima e massima dal fuoco (perigeo/apogeo se il corpo centrale &egrave; la Terra)</p>
+  <p>Nei punti di perielio (distanza minima, r<sub>p</sub>) e afelio (distanza massima, r<sub>a</sub>), la velocit&agrave; &egrave; interamente <strong>tangenziale</strong> (perpendicolare al raggio vettore): la componente radiale della velocit&agrave; si annulla proprio in quei punti, per definizione di massimo/minimo della distanza.</p>
+
+  <h3>Conservazione del momento angolare (legge delle aree)</h3>
+  <div class="formula">
+    <div class="f">v<sub>p</sub>&middot;r<sub>p</sub> = v<sub>a</sub>&middot;r<sub>a</sub></div>
+    <div class="fd">essendo la velocit&agrave; tutta tangenziale in questi punti, il prodotto (velocit&agrave; &times; distanza) &egrave; lo stesso: la seconda legge di Keplero in forma quantitativa</div>
+  </div>
+
+  <h3>Formule esplicite (equazione di vis-viva)</h3>
+  <p>Combinando la conservazione dell'energia e del momento angolare, si ricava l'equazione di vis-viva, valida in ogni punto dell'orbita:</p>
+  <div class="formula">
+    <div class="f">v&sup2; = GM<span class="frac"><span class="n">2</span><span class="d">r</span></span> &minus; GM<span class="frac"><span class="n">1</span><span class="d">a</span></span> &nbsp;&nbsp;&nbsp;ossia&nbsp;&nbsp;&nbsp; v&sup2; = GM&middot;&#8203;<span class="frac"><span class="n">2a&minus;r</span><span class="d">ar</span></span></div>
+    <div class="fd">equazione di vis-viva &middot; v=velocit&agrave; a distanza r qualsiasi lungo l'orbita, a=semiasse maggiore</div>
+  </div>
+  <p>Applicandola nei due punti particolari r=r<sub>p</sub>=a(1&minus;e) e r=r<sub>a</sub>=a(1+e) (e = eccentricit&agrave; dell'orbita):</p>
+  <div class="two">
+    <div class="formula">
+      <div class="f">v<sub>p</sub> = &radic;(<span class="frac"><span class="n">GM</span><span class="d">a</span></span>&middot;<span class="frac"><span class="n">1+e</span><span class="d">1&minus;e</span></span>)</div>
+      <div class="fd">velocit&agrave; al perielio (massima lungo l'orbita)</div>
+    </div>
+    <div class="formula">
+      <div class="f">v<sub>a</sub> = &radic;(<span class="frac"><span class="n">GM</span><span class="d">a</span></span>&middot;<span class="frac"><span class="n">1&minus;e</span><span class="d">1+e</span></span>)</div>
+      <div class="fd">velocit&agrave; all'afelio (minima lungo l'orbita)</div>
+    </div>
+  </div>
+  <div class="bn">&#128161; Nel caso particolare e=0 (orbita circolare) le due formule coincidono: v<sub>p</sub>=v<sub>a</sub>=&radic;(GM/a), la classica velocit&agrave; di un'orbita circolare di raggio a.</div>
+</div>
+
+<!-- VELOCITA DI FUGA -->
+<div class="sec" id="fuga">
+  <h2>5. Velocit&agrave; di Fuga e Tipi di Orbita</h2>
+  <p class="ssub">Quanto veloce deve essere un corpo per non ricadere pi&ugrave; indietro</p>
+  <p>La velocit&agrave; di fuga da una distanza r &egrave; la velocit&agrave; minima necessaria affinch&eacute; un corpo, lanciato radialmente, raggiunga distanza infinita con velocit&agrave; residua nulla: si ottiene imponendo E=0.</p>
+  <div class="formula">
+    <div class="f">v<sub>fuga</sub> = &radic;<span class="frac"><span class="n">2GM</span><span class="d">r</span></span></div>
+    <div class="fd">indipendente dalla massa del corpo che fugge, dipende solo da M (corpo centrale) e dalla distanza di partenza r</div>
+  </div>
+  <div class="bf">Confronto diretto con la velocit&agrave; circolare v<sub>circ</sub>=&radic;(GM/r) alla stessa distanza: v<sub>fuga</sub> = &radic;2&middot;v<sub>circ</sub> &asymp; 1.414&middot;v<sub>circ</sub>. La velocit&agrave; di fuga &egrave; sempre &radic;2 volte quella circolare, qualunque sia il corpo centrale o la distanza.</div>
+
+  <h3>Classificazione completa delle orbite (eccentricit&agrave; e)</h3>
+  <div class="two">
+    <div class="formula"><div class="f">e = 0</div><div class="fd">CIRCONFERENZA &middot; orbita chiusa, v costante = v<sub>circ</sub></div></div>
+    <div class="formula"><div class="f">0 &lt; e &lt; 1</div><div class="fd">ELLISSE &middot; orbita chiusa, v variabile tra v<sub>p</sub> e v<sub>a</sub></div></div>
+    <div class="formula"><div class="f">e = 1</div><div class="fd">PARABOLA &middot; orbita aperta, caso limite (v=v<sub>fuga</sub> esattamente)</div></div>
+    <div class="formula"><div class="f">e &gt; 1</div><div class="fd">IPERBOLE &middot; orbita aperta, v&gt;v<sub>fuga</sub>, velocit&agrave; residua all'infinito</div></div>
+  </div>
+</div>
+
+<!-- SATELLITI -->
+<div class="sec" id="satelliti">
+  <h2>6. Satelliti Artificiali della Terra</h2>
+  <p class="ssub">Applicando le stesse leggi ai satelliti che orbitano attorno al nostro pianeta</p>
+  <p>Per la Terra, &mu;<sub>&#8853;</sub>=GM<sub>&#8853;</sub>&asymp;398600&nbsp;km&sup3;/s&sup2; e il raggio medio &egrave; R<sub>&#8853;</sub>&asymp;6371&nbsp;km. I satelliti artificiali si classificano in base all'altitudine (distanza dalla superficie), che determina periodo e velocit&agrave; orbitale tramite la terza legge di Keplero.</p>
+
+  <h3>Le tre grandi famiglie</h3>
+  <div class="three">
+    <div class="formula">
+      <div class="f">LEO</div>
+      <div class="fd">Low Earth Orbit &middot; 300&ndash;2000km di quota &middot; periodi di 90&ndash;130 minuti &middot; es. ISS (~408km, ~92.7min), costellazioni come Starlink</div>
+    </div>
+    <div class="formula">
+      <div class="f">MEO</div>
+      <div class="fd">Medium Earth Orbit &middot; ~20000km di quota &middot; es. satelliti GPS (~20200km, periodo ~12h, met&agrave; di un giorno siderale)</div>
+    </div>
+    <div class="formula">
+      <div class="f">GEO</div>
+      <div class="fd">Geostationary Orbit &middot; ~35786km di quota &middot; periodo = 1 giorno siderale (23h56m) &middot; satelliti per telecomunicazioni e meteo</div>
+    </div>
+  </div>
+
+  <h3>L'orbita geostazionaria: un caso speciale</h3>
+  <p>Un satellite geostazionario ha un periodo orbitale <strong>esattamente uguale</strong> al periodo di rotazione della Terra su s&eacute; stessa (il giorno siderale, 23h56m4s, leggermente pi&ugrave; corto del giorno solare di 24h). Se l'orbita &egrave; anche <strong>equatoriale</strong>, il satellite rimane costantemente sopra lo stesso punto della superficie terrestre &mdash; per questo si usa per le telecomunicazioni: le antenne a terra possono restare puntate in una direzione fissa.</p>
+  <div class="formula">
+    <div class="f">r<sub>GEO</sub> = &#8731;<span class="frac"><span class="n">&mu;<sub>&#8853;</sub>T<sub>sid</sub>&sup2;</span><span class="d">4&pi;&sup2;</span></span> &asymp; 42164 km &nbsp;(altitudine &asymp; 35786 km)</div>
+    <div class="fd">l'unica distanza per cui la terza legge di Keplero d&agrave; esattamente T=T<sub>sid</sub></div>
+  </div>
+  <div class="bn">&#128161; Il satellite GPS, con periodo di met&agrave; giorno siderale, non &egrave; fisso rispetto alla Terra: compie due orbite ogni giorno, e la sua posizione rispetto al suolo si ripete identica ogni 24h siderali &mdash; utile per la copertura globale del sistema di posizionamento.</div>
+</div>
+
+<!-- SIM 1 -->
+<div class="sec" id="sim1">
+  <h2>7. Simulatore &mdash; Orbite Gravitazionali</h2>
+  <p class="ssub">Lancia un corpo con velocit&agrave; puramente tangenziale a distanza r&#8320; dal centro attrattore, e osserva l'orbita risultante</p>
+  <div class="sim">
+    <div class="sim-t">Il moto viene integrato numericamente dalla legge di Newton F=&minus;&mu;m<b>r</b>/r&sup3; (non &egrave; un'ellisse disegnata a priori: emerge dalla simulazione)</div>
+    <div class="ctrl">
+      <label>&mu; = GM (corpo centrale)</label>
+      <input type="range" id="s1mu" min="150" max="1200" step="10" value="600"><span class="vv" id="s1muv">600</span>
+      <label>r&#8320; (distanza iniziale)</label>
+      <input type="range" id="s1r0" min="30" max="140" step="1" value="80"><span class="vv" id="s1r0v">80</span>
+    </div>
+    <div class="ctrl">
+      <label>v&#8320; (velocit&agrave; iniziale, tangenziale)</label>
+      <input type="range" id="s1v0" min="0.5" max="20" step="0.05" value="2.74"><span class="vv" id="s1v0v">2.74</span>
+      <span class="ref" id="s1refs">v<sub>circ</sub>=&mdash; &middot; v<sub>fuga</sub>=&mdash;</span>
+    </div>
+    <div class="ctrl">
+      <label>Imposta rapidamente:</label>
+      <button class="btn g" onclick="presetOrbit(1.0)">Cerchio</button>
+      <button class="btn g" onclick="presetOrbit(1.35)">Ellisse</button>
+      <button class="btn g" onclick="presetOrbit('fuga')">Parabola</button>
+      <button class="btn g" onclick="presetOrbit('iperbole')">Iperbole</button>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv1" style="height:620px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="dd" style="background:#f4d03f"></span>Corpo centrale</span>
+      <span><span class="dd" style="background:#e08030"></span>Corpo orbitante</span>
+      <span><span class="ld" style="background:rgba(255,255,255,0.4)"></span>Orbita teorica</span>
+      <span><span class="ld" style="background:#74c99a"></span>Traiettoria simulata</span>
+      <span><span class="dd" style="background:#5ac9c9"></span>Perielio</span>
+      <span><span class="dd" style="background:#e05a8a"></span>Afelio</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2: SATELLITI TERRESTRI -->
+<div class="sec" id="sim2">
+  <h2>8. Simulatore &mdash; Satelliti Artificiali della Terra</h2>
+  <p class="ssub">Confronta a scala reale le orbite di ISS, satelliti LEO, GPS e geostazionari</p>
+  <div class="sim">
+    <div class="sim-t">Terra e orbite disegnate in scala reale (km) &middot; scegli lo zoom e quali orbite confrontare</div>
+    <div class="ctrl">
+      <label>Zoom:</label>
+      <button class="btn g on" id="btnZoomVicino" onclick="selectZoom('vicino','btnZoomVicino')">Orbite basse</button>
+      <button class="btn g" id="btnZoomMedio" onclick="selectZoom('medio','btnZoomMedio')">Fino a GEO</button>
+      <button class="btn g" id="btnZoomAmpio" onclick="selectZoom('ampio','btnZoomAmpio')">Fino alla Luna</button>
+    </div>
+    <div class="ctrl">
+      <label>Mostra:</label>
+      <button class="btn orb c-iss on" id="btnOrbIss" onclick="toggleOrbit('iss')">ISS</button>
+      <button class="btn orb c-leo on" id="btnOrbLeo" onclick="toggleOrbit('leo')">LEO generico</button>
+      <button class="btn orb c-meo on" id="btnOrbMeo" onclick="toggleOrbit('meo')">GPS (MEO)</button>
+      <button class="btn orb c-geo on" id="btnOrbGeo" onclick="toggleOrbit('geo')">Geostazionario</button>
+      <button class="btn orb c-moon" id="btnOrbMoon" onclick="toggleOrbit('moon')">Luna</button>
+    </div>
+    <div class="ctrl">
+      <label>Altitudine LEO generico (km)</label>
+      <input type="range" id="s2hLeo" min="300" max="2000" step="10" value="550"><span class="vv" id="s2hLeov">550</span>
+    </div>
+    <div class="ctrl">
+      <label>Satellite animato:</label>
+      <button class="btn rad on" id="btnAnimIss" onclick="selectAnim('iss','btnAnimIss')">ISS</button>
+      <button class="btn rad" id="btnAnimLeo" onclick="selectAnim('leo','btnAnimLeo')">LEO</button>
+      <button class="btn rad" id="btnAnimMeo" onclick="selectAnim('meo','btnAnimMeo')">GPS</button>
+      <button class="btn rad" id="btnAnimGeo" onclick="selectAnim('geo','btnAnimGeo')">GEO</button>
+      <button class="btn rad" id="btnAnimMoon" onclick="selectAnim('moon','btnAnimMoon')">Luna</button>
+    </div>
+    <div class="ctrl">
+      <label>Velocit&agrave; simulazione</label>
+      <input type="range" id="s2speed" min="200" max="3000" step="50" value="900"><span class="vv" id="s2speedv">900</span>
+      <button class="btn on" id="btnPlay2" onclick="togglePlay2()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim2()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv2" style="height:600px"></canvas>
+    <div class="out empty" id="out2">Caricamento...</div>
+    <div class="leg">
+      <span><span class="dd" style="background:#2a6ba0"></span>Terra</span>
+      <span><span class="ld" style="background:#e05a8a"></span>ISS</span>
+      <span><span class="ld" style="background:#5ac9c9"></span>LEO generico</span>
+      <span><span class="ld" style="background:#e0a05a"></span>GPS/MEO</span>
+      <span><span class="ld" style="background:#7a4fc4"></span>Geostazionario</span>
+      <span><span class="ld" style="background:#9aa0a8"></span>Luna</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>9. Esercizi Proposti</h2>
+  <p class="ssub">Gravitazione, leggi di Keplero, energia, velocit&agrave; di fuga</p>
+  <ol>
+    <li><strong>Terza legge di Keplero:</strong> un asteroide orbita attorno al Sole con semiasse maggiore a=3.2 U.A. (unit&agrave; astronomiche). Sapendo che la Terra ha a=1 U.A. e T=1 anno, calcola il periodo orbitale dell'asteroide (usa direttamente il rapporto T&sup2;/a&sup3;=costante, senza bisogno del valore di G).</li>
+    <li><strong>Velocit&agrave; circolare e di fuga:</strong> calcola la velocit&agrave; di un satellite in orbita circolare bassa attorno alla Terra (r&asymp;6670km, &mu;&#8853;&asymp;3.986&times;10&sup1;&sup4;m&sup3;/s&sup2;) e confrontala con la velocit&agrave; di fuga dalla stessa quota.</li>
+    <li><strong>Perielio e afelio:</strong> un pianeta ha r<sub>p</sub>=0.5 U.A. e r<sub>a</sub>=1.5 U.A. Calcola il semiasse maggiore a e l'eccentricit&agrave; e dell'orbita. Se v<sub>p</sub>=45km/s, quanto vale v<sub>a</sub> (usa la conservazione del momento angolare)?</li>
+    <li><strong>Energia di un'orbita:</strong> un satellite di massa m=800kg orbita attorno alla Terra con semiasse maggiore a=8000km. Calcola la sua energia meccanica totale E (&mu;&#8853;&asymp;3.986&times;10&sup1;&sup4;m&sup3;/s&sup2;). Il segno del risultato conferma che l'orbita &egrave; chiusa?</li>
+    <li><strong>Dal simulatore alla teoria:</strong> nel simulatore, imposta un'orbita ellittica (bottone "Ellisse") e leggi nel pannello dati i valori di r<sub>p</sub>, r<sub>a</sub>, v<sub>p</sub>, v<sub>a</sub>. Verifica che v<sub>p</sub>&middot;r<sub>p</sub>=v<sub>a</sub>&middot;r<sub>a</sub> (conservazione del momento angolare) usando i numeri che leggi.</li>
+    <li><strong>Sonda interstellare:</strong> spiega perch&eacute;, per lasciare per sempre il Sistema Solare, una sonda deve raggiungere almeno la velocit&agrave; di fuga (e non una qualunque velocit&agrave; elevata): cosa succederebbe con E&lt;0 anche se la velocit&agrave; iniziale fosse molto grande ma non sufficiente?</li>
+    <li><strong>Periodo dell'ISS:</strong> usando &mu;<sub>&#8853;</sub>=398600km&sup3;/s&sup2; e R<sub>&#8853;</sub>=6371km, calcola il periodo orbitale della ISS (altitudine 408km) con la terza legge di Keplero, e verifica il risultato nel Simulatore 2.</li>
+    <li><strong>Raggio dell'orbita geostazionaria:</strong> a partire dalla condizione che il periodo di un satellite geostazionario debba essere uguale al giorno siderale (T=86164s), ricava il raggio orbitale r<sub>GEO</sub> usando la terza legge di Keplero, e confronta il risultato con il valore mostrato nel simulatore.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Gravitazione &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+}
+
+// ══════════════════════════════════════════════════════
+// ELEMENTI ORBITALI (dato lancio tangenziale a r0 con v0)
+// ══════════════════════════════════════════════════════
+var V_FUGA_TOL=0.1; // se v0 differisce dalla velocità di fuga per meno di questo valore, si forza la parabola
+function orbitElements(mu,r0,v0){
+  var eps=v0*v0/2 - mu/r0;
+  var L=r0*v0;
+  var p=L*L/mu;
+  var vfuga0=Math.sqrt(2*mu/r0), vcirc0=Math.sqrt(mu/r0);
+  var vicinoAFuga = Math.abs(v0-vfuga0)<V_FUGA_TOL;
+  var eRaw=Math.sqrt(Math.max(0,1+2*eps*L*L/(mu*mu)));
+  var e = vicinoAFuga ? 1 : eRaw; // forza l'eccentricità esattamente a 1: nessuna ambiguità residua
+  var closed = e<1;
+  var rp=p/(1+e);
+  var ra = closed ? p/(1-e) : Infinity;
+  var vp=L/rp;
+  var va = closed ? L/ra : null;
+  var a = closed ? -mu/(2*eps) : Infinity;
+  var T = closed ? 2*Math.PI*Math.sqrt(Math.pow(a,3)/mu) : null;
+  return {eps:eps,L:L,p:p,e:e,closed:closed,rp:rp,ra:ra,vp:vp,va:va,a:a,T:T,vcirc0:vcirc0,vfuga0:vfuga0,vicinoAFuga:vicinoAFuga};
+}
+function orbitType(e){
+  if(Math.abs(e-1)<1e-6) return 'Parabolica (aperta)';
+  if(e<0.02) return 'Circolare';
+  if(e<1) return 'Ellittica (chiusa)';
+  return 'Iperbolica (aperta)';
+}
+
+// ══════════════════════════════════════════════════════
+// STATO E ANIMAZIONE
+// ══════════════════════════════════════════════════════
+var anim1={x:0,y:0,vx:0,vy:0,playing:false,id:null,lastT:null,simTime:0,trail:[]};
+
+function presetOrbit(kind){
+  var mu=rf('s1mu'), r0=rf('s1r0');
+  var vcirc=Math.sqrt(mu/r0), vfuga=Math.sqrt(2*mu/r0);
+  var v0;
+  if(kind==='fuga') v0=vfuga;
+  else if(kind==='iperbole') v0=vfuga*1.3;
+  else v0=vcirc*kind;
+  v0=Math.min(Math.max(v0,0.5),20);
+  document.getElementById('s1v0').value=v0; // piena precisione: evita che l'arrotondamento sposti l'eccentricità (es. parabola→ellisse)
+  document.getElementById('s1v0v').textContent=v0.toFixed(2); // solo il testo mostrato è arrotondato
+  resetSim1();
+}
+function updateRefs(){
+  var mu=rf('s1mu'), r0=rf('s1r0');
+  var vcirc=Math.sqrt(mu/r0), vfuga=Math.sqrt(2*mu/r0);
+  document.getElementById('s1refs').textContent='v_circ='+fmt2(vcirc)+' \u00b7 v_fuga='+fmt2(vfuga);
+}
+
+function togglePlay1(){
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim1.lastT=null;
+  if(anim1.playing)loop1();else if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+}
+function resetSim1(){
+  updateRefs();
+  anim1.playing=false;
+  document.getElementById('btnPlay1').className='btn on';
+  document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+  if(anim1.id){cancelAnimationFrame(anim1.id);anim1.id=null;}
+  var r0=rf('s1r0'), v0=rf('s1v0');
+  anim1.x=r0; anim1.y=0; anim1.vx=0; anim1.vy=v0;
+  anim1.simTime=0; anim1.trail=[{x:anim1.x,y:anim1.y}];
+  drawSim1();
+}
+function accel(mu,x,y){
+  var r2=x*x+y*y, r=Math.sqrt(r2), r3=r2*r;
+  return {ax:-mu*x/r3, ay:-mu*y/r3};
+}
+function rk4Step(mu,s,dt){
+  function deriv(st){
+    var a=accel(mu,st.x,st.y);
+    return {x:st.vx,y:st.vy,vx:a.ax,vy:a.ay};
+  }
+  var k1=deriv(s);
+  var s2={x:s.x+k1.x*dt/2,y:s.y+k1.y*dt/2,vx:s.vx+k1.vx*dt/2,vy:s.vy+k1.vy*dt/2};
+  var k2=deriv(s2);
+  var s3={x:s.x+k2.x*dt/2,y:s.y+k2.y*dt/2,vx:s.vx+k2.vx*dt/2,vy:s.vy+k2.vy*dt/2};
+  var k3=deriv(s3);
+  var s4={x:s.x+k3.x*dt,y:s.y+k3.y*dt,vx:s.vx+k3.vx*dt,vy:s.vy+k3.vy*dt};
+  var k4=deriv(s4);
+  return {
+    x:s.x+(dt/6)*(k1.x+2*k2.x+2*k3.x+k4.x),
+    y:s.y+(dt/6)*(k1.y+2*k2.y+2*k3.y+k4.y),
+    vx:s.vx+(dt/6)*(k1.vx+2*k2.vx+2*k3.vx+k4.vx),
+    vy:s.vy+(dt/6)*(k1.vy+2*k2.vy+2*k3.vy+k4.vy)
+  };
+}
+function loop1(ts){
+  if(!anim1.playing)return;
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dtReal=(ts-anim1.lastT)/1000;
+  if(!isFinite(dtReal)||dtReal<0)dtReal=0.016; dtReal=Math.min(dtReal,0.03);
+  anim1.lastT=ts;
+
+  var mu=rf('s1mu'), r0=rf('s1r0'), v0=rf('s1v0');
+  var El=orbitElements(mu,r0,v0);
+
+  // velocità di simulazione: più veloce per orbite piccole/veloci
+  var speedFactor=Math.max(mu/300,1)*2.6;
+  var dtSim=dtReal*speedFactor;
+  var subSteps=10;
+  var h=dtSim/subSteps;
+  var s={x:anim1.x,y:anim1.y,vx:anim1.vx,vy:anim1.vy};
+  for(var i=0;i<subSteps;i++){ s=rk4Step(mu,s,h); }
+  anim1.x=s.x; anim1.y=s.y; anim1.vx=s.vx; anim1.vy=s.vy;
+  anim1.simTime+=dtSim;
+  anim1.trail.push({x:anim1.x,y:anim1.y});
+  if(anim1.trail.length>2000) anim1.trail.shift();
+
+  var r=Math.hypot(anim1.x,anim1.y);
+  var farLimit = El.closed ? El.ra*1.3 : El.rp*7;
+  var closeCall = r < El.rp*0.15;
+  var periodReached = El.T!==null && anim1.simTime>=El.T;
+  if(periodReached || r>farLimit || closeCall){
+    anim1.x=r0; anim1.y=0; anim1.vx=0; anim1.vy=v0;
+    anim1.simTime=0; anim1.trail=[{x:anim1.x,y:anim1.y}];
+  }
+
+  drawSim1();
+  anim1.id=requestAnimationFrame(loop1);
+}
+
+function drawSim1(){
+  var mu=rf('s1mu'), r0=rf('s1r0'), v0=rf('s1v0');
+  var El=orbitElements(mu,r0,v0);
+
+  var cv=setupCv('cv1',620);
+  var W=cv.width,H=620,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0e1425';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  // stelline di sfondo (statiche, decorative)
+  ctx.fillStyle='rgba(255,255,255,0.35)';
+  for(var s=0;s<70;s++){
+    var sx=(s*97.3)%W, sy=(s*53.7)%H;
+    ctx.fillRect(sx,sy,1,1);
+  }
+
+  // viewport: dimensione basata su rp/ra teorici (statica, non jitter)
+  var viewR = El.closed ? El.ra*1.12 : Math.max(El.rp*3.4, r0*1.6);
+  var scale = Math.min(W,H-30)/(2*viewR);
+  var originX=W/2, originY=(H-16)/2+16;
+  function toCv(wx,wy){return {x:originX+wx*scale, y:originY-wy*scale};}
+
+  // orbita teorica (conica) r(θ)=p/(1+e cosθ), perielio a θ=0 lungo +x
+  ctx.strokeStyle='rgba(255,255,255,0.35)';ctx.lineWidth=1.4;ctx.setLineDash([4,3]);
+  ctx.beginPath();
+  var closed = El.closed;
+  var maxDrawR = viewR*1.35;
+  var thetaMax, thetaMin;
+  if(closed){
+    thetaMax=2*Math.PI; thetaMin=0;
+  } else {
+    var cosThLimit=(El.p/maxDrawR-1)/El.e;
+    cosThLimit=Math.max(-0.999,Math.min(0.999,cosThLimit));
+    thetaMax=Math.acos(cosThLimit); thetaMin=-thetaMax;
+  }
+  var NN=200, started=false;
+  for(var i=0;i<=NN;i++){
+    var th = thetaMin+(thetaMax-thetaMin)*i/NN;
+    var denom=1+El.e*Math.cos(th);
+    if(denom<0.02){started=false;continue;}
+    var rr=El.p/denom;
+    var px=rr*Math.cos(th), py=rr*Math.sin(th);
+    var cp=toCv(px,py);
+    started?ctx.lineTo(cp.x,cp.y):ctx.moveTo(cp.x,cp.y);
+    started=true;
+  }
+  ctx.stroke();ctx.setLineDash([]);
+
+  // traiettoria simulata (verde, solida)
+  if(anim1.trail.length>1){
+    ctx.strokeStyle='#74c99a';ctx.lineWidth=2;ctx.setLineDash([]);
+    ctx.beginPath();
+    for(var j=0;j<anim1.trail.length;j++){
+      var tp=toCv(anim1.trail[j].x,anim1.trail[j].y);
+      j===0?ctx.moveTo(tp.x,tp.y):ctx.lineTo(tp.x,tp.y);
+    }
+    ctx.stroke();
+  }
+
+  // corpo centrale
+  var C=toCv(0,0);
+  dot(ctx,C.x,C.y,9,'#f4d03f');
+  ctx.strokeStyle='rgba(244,208,63,0.4)';ctx.lineWidth=6;
+  ctx.beginPath();ctx.arc(C.x,C.y,13,0,2*Math.PI);ctx.stroke();
+
+  // perielio / afelio
+  var Pp=toCv(El.rp,0);
+  dot(ctx,Pp.x,Pp.y,4.5,'#5ac9c9');
+  if(El.closed){
+    var Pa=toCv(-El.ra,0);
+    dot(ctx,Pa.x,Pa.y,4.5,'#e05a8a');
+  }
+
+  // corpo orbitante
+  var B=toCv(anim1.x,anim1.y);
+  dot(ctx,B.x,B.y,6.5,'#e08030');
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.4;
+  ctx.beginPath();ctx.arc(B.x,B.y,6.5,0,2*Math.PI);ctx.stroke();
+
+  ctx.fillStyle='rgba(255,255,255,0.8)';ctx.font='bold 11px monospace';ctx.textAlign='center';
+  ctx.fillText(orbitType(El.e)+'  \u00b7  e='+fmt3(El.e),W/2,16);
+
+  var vNow=Math.hypot(anim1.vx,anim1.vy), rNow=Math.hypot(anim1.x,anim1.y);
+
+  o.className='out';
+  var html='<div class="rg">';
+  html+='<div class="rl">Tipo di orbita</div><div class="rv ok">'+orbitType(El.e)+'</div>';
+  html+='<div class="rl">Eccentricit\u00e0 e</div><div class="rv">'+fmt3(El.e)+'</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">Distanza attuale r</div><div class="rv">'+fmt2(rNow)+'</div>';
+  html+='<div class="rl">Velocit\u00e0 attuale v</div><div class="rv">'+fmt2(vNow)+'</div>';
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">r<sub>p</sub> (perielio)</div><div class="rv ok">'+fmt2(El.rp)+'</div>';
+  html+='<div class="rl">v<sub>p</sub> (a perielio)</div><div class="rv ok">'+fmt2(El.vp)+'</div>';
+  if(closed){
+    html+='<div class="rl">r<sub>a</sub> (afelio)</div><div class="rv ok">'+fmt2(El.ra)+'</div>';
+    html+='<div class="rl">v<sub>a</sub> (ad afelio)</div><div class="rv ok">'+fmt2(El.va)+'</div>';
+    html+='<div class="rl">Semiasse maggiore a</div><div class="rv">'+fmt2(El.a)+'</div>';
+    html+='<div class="rl">Periodo T</div><div class="rv">'+fmt2(El.T)+'</div>';
+  } else {
+    html+='<div class="rl">r<sub>a</sub> (afelio)</div><div class="rv warn">&#8734; (orbita aperta)</div>';
+  }
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">v<sub>circ</sub>(r&#8320;) di riferimento</div><div class="rv">'+fmt2(El.vcirc0)+'</div>';
+  html+='<div class="rl">v<sub>fuga</sub>(r&#8320;) di riferimento</div><div class="rv">'+fmt2(El.vfuga0)+'</div>';
+  html+='</div>';
+  o.innerHTML=html;
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn){
+  document.getElementById(id).oninput=function(){
+    document.getElementById(vid).textContent=this.value;
+    fn();
+  };
+}
+sl('s1mu','s1muv',function(){resetSim1();});
+sl('s1r0','s1r0v',function(){resetSim1();});
+sl('s1v0','s1v0v',function(){resetSim1();});
+
+window.addEventListener('resize',function(){drawSim1();drawSim2();});
+document.addEventListener('DOMContentLoaded',function(){
+  resetSim1();
+  resetSim2();
+});
+
+// ══════════════════════════════════════════════════════
+// SIMULATORE 2 — SATELLITI ARTIFICIALI DELLA TERRA
+// ══════════════════════════════════════════════════════
+var R_EARTH=6371, MU_EARTH=398600, T_SIDEREAL=86164;
+var r_GEO_val=Math.cbrt(MU_EARTH*T_SIDEREAL*T_SIDEREAL/(4*Math.PI*Math.PI));
+
+var curZoom='vicino';
+var orbitsShown={iss:true,leo:true,meo:true,geo:true,moon:false};
+var animSat='iss';
+var anim2={theta:{},thetaEarth:0,playing:false,id:null,lastT:null};
+
+var SAT_COLORS={iss:'#e05a8a',leo:'#5ac9c9',meo:'#e0a05a',geo:'#7a4fc4',moon:'#9aa0a8'};
+var SAT_LABELS={iss:'ISS',leo:'LEO generico',meo:'GPS (MEO)',geo:'Geostazionario',moon:'Luna'};
+
+function satRadius(key){
+  if(key==='iss') return R_EARTH+408;
+  if(key==='leo') return R_EARTH+rf('s2hLeo');
+  if(key==='meo') return R_EARTH+20200;
+  if(key==='geo') return r_GEO_val;
+  if(key==='moon') return 384400;
+}
+function satPeriod(r){ return 2*Math.PI*Math.sqrt(r*r*r/MU_EARTH); }
+function satVcirc(r){ return Math.sqrt(MU_EARTH/r); }
+
+function selectZoom(z,btnId){
+  curZoom=z;
+  ['btnZoomVicino','btnZoomMedio','btnZoomAmpio'].forEach(function(id){
+    document.getElementById(id).className='btn g'+(id===btnId?' on':'');
+  });
+  drawSim2();
+}
+function toggleOrbit(key){
+  orbitsShown[key]=!orbitsShown[key];
+  document.getElementById('btnOrb'+key.charAt(0).toUpperCase()+key.slice(1)).className='btn orb c-'+key+(orbitsShown[key]?' on':'');
+  drawSim2();
+}
+function selectAnim(key,btnId){
+  animSat=key;
+  ['btnAnimIss','btnAnimLeo','btnAnimMeo','btnAnimGeo','btnAnimMoon'].forEach(function(id){
+    document.getElementById(id).className='btn rad'+(id===btnId?' on':'');
+  });
+  drawSim2();
+}
+function togglePlay2(){
+  anim2.playing=!anim2.playing;
+  document.getElementById('btnPlay2').className=anim2.playing?'btn on':'btn';
+  document.getElementById('btnPlay2').textContent=anim2.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+  anim2.lastT=null;
+  if(anim2.playing)loop2();else if(anim2.id){cancelAnimationFrame(anim2.id);anim2.id=null;}
+}
+function resetSim2(){
+  anim2.playing=false;
+  document.getElementById('btnPlay2').className='btn on';
+  document.getElementById('btnPlay2').textContent='\u25b6 Avvia';
+  if(anim2.id){cancelAnimationFrame(anim2.id);anim2.id=null;}
+  anim2.theta={iss:0,leo:0,meo:0,geo:0,moon:0};
+  anim2.thetaEarth=0;
+  drawSim2();
+}
+function loop2(ts){
+  if(!anim2.playing)return;
+  if(anim2.lastT===null)anim2.lastT=ts;
+  var dtReal=(ts-anim2.lastT)/1000;
+  if(!isFinite(dtReal)||dtReal<0)dtReal=0.016; dtReal=Math.min(dtReal,0.03);
+  anim2.lastT=ts;
+  var k=rf('s2speed');
+  var dtSim=dtReal*k;
+  ['iss','leo','meo','geo','moon'].forEach(function(key){
+    var r=satRadius(key), T=satPeriod(r), om=2*Math.PI/T;
+    anim2.theta[key]=(anim2.theta[key]+om*dtSim)%(2*Math.PI);
+  });
+  anim2.thetaEarth=(anim2.thetaEarth+(2*Math.PI/T_SIDEREAL)*dtSim)%(2*Math.PI);
+  drawSim2();
+  anim2.id=requestAnimationFrame(loop2);
+}
+
+function drawSim2(){
+  var cv=setupCv('cv2',600);
+  var W=cv.width,H=600,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0e1425';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out2');
+
+  ctx.fillStyle='rgba(255,255,255,0.3)';
+  for(var s=0;s<60;s++){
+    var sx=(s*97.3)%W, sy=(s*61.1)%H;
+    ctx.fillRect(sx,sy,1,1);
+  }
+
+  var viewHalf = curZoom==='vicino' ? 15000 : (curZoom==='medio' ? 46000 : 420000);
+  var scale = Math.min(W,H-24)/(2*viewHalf);
+  var originX=W/2, originY=(H-14)/2+14;
+  function toCv(wx,wy){return {x:originX+wx*scale, y:originY-wy*scale};}
+
+  // Terra
+  var Ec=toCv(0,0);
+  var Erad=Math.max(R_EARTH*scale,2.2);
+  ctx.beginPath();ctx.arc(Ec.x,Ec.y,Erad,0,2*Math.PI);
+  ctx.fillStyle='#2a6ba0';ctx.fill();
+  ctx.strokeStyle='#7ab0d8';ctx.lineWidth=1;ctx.stroke();
+  // marcatore di rotazione terrestre (giorno siderale)
+  if(Erad>3){
+    var mkX=Ec.x+Erad*Math.cos(anim2.thetaEarth), mkY=Ec.y-Erad*Math.sin(anim2.thetaEarth);
+    ctx.strokeStyle='#c8e0f0';ctx.lineWidth=1.6;
+    ctx.beginPath();ctx.moveTo(Ec.x,Ec.y);ctx.lineTo(mkX,mkY);ctx.stroke();
+  }
+
+  var order=['moon','geo','meo','leo','iss'];
+  order.forEach(function(key){
+    if(!orbitsShown[key])return;
+    var r=satRadius(key);
+    var rc=r*scale;
+    if(rc<1)return;
+    ctx.beginPath();ctx.arc(Ec.x,Ec.y,rc,0,2*Math.PI);
+    ctx.strokeStyle=SAT_COLORS[key];ctx.lineWidth=1.6;ctx.globalAlpha=0.55;ctx.setLineDash([5,4]);
+    ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;
+
+    var th=anim2.theta[key]||0;
+    var px=Ec.x+rc*Math.cos(th), py=Ec.y-rc*Math.sin(th);
+    var isActive=(key===animSat);
+    ctx.beginPath();ctx.arc(px,py,isActive?6:4,0,2*Math.PI);
+    ctx.fillStyle=SAT_COLORS[key];ctx.fill();
+    if(isActive){ctx.strokeStyle='#fff';ctx.lineWidth=1.6;ctx.stroke();}
+
+    if(rc>26){
+      ctx.fillStyle=SAT_COLORS[key];ctx.font=(isActive?'bold ':'')+'9px sans-serif';ctx.textAlign='left';
+      ctx.fillText(SAT_LABELS[key],Ec.x+rc*0.72,Ec.y-rc*0.72-4);
+    }
+  });
+
+  ctx.fillStyle='rgba(255,255,255,0.75)';ctx.font='bold 10px monospace';ctx.textAlign='center';
+  var zoomLabel = curZoom==='vicino'?'vista: orbite basse (fino a ~15\u2009000km)':(curZoom==='medio'?'vista: fino a GEO (fino a ~46\u2009000km)':'vista: fino alla Luna (fino a ~420\u2009000km)');
+  ctx.fillText(zoomLabel,W/2,13);
+
+  var rA=satRadius(animSat), TA=satPeriod(rA), vA=satVcirc(rA), hA=rA-R_EARTH;
+  var syncNote = animSat==='geo' ? '<div class="rl">Sincronismo</div><div class="rv ok">segue la rotazione terrestre \u2014 resta sopra lo stesso punto</div>' :
+                 animSat==='meo' ? '<div class="rl">Nota</div><div class="rv">periodo \u2248 met\u00e0 giorno siderale (2 orbite/giorno)</div>' : '';
+
+  o.className='out';
+  o.innerHTML='<div class="rg">'+
+    '<div class="rl">Satellite animato</div><div class="rv ok">'+SAT_LABELS[animSat]+'</div>'+
+    '<div class="rl">Altitudine h</div><div class="rv">'+fmt1(hA)+' km</div>'+
+    '<div class="rl">Distanza dal centro r</div><div class="rv">'+fmt1(rA)+' km</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Periodo T</div><div class="rv ok">'+(TA>7200?fmt2(TA/3600)+' h':fmt2(TA/60)+' min')+'</div>'+
+    '<div class="rl">Velocit\u00e0 orbitale v</div><div class="rv ok">'+fmt3(vA)+' km/s</div>'+
+    (syncNote?('<div class="rsep"></div>'+syncNote):'')+
+    '</div>';
+}
+sl('s2hLeo','s2hLeov',function(){drawSim2();});
+sl('s2speed','s2speedv',function(){});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
