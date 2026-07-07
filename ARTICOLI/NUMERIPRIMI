@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizzatore di Numeri Primi (Miller-Rabin)</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --accent-color: #4ea8de;
+            --success-color: #4bb543;
+            --error-color: #ff3333;
+            --border-color: #2e2e34;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-top: 0;
+            color: #fff;
+            text-align: center;
+        }
+
+        p.description {
+            color: #a0a0a5;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        textarea, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #0f0f11;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        textarea:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .accuracy-info {
+            font-size: 0.8rem;
+            color: #a0a0a5;
+            margin-top: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #64b5f6;
+        }
+
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .prime {
+            background-color: rgba(75, 181, 67, 0.15);
+            border: 1px solid var(--success-color);
+            color: #81c784;
+        }
+
+        .composite {
+            background-color: rgba(255, 51, 51, 0.15);
+            border: 1px solid var(--error-color);
+            color: #e57373;
+        }
+        
+        .info-box {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #8a8a93;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Test di Primalità Probabilistico</h1>
+    <p class="description">Analizza numeri di grandi dimensioni usando l'algoritmo di Miller-Rabin.</p>
+
+    <div class="form-group">
+        <label for="numberInput">Inserisci il numero da verificare:</label>
+        <textarea id="numberInput" rows="4" placeholder="Es. 982451653033433 o numeri molto più grandi..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="roundsInput">Accuratezza (Numero di round K):</label>
+        <input type="number" id="roundsInput" value="20" min="1" max="100">
+        <div class="accuracy-info">Più round esegui, minore è la probabilità di un "falso positivo". Probabilità di errore attuale: &lt; (1/4)<sup><span id="k-val">20</span></sup></div>
+    </div>
+
+    <button onclick="checkPrimalty()">Verifica Numero</button>
+
+    <div id="result"></div>
+
+    <div class="info-box">
+        <strong>Nota matematica:</strong> Se l'algoritmo dice che il numero è <em>Composto</em>, lo è al 100%. Se dice che è <em>Probabilmente Primo</em>, la certezza è quasi assoluta (con 20 round, la possibilità di errore è inferiore a 1 su mille miliardi).
+    </div>
+</div>
+
+<script>
+    // Aggiorna visivamente il calcolo della probabilità nella UI
+    document.getElementById('roundsInput').addEventListener('input', function(e) {
+        document.getElementById('k-val').innerText = e.target.value || 0;
+    });
+
+    // Funzione per l'esponenziazione modulare veloce: (base^exp) % mod
+    function modularPow(base, exp, mod) {
+        let res = 1n;
+        base = base % mod;
+        while (exp > 0n) {
+            if (exp % 2n === 1n) {
+                res = (res * base) % mod;
+            }
+            exp = exp / 2n;
+            base = (base * base) % mod;
+        }
+        return res;
+    }
+
+    // Singolo round del test di Miller-Rabin
+    function millerTest(d, n) {
+        // Scegliamo una base casuale 'a' nell'intervallo [2, n-2]
+        // Per evitare problemi con numeri piccoli, gestiamo i limiti
+        const range = n - 4n;
+        let a;
+        if (range <= 0n) {
+            a = 2n;
+        } else {
+            // Generazione pseudo-casuale per BigInt
+            const randBytes = new Uint32Array(2);
+            crypto.getRandomValues(randBytes);
+            const randBig = (BigInt(randBytes[0]) << 32n) + BigInt(randBytes[1]);
+            a = 2n + (randBig % range);
+        }
+
+        // Calcola x = a^d % n
+        let x = modularPow(a, d, n);
+
+        if (x === 1n || x === n - 1n) {
+            return true;
+        }
+
+        // Continua a elevare al quadrato x finché d non raggiunge n-1
+        while (d !== n - 1n) {
+            x = (x * x) % n;
+            d *= 2n;
+
+            if (x === 1n) return false;
+            if (x === n - 1n) return true;
+        }
+
+        return false;
+    }
+
+    // Funzione principale di Miller-Rabin
+    function isPrimeMillerRabin(n, k) {
+        // Casi base fondamentali
+        if (n <= 1n) return false;
+        if (n <= 3n) return true;
+        if (n % 2n === 0n || n % 3n === 0n) return false;
+
+        // Trova d tale che n - 1 = d * 2^s dove d è dispari
+        let d = n - 1n;
+        while (d % 2n === 0n) {
+            d /= 2n;
+        }
+
+        // Esegui il test per k volte
+        for (let i = 0; i < k; i++) {
+            if (!millerTest(d, n)) {
+                return false; // Sicuramente composto
+            }
+        }
+        return true; // Probabilmente primo
+    }
+
+    function checkPrimalty() {
+        const inputStr = document.getElementById('numberInput').value.trim().replace(/\s+/g, '');
+        const rounds = parseInt(document.getElementById('roundsInput').value) || 20;
+        const resultDiv = document.getElementById('result');
+
+        if (!inputStr) {
+            alert("Per favore, inserisci un numero.");
+            return;
+        }
+
+        try {
+            const n = BigInt(inputStr);
+            
+            // Misurazione del tempo di calcolo
+            const startTime = performance.now();
+            const isPrime = isPrimeMillerRabin(n, rounds);
+            const endTime = performance.now();
+            const timeTaken = ((endTime - startTime) / 1000).toFixed(4);
+
+            resultDiv.style.display = 'block';
+            
+            if (isPrime) {
+                resultDiv.className = 'prime';
+                resultDiv.innerHTML = `<strong>Risultato:</strong> Il numero è <strong>PROBABILMENTE PRIMO</strong>.<br>` +
+                                      `<small>Verificato con ${rounds} round in ${timeTaken} secondi.</small>`;
+            } else {
+                resultDiv.className = 'composite';
+                resultDiv.innerHTML = `<strong>Risultato:</strong> Il numero è sicuramente <strong>COMPOSTO</strong>.<br>` +
+                                      `<small>Identificato in ${timeTaken} secondi.</small>`;
+            }
+
+        } catch (error) {
+            alert("Input non valido. Assicurati di inserire solo cifre numeriche intere (senza virgole o lettere).");
+        }
+    }
+</script>
+
+</body>
+</html>
