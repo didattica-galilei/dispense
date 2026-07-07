@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leggi dei Gas — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#e08a3a;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,38px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4a83a}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:580px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two{grid-template-columns:1fr}.three{grid-template-columns:1fr}}
+.bn{background:#fdf1e4;border-left:3px solid var(--a);color:#5a3a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.tbl-wrap{overflow-x:auto;margin:9px 0}
+table.kt{border-collapse:collapse;width:100%;font-size:12.5px;font-family:'Source Code Pro',monospace}
+table.kt th{background:var(--ink);color:#fff;padding:6px 10px;text-align:center;font-weight:600;font-size:10.5px;letter-spacing:.3px}
+table.kt th:first-child{text-align:left}
+table.kt td{padding:6px 10px;text-align:center;border-bottom:1px solid var(--bo)}
+table.kt td:first-child{text-align:left;font-family:'Source Sans 3',sans-serif;font-weight:600}
+table.kt tr:nth-child(even){background:var(--su)}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:74px;accent-color:var(--a2)}
+.ctrl input[type=range]:disabled{opacity:0.35}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:34px;color:var(--ink)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+.btn.g{background:var(--s2)}
+.btn.g.on{background:var(--a2);color:#fff;border-color:var(--a2)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.neg{color:#f4a582;font-weight:600}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Termodinamica</div>
+  <h1>Leggi dei<br><em>Gas</em></h1>
+  <p>Equazione di stato, le quattro trasformazioni notevoli, primo principio &mdash; con un cilindro a pistone per vedere lavoro, calore ed energia interna in azione</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#stato" class="active">Equazione di stato</a>
+  <a href="#trasformazioni">Le trasformazioni</a>
+  <a href="#primo-principio">Primo principio</a>
+  <a href="#riepilogo">Riepilogo formule</a>
+  <a href="#sim1">Simulatore</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="termodinamica.html">&#8592; Termodinamica</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- EQUAZIONE DI STATO -->
+<div class="sec" id="stato">
+  <h2>1. L'Equazione di Stato dei Gas Perfetti</h2>
+  <p class="ssub">La relazione che lega pressione, volume e temperatura di un gas ideale</p>
+  <p>Un <strong>gas perfetto</strong> (o ideale) &egrave; un modello semplificato in cui le molecole sono puntiformi e non interagiscono tra loro se non tramite urti elastici. Per un gas perfetto, pressione p, volume V e temperatura assoluta T (in kelvin) sono legati dall'equazione di stato:</p>
+  <div class="formula">
+    <div class="f">pV = nRT</div>
+    <div class="fd">n = numero di moli &middot; R = 8.314 J/(mol&middot;K), costante universale dei gas &middot; T in kelvin (T[K]=T[&deg;C]+273.15)</div>
+  </div>
+  <div class="bn">&#128161; Nei problemi conviene spesso raggruppare n e R in un unico parametro nR (dimensionalmente [J/K]): l'equazione diventa semplicemente pV=(nR)T, con un solo parametro che rappresenta "quanto gas" &egrave; presente.</div>
+
+  <h3>Unit&agrave; pratiche: kPa, litri, joule</h3>
+  <p>Se la pressione &egrave; espressa in kPa (kilopascal) e il volume in litri, il prodotto p&middot;V &egrave; gi&agrave; direttamente in <strong>joule</strong> (kPa&middot;L = J): un'unit&agrave; comoda per non dover convertire sempre in Pa e m&sup3;. La useremo nel simulatore.</p>
+</div>
+
+<!-- TRASFORMAZIONI -->
+<div class="sec" id="trasformazioni">
+  <h2>2. Le Trasformazioni Termodinamiche</h2>
+  <p class="ssub">Come cambia lo stato del gas quando una delle variabili resta fissa &mdash; o quando nessuna lo &egrave;</p>
+
+  <h3>La legge generale, valida per qualunque trasformazione</h3>
+  <div class="formula">
+    <div class="f"><span class="frac"><span class="n">pV</span><span class="d">T</span></span> = costante &nbsp;&nbsp;&nbsp;ossia&nbsp;&nbsp;&nbsp; <span class="frac"><span class="n">p<sub>i</sub>V<sub>i</sub></span><span class="d">T<sub>i</sub></span></span> = <span class="frac"><span class="n">p<sub>f</sub>V<sub>f</sub></span><span class="d">T<sub>f</sub></span></span></div>
+    <div class="fd">discende direttamente da pV=nRT (la costante è proprio nR) &middot; lega stato iniziale e finale di QUALSIASI trasformazione, non solo dei casi particolari</div>
+  </div>
+  <div class="bn">&#128161; Le tre leggi che seguono (isobara, isocora, isoterma) sono semplicemente questa stessa relazione nei tre casi in cui una delle tre grandezze non cambia: fissando p si ritrova V/T=cost, fissando V si ritrova p/T=cost, fissando T si ritrova pV=cost.</div>
+
+  <h3>Isobara (pressione costante)</h3>
+  <div class="formula">
+    <div class="f"><span class="frac"><span class="n">V</span><span class="d">T</span></span> = costante &nbsp;&nbsp;(1&#170; legge di Gay-Lussac / legge di Charles)</div>
+    <div class="fd">nel piano p&minus;V &egrave; un segmento ORIZZONTALE &middot; il volume &egrave; direttamente proporzionale alla temperatura</div>
+  </div>
+
+  <h3>Isocora (volume costante)</h3>
+  <div class="formula">
+    <div class="f"><span class="frac"><span class="n">p</span><span class="d">T</span></span> = costante &nbsp;&nbsp;(2&#170; legge di Gay-Lussac)</div>
+    <div class="fd">nel piano p&minus;V &egrave; un segmento VERTICALE &middot; la pressione &egrave; direttamente proporzionale alla temperatura</div>
+  </div>
+
+  <h3>Isoterma (temperatura costante)</h3>
+  <div class="formula">
+    <div class="f">pV = costante &nbsp;&nbsp;(legge di Boyle)</div>
+    <div class="fd">nel piano p&minus;V &egrave; un ramo di IPERBOLE EQUILATERA &middot; pressione e volume sono inversamente proporzionali</div>
+  </div>
+
+  <h3>Adiabatica (nessuno scambio di calore, Q=0)</h3>
+  <div class="formula">
+    <div class="f">pV<sup>&gamma;</sup> = costante</div>
+    <div class="fd">&gamma;=C<sub>p</sub>/C<sub>v</sub> &gt; 1 &middot; nel piano p&minus;V &egrave; una curva SIMILE all'isoterma ma pi&ugrave; RIPIDA (scende/sale pi&ugrave; velocemente)</div>
+  </div>
+  <div class="bf">Un'adiabatica non scambia calore con l'esterno (Q=0): avviene tipicamente quando la trasformazione &egrave; molto rapida (non c'&egrave; tempo per scambiare calore) oppure il sistema &egrave; ben isolato termicamente.</div>
+
+  <h3>Trasformazione lineare (qualsiasi)</h3>
+  <p>Se nessuna grandezza resta fissa, il gas passa da uno stato (p<sub>0</sub>,V<sub>0</sub>) a un altro (p<sub>f</sub>,V<sub>f</sub>) lungo un percorso qualsiasi nel piano p&minus;V. Se il percorso &egrave; un segmento rettilineo, il lavoro si calcola come <strong>area del trapezio</strong> sotteso dal segmento.</p>
+
+  <div class="bw">&#9888; In tutti i casi, il <strong>lavoro L</strong> compiuto dal gas in una trasformazione &egrave; sempre l'area sottesa dalla curva nel piano p&minus;V (tra la curva e l'asse V): L=&#8747;p&middot;dV. Se il gas si espande (V aumenta), L&gt;0 (il gas compie lavoro); se si comprime, L&lt;0 (il lavoro &egrave; compiuto sul gas).</div>
+</div>
+
+<!-- PRIMO PRINCIPIO -->
+<div class="sec" id="primo-principio">
+  <h2>3. Il Primo Principio della Termodinamica</h2>
+  <p class="ssub">La conservazione dell'energia applicata ai sistemi termodinamici</p>
+  <div class="formula">
+    <div class="f">&Delta;U = Q &minus; L</div>
+    <div class="fd">&Delta;U = variazione di energia interna &middot; Q = calore ASSORBITO dal gas &middot; L = lavoro compiuto DAL gas</div>
+  </div>
+  <div class="bn">&#128161; Convenzione dei segni: Q&gt;0 se il calore entra nel gas, L&gt;0 se il gas si espande compiendo lavoro verso l'esterno. Con questa convenzione, l'energia che "entra" nel gas (Q) meno quella che "esce" sotto forma di lavoro (L) è esattamente ciò che resta immagazzinato come energia interna.</div>
+
+  <h3>Legge di Joule: &Delta;U dipende solo dalla temperatura</h3>
+  <div class="formula">
+    <div class="f">&Delta;U = nC<sub>v</sub>&Delta;T</div>
+    <div class="fd">per un gas perfetto, l'energia interna dipende SOLO dalla temperatura, qualunque sia la trasformazione &middot; C<sub>v</sub> = calore specifico molare a volume costante</div>
+  </div>
+  <div class="bf">Questa formula vale <strong>sempre</strong>, in ogni trasformazione (isobara, isocora, isoterma, adiabatica o lineare): &Delta;U dipende solo dallo stato iniziale e finale (dalle temperature T<sub>i</sub> e T<sub>f</sub>), mai dal percorso seguito.</div>
+
+  <h3>Relazione di Mayer e coefficiente &gamma;</h3>
+  <div class="two">
+    <div class="formula">
+      <div class="f">C<sub>p</sub> = C<sub>v</sub> + R</div>
+      <div class="fd">relazione di Mayer, tra i calori specifici molari a pressione e volume costante</div>
+    </div>
+    <div class="formula">
+      <div class="f">&gamma; = <span class="frac"><span class="n">C<sub>p</sub></span><span class="d">C<sub>v</sub></span></span></div>
+      <div class="fd">rapporto tra i calori specifici, compare nell'equazione dell'adiabatica</div>
+    </div>
+  </div>
+  <div class="tbl-wrap">
+  <table class="kt">
+    <tr><th>Tipo di gas</th><th>C<sub>v</sub></th><th>C<sub>p</sub></th><th>&gamma;</th></tr>
+    <tr><td>Monoatomico (es. He, Ar)</td><td>3/2 &middot; R</td><td>5/2 &middot; R</td><td>5/3 &asymp; 1.67</td></tr>
+    <tr><td>Biatomico (es. N&#8322;, O&#8322;, aria)</td><td>5/2 &middot; R</td><td>7/2 &middot; R</td><td>7/5 = 1.40</td></tr>
+  </table>
+  </div>
+</div>
+
+<!-- RIEPILOGO -->
+<div class="sec" id="riepilogo">
+  <h2>4. Riepilogo: Lavoro, Calore e &Delta;U in ciascuna Trasformazione</h2>
+  <p class="ssub">Le formule pronte all'uso per ogni caso, coerenti con il primo principio</p>
+
+  <h3>Isobara</h3>
+  <div class="three">
+    <div class="formula"><div class="f">L = p&Delta;V</div><div class="fd">= nR&Delta;T</div></div>
+    <div class="formula"><div class="f">&Delta;U = nC<sub>v</sub>&Delta;T</div><div class="fd">legge di Joule</div></div>
+    <div class="formula"><div class="f">Q = nC<sub>p</sub>&Delta;T</div><div class="fd">Q=&Delta;U+L</div></div>
+  </div>
+
+  <h3>Isocora</h3>
+  <div class="three">
+    <div class="formula"><div class="f">L = 0</div><div class="fd">nessuna variazione di volume</div></div>
+    <div class="formula"><div class="f">&Delta;U = nC<sub>v</sub>&Delta;T</div><div class="fd">legge di Joule</div></div>
+    <div class="formula"><div class="f">Q = &Delta;U</div><div class="fd">tutto il calore va in energia interna</div></div>
+  </div>
+
+  <h3>Isoterma</h3>
+  <div class="three">
+    <div class="formula"><div class="f">L = nRT&middot;ln<span class="frac" style="font-size:.8em"><span class="n">V<sub>f</sub></span><span class="d">V<sub>i</sub></span></span></div><div class="fd">integrale di p dV con p=nRT/V</div></div>
+    <div class="formula"><div class="f">&Delta;U = 0</div><div class="fd">temperatura costante</div></div>
+    <div class="formula"><div class="f">Q = L</div><div class="fd">tutto il calore diventa lavoro</div></div>
+  </div>
+
+  <h3>Adiabatica</h3>
+  <div class="three">
+    <div class="formula"><div class="f">L = <span class="frac" style="font-size:.8em"><span class="n">p<sub>i</sub>V<sub>i</sub>&minus;p<sub>f</sub>V<sub>f</sub></span><span class="d">&gamma;&minus;1</span></span></div><div class="fd">= &minus;&Delta;U</div></div>
+    <div class="formula"><div class="f">&Delta;U = nC<sub>v</sub>&Delta;T</div><div class="fd">legge di Joule</div></div>
+    <div class="formula"><div class="f">Q = 0</div><div class="fd">per definizione di adiabatica</div></div>
+  </div>
+
+  <h3>Lineare (percorso rettilineo nel piano p&minus;V)</h3>
+  <div class="three">
+    <div class="formula"><div class="f">L = <span class="frac" style="font-size:.8em"><span class="n">p<sub>i</sub>+p<sub>f</sub></span><span class="d">2</span></span>&Delta;V</div><div class="fd">area del trapezio</div></div>
+    <div class="formula"><div class="f">&Delta;U = nC<sub>v</sub>&Delta;T</div><div class="fd">legge di Joule, sempre valida</div></div>
+    <div class="formula"><div class="f">Q = &Delta;U+L</div><div class="fd">dal primo principio</div></div>
+  </div>
+</div>
+
+<!-- SIM 1 -->
+<div class="sec" id="sim1">
+  <h2>5. Simulatore &mdash; Cilindro a Pistone</h2>
+  <p class="ssub">Scegli la trasformazione: osserva il pistone muoversi e la curva tracciarsi nel diagramma p&minus;V</p>
+  <div class="sim">
+    <div class="sim-t">Stato iniziale del gas e tipo di gas</div>
+    <div class="ctrl">
+      <label>Gas:</label>
+      <button class="btn g on" id="btnGasMono" onclick="selectGas('mono','btnGasMono')">Monoatomico</button>
+      <button class="btn g" id="btnGasBi" onclick="selectGas('bi','btnGasBi')">Biatomico</button>
+      <label>n&middot;R (J/K)</label>
+      <input type="range" id="s1nR" min="2" max="20" step="0.1" value="8.3"><span class="vv" id="s1nRv">8.3</span>
+    </div>
+    <div class="ctrl">
+      <label>p&#8320; (kPa)</label>
+      <input type="range" id="s1p0" min="50" max="400" step="5" value="150"><span class="vv" id="s1p0v">150</span>
+      <label>V&#8320; (L)</label>
+      <input type="range" id="s1V0" min="2" max="20" step="0.5" value="10"><span class="vv" id="s1V0v">10</span>
+    </div>
+    <div class="ctrl">
+      <label>Trasformazione:</label>
+      <button class="btn g on" id="btnTrIsobara" onclick="selectTransform('isobara','btnTrIsobara')">Isobara</button>
+      <button class="btn g" id="btnTrIsocora" onclick="selectTransform('isocora','btnTrIsocora')">Isocora</button>
+      <button class="btn g" id="btnTrIsoterma" onclick="selectTransform('isoterma','btnTrIsoterma')">Isoterma</button>
+      <button class="btn g" id="btnTrAdiabatica" onclick="selectTransform('adiabatica','btnTrAdiabatica')">Adiabatica</button>
+      <button class="btn g" id="btnTrLineare" onclick="selectTransform('lineare','btnTrLineare')">Lineare</button>
+    </div>
+    <div class="ctrl">
+      <label>V<sub>finale</sub> (L)</label>
+      <input type="range" id="s1Vf" min="2" max="20" step="0.5" value="16"><span class="vv" id="s1Vfv">16</span>
+      <label>p<sub>finale</sub> (kPa)</label>
+      <input type="range" id="s1pf" min="50" max="400" step="5" value="150" disabled><span class="vv" id="s1pfv">150</span>
+    </div>
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv1" style="height:520px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#c47a00"></span>Curva p&minus;V</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Lavoro L (area sottesa)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>6. Esercizi Proposti</h2>
+  <p class="ssub">Leggi dei gas, trasformazioni, primo principio</p>
+  <ol>
+    <li><strong>Isobara:</strong> 2 moli di gas monoatomico, inizialmente a p=200kPa e V=8L, si espandono a pressione costante fino a V=14L. Calcola T&#8320;, T<sub>f</sub>, L, &Delta;U e Q. Verifica nel simulatore.</li>
+    <li><strong>Isocora:</strong> lo stesso gas dell'esercizio 1 (senza espandersi) viene riscaldato a volume costante finch&eacute; la pressione raddoppia. Calcola L, &Delta;U e Q.</li>
+    <li><strong>Isoterma:</strong> un gas a T=300K si espande isotermicamente da V&#8320;=5L a V<sub>f</sub>=15L, con nR=10J/K. Calcola L e Q (ricorda che &Delta;U=0).</li>
+    <li><strong>Adiabatica vs isoterma:</strong> partendo dallo stesso stato iniziale (p&#8320;,V&#8320;) e con lo stesso volume finale V<sub>f</sub>&gt;V&#8320;, spiega perch&eacute; la pressione finale di un'adiabatica &egrave; sempre minore di quella di un'isoterma (usa il simulatore per confrontare le due curve).</li>
+    <li><strong>Ciclo semplice:</strong> un gas compie una trasformazione isobara (espansione), poi isocora (raffreddamento a volume costante), poi isoterma (ritorno allo stato iniziale). Disegna qualitativamente il ciclo nel piano p&minus;V e spiega, senza calcolare, se il lavoro netto del ciclo &egrave; positivo o negativo.</li>
+    <li><strong>Segno del lavoro:</strong> usando il simulatore, imposta V<sub>finale</sub>&lt;V&#8320; (compressione) in una trasformazione a scelta. Osserva il segno di L nel pannello dati: cosa significa fisicamente L&lt;0?</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Leggi dei Gas &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function niceStep(range,n){
+  var s=range/Math.max(n,1), m=Math.pow(10,Math.floor(Math.log10(Math.abs(s)||1))), t=s/m;
+  return(t<2?1:t<5?2:5)*m;
+}
+function drawAxes(ctx,x,y,w,h,xmin,xmax,ymin,ymax,xlabel,ylabel){
+  function sx(vx){return x+(vx-xmin)/(xmax-xmin)*w;}
+  function sy(vy){return y+h-(vy-ymin)/(ymax-ymin)*h;}
+  var gx=niceStep(xmax-xmin,6), gy=niceStep(ymax-ymin,5);
+  ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.6;ctx.setLineDash([]);
+  for(var vx=Math.ceil(xmin/gx)*gx; vx<=xmax; vx+=gx){
+    ctx.beginPath();ctx.moveTo(sx(vx),y);ctx.lineTo(sx(vx),y+h);ctx.stroke();
+  }
+  for(var vy=Math.ceil(ymin/gy)*gy; vy<=ymax; vy+=gy){
+    ctx.beginPath();ctx.moveTo(x,sy(vy));ctx.lineTo(x+w,sy(vy));ctx.stroke();
+  }
+  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=1;
+  if(0>=ymin&&0<=ymax){ctx.beginPath();ctx.moveTo(x,sy(0));ctx.lineTo(x+w,sy(0));ctx.stroke();}
+  if(0>=xmin&&0<=xmax){ctx.beginPath();ctx.moveTo(sx(0),y);ctx.lineTo(sx(0),y+h);ctx.stroke();}
+  ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='8.5px monospace';ctx.textAlign='center';
+  for(var vx2=Math.ceil(xmin/gx)*gx; vx2<=xmax; vx2+=gx){
+    ctx.fillText(fmt1(vx2),sx(vx2),y+h+11);
+  }
+  ctx.textAlign='right';
+  for(var vy2=Math.ceil(ymin/gy)*gy; vy2<=ymax; vy2+=gy){
+    ctx.fillText(fmt1(vy2),x-4,sy(vy2)+3);
+  }
+  ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='left';
+  ctx.fillText(xlabel,x+w-22,y+h+11);
+  ctx.fillText(ylabel,x-22,y+10);
+  return {sx:sx,sy:sy};
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.4;ctx.stroke();
+}
+function drawArrow(ctx,x1,y1,x2,y2,color,lw){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lw||2.4;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var dx=x2-x1,dy=y2-y1; if(Math.hypot(dx,dy)<1)return;
+  var ang=Math.atan2(dy,dx), hl=7;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(ang-Math.PI/6), y2-hl*Math.sin(ang-Math.PI/6));
+  ctx.lineTo(x2-hl*Math.cos(ang+Math.PI/6), y2-hl*Math.sin(ang+Math.PI/6));
+  ctx.closePath();ctx.fill();
+}
+
+// ══════════════════════════════════════════════════════
+// STATO
+// ══════════════════════════════════════════════════════
+var curGas='mono', curTransform='isobara';
+var anim1={s:0,playing:false,lastT:null};
+var Tref=180, particles=[];
+var N_PART=16, PART_R=2.6, BASE_SPEED=48; // px/s alla temperatura di riferimento Tref
+
+function cvFactor(){ return curGas==='mono' ? 1.5 : 2.5; }
+
+function initParticles(cylX,cylW,gasTop,cylBottom){
+  particles=[];
+  for(var i=0;i<N_PART;i++){
+    var ang=Math.random()*2*Math.PI;
+    particles.push({
+      x: cylX+6+Math.random()*(cylW-12),
+      y: gasTop+6+Math.random()*Math.max(cylBottom-gasTop-12,4),
+      dx: Math.cos(ang), dy: Math.sin(ang)
+    });
+  }
+}
+function updateParticles(dt,cylX,cylW,gasTop,cylBottom,T){
+  var speed=BASE_SPEED*Math.sqrt(Math.max(T,1)/Tref);
+  particles.forEach(function(pt){
+    // piccola perturbazione casuale di direzione, per un moto irregolare (non un rimbalzo perfettamente bigliardo)
+    var jitter=(Math.random()-0.5)*0.5;
+    var ca=Math.cos(jitter), sa=Math.sin(jitter);
+    var ndx=pt.dx*ca-pt.dy*sa, ndy=pt.dx*sa+pt.dy*ca;
+    var norm=Math.hypot(ndx,ndy)||1; pt.dx=ndx/norm; pt.dy=ndy/norm;
+
+    pt.x+=pt.dx*speed*dt; pt.y+=pt.dy*speed*dt;
+    var xMin=cylX+4+PART_R, xMax=cylX+cylW-4-PART_R;
+    var yMin=gasTop+4+PART_R, yMax=cylBottom-4-PART_R;
+    if(pt.x<xMin){pt.x=xMin;pt.dx=Math.abs(pt.dx);}
+    if(pt.x>xMax){pt.x=xMax;pt.dx=-Math.abs(pt.dx);}
+    if(pt.y<yMin){pt.y=yMin;pt.dy=Math.abs(pt.dy);}
+    if(pt.y>yMax){pt.y=yMax;pt.dy=-Math.abs(pt.dy);}
+  });
+}
+
+function selectGas(g,btnId){
+  curGas=g;
+  ['btnGasMono','btnGasBi'].forEach(function(id){
+    document.getElementById(id).className='btn g'+(id===btnId?' on':'');
+  });
+  resetSim1();
+}
+function selectTransform(t,btnId){
+  curTransform=t;
+  ['btnTrIsobara','btnTrIsocora','btnTrIsoterma','btnTrAdiabatica','btnTrLineare'].forEach(function(id){
+    document.getElementById(id).className='btn g'+(id===btnId?' on':'');
+  });
+  var vfEl=document.getElementById('s1Vf'), pfEl=document.getElementById('s1pf');
+  vfEl.disabled = (t==='isocora');
+  pfEl.disabled = (t!=='lineare');
+  resetSim1();
+}
+
+// stato(s): s in [0,1] interpola da (V0,p0) a (Vf, pf-secondo-la-legge)
+function state(s){
+  var nR=rf('s1nR'), p0=rf('s1p0'), V0=rf('s1V0');
+  var Vf=rf('s1Vf'), pfSlider=rf('s1pf');
+  var Cv=cvFactor()*nR, Cp=Cv+nR, gamma=Cp/Cv;
+  var T0=p0*V0/nR;
+  var V,p;
+  if(curTransform==='isobara'){
+    V=V0+(Vf-V0)*s; p=p0;
+  } else if(curTransform==='isocora'){
+    V=V0; p=p0+(pfSlider-p0)*s;
+  } else if(curTransform==='isoterma'){
+    V=V0+(Vf-V0)*s; p=nR*T0/V;
+  } else if(curTransform==='adiabatica'){
+    V=V0+(Vf-V0)*s; p=p0*Math.pow(V0/V,gamma);
+  } else { // lineare
+    V=V0+(Vf-V0)*s; p=p0+(pfSlider-p0)*s;
+  }
+  var T=p*V/nR;
+  return {V:V,p:p,T:T,nR:nR,Cv:Cv,Cp:Cp,gamma:gamma,T0:T0,p0:p0,V0:V0};
+}
+function finalTarget(){
+  var nR=rf('s1nR'), p0=rf('s1p0'), V0=rf('s1V0'), Vf=rf('s1Vf'), pfSlider=rf('s1pf');
+  var Cv=cvFactor()*nR, gamma=(Cv+nR)/Cv;
+  var Vt, pt;
+  if(curTransform==='isocora'){ Vt=V0; pt=pfSlider; }
+  else if(curTransform==='isoterma'){ var T0=p0*V0/nR; Vt=Vf; pt=nR*T0/Vt; }
+  else if(curTransform==='adiabatica'){ Vt=Vf; pt=p0*Math.pow(V0/Vt,gamma); }
+  else if(curTransform==='isobara'){ Vt=Vf; pt=p0; }
+  else { Vt=Vf; pt=pfSlider; }
+  return {V:Vt,p:pt};
+}
+function computeThermo(){
+  var nR=rf('s1nR'), p0=rf('s1p0'), V0=rf('s1V0');
+  var Cv=cvFactor()*nR;
+  var T0=p0*V0/nR;
+  var tgt=finalTarget();
+  var Tf=tgt.p*tgt.V/nR;
+  var dU=Cv*(Tf-T0);
+  var L, Q;
+  if(curTransform==='isobara'){
+    L=p0*(tgt.V-V0); Q=dU+L;
+  } else if(curTransform==='isocora'){
+    L=0; Q=dU;
+  } else if(curTransform==='isoterma'){
+    L=nR*T0*Math.log(tgt.V/V0); Q=L; // dU=0
+  } else if(curTransform==='adiabatica'){
+    L=-dU; Q=0;
+  } else {
+    L=0.5*(p0+tgt.p)*(tgt.V-V0); Q=dU+L;
+  }
+  return {T0:T0,Tf:Tf,dU:dU,L:L,Q:Q,Vf:tgt.V,pf:tgt.p};
+}
+
+function togglePlay1(){
+  if(!anim1.playing && anim1.s>=0.999) anim1.s=0;
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+}
+function resetSim1(){
+  anim1.playing=false; anim1.s=0;
+  document.getElementById('btnPlay1').className='btn on';
+  document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+  Tref=state(0).T0; if(!isFinite(Tref)||Tref<=0)Tref=180;
+  particles=[];
+  drawSim1();
+}
+// loop persistente: le particelle si muovono SEMPRE (anche a trasformazione ferma), come le molecole reali;
+// solo l'avanzamento del pistone (anim1.s) dipende da Avvia/Pausa
+function masterTick(ts){
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dt=(ts-anim1.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.016; dt=Math.min(dt,0.05);
+  anim1.lastT=ts;
+  if(anim1.playing){
+    anim1.s=Math.min(1,anim1.s+dt*0.5);
+    if(anim1.s>=1){
+      anim1.playing=false;
+      document.getElementById('btnPlay1').className='btn on';
+      document.getElementById('btnPlay1').textContent='\u25b6 Avvia';
+    }
+  }
+  drawSim1(dt);
+  requestAnimationFrame(masterTick);
+}
+
+function drawSim1(dtParticles){
+  var nR=rf('s1nR'), p0=rf('s1p0'), V0=rf('s1V0');
+  var th=computeThermo();
+  var s=anim1.s;
+  var st=state(s);
+
+  var cv=setupCv('cv1',580);
+  var W=cv.width,H=580,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  var cylX=20, cylW=Math.min(170,W*0.22), cylTop=76, cylH=260;
+  var pvX=cylX+cylW+60, pvW=W-pvX-24, pvTop=30, pvH=420;
+
+  // ── CILINDRO ──
+  var Vmax=Math.max(rf('s1Vf'), V0)*1.15;
+  var pMaxRef=Math.max(p0, th.pf, 60)*1.2;
+  var gasTop=cylTop + cylH*(1-st.V/Vmax);
+  var gasTop0=cylTop + cylH*(1-V0/Vmax); // altezza iniziale del pistone (per il blocco isocoro)
+
+  // isolamento adiabatico: tratteggio esterno sulle pareti
+  if(curTransform==='adiabatica'){
+    ctx.strokeStyle='#b5351a';ctx.lineWidth=1.3;
+    for(var hy=cylTop; hy<cylTop+cylH; hy+=9){
+      ctx.beginPath();ctx.moveTo(cylX-9,hy+9);ctx.lineTo(cylX-1,hy);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cylX+cylW+1,hy);ctx.lineTo(cylX+cylW+9,hy+9);ctx.stroke();
+    }
+    for(var hx=cylX; hx<cylX+cylW; hx+=9){
+      ctx.beginPath();ctx.moveTo(hx,cylTop+cylH+9);ctx.lineTo(hx+9,cylTop+cylH+1);ctx.stroke();
+    }
+  }
+
+  ctx.strokeStyle='#888';ctx.lineWidth=2.4;
+  ctx.strokeRect(cylX,cylTop,cylW,cylH);
+  ctx.fillStyle='rgba(224,138,58,0.18)';
+  ctx.fillRect(cylX+3,gasTop,cylW-6,cylTop+cylH-gasTop-3);
+
+  // particelle di gas: si muovono sempre, più velocemente quanto più il gas è caldo
+  var cylBottom=cylTop+cylH;
+  if(particles.length===0) initParticles(cylX,cylW,gasTop,cylBottom);
+  updateParticles(dtParticles||0.016, cylX,cylW,gasTop,cylBottom, st.T);
+  ctx.save();
+  ctx.beginPath();ctx.rect(cylX+3,gasTop,cylW-6,cylBottom-gasTop-3);ctx.clip();
+  ctx.fillStyle='rgba(150,70,20,0.6)';
+  particles.forEach(function(pt){
+    ctx.beginPath();ctx.arc(pt.x,pt.y,PART_R,0,2*Math.PI);ctx.fill();
+  });
+  ctx.restore();
+
+  // pistone + stelo
+  ctx.fillStyle='#555';
+  ctx.fillRect(cylX-4,gasTop-10,cylW+8,10);
+  var rodTop=Math.max(gasTop-46,20);
+  ctx.fillStyle='#333';
+  ctx.fillRect(cylX+cylW/2-3,rodTop,6,gasTop-10-rodTop);
+
+  // apparato esterno, secondo la trasformazione
+  if(curTransform==='isobara'){
+    // peso FISSO: dimensione proporzionale a p0, non cambia durante l'animazione
+    var wH=14+(p0/pMaxRef)*46;
+    ctx.fillStyle='#7a5a3a';
+    ctx.fillRect(cylX+cylW/2-24,rodTop-wH,48,wH);
+    ctx.strokeStyle='#4a3520';ctx.lineWidth=1.4;ctx.strokeRect(cylX+cylW/2-24,rodTop-wH,48,wH);
+    ctx.fillStyle='#4a3520';ctx.font='bold 9px sans-serif';ctx.textAlign='center';
+    ctx.fillText('peso fisso',cylX+cylW/2,rodTop-wH-6);
+  } else if(curTransform==='isoterma' || curTransform==='adiabatica' || curTransform==='lineare'){
+    // peso VARIABILE: dimensione segue la pressione attuale
+    var wH2=14+(st.p/pMaxRef)*46;
+    ctx.fillStyle='#7a5a8a';
+    ctx.fillRect(cylX+cylW/2-24,rodTop-wH2,48,wH2);
+    ctx.strokeStyle='#4a3560';ctx.lineWidth=1.4;ctx.strokeRect(cylX+cylW/2-24,rodTop-wH2,48,wH2);
+    ctx.fillStyle='#4a3560';ctx.font='bold 9px sans-serif';ctx.textAlign='center';
+    ctx.fillText('peso variabile',cylX+cylW/2,rodTop-wH2-6);
+  }
+  if(curTransform==='isocora'){
+    // pistone bloccato: staffe fisse all'altezza iniziale
+    var lockY=gasTop0-10;
+    ctx.fillStyle='#444';
+    ctx.fillRect(cylX-14,lockY-3,12,10);
+    ctx.fillRect(cylX+cylW+2,lockY-3,12,10);
+    ctx.strokeStyle='#222';ctx.lineWidth=1.2;
+    ctx.strokeRect(cylX-14,lockY-3,12,10);
+    ctx.strokeRect(cylX+cylW+2,lockY-3,12,10);
+    ctx.fillStyle='#444';ctx.font='bold 9px sans-serif';ctx.textAlign='center';
+    ctx.fillText('pistone bloccato',cylX+cylW/2,lockY-10);
+  }
+
+  // freccia del calore: alla base del cilindro (dove si pensa idealmente la sorgente), verticale
+  // entra=frecca verso l'alto dal basso, esce=freccia verso il basso; non mostrata per l'adiabatica (Q=0 per definizione)
+  var baseY=cylTop+cylH;
+  if(curTransform!=='adiabatica'){
+    var arrowX=cylX+cylW*0.5;
+    var yNear=baseY+6, yFar=baseY+24;
+    var arrowColor = th.Q>=0 ? '#b5351a' : '#1a4b8c';
+    if(th.Q>=0){
+      drawArrow(ctx,arrowX,yFar,arrowX,yNear,arrowColor,2.8);
+    } else {
+      drawArrow(ctx,arrowX,yNear,arrowX,yFar,arrowColor,2.8);
+    }
+    ctx.fillStyle=arrowColor;ctx.font='bold 9px sans-serif';ctx.textAlign='left';
+    ctx.fillText((th.Q>=0?'Q entra +':'Q esce ')+fmt1(th.Q)+'J',arrowX+10,(yNear+yFar)/2+3);
+  } else {
+    ctx.fillStyle='#b5351a';ctx.font='bold 9px sans-serif';ctx.textAlign='center';
+    ctx.fillText('Q = 0 (pareti isolanti, nessuna sorgente)',cylX+cylW/2,baseY+20);
+  }
+
+  // termostato, solo isoterma (disegnato sopra la freccia/scritta già posizionate, spostando in basso le altre etichette)
+  var labelsY=cylTop+cylH+42;
+  if(curTransform==='isoterma'){
+    var thY=cylTop+cylH+40, thH=34, thW=cylW+34, thX=cylX+cylW/2-thW/2;
+    for(var zz=0;zz<4;zz++){
+      var zx=cylX+8+zz*(cylW-16)/3;
+      ctx.strokeStyle='#c47a3a';ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.moveTo(zx,cylTop+cylH);ctx.lineTo(zx+5,thY-2);ctx.lineTo(zx-5,thY+2);ctx.lineTo(zx,thY+8);ctx.stroke();
+    }
+    ctx.fillStyle='#fde8d0';ctx.strokeStyle='#c47a3a';ctx.lineWidth=1.8;
+    ctx.fillRect(thX,thY+8,thW,thH);ctx.strokeRect(thX,thY+8,thW,thH);
+    ctx.fillStyle='#8a4a10';ctx.font='bold 10px sans-serif';ctx.textAlign='center';
+    ctx.fillText('termostato',cylX+cylW/2,thY+24);
+    ctx.fillText('T = '+fmt1(th.T0)+'K = cost',cylX+cylW/2,thY+37);
+    labelsY=thY+8+thH+18;
+  }
+
+  ctx.font='bold 11px monospace';ctx.textAlign='center';ctx.fillStyle='#444';
+  ctx.fillText('V='+fmt2(st.V)+'L',cylX+cylW/2,labelsY);
+  ctx.fillText('p='+fmt1(st.p)+'kPa',cylX+cylW/2,labelsY+14);
+  ctx.fillText('T='+fmt1(st.T)+'K',cylX+cylW/2,labelsY+28);
+
+  // ── DIAGRAMMA p-V ──
+  var ax=drawAxes(ctx,pvX,pvTop,pvW,pvH,0,Vmax,0,pMaxRef,'V (L)','p (kPa)');
+
+  // curva completa (0..1) tratteggiata leggera
+  ctx.strokeStyle='rgba(196,122,0,0.35)';ctx.lineWidth=1.6;ctx.setLineDash([4,3]);
+  ctx.beginPath();
+  var NN=80;
+  for(var i=0;i<=NN;i++){
+    var ss=i/NN, sp=state(ss);
+    var cp=ax.sx(sp.V), cpy=ax.sy(sp.p);
+    i===0?ctx.moveTo(cp,cpy):ctx.lineTo(cp,cpy);
+  }
+  ctx.stroke();ctx.setLineDash([]);
+
+  // area sottesa (lavoro) fino a s attuale
+  ctx.beginPath();
+  ctx.moveTo(ax.sx(V0),ax.sy(0));
+  for(var j=0;j<=60;j++){
+    var sj=s*j/60, spj=state(sj);
+    ctx.lineTo(ax.sx(spj.V),ax.sy(spj.p));
+  }
+  ctx.lineTo(ax.sx(st.V),ax.sy(0));
+  ctx.closePath();
+  ctx.fillStyle='rgba(26,107,58,0.22)';ctx.fill();
+
+  // curva percorsa finora (solida)
+  ctx.strokeStyle='#c47a00';ctx.lineWidth=2.6;ctx.setLineDash([]);
+  ctx.beginPath();
+  for(var k=0;k<=60;k++){
+    var sk=s*k/60, spk=state(sk);
+    var cpx=ax.sx(spk.V), cpy2=ax.sy(spk.p);
+    k===0?ctx.moveTo(cpx,cpy2):ctx.lineTo(cpx,cpy2);
+  }
+  ctx.stroke();
+
+  dot(ctx,ax.sx(V0),ax.sy(p0),5,'#1a4b8c');
+  dot(ctx,ax.sx(st.V),ax.sy(st.p),6,'#e08a3a');
+  dot(ctx,ax.sx(th.Vf),ax.sy(th.pf),4,'rgba(181,53,26,0.7)');
+
+  ctx.fillStyle='#333';ctx.font='bold 10px sans-serif';ctx.textAlign='left';
+  ctx.fillText('trasformazione: '+curTransform,pvX+6,pvTop+14);
+
+  o.className='out';
+  var barMax=Math.max(Math.abs(th.dU),Math.abs(th.L),Math.abs(th.Q),1);
+  function bar(val,color){
+    var w=Math.abs(val)/barMax*90;
+    return '<div style="display:inline-block;width:92px;height:9px;background:rgba(255,255,255,0.08);border-radius:2px;vertical-align:middle;position:relative;margin-left:6px">'+
+           '<div style="position:absolute;'+(val>=0?'left:50%':'right:50%')+';width:'+Math.min(w/2,46)+'px;height:9px;background:'+color+';border-radius:2px"></div>'+
+           '<div style="position:absolute;left:50%;top:0;width:1px;height:9px;background:rgba(255,255,255,0.3)"></div></div>';
+  }
+  o.innerHTML='<div class="rg">'+
+    '<div class="rl">Stato iniziale</div><div class="rv">p&#8320;='+fmt1(p0)+'kPa &middot; V&#8320;='+fmt2(V0)+'L &middot; T&#8320;='+fmt1(th.T0)+'K</div>'+
+    '<div class="rl">Stato finale</div><div class="rv">p<sub>f</sub>='+fmt1(th.pf)+'kPa &middot; V<sub>f</sub>='+fmt2(th.Vf)+'L &middot; T<sub>f</sub>='+fmt1(th.Tf)+'K</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Lavoro L</div><div class="rv '+(th.L>=0?'ok':'neg')+'">'+fmt2(th.L)+' J'+bar(th.L,'#1a6b3a')+'</div>'+
+    '<div class="rl">&Delta;U</div><div class="rv '+(th.dU>=0?'ok':'neg')+'">'+fmt2(th.dU)+' J'+bar(th.dU,'#7a4fc4')+'</div>'+
+    '<div class="rl">Calore Q</div><div class="rv '+(th.Q>=0?'ok':'neg')+'">'+fmt2(th.Q)+' J'+bar(th.Q,'#c47a00')+'</div>'+
+    '<div class="rsep"></div>'+
+    '<div class="rl">Verifica Q&minus;L=&Delta;U</div><div class="rv">'+fmt2(th.Q-th.L)+' = '+fmt2(th.dU)+'</div>'+
+    '<div class="rl">&gamma; = C<sub>p</sub>/C<sub>v</sub></div><div class="rv">'+fmt3((cvFactor()*nR+nR)/(cvFactor()*nR))+'</div>'+
+    '</div>';
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn){
+  document.getElementById(id).oninput=function(){
+    document.getElementById(vid).textContent=this.value;
+    fn();
+  };
+}
+sl('s1nR','s1nRv',function(){resetSim1();});
+sl('s1p0','s1p0v',function(){resetSim1();});
+sl('s1V0','s1V0v',function(){resetSim1();});
+sl('s1Vf','s1Vfv',function(){resetSim1();});
+sl('s1pf','s1pfv',function(){resetSim1();});
+
+window.addEventListener('resize',function(){drawSim1();});
+document.addEventListener('DOMContentLoaded',function(){
+  resetSim1();
+  requestAnimationFrame(masterTick);
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
