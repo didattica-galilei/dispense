@@ -152,6 +152,27 @@
         Se **almeno una** di queste condizioni è vera, il numero supera il test per quella base e viene dichiarato <em>probabilmente primo</em>. Se non ne soddisfa nessuna, il numero è **sicuramente composto**. Ripetendo questo test per $K$ basi diverse e casuali, la probabilità che un numero composto superi sempre il test (un "falso positivo") diventa inferiore a $(\frac{1}{4})^K$.
     </p>
 </div>
+    <div class="teorema-box" style="
+    background-color: rgba(78, 168, 222, 0.05); 
+    border-left: 4px solid var(--accent-color); 
+    padding: 15px 20px; 
+    margin-top: 25px; 
+    border-radius: 4px;
+">
+    <h4 style="color: var(--accent-color); margin: 0 0 10px 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
+        💡 Il Teorema "Smaschera-Composti"
+    </h4>
+    <p style="font-size: 0.9rem; line-height: 1.5; color: #e1e1e6; margin: 0;">
+        L'algoritmo si basa sul <strong>Piccolo Teorema di Fermat</strong> (e la sua estensione di Miller-Rabin). 
+        In parole semplici, stabilisce che se un numero $n$ è **primo**, allora per qualsiasi base casuale $a$ deve tassativamente superare questo controllo:
+    </p>
+    <div style="text-align: center; margin: 15px 0; font-family: 'Courier New', monospace; font-size: 1rem; color: #fff; background: #0f0f11; padding: 10px; border-radius: 4px;">
+        a<sup>n-1</sup> &equiv; 1 (mod n)
+    </div>
+    <p style="font-size: 0.85rem; line-height: 1.5; color: #a0a0a5; margin: 0;">
+        Se questa identità <strong>fallisce</strong>, il teorema garantisce al 100% che il numero è composto. Se invece è vera, il numero ha ottime probabilità di essere primo, sebbene esistano rari numeri composti (chiamati <em>pseudoprimi</em>) in grado di ingannare il test per una specifica base $a$.
+    </p>
+</div>
     <h1>Test di Primalità Probabilistico</h1>
     <p class="description">Analizza numeri di grandi dimensioni usando l'algoritmo di Miller-Rabin.</p>
 
