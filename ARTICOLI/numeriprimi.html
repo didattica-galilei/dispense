@@ -136,6 +136,22 @@
 <body>
 
 <div class="container">
+    <div class="spiegazione" style="margin-top: 30px; border-top: 1px dashed var(--border-color); padding-top: 20px;">
+    <h3 style="color: var(--accent-color); margin-bottom: 10px;">Come funziona Miller-Rabin?</h3>
+    <p style="font-size: 0.9rem; line-height: 1.6; color: #a0a0a5;">
+        L'algoritmo si basa su una proprietà dei numeri primi derivata dal <strong>Piccolo Teorema di Fermat</strong>. 
+        Dato un numero dispari $n$ da testare, lo scriviamo come:
+        <code style="display:block; padding: 8px; background: #0f0f11; margin: 100px 0; border-radius: 4px; text-align: center;">n - 1 = d &times; 2<sup>s</sup></code>
+        dove $d$ è un numero dispari. Poi, l'algoritmo sceglie una base casuale $a$ (chiamata "testimone") compresa tra $2$ e $n-2$ e verifica due condizioni:
+    </p>
+    <ul style="font-size: 0.9rem; line-height: 1.6; color: #a0a0a5; padding-left: 20px;">
+        <li>Se $a^d \equiv 1 \pmod n$</li>
+        <li>Se esiste un intero $r$ (con $0 \le r < s$) tale che $a^{d \cdot 2^r} \equiv -1 \pmod n$</li>
+    </ul>
+    <p style="font-size: 0.9rem; line-height: 1.6; color: #a0a0a5;">
+        Se **almeno una** di queste condizioni è vera, il numero supera il test per quella base e viene dichiarato <em>probabilmente primo</em>. Se non ne soddisfa nessuna, il numero è **sicuramente composto**. Ripetendo questo test per $K$ basi diverse e casuali, la probabilità che un numero composto superi sempre il test (un "falso positivo") diventa inferiore a $(\frac{1}{4})^K$.
+    </p>
+</div>
     <h1>Test di Primalità Probabilistico</h1>
     <p class="description">Analizza numeri di grandi dimensioni usando l'algoritmo di Miller-Rabin.</p>
 
