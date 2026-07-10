@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analizzatore di Numeri Primi (Miller-Rabin)</title>
+    <title>Strumenti Avanzati Numeri Primi (Miller-Rabin)</title>
     <style>
         :root {
             --bg-color: #121214;
@@ -32,7 +32,7 @@
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            max-width: 600px;
+            max-width: 650px;
             width: 100%;
             border: 1px solid var(--border-color);
         }
@@ -42,6 +42,7 @@
             margin-top: 0;
             color: #fff;
             text-align: center;
+            margin-bottom: 5px;
         }
 
         p.description {
@@ -49,6 +50,45 @@
             font-size: 0.9rem;
             text-align: center;
             margin-bottom: 25px;
+        }
+
+        /* Navigazione a Tab */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            color: #a0a0a5;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .form-group {
@@ -86,7 +126,7 @@
             margin-top: 4px;
         }
 
-        button {
+        button.action-btn {
             width: 100%;
             padding: 14px;
             background-color: var(--accent-color);
@@ -99,20 +139,21 @@
             transition: background 0.2s;
         }
 
-        button:hover {
+        button.action-btn:hover {
             background-color: #64b5f6;
         }
 
-        #result {
+        .result-box {
             margin-top: 25px;
             padding: 15px;
             border-radius: 6px;
             display: none;
             font-weight: 500;
             line-height: 1.5;
+            word-break: break-all;
         }
 
-        .prime {
+        .prime, .success-box {
             background-color: rgba(75, 181, 67, 0.15);
             border: 1px solid var(--success-color);
             color: #81c784;
@@ -124,189 +165,235 @@
             color: #e57373;
         }
         
-        .info-box {
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: #8a8a93;
-            border-top: 1px solid var(--border-color);
-            padding-top: 15px;
+        /* Sezione didattica */
+        .educational-section {
+            margin-top: 35px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 25px;
+        }
+
+        .teorema-box {
+            background-color: rgba(78, 168, 222, 0.05); 
+            border-left: 4px solid var(--accent-color); 
+            padding: 15px 20px; 
+            margin-bottom: 25px; 
+            border-radius: 4px;
+        }
+
+        .formula-inline {
+            text-align: center; 
+            margin: 12px 0; 
+            font-family: 'Courier New', monospace; 
+            font-size: 1.1rem; 
+            color: #fff; 
+            background: #0f0f11; 
+            padding: 8px; 
+            border-radius: 4px;
+        }
+
+        .educational-section p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #a0a0a5;
+        }
+
+        .educational-section h3, .educational-section h4 {
+            color: #fff;
+            margin-top: 0;
+        }
+
+        .educational-section ul {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #a0a0a5;
+            padding-left: 20px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="spiegazione" style="margin-top: 30px; border-top: 1px dashed var(--border-color); padding-top: 20px;">
-    <h3 style="color: var(--accent-color); margin-bottom: 10px;">Come funziona Miller-Rabin?</h3>
-    <p style="font-size: 0.9rem; line-height: 1.6; color: #a0a0a5;">
-        L'algoritmo si basa su una proprietà dei numeri primi derivata dal <strong>Piccolo Teorema di Fermat</strong>. 
-        Dato un numero dispari $n$ da testare, lo scriviamo come:
-        <code style="display:block; padding: 8px; background: #0f0f11; margin: 100px 0; border-radius: 4px; text-align: center;">n - 1 = d &times; 2<sup>s</sup></code>
-        dove $d$ è un numero dispari. Poi, l'algoritmo sceglie una base casuale $a$ (chiamata "testimone") compresa tra $2$ e $n-2$ e verifica due condizioni:
-    </p>
-    <ul style="font-size: 0.9rem; line-height: 1.6; color: #a0a0a5; padding-left: 20px;">
-        <li>Se $a^d \equiv 1 \pmod n$</li>
-        <li>Se esiste un intero $r$ (con $0 \le r < s$) tale che $a^{d \cdot 2^r} \equiv -1 \pmod n$</li>
-    </ul>
-    <p style="font-size: 0.9rem; line-height: 1.6; color: #a0a0a5;">
-        Se **almeno una** di queste condizioni è vera, il numero supera il test per quella base e viene dichiarato <em>probabilmente primo</em>. Se non ne soddisfa nessuna, il numero è **sicuramente composto**. Ripetendo questo test per $K$ basi diverse e casuali, la probabilità che un numero composto superi sempre il test (un "falso positivo") diventa inferiore a $(\frac{1}{4})^K$.
-    </p>
-</div>
-    <div class="teorema-box" style="
-    background-color: rgba(78, 168, 222, 0.05); 
-    border-left: 4px solid var(--accent-color); 
-    padding: 15px 20px; 
-    margin-top: 25px; 
-    border-radius: 4px;
-">
-    <h4 style="color: var(--accent-color); margin: 0 0 10px 0; font-size: 1.05rem; display: flex; align-items: center; gap: 8px;">
-        💡 Il Teorema "Smaschera-Composti"
-    </h4>
-    <p style="font-size: 0.9rem; line-height: 1.5; color: #e1e1e6; margin: 0;">
-        L'algoritmo si basa sul <strong>Piccolo Teorema di Fermat</strong> (e la sua estensione di Miller-Rabin). 
-        In parole semplici, stabilisce che se un numero $n$ è **primo**, allora per qualsiasi base casuale $a$ deve tassativamente superare questo controllo:
-    </p>
-    <div style="text-align: center; margin: 15px 0; font-family: 'Courier New', monospace; font-size: 1rem; color: #fff; background: #0f0f11; padding: 10px; border-radius: 4px;">
-        a<sup>n-1</sup> &equiv; 1 (mod n)
-    </div>
-    <p style="font-size: 0.85rem; line-height: 1.5; color: #a0a0a5; margin: 0;">
-        Se questa identità <strong>fallisce</strong>, il teorema garantisce al 100% che il numero è composto. Se invece è vera, il numero ha ottime probabilità di essere primo, sebbene esistano rari numeri composti (chiamati <em>pseudoprimi</em>) in grado di ingannare il test per una specifica base $a$.
-    </p>
-</div>
-    <h1>Test di Primalità Probabilistico</h1>
-    <p class="description">Analizza numeri di grandi dimensioni usando l'algoritmo di Miller-Rabin.</p>
+    <h1>Strumenti per Numeri Primi</h1>
+    <p class="description">Calcoli ad alta precisione con l'algoritmo probabilistico di Miller-Rabin.</p>
 
-    <div class="form-group">
-        <label for="numberInput">Inserisci il numero da verificare:</label>
-        <textarea id="numberInput" rows="4" placeholder="Es. 982451653033433 o numeri molto più grandi..."></textarea>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('analizzatore')">1. Verifica Numero</button>
+        <button class="tab-btn" onclick="switchTab('cacciatore')">2. Trova Prossimo Primo</button>
     </div>
 
-    <div class="form-group">
-        <label for="roundsInput">Accuratezza (Numero di round K):</label>
-        <input type="number" id="roundsInput" value="20" min="1" max="100">
-        <div class="accuracy-info">Più round esegui, minore è la probabilità di un "falso positivo". Probabilità di errore attuale: &lt; (1/4)<sup><span id="k-val">20</span></sup></div>
+    <div class="form-group" style="background: #18181c; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 25px;">
+        <label for="roundsInput">Accuratezza globale (Round K):</label>
+        <input type="number" id="roundsInput" value="20" min="1" max="100" style="width: 80px; padding: 6px; font-size: 1rem;">
+        <span class="accuracy-info" style="display:inline-block; margin-left: 10px;">Probabilità di errore: &lt; (1/4)<sup><span id="k-val">20</span></sup></span>
     </div>
 
-    <button onclick="checkPrimalty()">Verifica Numero</button>
+    <div id="analizzatore" class="tab-content active">
+        <div class="form-group">
+            <label for="numberInput">Inserisci il numero da verificare:</label>
+            <textarea id="numberInput" rows="3" placeholder="Es. 982451653033433..."></textarea>
+        </div>
+        <button class="action-btn" onclick="checkPrimalty()">Verifica Numero</button>
+        <div id="resultAnalizzatore" class="result-box"></div>
+    </div>
 
-    <div id="result"></div>
+    <div id="cacciatore" class="tab-content">
+        <div class="form-group">
+            <label for="startNumberInput">Trova il primo numero primo a partire da:</label>
+            <textarea id="startNumberInput" rows="3" placeholder="Inserisci un valore di partenza (Es. 100000000000000)..."></textarea>
+        </div>
+        <button class="action-btn" onclick="findNextPrime()">Cerca Prossimo Primo</button>
+        <div id="resultCacciatore" class="result-box"></div>
+    </div>
 
-    <div class="info-box">
-        <strong>Nota matematica:</strong> Se l'algoritmo dice che il numero è <em>Composto</em>, lo è al 100%. Se dice che è <em>Probabilmente Primo</em>, la certezza è quasi assoluta (con 20 round, la possibilità di errore è inferiore a 1 su mille miliardi).
+    <div class="educational-section">
+        
+        <div class="teorema-box">
+            <h4 style="color: var(--accent-color); margin: 0 0 10px 0; font-size: 1.05rem;">💡 Il Teorema "Smaschera-Composti"</h4>
+            <p style="margin: 0; color: #e1e1e6;">
+                L'algoritmo si basa sul <strong>Piccolo Teorema di Fermat</strong>. In parole semplici, stabilisce che se un numero <em>n</em> è veramente <strong>primo</strong>, allora per qualsiasi numero casuale (base) <em>a</em> scelto, deve tassativamente essere verificata questa identità modulare:
+            </p>
+            <div class="formula-inline">a<sup>n-1</sup> &equiv; 1 (mod n)</div>
+            <p style="font-size: 0.85rem; margin: 0;">
+                Se questo controllo <strong>fallisce</strong>, abbiamo una certezza matematica del 100%: il numero è <strong>composto</strong>. Se invece l'uguaglianza è vera, il numero ha ottime probabilità di essere primo, anche se esistono rari numeri composti (chiamati <em>pseudoprimi</em>) capaci di ingannare il test per una specifica base.
+            </p>
+        </div>
+
+        <h3 style="color: var(--accent-color); margin-bottom: 10px;">Come funziona il Test di Miller-Rabin?</h3>
+        <p>
+            I test tradizionali provano a dividere un numero per tutti i suoi precedenti; questo approccio richiede ere geologiche quando si parla di cifre enormi. Miller-Rabin aggira il problema usando gli indovinelli probabilistici in più round:
+        </p>
+        <ul>
+            <li><strong>Scomposizione iniziale:</strong> Prende il numero da testare e scrive <em>n - 1</em> nella forma <em>d &times; 2<sup>s</sup></em>, dove <em>d</em> è dispari.</li>
+            <li><strong>Lancio dei Testimoni (I Round K):</strong> Sceglie una base casuale <em>a</em> (compresa tra 2 e n-2) e analizza le potenze intermedie. Se non si incontra mai un 1 o un -1 (espresso come n-1) durante le elevazioni al quadrato modulari, il numero viene scartato immediatamente come composto.</li>
+            <li><strong>La forza dei grandi numeri:</strong> Ogni volta che un numero supera un round con un testimone diverso, la probabilità che sia un falso positivo si riduce di oltre il <strong>75%</strong>. Con 20 round (impostati di default), la probabilità di dichiarare primo un numero composto è inferiore a 1 su mille miliardi: un'accuratezza virtualmente assoluta.</li>
+        </ul>
     </div>
 </div>
 
 <script>
+    // Gestione del cambio scheda (Tab)
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
     // Aggiorna visivamente il calcolo della probabilità nella UI
     document.getElementById('roundsInput').addEventListener('input', function(e) {
         document.getElementById('k-val').innerText = e.target.value || 0;
     });
 
-    // Funzione per l'esponenziazione modulare veloce: (base^exp) % mod
+    // --- ALGORITMO DI MILLER-RABIN (Matematica BigInt) ---
     function modularPow(base, exp, mod) {
         let res = 1n;
         base = base % mod;
         while (exp > 0n) {
-            if (exp % 2n === 1n) {
-                res = (res * base) % mod;
-            }
+            if (exp % 2n === 1n) res = (res * base) % mod;
             exp = exp / 2n;
             base = (base * base) % mod;
         }
         return res;
     }
 
-    // Singolo round del test di Miller-Rabin
     function millerTest(d, n) {
-        // Scegliamo una base casuale 'a' nell'intervallo [2, n-2]
-        // Per evitare problemi con numeri piccoli, gestiamo i limiti
         const range = n - 4n;
         let a;
         if (range <= 0n) {
             a = 2n;
         } else {
-            // Generazione pseudo-casuale per BigInt
             const randBytes = new Uint32Array(2);
             crypto.getRandomValues(randBytes);
             const randBig = (BigInt(randBytes[0]) << 32n) + BigInt(randBytes[1]);
             a = 2n + (randBig % range);
         }
 
-        // Calcola x = a^d % n
         let x = modularPow(a, d, n);
+        if (x === 1n || x === n - 1n) return true;
 
-        if (x === 1n || x === n - 1n) {
-            return true;
-        }
-
-        // Continua a elevare al quadrato x finché d non raggiunge n-1
         while (d !== n - 1n) {
             x = (x * x) % n;
             d *= 2n;
-
             if (x === 1n) return false;
             if (x === n - 1n) return true;
         }
-
         return false;
     }
 
-    // Funzione principale di Miller-Rabin
     function isPrimeMillerRabin(n, k) {
-        // Casi base fondamentali
         if (n <= 1n) return false;
         if (n <= 3n) return true;
         if (n % 2n === 0n || n % 3n === 0n) return false;
 
-        // Trova d tale che n - 1 = d * 2^s dove d è dispari
         let d = n - 1n;
-        while (d % 2n === 0n) {
-            d /= 2n;
-        }
+        while (d % 2n === 0n) d /= 2n;
 
-        // Esegui il test per k volte
         for (let i = 0; i < k; i++) {
-            if (!millerTest(d, n)) {
-                return false; // Sicuramente composto
-            }
+            if (!millerTest(d, n)) return false;
         }
-        return true; // Probabilmente primo
+        return true;
     }
 
+    // --- LOGICA DELLE FUNZIONI UTENTE ---
+    
+    // Funzione 1: Analizzatore
     function checkPrimalty() {
         const inputStr = document.getElementById('numberInput').value.trim().replace(/\s+/g, '');
         const rounds = parseInt(document.getElementById('roundsInput').value) || 20;
-        const resultDiv = document.getElementById('result');
+        const resultDiv = document.getElementById('resultAnalizzatore');
 
-        if (!inputStr) {
-            alert("Per favore, inserisci un numero.");
-            return;
-        }
+        if (!inputStr) { return alert("Inserisci un numero da verificare."); }
 
         try {
             const n = BigInt(inputStr);
-            
-            // Misurazione del tempo di calcolo
             const startTime = performance.now();
             const isPrime = isPrimeMillerRabin(n, rounds);
-            const endTime = performance.now();
-            const timeTaken = ((endTime - startTime) / 1000).toFixed(4);
+            const timeTaken = ((performance.now() - startTime) / 1000).toFixed(4);
 
             resultDiv.style.display = 'block';
-            
             if (isPrime) {
-                resultDiv.className = 'prime';
-                resultDiv.innerHTML = `<strong>Risultato:</strong> Il numero è <strong>PROBABILMENTE PRIMO</strong>.<br>` +
-                                      `<small>Verificato con ${rounds} round in ${timeTaken} secondi.</small>`;
+                resultDiv.className = 'result-box prime';
+                resultDiv.innerHTML = `<strong>Risultato:</strong> Il numero è <strong>PROBABILMENTE PRIMO</strong>.<br><small>Analizzato in ${timeTaken}s.</small>`;
             } else {
-                resultDiv.className = 'composite';
-                resultDiv.innerHTML = `<strong>Risultato:</strong> Il numero è sicuramente <strong>COMPOSTO</strong>.<br>` +
-                                      `<small>Identificato in ${timeTaken} secondi.</small>`;
+                resultDiv.className = 'result-box composite';
+                resultDiv.innerHTML = `<strong>Risultato:</strong> Il numero è sicuramente <strong>COMPOSTO</strong>.<br><small>Identificato in ${timeTaken}s.</small>`;
+            }
+        } catch (e) { alert("Input non valido. Usa solo numeri interi."); }
+    }
+
+    // Funzione 2: Cacciatore del prossimo primo
+    function findNextPrime() {
+        const inputStr = document.getElementById('startNumberInput').value.trim().replace(/\s+/g, '');
+        const rounds = parseInt(document.getElementById('roundsInput').value) || 20;
+        const resultDiv = document.getElementById('resultCacciatore');
+
+        if (!inputStr) { return alert("Inserisci un numero di partenza."); }
+
+        try {
+            let n = BigInt(inputStr);
+            const startTime = performance.now();
+
+            if (n < 2n) {
+                n = 2n;
+            } else {
+                if (n % 2n === 0n) {
+                    n++;
+                } else {
+                    n += 2n;
+                }
+
+                while (!isPrimeMillerRabin(n, rounds)) {
+                    n += 2n;
+                }
             }
 
-        } catch (error) {
-            alert("Input non valido. Assicurati di inserire solo cifre numeriche intere (senza virgole o lettere).");
-        }
+            const timeTaken = ((performance.now() - startTime) / 1000).toFixed(4);
+
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result-box success-box';
+            resultDiv.innerHTML = `<strong>Il primo numero primo successivo è:</strong><br><span style="font-size:1.2rem; color:#fff; font-family:monospace; display:block; margin:8px 0;">${n}</span><small>Trovato in ${timeTaken} secondi.</small>`;
+        } catch (e) { alert("Input non valido. Usa solo numeri interi."); }
     }
 </script>
 
