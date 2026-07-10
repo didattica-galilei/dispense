@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aritmetica Modulare: L'Insieme Z/nZ</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         :root {
             --bg-color: #121214;
@@ -83,7 +94,6 @@
             display: block;
         }
 
-        /* Stili per tabelle matematiche */
         .table-container {
             overflow-x: auto;
             margin-bottom: 30px;
@@ -118,7 +128,6 @@
             font-weight: bold;
         }
 
-        /* Evidenziatori speciali per la moltiplicazione */
         .has-inverse {
             background-color: rgba(75, 181, 67, 0.1);
             color: #81c784;
@@ -195,28 +204,27 @@
 
     <div id="teoria" class="tab-content active">
         <h3>Definizione Generale</h3>
-        <p>L'insieme $\mathbb{Z}/n\mathbb{Z}$ (letto <em>"Z modificato n"</em> o <em>"Z modulo n"</em>) contiene i possibili resti della divisione intera per $n$. È composto da esattamente $n$ elementi:</p>
-        <p style="text-align:center; font-size:1.1rem;"><code>{0, 1, 2, ..., n-1}</code></p>
+        <p>L'insieme $\mathbb{Z}/n\mathbb{Z}$ (letto <em>"Z diviso nZ"</em> o <em>"Z modulo n"</em>) contiene tutti i possibili resti della divisione intera per $n$. È composto da esattamente $n$ elementi:</p>
+        <p style="text-align:center; font-size:1.1rem;">$$\mathbb{Z}/n\mathbb{Z} = \{0, 1, 2, \dots, n-1\}$$</p>
         
         <div class="info-box">
             <strong>L'Inverso Moltiplicativo:</strong><br>
-            In aritmetica normale, l'inverso di $3$ è $\frac{1}{3}$. In aritmetica modulare non esistono le frazioni! L'inverso di un elemento $a$ modulo $n$ è un altro elemento $x$ tale per cui il loro prodotto fa $1$:
-            <div style="text-align:center; margin:8px 0; font-family:monospace; font-size:1.1rem;">(a &times; x) &equiv; 1 (mod n)</div>
+            In aritmetica modulare non si usano le frazioni. L'inverso di un elemento $a$ modulo $n$ è un altro elemento $x$ tale per cui il loro prodotto fornisce un resto pari a $1$:
+            <p style="text-align:center; font-weight: bold; font-size:1.1rem; margin:10px 0;">$$a \cdot x \equiv 1 \pmod n$$</p>
         </div>
 
         <h3>Il Ruolo Cruciale dei Numeri Primi</h3>
-        <p>Un elemento $a$ ammette un inverso moltiplicativo se e solo se $a$ e $n$ sono <strong>coprimi</strong> (ovvero il loro Massimo Comune Divisore è 1).</p>
+        <p>Un elemento $a$ ammette un inverso moltiplicativo se e solo se $a$ e $n$ sono <strong>coprimi</strong>, ovvero se il loro Massimo Comune Divisore è pari a 1: $\text{MCD}(a, n) = 1$.</p>
         <ul>
-            <li><strong>Se $n$ è COMPOSTO (es. $n=6$):</strong> Alcuni elementi non avranno l'inverso. Ad esempio, modulo 6, l'elemento $2$ non ha inverso (non esiste nessun numero che moltiplicato per 2 dia un resto di 1 se diviso per 6). Elementi come 2 e 3 sono chiamati <em>divisori dello zero</em> perché $2 \times 3 = 6 \equiv 0 \pmod 6$.</li>
-            <li><strong>Se $n$ è PRIMO (es. $n=5$):</strong> Tutti gli elementi tranne lo zero sono coprimi con $n$. Di conseguenza, <strong>ogni elemento ha sempre un inverso moltiplicativo unico</strong>. In algebra, questo trasforma l'anello $\mathbb{Z}/n\mathbb{Z}$ in un <strong>Campo</strong> (indicato come $\mathbb{F}_p$ o $\mathbb{G}\mathbb{F}(p)$).</li>
+            <li><strong>Se $n$ è COMPOSTO (es. $n=6$):</strong> Alcuni elementi non hanno un inverso. Ad esempio, modulo 6, l'elemento $2$ non ha inverso (nessun numero moltiplicato per 2 dà resto 1 se diviso per 6). Elementi come 2 e 3 sono detti <em>divisori dello zero</em> perché $$2 \cdot 3 = 6 \equiv 0 \pmod 6$$ pur non essendo nessuno dei due uguale a zero.</li>
+            <li><strong>Se $n$ è PRIMO (es. $n=5$):</strong> Tutti gli elementi tranne lo zero sono coprimi con $n$. Di conseguenza, <strong>ogni elemento ha sempre un inverso moltiplicativo unico</strong>. In algebra, questo trasforma l'anello $\mathbb{Z}/n\mathbb{Z}$ in un <strong>Campo</strong> (indicato come $\mathbb{F}_p$).</li>
         </ul>
-        <p><em>👉 Spostati sulla scheda <strong>"Tabelle Somma/Prodotto"</strong> per vedere graficamente questa differenza cambiando il valore di $n$.</em></p>
     </div>
 
     <div id="tabelle" class="tab-content">
         <div class="legend">
-            <div class="legend-item"><div class="legend-color is-identity"></div> Risultato uguale a 1 (Identità)</div>
-            <div class="legend-item"><div class="legend-color has-inverse"></div> Elemento invertibile (ha un 1 nella sua riga)</div>
+            <div class="legend-item"><div class="legend-color is-identity"></div> Risultato uguale a 1 (Inverso Trovato)</div>
+            <div class="legend-item"><div class="legend-color has-inverse"></div> Elemento invertibile (ha un '1' nella sua riga)</div>
         </div>
 
         <h3>Tabella della Somma Modulo <span class="n-val">5</span></h3>
@@ -225,7 +233,7 @@
         <h3>Tabella del Prodotto Modulo <span class="n-val">5</span></h3>
         <div class="table-container" id="mulTableContainer"></div>
         
-        <div id="observationsBox" class="info-box" style="border-left-color: var(--success-color);"></div>
+        <div id="observationsBox" class="info-box"></div>
     </div>
 
     <div id="potenze" class="tab-content">
@@ -234,7 +242,7 @@
         <div class="table-container" id="powTableContainer"></div>
         <div class="info-box">
             <strong>Osservazione (Piccolo Teorema di Fermat):</strong><br>
-            Se $n$ è primo, guarda la colonna dell'esponente $k = n-1$. Noterai che per ogni base (escluso lo zero) il risultato è sempre **1**. Questa è la regolarità matematica usata dall'algoritmo di Miller-Rabin!
+            Se $n$ è primo, guarda attentamente la colonna dell'esponente $k = n-1$. Noterai che per qualsiasi base (escluso lo zero) il risultato modulare è sempre **1** ($a^{n-1} \equiv 1 \pmod n$). Questa è la simmetria sfruttata dall'algoritmo probabilistico di Miller-Rabin!
         </div>
     </div>
 </div>
@@ -247,7 +255,6 @@
         event.currentTarget.classList.add('active');
     }
 
-    // Funzione base per MCD (per calcolare l'invertibilità)
     function gcd(a, b) {
         while (b !== 0) {
             let t = b;
@@ -257,7 +264,6 @@
         return a;
     }
 
-    // Verifica se n è primo (per piccoli numeri)
     function isSmallPrime(n) {
         if (n < 2) return false;
         for (let i = 2; i <= Math.sqrt(n); i++) {
@@ -269,28 +275,32 @@
     function generateAll() {
         let n = parseInt(document.getElementById('modulusInput').value);
         if (isNaN(n) || n < 2) n = 2;
-        if (n > 40) {
-            alert("Valore troppo alto per una resa grafica ottimale delle tabelle. Limitato a 40.");
-            n = 40;
-            document.getElementById('modulusInput').value = 40;
+        if (n > 30) {
+            alert("Valore limitato a 30 per una corretta visualizzazione delle tabelle.");
+            n = 30;
+            document.getElementById('modulusInput').value = 30;
         }
 
-        // Aggiorna scritte n-val nelle schede
         document.querySelectorAll('.n-val').forEach(el => el.innerText = n);
 
         const isPrime = isSmallPrime(n);
         const statusEl = document.getElementById('primeStatus');
         if (isPrime) {
-            statusEl.innerText = `(${n} è PRIMO -> Z/${n}Z è un Campo)`;
+            statusEl.innerText = `(${n} è PRIMO → Campo formato da elementi tutti invertibili)`;
             statusEl.style.color = "var(--success-color)";
         } else {
-            statusEl.innerText = `(${n} è COMPOSTO -> Z/${n}Z ha divisori dello zero)`;
+            statusEl.innerText = `(${n} è COMPOSTO → Anello con elementi non invertibili)`;
             statusEl.style.color = "var(--error-color)";
         }
 
         generateSumTable(n);
         generateMulTable(n, isPrime);
         generatePowTable(n);
+
+        // Chiedi a MathJax di ri-elaborare le nuove scritte iniettate dinamicamente
+        if (window.MathJax && window.MathJax.typeset) {
+            window.MathJax.typeset();
+        }
     }
 
     function generateSumTable(n) {
@@ -301,8 +311,7 @@
         for (let r = 0; r < n; r++) {
             html += `<tr><td class="header-col">${r}</td>`;
             for (let c = 0; c < n; c++) {
-                let res = (r + c) % n;
-                html += `<td>${res}</td>`;
+                html += `<td>${(r + c) % n}</td>`;
             }
             html += '</tr>';
         }
@@ -334,29 +343,25 @@
         html += '</table>';
         document.getElementById('mulTableContainer').innerHTML = html;
 
-        // Scrivi le osservazioni dinamiche sugli inversi
         let obsBox = document.getElementById('observationsBox');
         if (isPrime) {
             obsBox.style.borderLeftColor = "var(--success-color)";
-            obsBox.innerHTML = `<strong>Osservazione Analisi Modulo ${n}:</strong><br>` +
-                `Visto che ${n} è primo, <strong>tutti</strong> gli elementi (escluso lo 0) hanno una riga verde. ` +
-                `Nota che in ogni riga/colonna compare esattamente una volta il numero <strong>1</strong> (in blu). ` +
-                `Questo significa che ogni elemento ha un unico inverso. Ad esempio: ` +
-                (n > 2 ? `l'inverso di 2 è il numero <strong>${invertibili.find(x => (2*x)%n === 1) || 1}</strong>.` : `l'inverso di 1 è 1.`);
+            obsBox.innerHTML = `<strong>Analisi Modulo ${n}:</strong><br>` +
+                `Dato che ${n} è primo, <strong>tutti</strong> gli elementi eccetto lo zero hanno la riga evidenziata in verde. ` +
+                `In ognuna di queste righe è presente un valore <strong>1</strong> (in blu), a riprova che l'inverso moltiplicativo esiste sempre ed è unico.`;
         } else {
             obsBox.style.borderLeftColor = "var(--error-color)";
             let nonInvertibili = [];
             for(let i=1; i<n; i++) if(gcd(i,n)!==1) nonInvertibili.push(i);
             
-            obsBox.innerHTML = `<strong>Osservazione Analisi Modulo ${n}:</strong><br>` +
-                `Poiché ${n} è composto, gli elementi <strong>${nonInvertibili.join(', ')}</strong> non sono coprimi con ${n} e ` +
-                `<em>non possiedono un inverso moltiplicativo</em> (infatti le loro righe non sono verdi e non contengono alcun 1). <br>` +
-                `Inoltre, nota come moltiplicando tra loro numeri diversi da zero si possa ottenere zero (es. divisori dello zero).`;
+            obsBox.innerHTML = `<strong>Analisi Modulo ${n}:</strong><br>` +
+                `Essendo ${n} composto, gli elementi <strong>${nonInvertibili.join(', ')}</strong> non possiedono un inverso moltiplicativo ` +
+                `(le loro righe non contengono l'1). Moltiplicando alcuni di questi elementi tra loro si può ottenere $0$, rivelando la presenza di divisori dello zero.`;
         }
     }
 
     function generatePowTable(n) {
-        let maxK = Math.max(n + 1, 6); // mostra qualche colonna in più
+        let maxK = Math.max(n + 1, 6);
         let html = '<table><tr><th>a \\ k</th>';
         for (let k = 1; k <= maxK; k++) html += `<th><sup>${k}</sup></th>`;
         html += '</tr>';
@@ -375,8 +380,8 @@
         document.getElementById('powTableContainer').innerHTML = html;
     }
 
-    // Avvio iniziale
     generateAll();
 </script>
 </body>
+</html>
 </html>
