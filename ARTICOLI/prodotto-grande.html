@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moltiplicatore Modulare per Grandi Numeri</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --accent-color: #4ea8de;
+            --success-color: #4bb543;
+            --border-color: #2e2e34;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            max-width: 750px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            margin-top: 0;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            color: #a0a0a5;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #0f0f11;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-inputs { grid-template-columns: 1fr; }
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #64b5f6;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-weight: 500;
+            line-height: 1.6;
+            word-break: break-all;
+            background-color: rgba(78, 168, 222, 0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .result-segment {
+            margin-bottom: 15px;
+        }
+
+        .result-segment:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-title {
+            font-size: 0.85rem;
+            color: #a0a0a5;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .result-value {
+            font-family: 'Courier New', Courier, monospace;
+            color: #fff;
+            font-size: 1.1rem;
+            background: #0f0f11;
+            padding: 8px;
+            border-radius: 4px;
+            user-select: all;
+        }
+
+        .info-box {
+            background-color: rgba(78, 168, 222, 0.05);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #a0a0a5;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .nav-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Moltiplicazione Modulare ad Alta Precisione</h1>
+    <p class="subtitle">Calcola il prodotto standard e il prodotto ridotto all'interno di ℤ/nℤ</p>
+
+    <div class="grid-inputs">
+        <div class="form-group">
+            <label for="inputA">Numero A:</label>
+            <textarea id="inputA" rows="3" placeholder="Inserisci il primo fattore..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="inputB">Numero B:</label>
+            <textarea id="inputB" rows="3" placeholder="Inserisci il secondo fattore..."></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputN">Modulo n strutturale (Opzionale - lascia vuoto per il prodotto classico):</label>
+        <textarea id="inputN" rows="2" placeholder="Es. Inserisci il modulo se vuoi calcolare (A × B) mod n..."></textarea>
+    </div>
+
+    <button class="action-btn" onclick="calcolaProdottoGrande()">Esegui Moltiplicazione</button>
+
+    <div id="resultContainer" class="result-box">
+        <div class="result-segment">
+            <div class="result-title">Prodotto Standard (A × B)</div>
+            <div id="prodStandard" class="result-value"></div>
+        </div>
+        <div class="result-segment" id="moduloSegment" style="display:none;">
+            <div class="result-title">Prodotto Modulare (A × B) mod n</div>
+            <div id="prodModulare" class="result-value" style="color: #81c784;"></div>
+        </div>
+        <div class="result-segment">
+            <div class="result-title" id="statsTitle">Statistiche calcolo</div>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <strong>Applicazione in Crittografia (RSA e Diffie-Hellman):</strong><br>
+        La moltiplicazione di numeri primi colossali (e la successiva riduzione modulare) è l'operazione matematica asimmetrica fondamentale che protegge i dati su Internet. Se prendi due numeri primi segreti $p$ e $q$ molto grandi, calcolare il loro prodotto classico $n = p \times q$ è istantaneo, ma fare il percorso inverso (scovare $p$ e $q$ partendo solo da $n$) richiede miliardi di anni ai supercomputer moderni.
+    </div>
+
+    <div class="nav-links">
+        <a href="moduli.html" class="nav-link">&larr; Tabelle di ℤ/nℤ</a>
+        <a href="inverso-grande.html" class="nav-link">🔄 Calcolatore Inverso &rarr;</a>
+    </div>
+</div>
+
+<script>
+    function calcolaProdottoGrande() {
+        const strA = document.getElementById('inputA').value.trim().replace(/\s+/g, '');
+        const strB = document.getElementById('inputB').value.trim().replace(/\s+/g, '');
+        const strN = document.getElementById('inputN').value.trim().replace(/\s+/g, '');
+        
+        const resBox = document.getElementById('resultContainer');
+        const prodStandardEl = document.getElementById('prodStandard');
+        const prodModulareEl = document.getElementById('prodModulare');
+        const modSegment = document.getElementById('moduloSegment');
+        const statsTitle = document.getElementById('statsTitle');
+
+        if (!strA || !strB) {
+            alert("Per favore, inserisci sia il Numero A che il Numero B.");
+            return;
+        }
+
+        try {
+            const a = BigInt(strA);
+            const b = BigInt(strB);
+
+            const startTime = performance.now();
+            
+            // 1. Prodotto Standard
+            const prodottoStandard = a * b;
+            
+            // 2. Prodotto Modulare (se il modulo è inserito)
+            let haModulo = false;
+            let prodottoModulare = 0n;
+            let n = 0n;
+
+            if (strN) {
+                n = BigInt(strN);
+                if (n <= 0n) {
+                    alert("Il modulo n deve essere un intero positivo maggiore di zero.");
+                    return;
+                }
+                haModulo = true;
+                prodottoModulare = ((prodottoStandard % n) + n) % n; // Gestisce anche eventuali prodotti negativi
+            }
+
+            const timeTaken = ((performance.now() - startTime) / 1000).toFixed(5);
+
+            // Scrittura dei risultati nell'interfaccia
+            prodStandardEl.innerText = prodottoStandard.toString();
+            
+            if (haModulo) {
+                prodModulareEl.innerText = prodottoModulare.toString();
+                modSegment.style.display = "block";
+            } else {
+                modSegment.style.display = "none";
+            }
+
+            statsTitle.innerHTML = `Lunghezza risultato standard: <strong>${prodottoStandard.toString().length} cifre</strong> | Tempo: <strong>${timeTaken} secondi</strong>`;
+            resBox.style.display = "block";
+
+        } catch (e) {
+            alert("Input non valido. Assicurati di inserire esclusivamente numeri interi senza lettere, spazi interni o simboli decimali.");
+        }
+    }
+</script>
+
+</body>
+</html>
