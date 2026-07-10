@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Inverso Modulare per Grandi Numeri</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --accent-color: #4ea8de;
+            --success-color: #4bb543;
+            --error-color: #ff3333;
+            --border-color: #2e2e34;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            max-width: 700px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            margin-top: 0;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            color: #a0a0a5;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #0f0f11;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #64b5f6;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            font-weight: 500;
+            line-height: 1.6;
+            word-break: break-all;
+        }
+
+        .success {
+            background-color: rgba(75, 181, 67, 0.15);
+            border: 1px solid var(--success-color);
+            color: #81c784;
+        }
+
+        .error {
+            background-color: rgba(255, 51, 51, 0.15);
+            border: 1px solid var(--error-color);
+            color: #e57373;
+        }
+
+        .info-box {
+            background-color: rgba(78, 168, 222, 0.05);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #a0a0a5;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Inverso Modulare ad Alta Precisione</h1>
+    <p class="subtitle">Calcolo istantaneo per grandi numeri tramite l'Algoritmo di Euclide Esteso</p>
+
+    <div class="form-group">
+        <label for="inputP">Inserisci la base p (anche molto grande):</label>
+        <textarea id="inputP" rows="2" placeholder="Es. 7919 o numeri di molte cifre..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="inputN">Inserisci il modulo n (struttura Zn):</label>
+        <textarea id="inputN" rows="2" placeholder="Es. 1000000007 o chiavi crittografiche..."></textarea>
+    </div>
+
+    <button class="action-btn" onclick="calcolaInversoGrande()">Trova Inverso Modulare</button>
+
+    <div id="resultContainer" class="result-box"></div>
+
+    <div class="info-box">
+        <strong>Come fa ad essere così veloce?</strong><br>
+        Mentre per moduli piccoli basta scorrere la tabella, con numeri colossali questo computer impiegherebbe miliardi di anni. Questo strumento usa l'<strong>Algoritmo di Euclide Esteso</strong>. Invece di moltiplicare a caso, l'algoritmo esegue una serie rapida di divisioni successive a ritroso per trovare i coefficienti della formula di Bézout: 
+        <br><br>
+        <span style="font-family:monospace; color:#fff; display:block; text-align:center;">p · x + n · y = 1</span>
+        <br>
+        Il valore di <span style="font-family:monospace; color:#fff;">x</span> (portato positivo dentro Zn) è matematicamente l'inverso cercato. Se il Massimo Comune Divisore tra p e n non è uguale a 1, l'algoritmo si interrompe subito segnalando l'impossibilità del calcolo.
+    </div>
+
+    <div style="text-align: center;">
+        <a href="moduli.html" class="nav-link">&larr; Torna alle Tabelle di Zn</a>
+    </div>
+</div>
+
+<script>
+    // Algoritmo di Euclide Esteso adattato per BigInt
+    // Ritorna un array [g, x, y] tale che p*x + n*y = g (dove g = MCD)
+    function extendedGCD(p, n) {
+        let x0 = 1n, y0 = 0n;
+        let x1 = 0n, y1 = 1n;
+        let a = p, b = n;
+
+        while (b !== 0n) {
+            let q = a / b;
+            let r = a % b;
+            
+            a = b;
+            b = r;
+
+            let x2 = x0 - q * x1;
+            let y2 = y0 - q * y1;
+
+            x0 = x1; x1 = x2;
+            y0 = y1; y1 = y2;
+        }
+        return [a, x0, y0];
+    }
+
+    function calcolaInversoGrande() {
+        const strP = document.getElementById('inputP').value.trim().replace(/\s+/g, '');
+        const strN = document.getElementById('inputN').value.trim().replace(/\s+/g, '');
+        const resBox = document.getElementById('resultContainer');
+
+        if (!strP || !strN) {
+            alert("Per favore, compila entrambi i campi.");
+            return;
+        }
+
+        try {
+            const p = BigInt(strP);
+            const n = BigInt(strN);
+
+            if (n <= 1n) {
+                resBox.style.display = "block";
+                resBox.className = "result-box error";
+                resBox.innerHTML = "<strong>Errore:</strong> Il modulo n deve essere maggiore di 1.";
+                return;
+            }
+
+            // Normalizziamo p nel range [0, n-1] per coerenza
+            let pNorm = ((p % n) + n) % n;
+
+            if (pNorm === 0n) {
+                resBox.style.display = "block";
+                resBox.className = "result-box error";
+                resBox.innerHTML = `<strong>Risultato:</strong> L'elemento ridotto è 0 (mod ${n}). Lo zero non possiede mai un inverso moltiplicativo.`;
+                return;
+            }
+
+            const startTime = performance.now();
+            const [g, x, y] = extendedGCD(pNorm, n);
+            const timeTaken = ((performance.now() - startTime) / 1000).toFixed(4);
+
+            resBox.style.display = "block";
+
+            if (g !== 1n) {
+                resBox.className = "result-box error";
+                resBox.innerHTML = `<strong>L'inverso non esiste!</strong><br>` +
+                    `Il numero p (ridotto a ${pNorm}) e il modulo n non sono coprimi.<br>` +
+                    `<strong>MCD(${pNorm}, ${n}) = ${g}</strong> (deve essere 1 per avere l'inverso).`;
+            } else {
+                // L'algoritmo può restituire un x negativo, lo portiamo positivo modulo n
+                let inv = ((x % n) + n) % n;
+
+                resBox.className = "result-box success";
+                resBox.innerHTML = `<strong>Inverso trovato in ${timeTaken} secondi!</strong><br>` +
+                    `L'inverso di p modulo n è:<br>` +
+                    `<span style="font-family:monospace; color:#fff; display:block; margin:10px 0; font-size:1.1rem; user-select:all;">${inv}</span>` +
+                    `<small style="color:#a0a0a5;">Verifica: (${pNorm} × ${inv}) mod ${n} = 1</small>`;
+            }
+
+        } catch (e) {
+            alert("Input non valido. Assicurati di inserire solo numeri interi (senza lettere o virgole).");
+        }
+    }
+</script>
+
+</body>
+</html>
