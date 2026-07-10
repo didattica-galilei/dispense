@@ -42,6 +42,7 @@
             margin-top: 0;
             color: #fff;
             text-align: center;
+            margin-bottom: 15px;
         }
 
         .tabs {
@@ -185,16 +186,17 @@
 
 <div class="container">
     <h1>L'Anello degli Interi Modulo n (ℤ/nℤ)</h1>
-<div style="text-align: center; margin-bottom: 25px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-    <a href="inverso-grande.html" style="color: #4ea8de; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
-        🔄 Calcolatore Inverso per Grandi Numeri &rarr;
-    </a>
-    <span style="color: var(--border-color);">|</span>
-    <a href="prodotto-grande.html" style="color: #4ea8de; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
-        ✖️ Moltiplicatore per Grandi Numeri &rarr;
-    </a>
-</div>
-</div>    
+    
+    <div style="text-align: center; margin-bottom: 25px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <a href="inverso-grande.html" style="color: #4ea8de; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
+            🔄 Calcolatore Inverso per Grandi Numeri &rarr;
+        </a>
+        <span style="color: var(--border-color);">|</span>
+        <a href="prodotto-grande.html" style="color: #4ea8de; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
+            ✖️ Moltiplicatore Standard e in ℤ/nℤ Grandi &rarr;
+        </a>
+    </div>
+    
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('teoria')">📚 1. Concetti Base & Calcolatore</button>
         <button class="tab-btn" onclick="switchTab('tabelle')">🧮 2. Tabelle Somma/Prodotto</button>
@@ -235,8 +237,7 @@
                 <label>Numero B:</label>
                 <input type="number" id="calcB" value="3" style="width: 100px;" oninput="computeMiniCalc()">
             </div>
-            <div id="miniCalcResults" style="font-family: 'Courier New', monospace; font-size: 1rem; line-height: 1.8; color: #fff;">
-                </div>
+            <div id="miniCalcResults" style="font-family: 'Courier New', monospace; font-size: 1rem; line-height: 1.8; color: #fff;"></div>
         </div>
 
         <h3 style="margin-top:30px;">Dalle Operazioni all'Inverso Moltiplicativo</h3>
@@ -269,16 +270,13 @@
             Se <em>n</em> è primo, guarda la colonna in cui l'esponente k = n - 1. Per ogni singola base (escluso lo zero) il risultato modulare collassa simmetricamente sempre sul valore **1** (a<sup>n-1</sup> ≡ 1 mod n). Questo comportamento regolare è la firma matematica usata dagli algoritmi crittografici e dai test di primalità!
         </div>
     </div>
-</div>
-
-<script>
+</div> <script>
     // Sistema di navigazione schede ultra-solido
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         
         document.getElementById(tabId).classList.add('active');
-        // Identifica l'elemento che ha scatenato l'evento per aggiungere la classe attiva
         if (event && event.currentTarget) {
             event.currentTarget.classList.add('active');
         }
@@ -438,8 +436,8 @@
         document.getElementById('powTableContainer').innerHTML = html;
     }
 
-    // Esecuzione immediata dei calcoli nativi all'avvio
     generateAll();
 </script>
 </body>
 </html>
+
