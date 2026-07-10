@@ -205,7 +205,7 @@
     </div>
 
     <div class="form-group" style="background: #18181c; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 25px;">
-        <label for="modulusInput">Imposta il modulo $n$ strutturale:</label>
+        <label for="modulusInput">Imposta il modulo n strutturale:</label>
         <input type="number" id="modulusInput" value="5" min="2" max="30" style="width: 80px;" oninput="generateAll()">
         <span id="primeStatus" style="font-weight: bold; margin-left: 10px;"></span>
     </div>
@@ -217,7 +217,7 @@
         <p style="text-align:center; font-size:1.1rem;">$$\mathbb{Z}/n\mathbb{Z} = \{0, 1, 2, \dots, n-1\}$$</p>
 
         <h3>Le Operazioni Fondamentali</h3>
-        <p>Per sommare o moltiplicare due elementi in $\mathbb{Z}/n\mathbb{Z}$, si esegue l'operazione aritmetica standard e poi si calcola il <strong>resto della divisione per $n$</strong> (l'operatore <em>resto</em> o <em>mod</em>).</p>
+        <p>Per sommare o moltiplicare due elementi in $\mathbb{Z}/n\mathbb{Z}$, si esegue l'operazione aritmetica standard e poi si calcola il <strong>resto della divisione per $n$</strong> (l'operatore <em>mod</em>).</p>
         
         <div class="info-box">
             <strong>Esempio con $n = 5$:</strong><br>
@@ -229,16 +229,166 @@
 
         <div class="calc-box">
             <h4 style="margin-top:0; color:var(--accent-color);">🧮 Calcolatore Algebrico Modulo <span class="n-val">5</span></h4>
-            <p style="font-size: 0.85rem; color:#a0a0a5;">Inserisci due numeri interi qualsiasi per calcolare le loro relazioni nell'orologio modulare corrente.</p>
+            <p style="font-size: 0.85rem; color:#a0a0a5;">Inserisci due numeri interi per calcolare le loro relazioni nell'orologio modulare attuale.</p>
             <div class="form-group">
-                <label>Numero $A$:</label>
+                <label>Numero A:</label>
                 <input type="number" id="calcA" value="4" style="width: 100px;" oninput="computeMiniCalc()">
-                <label>Numero $B$:</label>
+                <label>Numero B:</label>
                 <input type="number" id="calcB" value="3" style="width: 100px;" oninput="computeMiniCalc()">
             </div>
             <div id="miniCalcResults" style="font-family: 'Courier New', monospace; font-size: 1rem; line-height: 1.8; color: #fff;">
                 </div>
         </div>
 
-        <h
-</html>
+        <h3 style="margin-top:30px;">Dalle Operazioni all'Inverso Moltiplicativo</h3>
+        <p>Ora che sappiamo come si moltiplica, possiamo definire l'<strong>inverso moltiplicativo</strong>. L'inverso di un elemento $a$ è quel numero $x$ che moltiplicato per $a$ riporta il risultato su $1$:</p>
+        <p style="text-align:center; font-weight: bold;">$$a \cdot x \equiv 1 \pmod n$$</p>
+        <p>Come noterai provando diversi numeri nel calcolatore qui sopra, se $n$ è <strong>primo</strong> troverai sempre un inverso per ogni numero (tranne lo 0). Se invece provi a impostare $n$ come numero <strong>composto</strong> (es. 6), scoprirai che per alcuni numeri l'inverso è impossibile da trovare!</p>
+    </div>
+
+    <div id="tabelle" class="tab-content">
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color is-identity"></div> Risultato uguale a 1 (Inverso Trovato)</div>
+            <div class="legend-item"><div class="legend-color has-inverse"></div> Elemento invertibile (ha un '1' nella sua riga)</div>
+        </div>
+
+        <h3>Tabella della Somma Modulo <span class="n-val">5</span></h3>
+        <div class="table-container" id="sumTableContainer"></div>
+
+        <h3>Tabella del Prodotto Modulo <span class="n-val">5</span></h3>
+        <div class="table-container" id="mulTableContainer"></div>
+        
+        <div id="observationsBox" class="info-box"></div>
+    </div>
+
+    <div id="potenze" class="tab-content">
+        <h3>Tabella delle Potenze Modulo <span class="n-val">5</span></h3>
+        <p>Mostra il valore di $a^k \pmod n$ al variare della base $a$ (righe) e dell'esponente $k$ (colonne).</p>
+        <div class="table-container" id="powTableContainer"></div>
+        <div class="info-box">
+            <strong>Osservazione (Piccolo Teorema di Fermat):</strong><br>
+            Se $n$ è primo, guarda la colonna in cui l'esponente $k = n-1$. Per ogni base diversa da zero, il risultato modulare collassa simmetricamente sempre su **1** ($a^{n-1} \equiv 1 \pmod n$). Questa è la simmetria sfruttata dall'algoritmo probabilistico di Miller-Rabin!
+        </div>
+    </div>
+</div>
+
+<script>
+    // Gestione dei Tab fluida e priva di bloccaggi
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function gcd(a, b) {
+        while (b !== 0) {
+            let t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+
+    function findInverse(a, n) {
+        a = ((a % n) + n) % n;
+        for (let x = 1; x < n; x++) {
+            if ((a * x) % n === 1) return x;
+        }
+        return null;
+    }
+
+    function isSmallPrime(n) {
+        if (n < 2) return false;
+        for (let i = 2; i <= Math.sqrt(n); i++) {
+            if (n % i === 0) return false;
+        }
+        return true;
+    }
+
+    // Calcolatore istantaneo in puro testo (Risolve il problema dei crash)
+    function computeMiniCalc() {
+        const n = parseInt(document.getElementById('modulusInput').value) || 5;
+        let a = parseInt(document.getElementById('calcA').value);
+        let b = parseInt(document.getElementById('calcB').value);
+        
+        if (isNaN(a)) a = 0;
+        if (isNaN(b)) b = 0;
+
+        const aMod = ((a % n) + n) % n;
+        const bMod = ((b % n) + n) % n;
+
+        const sumRes = (aMod + bMod) % n;
+        const mulRes = (aMod * bMod) % n;
+        const invA = findInverse(aMod, n);
+
+        let html = `<div>• <strong>Riduzione nel sistema:</strong> A = ${aMod} (mod ${n}), B = ${bMod} (mod ${n})</div>`;
+        html += `<div>• <strong>Somma:</strong> ${aMod} + ${bMod} = ${aMod + bMod} &rarr; <strong>${sumRes} (mod ${n})</strong></div>`;
+        html += `<div>• <strong>Moltiplicazione:</strong> ${aMod} &times; ${bMod} = ${aMod * bMod} &rarr; <strong>${mulRes} (mod ${n})</strong></div>`;
+        
+        if (invA !== null) {
+            html += `<div>• <strong>Inverso di A:</strong> Esiste ed è <strong>${invA}</strong> [infatti ${aMod} &times; ${invA} = ${aMod * invA} &equiv; 1 (mod ${n})]</div>`;
+        } else {
+            html += `<div>• <strong>Inverso di A:</strong> <span style="color:var(--error-color);">Non esiste</span> [MCD(${aMod}, ${n}) = ${gcd(aMod, n)} &ne; 1]</div>`;
+        }
+
+        document.getElementById('miniCalcResults').innerHTML = html;
+    }
+
+    function generateAll() {
+        let n = parseInt(document.getElementById('modulusInput').value);
+        if (isNaN(n) || n < 2) n = 2;
+        if (n > 30) {
+            alert("Valore limitato a 30 per conservare la leggibilità delle tabelle.");
+            n = 30;
+            document.getElementById('modulusInput').value = 30;
+        }
+
+        document.querySelectorAll('.n-val').forEach(el => el.innerText = n);
+
+        const isPrime = isSmallPrime(n);
+        const statusEl = document.getElementById('primeStatus');
+        if (isPrime) {
+            statusEl.innerText = `(${n} è PRIMO → Campo)`;
+            statusEl.style.color = "var(--success-color)";
+        } else {
+            statusEl.innerText = `(${n} è COMPOSTO → Anello)`;
+            statusEl.style.color = "var(--error-color)";
+        }
+
+        generateSumTable(n);
+        generateMulTable(n, isPrime);
+        generatePowTable(n);
+        computeMiniCalc(); 
+
+        // Avvisa MathJax di elaborare unicamente la teoria statica, senza toccare i calcolatori dinamici
+        if (window.MathJax && window.MathJax.typeset) {
+            window.MathJax.typeset();
+        }
+    }
+
+    function generateSumTable(n) {
+        let html = '<table><tr><th>+</th>';
+        for (let i = 0; i < n; i++) html += `<th>${i}</th>`;
+        html += '</tr>';
+
+        for (let r = 0; r < n; r++) {
+            html += `<tr><td class="header-col">${r}</td>`;
+            for (let c = 0; c < n; c++) {
+                html += `<td>${(r + c) % n}</td>`;
+            }
+            html += '</tr>';
+        }
+        html += '</table>';
+        document.getElementById('sumTableContainer').innerHTML = html;
+    }
+
+    function generateMulTable(n, isPrime) {
+        let html = '<table><tr><th>&times;</th>';
+        for (let i = 0; i < n; i++) html += `<th>${i}</th>`;
+        html += '</tr>';
+
+        for (let r = 0; r < n; r++) {
+            let isAnElementInvertible = gcd(r, n) === 1;
+            let rowClass = isAnElementInvertible && r > 0 ? 'class="has-inverse"' : '';
+            html += `<tr ${rowClass}><td class="header-col">${r}</td>`;
