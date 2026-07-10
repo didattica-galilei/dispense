@@ -4,17 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aritmetica Modulare: Guida Completa a Z/nZ</title>
-    
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            }
-        };
-    </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
     <style>
         :root {
             --bg-color: #121214;
@@ -24,7 +13,6 @@
             --success-color: #4bb543;
             --error-color: #ff3333;
             --border-color: #2e2e34;
-            --highlight-bg: #2a2a30;
         }
 
         body {
@@ -196,7 +184,7 @@
 <body>
 
 <div class="container">
-    <h1>L'Anello degli Interi Modulo $n$ ($\mathbb{Z}/n\mathbb{Z}$)</h1>
+    <h1>L'Anello degli Interi Modulo n (ℤ/nℤ)</h1>
     
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('teoria')">📚 1. Concetti Base & Calcolatore</button>
@@ -213,23 +201,25 @@
     <div id="teoria" class="tab-content active">
         <h3>Cos'è l'Aritmetica Modulare?</h3>
         <p>Immagina un orologio: se sono le 10 e passano 4 ore, non diciamo che sono le 14, ma le 2. L'orologio lavora "modulo 12".</p>
-        <p>L'insieme $\mathbb{Z}/n\mathbb{Z}$ racchiude tutti i possibili resti che si ottengono dividendo un qualsiasi numero intero per $n$. Questo insieme contiene esattamente $n$ elementi:</p>
-        <p style="text-align:center; font-size:1.1rem;">$$\mathbb{Z}/n\mathbb{Z} = \{0, 1, 2, \dots, n-1\}$$</p>
+        <p>L'insieme <strong>ℤ/nℤ</strong> racchiude tutti i possibili resti che si ottengono dividendo un qualsiasi numero intero per <em>n</em>. Contiene esattamente <em>n</em> elementi:</p>
+        <p style="text-align:center; font-size:1.2rem; font-family: monospace; color: #fff; background: #0f0f11; padding: 8px; border-radius: 4px;">
+            ℤ/nℤ = {0, 1, 2, ..., n-1}
+        </p>
 
         <h3>Le Operazioni Fondamentali</h3>
-        <p>Per sommare o moltiplicare due elementi in $\mathbb{Z}/n\mathbb{Z}$, si esegue l'operazione aritmetica standard e poi si calcola il <strong>resto della divisione per $n$</strong> (l'operatore <em>mod</em>).</p>
+        <p>Per sommare o moltiplicare due elementi in ℤ/nℤ, si esegue l'operazione aritmetica standard e poi si calcola il <strong>resto della divisione per <em>n</em></strong>.</p>
         
         <div class="info-box">
-            <strong>Esempio con $n = 5$:</strong><br>
+            <strong>Esempio pratico con n = 5:</strong><br>
             <ul>
-                <li><strong>Somma:</strong> $4 + 3 = 7$. Poiché $7$ diviso $5$ dà resto $2$, scriviamo: $$4 + 3 \equiv 2 \pmod 5$$</li>
-                <li><strong>Moltiplicazione:</strong> $4 \cdot 4 = 16$. Poiché $16$ diviso $5$ dà resto $1$, scriviamo: $$4 \cdot 4 \equiv 1 \pmod 5$$</li>
+                <li><strong>Somma:</strong> 4 + 3 = 7. Poiché 7 diviso 5 dà resto 2, scriviamo: 4 + 3 ≡ 2 (mod 5)</li>
+                <li><strong>Moltiplicazione:</strong> 4 × 4 = 16. Poiché 16 diviso 5 dà resto 1, scriviamo: 4 × 4 ≡ 1 (mod 5)</li>
             </ul>
         </div>
 
         <div class="calc-box">
             <h4 style="margin-top:0; color:var(--accent-color);">🧮 Calcolatore Algebrico Modulo <span class="n-val">5</span></h4>
-            <p style="font-size: 0.85rem; color:#a0a0a5;">Inserisci due numeri interi per calcolare le loro relazioni nell'orologio modulare attuale.</p>
+            <p style="font-size: 0.85rem; color:#a0a0a5;">Inserisci due numeri interi qualsiasi per testare istantaneamente i calcoli nell'orologio modulare attuale.</p>
             <div class="form-group">
                 <label>Numero A:</label>
                 <input type="number" id="calcA" value="4" style="width: 100px;" oninput="computeMiniCalc()">
@@ -241,9 +231,9 @@
         </div>
 
         <h3 style="margin-top:30px;">Dalle Operazioni all'Inverso Moltiplicativo</h3>
-        <p>Ora che sappiamo come si moltiplica, possiamo definire l'<strong>inverso moltiplicativo</strong>. L'inverso di un elemento $a$ è quel numero $x$ che moltiplicato per $a$ riporta il risultato su $1$:</p>
-        <p style="text-align:center; font-weight: bold;">$$a \cdot x \equiv 1 \pmod n$$</p>
-        <p>Come noterai provando diversi numeri nel calcolatore qui sopra, se $n$ è <strong>primo</strong> troverai sempre un inverso per ogni numero (tranne lo 0). Se invece provi a impostare $n$ come numero <strong>composto</strong> (es. 6), scoprirai che per alcuni numeri l'inverso è impossibile da trovare!</p>
+        <p>Ora che sappiamo come si moltiplica, possiamo definire l'<strong>inverso moltiplicativo</strong>. L'inverso di un elemento <em>a</em> è quel numero <em>x</em> che moltiplicato per <em>a</em> riporta la lancetta sul valore unitario:</p>
+        <p style="text-align:center; font-size:1.1rem; font-family: monospace;">a × x ≡ 1 (mod n)</p>
+        <p>Come noterai provando diversi numeri nel calcolatore qui sopra, se <em>n</em> è <strong>primo</strong> troverai sempre un inverso per ogni numero (tranne lo 0). Se invece imposti <em>n</em> come numero <strong>composto</strong> (es. 6), scoprirai che per alcuni numeri l'inverso è matematicamente impossibile da generare!</p>
     </div>
 
     <div id="tabelle" class="tab-content">
@@ -263,22 +253,26 @@
 
     <div id="potenze" class="tab-content">
         <h3>Tabella delle Potenze Modulo <span class="n-val">5</span></h3>
-        <p>Mostra il valore di $a^k \pmod n$ al variare della base $a$ (righe) e dell'esponente $k$ (colonne).</p>
+        <p>Mostra il valore di a<sup>k</sup> (mod n) al variare della base <em>a</em> (righe) e dell'esponente <em>k</em> (colonne).</p>
         <div class="table-container" id="powTableContainer"></div>
         <div class="info-box">
             <strong>Osservazione (Piccolo Teorema di Fermat):</strong><br>
-            Se $n$ è primo, guarda la colonna in cui l'esponente $k = n-1$. Per ogni base diversa da zero, il risultato modulare collassa simmetricamente sempre su **1** ($a^{n-1} \equiv 1 \pmod n$). Questa è la simmetria sfruttata dall'algoritmo probabilistico di Miller-Rabin!
+            Se <em>n</em> è primo, guarda la colonna in cui l'esponente k = n - 1. Per ogni singola base (escluso lo zero) il risultato modulare collassa simmetricamente sempre sul valore **1** (a<sup>n-1</sup> ≡ 1 mod n). Questo comportamento regolare è la firma matematica usata dagli algoritmi crittografici e dai test di primalità!
         </div>
     </div>
 </div>
 
 <script>
-    // Gestione dei Tab fluida e priva di bloccaggi
+    // Sistema di navigazione schede ultra-solido
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
         document.getElementById(tabId).classList.add('active');
-        event.currentTarget.classList.add('active');
+        // Identifica l'elemento che ha scatenato l'evento per aggiungere la classe attiva
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
+        }
     }
 
     function gcd(a, b) {
@@ -306,7 +300,7 @@
         return true;
     }
 
-    // Calcolatore istantaneo in puro testo (Risolve il problema dei crash)
+    // Calcolatore dinamico nativo
     function computeMiniCalc() {
         const n = parseInt(document.getElementById('modulusInput').value) || 5;
         let a = parseInt(document.getElementById('calcA').value);
@@ -349,10 +343,10 @@
         const isPrime = isSmallPrime(n);
         const statusEl = document.getElementById('primeStatus');
         if (isPrime) {
-            statusEl.innerText = `(${n} è PRIMO → Campo)`;
+            statusEl.innerText = `(${n} è PRIMO → Campo di Galois)`;
             statusEl.style.color = "var(--success-color)";
         } else {
-            statusEl.innerText = `(${n} è COMPOSTO → Anello)`;
+            statusEl.innerText = `(${n} è COMPOSTO → Anello con divisori dello zero)`;
             statusEl.style.color = "var(--error-color)";
         }
 
@@ -360,11 +354,6 @@
         generateMulTable(n, isPrime);
         generatePowTable(n);
         computeMiniCalc(); 
-
-        // Avvisa MathJax di elaborare unicamente la teoria statica, senza toccare i calcolatori dinamici
-        if (window.MathJax && window.MathJax.typeset) {
-            window.MathJax.typeset();
-        }
     }
 
     function generateSumTable(n) {
@@ -392,3 +381,56 @@
             let isAnElementInvertible = gcd(r, n) === 1;
             let rowClass = isAnElementInvertible && r > 0 ? 'class="has-inverse"' : '';
             html += `<tr ${rowClass}><td class="header-col">${r}</td>`;
+            
+            for (let c = 0; c < n; c++) {
+                let res = (r * c) % n;
+                let cellClass = (res === 1) ? 'class="is-identity"' : '';
+                html += `<td ${cellClass}>${res}</td>`;
+            }
+            html += '</tr>';
+        }
+        html += '</table>';
+        document.getElementById('mulTableContainer').innerHTML = html;
+
+        let obsBox = document.getElementById('observationsBox');
+        if (isPrime) {
+            obsBox.style.borderLeftColor = "var(--success-color)";
+            obsBox.innerHTML = `<strong>Analisi Modulo ${n}:</strong><br>` +
+                `Essendo ${n} un numero primo, ogni riga (tranne lo 0) possiede una cella blu con valore 1. ` +
+                `Questo conferma empiricamente che ogni elemento non nullo ammette un inverso moltiplicativo unico.`;
+        } else {
+            obsBox.style.borderLeftColor = "var(--error-color)";
+            let nonInvertibili = [];
+            for(let i=1; i<n; i++) if(gcd(i,n)!==1) nonInvertibili.push(i);
+            
+            obsBox.innerHTML = `<strong>Analisi Modulo ${n}:</strong><br>` +
+                `Poiché ${n} è composto, gli elementi <strong>${nonInvertibili.join(', ')}</strong> non sono invertibili. ` +
+                `Nota che moltiplicando elementi diversi da zero si possono ottenere celle con valore 0 (i cosiddetti <em>divisori dello zero</em>).`;
+        }
+    }
+
+    function generatePowTable(n) {
+        let maxK = Math.max(n + 1, 6);
+        let html = '<table><tr><th>a \\ k</th>';
+        for (let k = 1; k <= maxK; k++) html += `<th><sup>${k}</sup></th>`;
+        html += '</tr>';
+
+        for (let a = 0; a < n; a++) {
+            html += `<tr><td class="header-col">${a}</td>`;
+            let currentPow = 1;
+            for (let k = 1; k <= maxK; k++) {
+                currentPow = (currentPow * a) % n;
+                let cellClass = (k === n - 1 && a !== 0 && currentPow === 1) ? 'class="is-identity"' : '';
+                html += `<td ${cellClass}>${currentPow}</td>`;
+            }
+            html += '</tr>';
+        }
+        html += '</table>';
+        document.getElementById('powTableContainer').innerHTML = html;
+    }
+
+    // Esecuzione immediata dei calcoli nativi all'avvio
+    generateAll();
+</script>
+</body>
+</html>
