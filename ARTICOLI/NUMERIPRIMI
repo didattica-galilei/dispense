@@ -134,7 +134,11 @@
     </style>
 </head>
 <body>
-
+<div style="text-align: center; margin-bottom: 20px;">
+    <a href="prodotto-grande.html" style="color: #4ea8de; text-decoration: none; font-weight: 600; font-size: 0.95rem;">
+        🚀 Devi calcolare il prodotto di numeri enormi? Vai al Calcolatore per Grandi Numeri &rarr;
+    </a>
+</div>
 <div class="container">
     <h1>Test di Primalità Probabilistico</h1>
     <p class="description">Analizza numeri di grandi dimensioni usando l'algoritmo di Miller-Rabin.</p>
