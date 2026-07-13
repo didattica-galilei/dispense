@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cicli Termodinamici — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#e08a3a;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;--or:#c47a00;--pu:#7a4fc4;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:54px 32px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:11px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(20px,4vw,38px);font-weight:700;line-height:1.1;margin-bottom:7px}
+.hero h1 em{color:#f4a83a}
+.hero p{font-size:13px;color:rgba(255,255,255,0.38);max-width:600px;margin:0 auto}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 14px}
+.nav-inner{max-width:980px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:10px 9px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:980px;margin:0 auto;padding:38px 22px}
+@media(max-width:600px){.page{padding:16px 10px}}
+.sec{margin-bottom:58px;scroll-margin-top:48px}
+h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:8px;margin-bottom:12px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:13px 0 5px}
+p{font-size:14px;margin-bottom:9px;color:#2a2a2e}
+ul,ol{margin:4px 0 9px 18px;font-size:14px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);padding:11px 14px;margin:9px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:16px;color:var(--a2);margin-bottom:2px;line-height:1.8}
+.formula .fd{font-size:10px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 2px;font-size:.88em}
+.frac .n{border-bottom:1.4px solid var(--a2);padding:0 3px 1px}
+.frac .d{padding:1px 3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:9px 0}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:9px 0}
+@media(max-width:560px){.two{grid-template-columns:1fr}.three{grid-template-columns:1fr}}
+.bn{background:#fdf1e4;border-left:3px solid var(--a);color:#5a3a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.bf{background:#e8f0fa;border-left:3px solid var(--a2);color:#0a1a5a;padding:9px 12px;margin:9px 0;font-size:13px;border-radius:0 3px 3px 0}
+.sim{background:var(--s2);border:1px solid var(--bo);border-radius:5px;padding:14px;margin:14px 0}
+.sim-t{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--a);flex-shrink:0}
+.ctrl{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:7px;align-items:center;font-size:11px;color:var(--mu)}
+.ctrl label{font-weight:600}
+.ctrl input[type=range]{width:74px;accent-color:var(--a2)}
+.vv{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:600;min-width:34px;color:var(--ink)}
+.ref{font-family:'Source Code Pro',monospace;font-size:10.5px;color:var(--mu)}
+.btn{padding:4px 12px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer}
+.btn:hover{background:var(--su)}
+.btn.on{background:var(--a);color:#fff;border-color:var(--a)}
+.btn.g{background:var(--s2)}
+.btn.g.on{background:var(--a2);color:#fff;border-color:var(--a2)}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%}
+.out{background:var(--ink);color:#fff;border-radius:3px;padding:10px 13px;margin-top:8px;min-height:30px}
+.out.empty{background:var(--su);color:var(--mu);font-style:italic;font-size:12px;display:flex;align-items:center}
+.rg{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:12px}
+.rl{font-weight:600;color:rgba(255,255,255,0.45);font-family:'Source Code Pro',monospace;white-space:nowrap;padding:1px 0}
+.rv{font-family:'Source Code Pro',monospace;color:#fff;padding:1px 0}
+.rv.ok{color:#74c99a;font-weight:600}
+.rv.neg{color:#f4a582;font-weight:600}
+.rsep{grid-column:1/-1;border-top:1px solid rgba(255,255,255,0.12);margin:4px 0}
+.leg{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;font-size:10px;color:var(--mu);align-items:center}
+.ld{display:inline-block;width:16px;height:2.5px;border-radius:1px;margin-right:3px;vertical-align:middle}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:44px;padding:16px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Fisica &middot; Termodinamica</div>
+  <h1>Cicli<br><em>Termodinamici</em></h1>
+  <p>Ciclo di Carnot, rendimento delle macchine termiche, COP di frigoriferi e pompe di calore &mdash; scegli le trasformazioni e osserva se il ciclo diventa un motore o una macchina frigorifera</p>
+</div>
+<nav class="nav"><div class="nav-inner">
+  <a href="#cicli" class="active">I cicli termodinamici</a>
+  <a href="#motori">Macchine termiche</a>
+  <a href="#carnot">Ciclo di Carnot</a>
+  <a href="#frigo">Frigoriferi &amp; pompe di calore</a>
+  <a href="#sim1">Simulatore guidato</a>
+  <a href="#sim2">Simulatore libero</a>
+  <a href="#esercizi">Esercizi</a>
+  <a href="leggi_gas.html">&#8592; Leggi dei gas</a>
+  <a href="index.html">&#8592; Home</a>
+</div></nav>
+<div class="page">
+
+<!-- CICLI -->
+<div class="sec" id="cicli">
+  <h2>1. I Cicli Termodinamici</h2>
+  <p class="ssub">Trasformazioni che riportano il sistema esattamente allo stato di partenza</p>
+  <p>Un <strong>ciclo termodinamico</strong> &egrave; una successione di trasformazioni che, partendo da uno stato iniziale A, riporta il sistema esattamente allo stesso stato A. Nel piano p&minus;V, un ciclo &egrave; quindi una <strong>curva chiusa</strong>.</p>
+
+  <h3>Perch&eacute; &Delta;U=0 in un ciclo</h3>
+  <div class="formula">
+    <div class="f">&Delta;U<sub>ciclo</sub> = 0 &nbsp;&nbsp;&nbsp;&#8658;&nbsp;&nbsp;&nbsp; Q<sub>ciclo</sub> = L<sub>ciclo</sub></div>
+    <div class="fd">U &egrave; una funzione di stato: se lo stato finale coincide con quello iniziale, la sua variazione totale &egrave; nulla, qualunque sia il percorso</div>
+  </div>
+  <div class="bn">&#128161; Questo &egrave; il punto chiave di tutta la teoria delle macchine termiche: in un ciclo, tutto il calore netto scambiato si trasforma integralmente in lavoro netto (o viceversa). Non c'&egrave; accumulo di energia interna da un giro all'altro.</div>
+
+  <h3>Cicli orari e cicli antiorari</h3>
+  <p>Nel piano p&minus;V (con V in ascissa, p in ordinata), un ciclo pu&ograve; essere percorso in due versi:</p>
+  <div class="two">
+    <div class="formula">
+      <div class="f">Ciclo ORARIO</div>
+      <div class="fd">L<sub>netto</sub> &gt; 0 &middot; il sistema compie lavoro netto positivo verso l'esterno &middot; &egrave; una MACCHINA TERMICA (motore)</div>
+    </div>
+    <div class="formula">
+      <div class="f">Ciclo ANTIORARIO</div>
+      <div class="fd">L<sub>netto</sub> &lt; 0 &middot; serve lavoro esterno per farlo percorrere &middot; &egrave; una MACCHINA FRIGORIFERA o una POMPA DI CALORE</div>
+    </div>
+  </div>
+  <div class="bf">Il lavoro netto del ciclo &egrave; sempre uguale, in valore assoluto, all'<strong>area racchiusa</strong> dalla curva nel piano p&minus;V: L<sub>netto</sub>=&#8721;L<sub>tratto</sub>. Il verso di percorrenza (che dipende dall'ORDINE in cui si susseguono le trasformazioni) decide il segno, e quindi se il ciclo &egrave; un motore o una macchina frigorifera/pompa di calore.</div>
+</div>
+
+<!-- MOTORI -->
+<div class="sec" id="motori">
+  <h2>2. Macchine Termiche e Rendimento</h2>
+  <p class="ssub">Un motore termico assorbe calore da una sorgente calda e ne cede parte a una sorgente fredda, producendo lavoro</p>
+  <p>Una macchina termica (motore) lavora tra due sorgenti di calore: assorbe calore Q<sub>ass</sub> dalla sorgente calda, cede una parte Q<sub>ced</sub> alla sorgente fredda, e produce lavoro netto L=Q<sub>ass</sub>&minus;Q<sub>ced</sub> (dal primo principio applicato al ciclo).</p>
+  <div class="formula">
+    <div class="f">&eta; = <span class="frac"><span class="n">L</span><span class="d">Q<sub>ass</sub></span></span> = 1 &minus; <span class="frac"><span class="n">Q<sub>ced</sub></span><span class="d">Q<sub>ass</sub></span></span></div>
+    <div class="fd">rendimento (efficienza) della macchina termica &middot; sempre &lt;1: non tutto il calore assorbito pu&ograve; diventare lavoro</div>
+  </div>
+</div>
+
+<!-- CARNOT -->
+<div class="sec" id="carnot">
+  <h2>3. Il Ciclo di Carnot</h2>
+  <p class="ssub">Il ciclo termodinamico pi&ugrave; efficiente possibile tra due temperature date</p>
+  <p>Il <strong>ciclo di Carnot</strong> &egrave; composto da quattro trasformazioni reversibili, alternando isoterme e adiabatiche tra due sole temperature T<sub>c</sub> (calda) e T<sub>f</sub> (fredda):</p>
+  <ol>
+    <li><strong>Espansione isoterma</strong> a T<sub>c</sub>: il gas assorbe calore Q<sub>c</sub> dalla sorgente calda</li>
+    <li><strong>Espansione adiabatica</strong>: il gas si raffredda da T<sub>c</sub> a T<sub>f</sub> senza scambiare calore</li>
+    <li><strong>Compressione isoterma</strong> a T<sub>f</sub>: il gas cede calore Q<sub>f</sub> alla sorgente fredda</li>
+    <li><strong>Compressione adiabatica</strong>: il gas si riscalda da T<sub>f</sub> a T<sub>c</sub>, tornando allo stato iniziale</li>
+  </ol>
+  <div class="formula">
+    <div class="f">&eta;<sub>Carnot</sub> = 1 &minus; <span class="frac"><span class="n">T<sub>f</sub></span><span class="d">T<sub>c</sub></span></span></div>
+    <div class="fd">dipende SOLO dalle due temperature (in kelvin), non dal gas usato n&eacute; dalle dimensioni del ciclo</div>
+  </div>
+  <div class="bw">&#9888; Teorema di Carnot (secondo principio della termodinamica): nessuna macchina che lavori tra le stesse due temperature T<sub>c</sub> e T<sub>f</sub> pu&ograve; avere un rendimento maggiore di &eta;<sub>Carnot</sub>. Il ciclo di Carnot rappresenta il limite teorico ideale, irraggiungibile nella pratica (richiederebbe trasformazioni infinitamente lente e senza attrito).</div>
+</div>
+
+<!-- FRIGO -->
+<div class="sec" id="frigo">
+  <h2>4. Macchine Frigorifere e Pompe di Calore</h2>
+  <p class="ssub">Lo stesso ciclo di Carnot, percorso al contrario</p>
+  <p>Se si percorre lo stesso ciclo in verso antiorario (fornendo lavoro esterno L, ad esempio tramite un compressore), il calore viene <strong>spostato dalla sorgente fredda a quella calda</strong> &mdash; il contrario di quanto avverrebbe spontaneamente. &Egrave; il principio di funzionamento di frigoriferi, condizionatori e pompe di calore.</p>
+  <p>La differenza tra frigorifero e pompa di calore &egrave; solo di <strong>scopo</strong> (lo stesso ciclo fisico pu&ograve; essere entrambi):</p>
+  <div class="two">
+    <div class="formula">
+      <div class="f">COP<sub>frigo</sub> = <span class="frac"><span class="n">Q<sub>f</sub></span><span class="d">L</span></span></div>
+      <div class="fd">obiettivo: sottrarre calore Q<sub>f</sub> dall'ambiente freddo (interno del frigo) &middot; L = lavoro speso (compressore)</div>
+    </div>
+    <div class="formula">
+      <div class="f">COP<sub>pdc</sub> = <span class="frac"><span class="n">Q<sub>c</sub></span><span class="d">L</span></span></div>
+      <div class="fd">obiettivo: cedere calore Q<sub>c</sub> all'ambiente caldo (riscaldare una stanza) &middot; stesso ciclo, stesso L</div>
+    </div>
+  </div>
+  <div class="formula">
+    <div class="f">COP<sub>pdc</sub> = COP<sub>frigo</sub> + 1</div>
+    <div class="fd">discende da Q<sub>c</sub>=Q<sub>f</sub>+L (primo principio) &middot; una pompa di calore ha sempre COP maggiore di 1 unit&agrave; rispetto al frigorifero corrispondente</div>
+  </div>
+  <div class="bn">&#128161; A differenza del rendimento &eta; (sempre &lt;1), il COP pu&ograve; essere ed &egrave; tipicamente MAGGIORE di 1: una pompa di calore con COP=4 fornisce 4 joule di calore per ogni joule di lavoro elettrico speso &mdash; molto pi&ugrave; efficiente di una resistenza elettrica diretta (che avrebbe "COP"=1).</div>
+
+  <h3>Valori ideali di Carnot per frigo e pompa di calore</h3>
+  <div class="two">
+    <div class="formula">
+      <div class="f">COP<sub>frigo,Carnot</sub> = <span class="frac"><span class="n">T<sub>f</sub></span><span class="d">T<sub>c</sub>&minus;T<sub>f</sub></span></span></div>
+      <div class="fd">valore massimo teorico, tra le stesse due temperature</div>
+    </div>
+    <div class="formula">
+      <div class="f">COP<sub>pdc,Carnot</sub> = <span class="frac"><span class="n">T<sub>c</sub></span><span class="d">T<sub>c</sub>&minus;T<sub>f</sub></span></span></div>
+      <div class="fd">valore massimo teorico, tra le stesse due temperature</div>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 1 -->
+<div class="sec" id="sim1">
+  <h2>5. Simulatore &mdash; Costruisci il Tuo Ciclo</h2>
+  <p class="ssub">Parti dal punto A, scegli le trasformazioni: il verso (orario/antiorario) emerge dalle tue scelte, non lo imposti direttamente</p>
+  <div class="sim">
+    <div class="sim-t">Tipo di ciclo</div>
+    <div class="ctrl">
+      <button class="btn g on" id="btnModeRect" onclick="selectMode('rect','btnModeRect')">Ciclo Rettangolare (isobara+isocora)</button>
+      <button class="btn g" id="btnModeCarnot" onclick="selectMode('carnot','btnModeCarnot')">Ciclo di Carnot (isoterma+adiabatica)</button>
+      <label>Gas:</label>
+      <button class="btn g on" id="btnGasMono" onclick="selectGas('mono','btnGasMono')">Monoatomico</button>
+      <button class="btn g" id="btnGasBi" onclick="selectGas('bi','btnGasBi')">Biatomico</button>
+      <label>n&middot;R (J/K)</label>
+      <input type="range" id="s1nR" min="2" max="20" step="0.1" value="8.3"><span class="vv" id="s1nRv">8.3</span>
+    </div>
+
+    <div id="rectControls">
+      <div class="ctrl">
+        <label>V<sub>min</sub> (L) &mdash; punto A</label>
+        <input type="range" id="s1Vmin" min="4" max="14" step="0.5" value="8"><span class="vv" id="s1Vminv">8</span>
+        <label>V<sub>max</sub> (L)</label>
+        <input type="range" id="s1Vmax" min="15" max="28" step="0.5" value="20"><span class="vv" id="s1Vmaxv">20</span>
+      </div>
+      <div class="ctrl">
+        <label>p<sub>min</sub> (kPa) &mdash; punto A</label>
+        <input type="range" id="s1pmin" min="50" max="140" step="5" value="100"><span class="vv" id="s1pminv">100</span>
+        <label>p<sub>max</sub> (kPa)</label>
+        <input type="range" id="s1pmax" min="150" max="300" step="5" value="200"><span class="vv" id="s1pmaxv">200</span>
+      </div>
+      <div class="ctrl">
+        <label>Ordine dal punto A:</label>
+        <button class="btn on" id="btnOrdIsobara" onclick="selectOrder(true,'btnOrdIsobara')">Isobara prima (A&rarr;B)</button>
+        <button class="btn" id="btnOrdIsocora" onclick="selectOrder(false,'btnOrdIsocora')">Isocora prima (A&rarr;D)</button>
+      </div>
+    </div>
+
+    <div id="carnotControls" style="display:none">
+      <div class="ctrl">
+        <label>T<sub>c</sub> calda (K)</label>
+        <input type="range" id="s1Tc" min="320" max="600" step="5" value="450"><span class="vv" id="s1Tcv">450</span>
+        <label>T<sub>f</sub> fredda (K)</label>
+        <input type="range" id="s1Tf" min="150" max="310" step="5" value="280"><span class="vv" id="s1Tfv">280</span>
+      </div>
+      <div class="ctrl">
+        <label>V<sub>A</sub> (L) &mdash; punto A</label>
+        <input type="range" id="s1Va" min="4" max="16" step="0.5" value="8"><span class="vv" id="s1Vav">8</span>
+        <label>V<sub>B</sub> (L) &mdash; fine 1&#170; isoterma</label>
+        <input type="range" id="s1Vb" min="4" max="28" step="0.5" value="16"><span class="vv" id="s1Vbv">16</span>
+      </div>
+      <div class="bn" style="margin:4px 0 0">&#128161; Se V<sub>B</sub>&gt;V<sub>A</sub>: il gas si espande per primo &rarr; ciclo ORARIO (motore). Se V<sub>B</sub>&lt;V<sub>A</sub>: si comprime per primo &rarr; ciclo ANTIORARIO (frigo/pompa di calore).</div>
+    </div>
+
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay1" onclick="togglePlay1()">&#9654; Avvia</button>
+      <button class="btn" onclick="resetSim1()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv1" style="height:520px"></canvas>
+    <div class="out empty" id="out1">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#c47a00"></span>Isobara</span>
+      <span><span class="ld" style="background:#1a4b8c"></span>Isocora</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Isoterma</span>
+      <span><span class="ld" style="background:#7a4fc4"></span>Adiabatica</span>
+    </div>
+  </div>
+</div>
+
+<!-- SIM 2: LIBERO -->
+<div class="sec" id="sim2">
+  <h2>6. Simulatore Libero &mdash; Costruisci un Ciclo con Fino a 5 Trasformazioni</h2>
+  <p class="ssub">Parti dal punto A, scegli liberamente il tipo e l'ampiezza di ogni tratto: la chiusura verso A (in grigio tratteggiato) è automatica</p>
+  <div class="sim">
+    <div class="sim-t">Punto di partenza A e gas</div>
+    <div class="ctrl">
+      <label>V<sub>A</sub> (L)</label>
+      <input type="range" id="s2VA" min="4" max="16" step="0.5" value="8"><span class="vv" id="s2VAv">8</span>
+      <label>p<sub>A</sub> (kPa)</label>
+      <input type="range" id="s2pA" min="60" max="200" step="5" value="100"><span class="vv" id="s2pAv">100</span>
+      <label>n&middot;R (J/K)</label>
+      <input type="range" id="s2nR" min="2" max="20" step="0.1" value="8.3"><span class="vv" id="s2nRv">8.3</span>
+      <button class="btn g on" id="s2GasMono" onclick="s2selectGas('mono','s2GasMono')">Monoatomico</button>
+      <button class="btn g" id="s2GasBi" onclick="s2selectGas('bi','s2GasBi')">Biatomico</button>
+    </div>
+    <div class="ctrl">
+      <label>Numero di trasformazioni:</label>
+      <button class="btn on" id="s2N1" onclick="s2selectN(1,'s2N1')">1</button>
+      <button class="btn" id="s2N2" onclick="s2selectN(2,'s2N2')">2</button>
+      <button class="btn" id="s2N3" onclick="s2selectN(3,'s2N3')">3</button>
+      <button class="btn" id="s2N4" onclick="s2selectN(4,'s2N4')">4</button>
+      <button class="btn" id="s2N5" onclick="s2selectN(5,'s2N5')">5</button>
+      <span class="ref">l'ultima trasformazione deve tornare esattamente al punto A</span>
+    </div>
+
+    <div id="s2legRows"></div>
+
+    <div class="ctrl">
+      <button class="btn on" id="btnPlay2" onclick="s2togglePlay()">&#9654; Avvia</button>
+      <button class="btn" onclick="s2reset()">&#8634; Reset</button>
+    </div>
+    <canvas id="cv2" style="height:520px"></canvas>
+    <div class="out empty" id="out2">Caricamento...</div>
+    <div class="leg">
+      <span><span class="ld" style="background:#c47a00"></span>Isobara</span>
+      <span><span class="ld" style="background:#1a4b8c"></span>Isocora</span>
+      <span><span class="ld" style="background:#1a6b3a"></span>Isoterma</span>
+      <span><span class="ld" style="background:#7a4fc4"></span>Adiabatica</span>
+      <span><span class="ld" style="background:#c9457a"></span>Lineare</span>
+      <span><span class="ld" style="background:#999;border-top:1.5px dashed #999;height:0"></span>Chiusura automatica</span>
+    </div>
+  </div>
+</div>
+
+<!-- ESERCIZI -->
+<div class="sec" id="esercizi">
+  <h2>6. Esercizi Proposti</h2>
+  <p class="ssub">Cicli termodinamici, rendimento, COP</p>
+  <ol>
+    <li><strong>Rendimento di Carnot:</strong> una macchina di Carnot lavora tra T<sub>c</sub>=500K e T<sub>f</sub>=300K. Calcola il rendimento &eta;. Se assorbe Q<sub>c</sub>=2000J per ciclo, quanto lavoro L produce e quanto calore Q<sub>f</sub> cede?</li>
+    <li><strong>COP di un frigorifero:</strong> un frigorifero ideale (Carnot) mantiene l'interno a T<sub>f</sub>=270K, cedendo calore a una stanza a T<sub>c</sub>=300K. Calcola COP<sub>frigo</sub>. Se il compressore assorbe L=50J per ciclo, quanto calore Q<sub>f</sub> viene sottratto all'interno?</li>
+    <li><strong>Pompa di calore vs resistenza:</strong> una pompa di calore ideale lavora tra T<sub>f</sub>=275K (esterno) e T<sub>c</sub>=295K (interno). Calcola COP<sub>pdc</sub>. Spiega perch&eacute; riscaldare una casa con questa pompa di calore consuma meno energia elettrica che con una resistenza elettrica diretta.</li>
+    <li><strong>Confronto con il ciclo reale:</strong> usa il simulatore in modalit&agrave; "Ciclo Rettangolare" con "Isocora prima" (motore) e confronta il rendimento ottenuto con quello di un ciclo di Carnot ideale che lavori tra le stesse temperature massima e minima raggiunte durante il ciclo. Quale dei due &egrave; maggiore? Perch&eacute;?</li>
+    <li><strong>Stesso ciclo, verso opposto:</strong> nel simulatore, passa da "Isobara prima" a "Isocora prima" (o cambia il segno di V<sub>B</sub>&minus;V<sub>A</sub> in modalit&agrave; Carnot) mantenendo tutti gli altri parametri uguali. Osserva come L<sub>netto</sub> cambi segno mantenendo lo stesso valore assoluto: perch&eacute; questo conferma che &egrave; esattamente lo stesso ciclo fisico, solo percorso al contrario?</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Fisica &middot; Cicli Termodinamici &nbsp;|&nbsp; <a href="index.html" style="color:var(--a)">&#8592; Home</a></footer>
+</div>
+
+<script>
+function rf(id){return parseFloat(document.getElementById(id).value)||0;}
+function fmt1(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(1);}
+function fmt2(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(2);}
+function fmt3(v){return(!isFinite(v)||isNaN(v))?'—':v.toFixed(3);}
+function setupCv(id,h){
+  var cv=document.getElementById(id);
+  var w=Math.max(cv.parentElement.clientWidth-28,260);
+  cv.style.width=w+'px';cv.width=w;cv.height=h;return cv;
+}
+function niceStep(range,n){
+  var s=range/Math.max(n,1), m=Math.pow(10,Math.floor(Math.log10(Math.abs(s)||1))), t=s/m;
+  return(t<2?1:t<5?2:5)*m;
+}
+function drawAxes(ctx,x,y,w,h,xmin,xmax,ymin,ymax,xlabel,ylabel){
+  function sx(vx){return x+(vx-xmin)/(xmax-xmin)*w;}
+  function sy(vy){return y+h-(vy-ymin)/(ymax-ymin)*h;}
+  var gx=niceStep(xmax-xmin,6), gy=niceStep(ymax-ymin,5);
+  ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.lineWidth=0.6;ctx.setLineDash([]);
+  for(var vx=Math.ceil(xmin/gx)*gx; vx<=xmax; vx+=gx){
+    ctx.beginPath();ctx.moveTo(sx(vx),y);ctx.lineTo(sx(vx),y+h);ctx.stroke();
+  }
+  for(var vy=Math.ceil(ymin/gy)*gy; vy<=ymax; vy+=gy){
+    ctx.beginPath();ctx.moveTo(x,sy(vy));ctx.lineTo(x+w,sy(vy));ctx.stroke();
+  }
+  ctx.strokeStyle='#ccc';ctx.lineWidth=1;ctx.strokeRect(x,y,w,h);
+  ctx.fillStyle='rgba(0,0,0,0.45)';ctx.font='8.5px monospace';ctx.textAlign='center';
+  for(var vx2=Math.ceil(xmin/gx)*gx; vx2<=xmax; vx2+=gx){
+    ctx.fillText(fmt1(vx2),sx(vx2),y+h+11);
+  }
+  ctx.textAlign='right';
+  for(var vy2=Math.ceil(ymin/gy)*gy; vy2<=ymax; vy2+=gy){
+    ctx.fillText(fmt1(vy2),x-4,sy(vy2)+3);
+  }
+  ctx.fillStyle='#555';ctx.font='9px sans-serif';ctx.textAlign='left';
+  ctx.fillText(xlabel,x+w-22,y+h+11);
+  ctx.fillText(ylabel,x-22,y+10);
+  return {sx:sx,sy:sy};
+}
+function dot(ctx,x,y,r,color){
+  ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=1.4;ctx.stroke();
+}
+function drawArrow(ctx,x1,y1,x2,y2,color,lw){
+  ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lw||2.4;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  var dx=x2-x1,dy=y2-y1; if(Math.hypot(dx,dy)<1)return;
+  var ang=Math.atan2(dy,dx), hl=7;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(ang-Math.PI/6), y2-hl*Math.sin(ang-Math.PI/6));
+  ctx.lineTo(x2-hl*Math.cos(ang+Math.PI/6), y2-hl*Math.sin(ang+Math.PI/6));
+  ctx.closePath();ctx.fill();
+}
+
+// ══════════════════════════════════════════════════════
+// STATO
+// ══════════════════════════════════════════════════════
+var curMode='rect', curGas='mono', isobaraFirst=true;
+var anim1={s:0,playing:true,lastT:null}; // i cicli girano di norma in loop continuo
+
+function cvFactor(){ return curGas==='mono' ? 1.5 : 2.5; }
+
+function selectMode(m,btnId){
+  curMode=m;
+  ['btnModeRect','btnModeCarnot'].forEach(function(id){
+    document.getElementById(id).className='btn g'+(id===btnId?' on':'');
+  });
+  document.getElementById('rectControls').style.display = (m==='rect')?'block':'none';
+  document.getElementById('carnotControls').style.display = (m==='carnot')?'block':'none';
+  resetSim1();
+}
+function selectGas(g,btnId){
+  curGas=g;
+  ['btnGasMono','btnGasBi'].forEach(function(id){
+    document.getElementById(id).className='btn g'+(id===btnId?' on':'');
+  });
+  resetSim1();
+}
+function selectOrder(v,btnId){
+  isobaraFirst=v;
+  ['btnOrdIsobara','btnOrdIsocora'].forEach(function(id){
+    document.getElementById(id).className='btn'+(id===btnId?' on':'');
+  });
+  resetSim1();
+}
+
+// ══════════════════════════════════════════════════════
+// CALCOLO DEL CICLO: 4 vertici + 4 tratti (tipo,L,Q,dU)
+// ══════════════════════════════════════════════════════
+function isobaraLeg(V1,V2,p,nR,Cv){
+  nR=nR||rf('s1nR'); Cv=Cv||cvFactor()*nR;
+  var T1=p*V1/nR, T2=p*V2/nR;
+  var dU=Cv*(T2-T1), L=p*(V2-V1);
+  return {type:'isobara',V1:V1,p1:p,T1:T1,V2:V2,p2:p,T2:T2,L:L,dU:dU,Q:dU+L};
+}
+function isocoraLeg(p1,p2,V,nR,Cv){
+  nR=nR||rf('s1nR'); Cv=Cv||cvFactor()*nR;
+  var T1=p1*V/nR, T2=p2*V/nR;
+  var dU=Cv*(T2-T1);
+  return {type:'isocora',V1:V,p1:p1,T1:T1,V2:V,p2:p2,T2:T2,L:0,dU:dU,Q:dU};
+}
+function isotermaLeg(V1,V2,T,nR){
+  nR=nR||rf('s1nR');
+  var p1=nR*T/V1, p2=nR*T/V2;
+  var L=nR*T*Math.log(V2/V1);
+  return {type:'isoterma',V1:V1,p1:p1,T1:T,V2:V2,p2:p2,T2:T,L:L,dU:0,Q:L};
+}
+function adiabaticaLeg(V1,T1,V2,T2,nR,Cv){
+  nR=nR||rf('s1nR'); Cv=Cv||cvFactor()*nR;
+  var p1=nR*T1/V1, p2=nR*T2/V2;
+  var dU=Cv*(T2-T1);
+  return {type:'adiabatica',V1:V1,p1:p1,T1:T1,V2:V2,p2:p2,T2:T2,L:-dU,dU:dU,Q:0};
+}
+function linearLeg(V1,p1,V2,p2,nR,Cv){
+  var T1=p1*V1/nR, T2=p2*V2/nR;
+  var dU=Cv*(T2-T1);
+  var L=0.5*(p1+p2)*(V2-V1);
+  return {type:'lineare',V1:V1,p1:p1,T1:T1,V2:V2,p2:p2,T2:T2,L:L,dU:dU,Q:dU+L};
+}
+// costruisce un tratto qualsiasi a partire dal punto CORRENTE (V1,p1), dato tipo e parametro scelto
+function legFromPoint(type,V1,p1,param2,nR,Cv,gamma){
+  var T1=p1*V1/nR;
+  if(type==='isobara') return isobaraLeg(V1,param2,p1,nR,Cv);
+  if(type==='isocora') return isocoraLeg(p1,param2,V1,nR,Cv);
+  if(type==='isoterma') return isotermaLeg(V1,param2,T1,nR);
+  if(type==='adiabatica'){ var Vf=param2; var pf=p1*Math.pow(V1/Vf,gamma); var Tf=pf*Vf/nR; return adiabaticaLeg(V1,T1,Vf,Tf,nR,Cv); }
+  // lineare: param2 è un oggetto {V:...,p:...}
+  return linearLeg(V1,p1,param2.V,param2.p,nR,Cv);
+}
+
+function buildCycle(){
+  if(curMode==='rect'){
+    var Vmin=rf('s1Vmin'), Vmax=rf('s1Vmax'), pmin=rf('s1pmin'), pmax=rf('s1pmax');
+    var legs;
+    if(isobaraFirst){
+      legs=[isobaraLeg(Vmin,Vmax,pmin), isocoraLeg(pmin,pmax,Vmax), isobaraLeg(Vmax,Vmin,pmax), isocoraLeg(pmax,pmin,Vmin)];
+    } else {
+      legs=[isocoraLeg(pmin,pmax,Vmin), isobaraLeg(Vmin,Vmax,pmax), isocoraLeg(pmax,pmin,Vmax), isobaraLeg(Vmax,Vmin,pmin)];
+    }
+    return legs;
+  } else {
+    var Tc=rf('s1Tc'), Tf=rf('s1Tf'), Va=rf('s1Va'), Vb=rf('s1Vb');
+    var nR=rf('s1nR'), gamma=(cvFactor()*nR+nR)/(cvFactor()*nR);
+    var ratio=Math.pow(Tc/Tf, 1/(gamma-1));
+    var Vc=Vb*ratio, Vd=Va*ratio;
+    return [isotermaLeg(Va,Vb,Tc), adiabaticaLeg(Vb,Tc,Vc,Tf), isotermaLeg(Vc,Vd,Tf), adiabaticaLeg(Vd,Tf,Va,Tc)];
+  }
+}
+function cycleSummary(legs){
+  var Lnet=0, Qass=0, Qced=0;
+  legs.forEach(function(l){
+    Lnet+=l.L;
+    if(l.Q>1e-9) Qass+=l.Q;
+    else if(l.Q<-1e-9) Qced+=-l.Q;
+  });
+  var isEngine = Lnet>=0;
+  var eta = isEngine ? Lnet/Qass : null;
+  var COPfrigo = (!isEngine) ? Qass/Math.abs(Lnet) : null; // calore assorbito (dalla sorgente fredda) / lavoro speso
+  var COPpdc = (!isEngine) ? Qced/Math.abs(Lnet) : null;   // calore ceduto (alla sorgente calda) / lavoro speso
+  return {Lnet:Lnet,Qass:Qass,Qced:Qced,isEngine:isEngine,eta:eta,COPfrigo:COPfrigo,COPpdc:COPpdc};
+}
+
+function togglePlay1(){
+  anim1.playing=!anim1.playing;
+  document.getElementById('btnPlay1').className=anim1.playing?'btn on':'btn';
+  document.getElementById('btnPlay1').textContent=anim1.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+}
+function resetSim1(){
+  anim1.s=0;
+  drawSim1();
+}
+function masterTick(ts){
+  if(anim1.lastT===null)anim1.lastT=ts;
+  var dt=(ts-anim1.lastT)/1000;
+  if(!isFinite(dt)||dt<0)dt=0.016; dt=Math.min(dt,0.05);
+  anim1.lastT=ts;
+  if(anim1.playing){
+    anim1.s=(anim1.s+dt*0.28)%1;
+  }
+  drawSim1();
+  if(s2anim.playing){
+    s2anim.s=(s2anim.s+dt*0.24)%1;
+  }
+  s2draw();
+  requestAnimationFrame(masterTick);
+}
+
+// interpola un punto lungo un singolo tratto (per l'animazione e per tracciare la curva)
+function pointOnLeg(leg,frac,gammaOverride){
+  if(leg.type==='isobara'||leg.type==='isocora'||leg.type==='isoterma'||leg.type==='lineare'){
+    var V=leg.V1+(leg.V2-leg.V1)*frac;
+    var p;
+    if(leg.type==='isobara') p=leg.p1;
+    else if(leg.type==='isocora') p=leg.p1+(leg.p2-leg.p1)*frac;
+    else if(leg.type==='lineare') p=leg.p1+(leg.p2-leg.p1)*frac;
+    else p=leg.p1*leg.V1/V; // isoterma: p*V=cost
+    return {V:V,p:p};
+  } else { // adiabatica: interpola in V, ricava p da pV^gamma=cost
+    var gamma=gammaOverride;
+    if(!gamma){ var nR=rf('s1nR'); gamma=(cvFactor()*nR+nR)/(cvFactor()*nR); }
+    var Va=leg.V1+(leg.V2-leg.V1)*frac;
+    var k=leg.p1*Math.pow(leg.V1,gamma);
+    return {V:Va,p:k/Math.pow(Va,gamma)};
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// SIMULATORE 2 — CICLO LIBERO (fino a 5 trasformazioni)
+// ══════════════════════════════════════════════════════
+var s2Gas='mono', s2N=1;
+var s2legType=['isobara','isocora','isoterma','adiabatica','lineare'];
+var s2legVf=[16,16,10,6,8];
+var s2legPf=[150,220,150,150,100];
+var s2anim={s:0,playing:true};
+
+function s2cvFactor(){ return s2Gas==='mono' ? 1.5 : 2.5; }
+function s2selectGas(g,btnId){
+  s2Gas=g;
+  ['s2GasMono','s2GasBi'].forEach(function(id){ document.getElementById(id).className='btn g'+(id===btnId?' on':''); });
+}
+function s2selectN(n,btnId){
+  s2N=n;
+  ['s2N1','s2N2','s2N3','s2N4','s2N5'].forEach(function(id){ document.getElementById(id).className='btn'+(id===btnId?' on':''); });
+  s2renderLegRows();
+}
+function s2setType(i,val){ s2legType[i]=val; s2renderLegRows(); }
+
+function s2renderLegRows(){
+  var host=document.getElementById('s2legRows');
+  var html='';
+  for(var i=0;i<s2N;i++){
+    var t=s2legType[i];
+    html+='<div class="ctrl"><label>Trasformazione '+(i+1)+':</label>'+
+      '<select id="s2type'+i+'" onchange="s2setType('+i+',this.value)" style="font-size:11px;padding:3px 4px;border-radius:3px;border:1px solid var(--bo)">'+
+      ['isobara','isocora','isoterma','adiabatica','lineare'].map(function(tp){
+        var names={isobara:'Isobara',isocora:'Isocora',isoterma:'Isoterma',adiabatica:'Adiabatica',lineare:'Lineare'};
+        return '<option value="'+tp+'"'+(tp===t?' selected':'')+'>'+names[tp]+'</option>';
+      }).join('')+
+      '</select>';
+    if(t!=='isocora'){
+      html+='<label>V<sub>f</sub> (L)</label><input type="range" id="s2Vf'+i+'" min="2" max="30" step="0.5" value="'+s2legVf[i]+'" oninput="s2legVf['+i+']=parseFloat(this.value);document.getElementById(\'s2Vf'+i+'v\').textContent=this.value;s2draw();"><span class="vv" id="s2Vf'+i+'v">'+s2legVf[i]+'</span>';
+    }
+    if(t==='isocora'||t==='lineare'){
+      html+='<label>p<sub>f</sub> (kPa)</label><input type="range" id="s2Pf'+i+'" min="30" max="400" step="5" value="'+s2legPf[i]+'" oninput="s2legPf['+i+']=parseFloat(this.value);document.getElementById(\'s2Pf'+i+'v\').textContent=this.value;s2draw();"><span class="vv" id="s2Pf'+i+'v">'+s2legPf[i]+'</span>';
+    }
+    html+='</div>';
+  }
+  host.innerHTML=html;
+}
+
+function s2buildCycle(){
+  var nR=rf('s2nR'), Cv=s2cvFactor()*nR, Cp=Cv+nR, gamma=Cp/Cv;
+  var VA=rf('s2VA'), pA=rf('s2pA');
+  var legs=[];
+  var curV=VA, curP=pA;
+  for(var i=0;i<s2N;i++){
+    var t=s2legType[i];
+    var param2 = (t==='isocora') ? s2legPf[i] : (t==='lineare' ? {V:s2legVf[i],p:s2legPf[i]} : s2legVf[i]);
+    var leg=legFromPoint(t,curV,curP,param2,nR,Cv,gamma);
+    legs.push(leg);
+    curV=leg.V2; curP=leg.p2;
+  }
+  return legs;
+}
+// tolleranza di chiusura: piccola ma non infinitesima, per non richiedere una precisione impossibile con gli slider
+var S2_TOL_V=0.25, S2_TOL_P=4;
+function s2checkClosure(legs){
+  var VA=rf('s2VA'), pA=rf('s2pA');
+  var last=legs[legs.length-1];
+  var dV=last.V2-VA, dP=last.p2-pA;
+  var closed = Math.abs(dV)<S2_TOL_V && Math.abs(dP)<S2_TOL_P;
+  return {closed:closed, dV:dV, dP:dP, Vend:last.V2, pend:last.p2};
+}
+
+function s2togglePlay(){
+  s2anim.playing=!s2anim.playing;
+  document.getElementById('btnPlay2').className=s2anim.playing?'btn on':'btn';
+  document.getElementById('btnPlay2').textContent=s2anim.playing?'\u23f8 Pausa':'\u25b6 Avvia';
+}
+function s2reset(){ s2anim.s=0; s2draw(); }
+
+function s2draw(){
+  var legs=s2buildCycle();
+  var closure=s2checkClosure(legs);
+  var sum = closure.closed ? cycleSummary(legs) : null;
+  var nR=rf('s2nR'), gamma=(s2cvFactor()*nR+nR)/(s2cvFactor()*nR);
+
+  var cv=setupCv('cv2',520);
+  var W=cv.width,H=520,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out2');
+  if(!o)return;
+
+  var allV=[],allP=[];
+  legs.forEach(function(l){
+    for(var i=0;i<=20;i++){ var pt=pointOnLeg(l,i/20,gamma); allV.push(pt.V); allP.push(pt.p); }
+  });
+  var VA=rf('s2VA'), pA=rf('s2pA');
+  allV.push(VA); allP.push(pA); // il punto A resta sempre visibile in scala, anche se il ciclo non lo raggiunge
+  var Vmin=Math.min.apply(null,allV), Vmax=Math.max.apply(null,allV);
+  var pmin=Math.min.apply(null,allP), pmax=Math.max.apply(null,allP);
+  var Vpad=(Vmax-Vmin)*0.15||1, ppad=(pmax-pmin)*0.15||10;
+
+  var axTop=34, axH=H-axTop-24, axX=60, axW=W-axX-24;
+  var ax=drawAxes(ctx,axX,axTop,axW,axH,Vmin-Vpad,Vmax+Vpad,pmin-ppad,pmax+ppad,'V (L)','p (kPa)');
+
+  var colors={isobara:'#c47a00',isocora:'#1a4b8c',isoterma:'#1a6b3a',adiabatica:'#7a4fc4',lineare:'#c9457a'};
+
+  // area racchiusa: solo se il ciclo è effettivamente chiuso
+  if(closure.closed){
+    ctx.beginPath();
+    legs.forEach(function(l,idx){
+      for(var i=0;i<=20;i++){
+        var pt=pointOnLeg(l,i/20,gamma);
+        var cx=ax.sx(pt.V), cy=ax.sy(pt.p);
+        (idx===0&&i===0)?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+      }
+    });
+    ctx.closePath();
+    ctx.fillStyle = sum.isEngine ? 'rgba(26,107,58,0.15)' : 'rgba(181,53,26,0.13)';
+    ctx.fill();
+  }
+
+  legs.forEach(function(l,idx){
+    ctx.strokeStyle = colors[l.type];
+    ctx.lineWidth=2.6;ctx.setLineDash([]);
+    ctx.beginPath();
+    for(var i=0;i<=20;i++){
+      var pt=pointOnLeg(l,i/20,gamma);
+      var cx=ax.sx(pt.V), cy=ax.sy(pt.p);
+      i===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+    }
+    ctx.stroke();
+    var pA2=pointOnLeg(l,0.46,gamma), pB2=pointOnLeg(l,0.54,gamma);
+    drawArrow(ctx,ax.sx(pA2.V),ax.sy(pA2.p),ax.sx(pB2.V),ax.sy(pB2.p),colors[l.type],3.2);
+  });
+
+  // se il ciclo NON si chiude, evidenzio il punto A (obiettivo) e il punto finale raggiunto, con un segmento tratteggiato tra i due
+  if(!closure.closed){
+    var Ac=ax.sx(VA), Aq=ax.sy(pA);
+    var Ec=ax.sx(closure.Vend), Eq=ax.sy(closure.pend);
+    ctx.strokeStyle='rgba(181,53,26,0.6)';ctx.lineWidth=1.6;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(Ec,Eq);ctx.lineTo(Ac,Aq);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#b5351a';
+    ctx.beginPath();ctx.arc(Ec,Eq,5.5,0,2*Math.PI);ctx.fill();
+    ctx.font='bold 9px sans-serif';ctx.textAlign='left';
+    ctx.fillText('punto finale raggiunto',Ec+8,Eq+3);
+  }
+
+  legs.forEach(function(l,idx){
+    var cp=ax.sx(l.V1), cq=ax.sy(l.p1);
+    dot(ctx,cp,cq,5,'#222');
+    ctx.fillStyle='#222';ctx.font='bold 11px serif';ctx.textAlign='center';
+    ctx.fillText(idx===0?'A':String.fromCharCode(65+idx),cp,cq-10);
+  });
+  // punto A sempre marcato in modo evidente (stella), anche se il ciclo non lo raggiunge
+  var Amark=ax.sx(VA), Amarkq=ax.sy(pA);
+  ctx.strokeStyle='#222';ctx.lineWidth=1.6;
+  ctx.beginPath();ctx.arc(Amark,Amarkq,8,0,2*Math.PI);ctx.stroke();
+
+  if(closure.closed){
+    var sTot=s2anim.s*legs.length, legIdx=Math.min(legs.length-1,Math.floor(sTot)), frac=sTot-legIdx;
+    var curPt=pointOnLeg(legs[legIdx],frac,gamma);
+    dot(ctx,ax.sx(curPt.V),ax.sy(curPt.p),6.5,'#e08a3a');
+  }
+
+  ctx.fillStyle = closure.closed ? '#333' : '#b5351a';
+  ctx.font='bold 11px monospace';ctx.textAlign='left';
+  var title = closure.closed
+    ? ((sum.isEngine?'CICLO ORARIO — motore termico':'CICLO ANTIORARIO — frigo / pompa di calore')+'  ('+legs.length+' tratti)')
+    : ('IL CICLO NON SI CHIUDE  ('+legs.length+' tratt'+(legs.length===1?'o':'i')+')');
+  ctx.fillText(title,axX+4,20);
+
+  var html='';
+  if(!closure.closed){
+    html+='<div style="background:rgba(181,53,26,0.15);border-left:3px solid #e08a3a;color:#f4a582;padding:8px 10px;margin-bottom:8px;border-radius:0 3px 3px 0;font-size:12px">'+
+      '&#9888; Il punto finale &egrave; ('+fmt2(closure.Vend)+'L, '+fmt1(closure.pend)+'kPa), ma il punto A &egrave; ('+fmt2(VA)+'L, '+fmt1(pA)+'kPa): '+
+      'manca &Delta;V='+fmt2(closure.dV)+'L, &Delta;p='+fmt1(closure.dP)+'kPa per richiudere il ciclo. Regola gli ultimi parametri, oppure aggiungi/cambia una trasformazione.'+
+      '</div>';
+  }
+  html+='<div class="rg">';
+  legs.forEach(function(l,idx){
+    var name=(idx===0?'A':String.fromCharCode(65+idx-1))+'\u2192'+String.fromCharCode(65+idx);
+    html+='<div class="rl">'+name+' ('+l.type+')</div><div class="rv">L='+fmt2(l.L)+'J &middot; Q='+fmt2(l.Q)+'J &middot; &Delta;U='+fmt2(l.dU)+'J</div>';
+  });
+  html+='<div class="rsep"></div>';
+  if(closure.closed){
+    html+='<div class="rl">Lavoro netto L</div><div class="rv '+(sum.Lnet>=0?'ok':'neg')+'">'+fmt2(sum.Lnet)+' J</div>';
+    html+='<div class="rl">Calore assorbito Q<sub>ass</sub></div><div class="rv ok">'+fmt2(sum.Qass)+' J</div>';
+    html+='<div class="rl">Calore ceduto Q<sub>ced</sub></div><div class="rv neg">'+fmt2(sum.Qced)+' J</div>';
+    html+='<div class="rsep"></div>';
+    if(sum.isEngine){
+      html+='<div class="rl">Rendimento &eta;</div><div class="rv ok">'+fmt3(sum.eta)+' ('+fmt1(sum.eta*100)+'%)</div>';
+    } else {
+      html+='<div class="rl">COP frigo</div><div class="rv ok">'+fmt3(sum.COPfrigo)+'</div>';
+      html+='<div class="rl">COP pompa di calore</div><div class="rv ok">'+fmt3(sum.COPpdc)+'</div>';
+    }
+  } else {
+    html+='<div class="rl">Lavoro netto, &eta;, COP</div><div class="rv neg">non calcolabili: il ciclo non &egrave; chiuso</div>';
+  }
+  html+='</div>';
+  o.className='out';
+  o.innerHTML=html;
+}
+
+
+function drawSim1(){
+  var legs=buildCycle();
+  var sum=cycleSummary(legs);
+
+  var cv=setupCv('cv1',520);
+  var W=cv.width,H=520,ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  var o=document.getElementById('out1');
+
+  var allV=[],allP=[];
+  legs.forEach(function(l){
+    for(var i=0;i<=20;i++){ var pt=pointOnLeg(l,i/20); allV.push(pt.V); allP.push(pt.p); }
+  });
+  var Vmin=Math.min.apply(null,allV), Vmax=Math.max.apply(null,allV);
+  var pmin=Math.min.apply(null,allP), pmax=Math.max.apply(null,allP);
+  var Vpad=(Vmax-Vmin)*0.15||1, ppad=(pmax-pmin)*0.15||10;
+
+  var axTop=34, axH=H-axTop-24, axX=60, axW=W-axX-24;
+  var ax=drawAxes(ctx,axX,axTop,axW,axH,Vmin-Vpad,Vmax+Vpad,pmin-ppad,pmax+ppad,'V (L)','p (kPa)');
+
+  var colors={isobara:'#c47a00',isocora:'#1a4b8c',isoterma:'#1a6b3a',adiabatica:'#7a4fc4'};
+
+  // area racchiusa (colore secondo motore/frigo)
+  ctx.beginPath();
+  legs.forEach(function(l,idx){
+    for(var i=0;i<=20;i++){
+      var pt=pointOnLeg(l,i/20);
+      var cx=ax.sx(pt.V), cy=ax.sy(pt.p);
+      (idx===0&&i===0)?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+    }
+  });
+  ctx.closePath();
+  ctx.fillStyle = sum.isEngine ? 'rgba(26,107,58,0.15)' : 'rgba(181,53,26,0.13)';
+  ctx.fill();
+
+  // tratti colorati + frecce di verso
+  legs.forEach(function(l){
+    ctx.strokeStyle=colors[l.type];ctx.lineWidth=2.6;ctx.setLineDash([]);
+    ctx.beginPath();
+    for(var i=0;i<=20;i++){
+      var pt=pointOnLeg(l,i/20);
+      var cx=ax.sx(pt.V), cy=ax.sy(pt.p);
+      i===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+    }
+    ctx.stroke();
+    // freccia di verso a metà tratto
+    var pA=pointOnLeg(l,0.46), pB=pointOnLeg(l,0.54);
+    drawArrow(ctx,ax.sx(pA.V),ax.sy(pA.p),ax.sx(pB.V),ax.sy(pB.p),colors[l.type],3.2);
+  });
+
+  // vertici A,B,C,D
+  var labels=['A','B','C','D'];
+  legs.forEach(function(l,idx){
+    var cp=ax.sx(l.V1), cq=ax.sy(l.p1);
+    dot(ctx,cp,cq,5,'#222');
+    ctx.fillStyle='#222';ctx.font='bold 11px serif';ctx.textAlign='center';
+    ctx.fillText(labels[idx],cp,cq-10);
+  });
+
+  // punto animato lungo il ciclo
+  var sTot=anim1.s*4, legIdx=Math.min(3,Math.floor(sTot)), frac=sTot-legIdx;
+  var curPt=pointOnLeg(legs[legIdx],frac);
+  dot(ctx,ax.sx(curPt.V),ax.sy(curPt.p),6.5,'#e08a3a');
+
+  ctx.fillStyle='#333';ctx.font='bold 11px monospace';ctx.textAlign='left';
+  ctx.fillText((sum.isEngine?'CICLO ORARIO — motore termico':'CICLO ANTIORARIO — frigo / pompa di calore'),axX+4,20);
+
+  var html='<div class="rg">';
+  html+='<div class="rl">Tratto attuale</div><div class="rv">'+legs[legIdx].type+' (A'+['&rarr;B','&rarr;C','&rarr;D','&rarr;A'][legIdx]+')</div>';
+  html+='<div class="rsep"></div>';
+  legs.forEach(function(l,idx){
+    var name=['A&rarr;B','B&rarr;C','C&rarr;D','D&rarr;A'][idx];
+    html+='<div class="rl">'+name+' ('+l.type+')</div><div class="rv">L='+fmt2(l.L)+'J &middot; Q='+fmt2(l.Q)+'J &middot; &Delta;U='+fmt2(l.dU)+'J</div>';
+  });
+  html+='<div class="rsep"></div>';
+  html+='<div class="rl">Lavoro netto L</div><div class="rv '+(sum.Lnet>=0?'ok':'neg')+'">'+fmt2(sum.Lnet)+' J</div>';
+  html+='<div class="rl">Calore assorbito Q<sub>ass</sub></div><div class="rv ok">'+fmt2(sum.Qass)+' J</div>';
+  html+='<div class="rl">Calore ceduto Q<sub>ced</sub></div><div class="rv neg">'+fmt2(sum.Qced)+' J</div>';
+  html+='<div class="rsep"></div>';
+  if(sum.isEngine){
+    html+='<div class="rl">Rendimento &eta;</div><div class="rv ok">'+fmt3(sum.eta)+' ('+fmt1(sum.eta*100)+'%)</div>';
+    if(curMode==='carnot'){
+      var Tc=rf('s1Tc'), Tf=rf('s1Tf');
+      html+='<div class="rl">&eta;<sub>Carnot</sub>=1&minus;T<sub>f</sub>/T<sub>c</sub></div><div class="rv">'+fmt3(1-Tf/Tc)+' (verifica)</div>';
+    }
+  } else {
+    html+='<div class="rl">COP frigo</div><div class="rv ok">'+fmt3(sum.COPfrigo)+'</div>';
+    html+='<div class="rl">COP pompa di calore</div><div class="rv ok">'+fmt3(sum.COPpdc)+'</div>';
+    if(curMode==='carnot'){
+      var Tc2=rf('s1Tc'), Tf2=rf('s1Tf');
+      html+='<div class="rl">COP<sub>frigo,Carnot</sub>=T<sub>f</sub>/(T<sub>c</sub>&minus;T<sub>f</sub>)</div><div class="rv">'+fmt3(Tf2/(Tc2-Tf2))+' (verifica)</div>';
+      html+='<div class="rl">COP<sub>pdc,Carnot</sub>=T<sub>c</sub>/(T<sub>c</sub>&minus;T<sub>f</sub>)</div><div class="rv">'+fmt3(Tc2/(Tc2-Tf2))+' (verifica)</div>';
+    }
+  }
+  html+='</div>';
+  o.className='out';
+  o.innerHTML=html;
+}
+
+// ── SLIDER ───────────────────────────────────────────────
+function sl(id,vid,fn){
+  document.getElementById(id).oninput=function(){
+    document.getElementById(vid).textContent=this.value;
+    fn();
+  };
+}
+sl('s1nR','s1nRv',function(){resetSim1();});
+sl('s1Vmin','s1Vminv',function(){resetSim1();});
+sl('s1Vmax','s1Vmaxv',function(){resetSim1();});
+sl('s1pmin','s1pminv',function(){resetSim1();});
+sl('s1pmax','s1pmaxv',function(){resetSim1();});
+sl('s1Tc','s1Tcv',function(){resetSim1();});
+sl('s1Tf','s1Tfv',function(){resetSim1();});
+sl('s1Va','s1Vav',function(){resetSim1();});
+sl('s1Vb','s1Vbv',function(){resetSim1();});
+
+sl('s2VA','s2VAv',function(){s2draw();});
+sl('s2pA','s2pAv',function(){s2draw();});
+sl('s2nR','s2nRv',function(){s2draw();});
+
+window.addEventListener('resize',function(){drawSim1();s2draw();});
+document.addEventListener('DOMContentLoaded',function(){
+  resetSim1();
+  s2renderLegRows();
+  s2draw();
+  requestAnimationFrame(masterTick);
+});
+
+var secs=document.querySelectorAll('.sec'),navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
