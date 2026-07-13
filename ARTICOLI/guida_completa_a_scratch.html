@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida Didattica a Scratch</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Document Styles mimicking a professional Google Doc / PDF Report */
+        :root {
+            --primary-color: #1e293b;
+            --accent-color: #4D97FF;
+            --accent-orange: #FFab19;
+            --text-color: #334155;
+            --bg-color: #f1f5f9;
+            --doc-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        /* Page Container (A4 style paper) */
+        .document-container {
+            background-color: var(--doc-bg);
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 80px 60px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+            font-family: 'Lora', serif;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 36px;
+            line-height: 1.2;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-top: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin-top: 25px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 15px;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-bottom: 1.5rem;
+            padding-left: 24px;
+        }
+
+        li {
+            font-size: 15px;
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            color: var(--primary-color);
+        }
+
+        /* Document Header / Cover style */
+        .doc-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .doc-metadata {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: -15px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Callout Box */
+        .callout-box {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .callout-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .callout-box.orange {
+            border-left-color: var(--accent-orange);
+            background-color: #fffbeb;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .toc li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .toc a {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .toc a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .toc-dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted #cbd5e1;
+            margin: 0 10px;
+            position: relative;
+            top: -4px;
+        }
+
+        /* Highlight box for key metric */
+        .metric-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .metric-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--accent-color);
+            font-family: 'Lora', serif;
+        }
+
+        /* Code Block Mock */
+        .code-mock {
+            font-family: monospace;
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        /* Footer */
+        .doc-footer {
+            margin-top: 60px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        /* Print optimization */
+        @media print {
+            body {
+                background-color: transparent;
+                padding: 0;
+            }
+            .document-container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        
+        <div class="doc-header">
+            <h1>Scratch: Immagina, Programma, Condividi</h1>
+            <div class="doc-metadata">
+                Guida Didattica Completa all'Uso della Programmazione Visuale
+            </div>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h3>Indice del Documento</h3>
+            <ul>
+                <li>
+                    <a href="#intro">1. Introduzione a Scratch <span class="toc-dots"></span> Pag. 1</a>
+                </li>
+                <li>
+                    <a href="#interfaccia">2. L'Interfaccia di Lavoro <span class="toc-dots"></span> Pag. 1</a>
+                </li>
+                <li>
+                    <a href="#pilastri">3. I Tre Pilastri Fondamentali <span class="toc-dots"></span> Pag. 2</a>
+                </li>
+                <li>
+                    <a href="#blocchi">4. Categorie dei Blocchi di Codice <span class="toc-dots"></span> Pag. 3</a>
+                </li>
+                <li>
+                    <a href="#didattica">5. Il Valore Pedagogico del Coding <span class="toc-dots"></span> Pag. 4</a>
+                </li>
+                <li>
+                    <a href="#tutorial">6. Primi Passi: Il Tuo Primo Script <span class="toc-dots"></span> Pag. 4</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section 1 -->
+        <h2 id="intro">1. Introduzione a Scratch</h2>
+        <p>
+            Sviluppato dal celebre gruppo di ricerca <strong>Lifelong Kindergarten</strong> del <strong>MIT Media Lab</strong>, Scratch è un ambiente di sviluppo e un linguaggio di programmazione visuale a blocchi gratuito. Concepito specificamente per i giovani dagli 8 ai 16 anni, Scratch viene ampiamente utilizzato da persone di ogni fascia d'età in contesti scolastici, extra-scolastici, universitari e domestici.
+        </p>
+        <p>
+            La filosofia alla base di Scratch poggia sul concetto che l'apprendimento della programmazione debba essere un processo creativo, sociale e divertente. Invece di dover digitare comandi di testo complessi incorrendo in frustranti errori di sintassi (come parentesi o punti e virgola dimenticati), Scratch permette agli utenti di concentrarsi interamente sulla <strong>logica algoritmica</strong> tramite l'uso di colorati blocchi grafici ad incastro.
+        </p>
+
+        <div class="callout-box">
+            <p><strong>💡 Nota Storica:</strong></p>
+            <p>
+                Il nome "Scratch" deriva dalla tecnica di "scratching" dei disc-jockey radiofonici, che mixano e manipolano clip audio in modo creativo e interattivo. Allo stesso modo, Scratch invita a prendere elementi multimediali esistenti (immagini, suoni, script) per ricombinarli in progetti inediti.
+            </p>
+        </div>
+
+        <!-- Section 2 -->
+        <h2 id="interfaccia">2. L'Interfaccia di Lavoro</h2>
+        <p>
+            L'interfaccia utente di Scratch è studiata per offrire il controllo completo del progetto in un'unica schermata divisa in tre sezioni principali:
+        </p>
+        <ul>
+            <li><strong>La Tavolozza dei Blocchi (Sinistra):</strong> Contiene tutti i mattoncini di codice pronti per essere utilizzati, ordinati per colore in base alla loro categoria funzionale (Movimento, Aspetto, Controllo, ecc.).</li>
+            <li><strong>L'Area degli Script (Centro):</strong> È il foglio di lavoro in cui l'utente trascina, rilascia e incastra i blocchi per strutturare l'algoritmo del proprio programma.</li>
+            <li><strong>Lo Stage e la Lista degli Sprite (Destra):</strong> Mostra l'esecuzione in tempo reale del programma. Sotto lo Stage si trova il pannello di gestione dei personaggi (Sprite) e degli sfondi del palcoscenico.</li>
+        </ul>
+
+        <!-- Section 3 -->
+        <h2 id="pilastri">3. I Tre Pilastri Fondamentali</h2>
+        <p>
+            Per comprendere la struttura di qualsiasi progetto Scratch, è fondamentale fare riferimento ai tre concetti chiave che ne costituiscono l'ossatura logica:
+        </p>
+
+        <h3>A. Lo Stage (Il Palcoscenico)</h3>
+        <p>
+            Lo <strong>Stage</strong> è l'area visiva in cui si sviluppa l'azione. Ha dimensioni fisse pari a <strong>480 unità di larghezza per 360 unità di altezza</strong> ed è impostato su un piano cartesiano matematico. Il centro esatto dello Stage corrisponde alle coordinate <code>(X: 0, Y: 0)</code>. 
+        </p>
+        <p>
+            Gli utenti possono programmare lo Stage per cambiare "Sfondo" in modo dinamico durante l'esecuzione del codice (ad esempio, passando dal livello 1 al livello 2 di un videogioco).
+        </p>
+
+        <h3>B. Gli Sprite (Gli Attori)</h3>
+        <p>
+            Gli <strong>Sprite</strong> sono gli oggetti grafici (personaggi, pulsanti, ostacoli) attivi all'interno dello Stage. Ciascuno di essi possiede la propria identità e può essere programmato in modo del tutto indipendente dagli altri. Uno Sprite possiede:
+        </p>
+        <ul>
+            <li><strong>Costumi alternativi:</strong> che, se alternati rapidamente, creano l'illusione ottica del movimento (es. la camminata del gatto).</li>
+            <li><strong>Suoni:</strong> effetti sonori o tracce musicali d'ambiente.</li>
+            <li><strong>Stato locale:</strong> variabili dedicate come velocità, punti vita, o nome.</li>
+        </ul>
+
+        <h3>C. I Blocchi di Codice (Le Istruzioni)</h3>
+        <p>
+            I blocchi sono la rappresentazione visiva dei comandi informatici. La forma geometrica di ogni blocco ne suggerisce la funzione: i blocchi con la parte superiore arrotondata (blocchi <i>Situazione</i>) danno inizio a una sequenza di codice; i blocchi intermedi si incastrano l'un l'altro in senso verticale; i blocchi con angoli appuntiti o forme esagonali rappresentano condizioni logiche booleane (Vero/Falso).
+        </p>
+
+        <div class="callout-box orange">
+            <p><strong>⚙️ Approfondimento Matematico:</strong></p>
+            <p>
+                L'utilizzo dello Stage introduce in modo pratico ed estremamente visivo concetti geometrici complessi quali gli assi cartesiani ortogonali, i numeri negativi, i gradi degli angoli per la rotazione nello spazio tridimensionale (sebbene Scratch operi in 2D).
+            </p>
+        </div>
+
+        <!-- Section 4 -->
+        <h2 id="blocchi">4. Categorie dei Blocchi di Codice</h2>
+        <p>
+            Per facilitare lo sviluppo logico, i blocchi sono organizzati per colore in 9 categorie predefinite:
+        </p>
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                    <th style="padding: 10px 0;">Categoria</th>
+                    <th style="padding: 10px 0;">Colore</th>
+                    <th style="padding: 10px 0;">Scopo Principale</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 10px 0; font-weight: bold;">Movimento</td>
+                    <td style="padding: 10px 0; color: #4D97FF;">Blu</td>
+                    <td style="padding: 10px 0;">Spostare, ruotare e posizionare gli Sprite sullo schermo.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 10px 0; font-weight: bold;">Aspetto</td>
+                    <td style="padding: 10px 0; color: #9966FF;">Viola</td>
+                    <td style="padding: 10px 0;">Modificare costumi, sfondi, dimensioni e mostrare fumetti di testo.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 10px 0; font-weight: bold;">Suono</td>
+                    <td style="padding: 10px 0; color: #D161E3;">Rosa</td>
+                    <td style="padding: 10px 0;">Riprodurre effetti acustici, note musicali e regolare il volume.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 10px 0; font-weight: bold;">Situazioni</td>
+                    <td style="padding: 10px 0; color: #FFab19;">Giallo</td>
+                    <td style="padding: 10px 0;">Gestire gli eventi di avvio (es. "Quando si clicca sulla bandierina verde").</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 10px 0; font-weight: bold;">Controllo</td>
+                    <td style="padding: 10px 0; color: #FF661A;">Arancione</td>
+                    <td style="padding: 10px 0;">Gestire cicli (ripeti) e condizioni logiche (se... allora... altrimenti).</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Section 5 -->
+        <h2 id="didattica">5. Il Valore Pedagogico del Coding</h2>
+        <p>
+            Inserire Scratch nei piani didattici delle scuole primarie e secondarie non mira unicamente a formare futuri programmatori, ma promuove lo sviluppo di competenze trasversali cruciali per il XXI secolo:
+        </p>
+        <ol>
+            <li><strong>Sviluppo del Pensiero Computazionale:</strong> Imparare a scomporre problemi complessi in sotto-problemi più piccoli e facilmente risolvibili in sequenza logica.</li>
+            <li><strong>Promozione della Creatività Attiva:</strong> Passare dal ruolo di consumatori passivi di tecnologia (videogiochi, video online) a creatori attivi.</li>
+            <li><strong>Problem Solving Cooperativo:</strong> Il portale Scratch incoraggia a condividere i propri codici sorgente (progetti "open source") stimolando l'analisi reciproca e il lavoro collaborativo.</li>
+        </ol>
+
+        <div class="metric-box">
+            <div class="metric-number">100M+</div>
+            <div>
+                <p style="margin-bottom: 0; font-weight: 600; color: var(--primary-color);">Progetti Condivisi sul Portale Scratch</p>
+                <p style="margin-bottom: 0; font-size: 13px; color: #64748b;">Una delle community educative digitali più attive al mondo, supportata da università e fondazioni no-profit.</p>
+            </div>
+        </div>
+
+        <!-- Section 6 -->
+        <h2 id="tutorial">6. Primi Passi: Il Tuo Primo Script</h2>
+        <p>
+            Per comprendere l'immediatezza della programmazione visuale, ecco lo schema per far camminare ed emettere un suono al personaggio del Gatto (lo Sprite predefinito):
+        </p>
+
+        <div class="code-mock">
+QUANDO SI CLICCA SULLA BANDIERINA VERDE
+ripeti per sempre:
+|   fai 10 passi
+|   se tocchi il bordo, rimbalza
+|   prossimo costume
+|   attendi 0.1 secondi
+|   se il tasto [spazio] è premuto allora:
+|   |   avvia suono [miao]
+--------------------------------------------------
+        </div>
+
+        <p>
+            Questo semplice esempio mostra l'implementazione di un ciclo infinito (<code>ripeti per sempre</code>), la gestione del movimento spaziale, un cambio costume dinamico per creare l'animazione grafica e un controllo di input della tastiera interattivo in tempo reale.
+        </p>
+
+        <div class="doc-footer">
+            Guida Scratch Didattica | Licenza d'Uso Libera per Scuole e Docenti | www.scratch.mit.edu
+        </div>
+
+    </div>
+
+</body>
+</html>
