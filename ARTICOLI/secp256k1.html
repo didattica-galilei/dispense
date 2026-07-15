@@ -268,44 +268,19 @@
 
     <div class="diagram-container">
         <div class="diagram-card">
-            <h4 style="margin: 0 0 10px 0; color: #fff;">Somma di Punti (P ≠ Q)</h4>
-            <svg width="260" height="200" viewBox="0 0 260 200" style="background:#151518; border-radius:6px; border: 1px solid #333;">
-                <path d="M 40,20 Q 90,100 130,100 T 220,180" fill="none" stroke="#4ea8de" stroke-width="2"/>
-                <path d="M 40,180 Q 90,100 130,100 T 220,20" fill="none" stroke="#4ea8de" stroke-width="2"/>
-                <line x1="50" y1="50" x2="210" y2="170" stroke="#f39c12" stroke-width="1.5" stroke-dasharray="4"/>
-                <line x1="170" y1="140" x2="170" y2="60" stroke="#888" stroke-width="1" stroke-dasharray="2"/>
-                <circle cx="50" cy="50" r="4" fill="#4bb543"/>
-                <text x="45" y="42" fill="#fff" font-size="12">P</text>
-                
-                <circle cx="110" cy="95" r="4" fill="#4bb543"/>
-                <text x="105" y="87" fill="#fff" font-size="12">Q</text>
-                
-                <circle cx="170" cy="140" r="4" fill="#ff3333"/>
-                <text x="180" y="145" fill="#aaa" font-size="11">R'</text>
-                
-                <circle cx="170" cy="60" r="5" fill="#4ea8de"/>
-                <text x="180" y="65" fill="#fff" font-weight="bold" font-size="12">P+Q=R</text>
-            </svg>
-            <p>La retta secante passante per P e Q interseca la curva in R'. Riflettendo R' sull'asse delle ascisse si ottiene R.</p>
+            <h4 style="margin: 0 0 10px 0; color: #fff;">Somma di Punti Distinti (P ≠ Q)</h4>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Elliptic_curve_point_addition.svg" 
+                 alt="Somma di Punti su Curva Ellittica" 
+                 style="width: 100%; max-width: 280px; height: auto; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <p>La retta secante passante per P e Q interseca la curva nel terzo punto R'. La sua riflessione rispetto all'asse x definisce il punto somma R = P + Q.</p>
         </div>
 
         <div class="diagram-card">
             <h4 style="margin: 0 0 10px 0; color: #fff;">Raddoppio di un Punto (P = Q)</h4>
-            <svg width="260" height="200" viewBox="0 0 260 200" style="background:#151518; border-radius:6px; border: 1px solid #333;">
-                <path d="M 40,20 Q 90,100 130,100 T 220,180" fill="none" stroke="#4ea8de" stroke-width="2"/>
-                <path d="M 40,180 Q 90,100 130,100 T 220,20" fill="none" stroke="#4ea8de" stroke-width="2"/>
-                <line x1="30" y1="115" x2="210" y2="65" stroke="#f39c12" stroke-width="1.5" stroke-dasharray="4"/>
-                <line x1="165" y1="78" x2="165" y2="122" stroke="#888" stroke-width="1" stroke-dasharray="2"/>
-                <circle cx="78" cy="102" r="5" fill="#4bb543"/>
-                <text x="73" y="92" fill="#fff" font-size="12">P</text>
-                
-                <circle cx="165" cy="78" r="4" fill="#ff3333"/>
-                <text x="175" y="75" fill="#aaa" font-size="11">R'</text>
-                
-                <circle cx="165" cy="122" r="5" fill="#4ea8de"/>
-                <text x="175" y="130" fill="#fff" font-weight="bold" font-size="12">2P=R</text>
-            </svg>
-            <p>Si traccia la retta tangente alla curva nel punto P. Essa interseca la curva in R'. La riflessione verticale di R' è 2P.</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Elliptic_curve_point_doubling.svg" 
+                 alt="Raddoppio di un Punto su Curva Ellittica" 
+                 style="width: 100%; max-width: 280px; height: auto; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <p>Si traccia la retta tangente alla curva nel punto P. Questa incontra la curva nel punto R'. Riflettendo R' verticalmente si ottiene il punto doppio R = 2P.</p>
         </div>
     </div>
 
