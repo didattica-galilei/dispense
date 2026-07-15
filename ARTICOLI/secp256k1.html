@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crittografia Ellittica: La Curva Secp256k1</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --accent-color: #4ea8de;
+            --success-color: #4bb543;
+            --warning-color: #f39c12;
+            --border-color: #2e2e34;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            max-width: 900px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-top: 0;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        p.subtitle {
+            color: #a0a0a5;
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        h2.section-title {
+            font-size: 1.3rem;
+            color: #fff;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 35px;
+        }
+
+        h3.subsection-title {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background-color: rgba(78, 168, 222, 0.05);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .math-box {
+            background: #0f0f11;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+            margin: 15px 0;
+            overflow-x: auto;
+            color: #fff;
+            line-height: 1.5;
+        }
+
+        .math-box strong {
+            color: var(--accent-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background-color: #0f0f11;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #64b5f6;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            background-color: rgba(78, 168, 222, 0.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .result-segment {
+            margin-bottom: 15px;
+        }
+
+        .result-segment:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-title {
+            font-size: 0.85rem;
+            color: #a0a0a5;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .result-value {
+            font-family: 'Courier New', Courier, monospace;
+            color: #fff;
+            font-size: 1rem;
+            background: #0f0f11;
+            padding: 10px;
+            border-radius: 4px;
+            word-break: break-all;
+            user-select: all;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        ul, ol {
+            line-height: 1.6;
+            color: #a0a0a5;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        li strong {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>La Curva Ellittica Secp256k1</h1>
+    <p class="subtitle">Il motore matematico dietro Bitcoin e la crittografia asimmetrica</p>
+
+    <div class="info-box">
+        <strong>Cos'è Secp256k1?</strong><br>
+        È una curva ellittica definita su un campo finito $\mathbb{F}_p$ (aritmetica modulare applicata alle coordinate dei punti). L'equazione di riferimento assume una forma incredibilmente semplice, detta forma di Weierstrass:
+        <div style="text-align: center; font-size: 1.25rem; margin: 12px 0; font-family: monospace; color: #fff; background: #0f0f11; padding: 10px; border-radius: 6px;">
+            y² ≡ x³ + 7 (mod p)
+        </div>
+        I punti $(x, y)$ che soddisfano questa equazione nel campo discreto, insieme a un "punto all'infinito" speciale ($\mathcal{O}$), formano un gruppo algebrico in cui è estremamente complesso calcolare il logaritmo discreto.
+    </div>
+
+    <h2 class="section-title">📐 Come si Opera nel Gruppo?</h2>
+    
+    <p>Nelle curve ellittiche non si sommano le singole coordinate come se fossero normali vettori (cioè $P + Q \neq (x_P+x_Q, y_P+y_Q)$). La <strong>somma tra punti</strong> è definita tramite una suggestiva costruzione geometrica, che viene poi formalizzata in equazioni discrete.</p>
+
+    
+
+    <h3 class="subsection-title">1. La Somma Geometrica (Punti Distinti: P ≠ Q)</h3>
+    <p>Per sommare due punti distinti $P$ e $Q$ sulla curva:</p>
+    <ul>
+        <li>Si traccia una retta passante per <strong>P</strong> e <strong>Q</strong>.</li>
+        <li>La retta intersecherà la curva in un terzo punto, che chiamiamo <strong>R'</strong>.</li>
+        <li>Si esegue la riflessione simmetrica di <strong>R'</strong> rispetto all'asse delle ascisse ($x$). Il punto risultante è la somma: <strong>P + Q = R</strong>.</li>
+    </ul>
+
+    <h3 class="subsection-title">2. Il Raddoppio di un Punto (P = Q)</h3>
+    <p>Per sommare un punto a se stesso ($P + P = 2P$):</p>
+    <ul>
+        <li>Non potendo tracciare una retta passante per due punti distinti, si traccia la <strong>retta tangente</strong> alla curva nel punto <strong>P</strong>.</li>
+        <li>Si trova la terza intersezione con la curva (<strong>R'</strong>).</li>
+        <li>Si riflette simmetricamente <strong>R'</strong> rispetto all'asse $x$ per trovare <strong>2P</strong>.</li>
+    </ul>
+
+    
+
+    <h3 class="subsection-title">3. Le Formule Algebriche in $\mathbb{F}_p$</h3>
+    <p>Per tradurre la geometria in codice software, le formule cartesiane vengono elaborate all'interno dell'aritmetica modulare (modulo $p$).</p>
+    
+    <p>Dati due punti $P = (x_1, y_1)$ e $Q = (x_2, y_2)$:</p>
+    
+    <div class="math-box">
+        <strong>Pendenza (m) della retta:</strong><br>
+        • Se P ≠ Q: &nbsp;&nbsp;&nbsp;&nbsp; m ≡ (y₂ - y₁) * (x₂ - x₁)⁻¹ (mod p)<br>
+        • Se P = Q: &nbsp;&nbsp;&nbsp;&nbsp; m ≡ (3 * x₁² + A) * (2 * y₁)⁻¹ (mod p) &nbsp;&nbsp; [In Secp256k1, A = 0]<br><br>
+        <strong>Coordinate del Punto Risultante R = (x₃, y₃):</strong><br>
+        • x₃ ≡ m² - x₁ - x₂ (mod p)<br>
+        • y₃ ≡ m * (x₁ - x₃) - y₁ (mod p)
+    </div>
+
+    <h3 class="subsection-title">4. L'Elemento Neutro: Il Punto all'Infinito ($\mathcal{O}$)</h3>
+    <p>Cosa succede se proviamo a sommare un punto $P = (x, y)$ al suo simmetrico $-P = (x, -y)$? La retta che li unisce è perfettamente verticale e non interseca la curva in un terzo punto reale. Per chiudere matematicamente il gruppo, definiamo un punto ideale chiamato <strong>Punto all'Infinito ($\mathcal{O}$)</strong>, che funge da elemento neutro:</p>
+    <ul>
+        <li><strong>P + (-P) = $\mathcal{O}$</strong></li>
+        <li><strong>P + $\mathcal{O}$ = P</strong></li>
+    </ul>
+
+    <h3 class="subsection-title">5. Perché è un Gruppo "Ciclico"?</h3>
+    <p>Se prendiamo il Punto Generatore standard $G$ e lo sommiamo ripetutamente a se stesso, generiamo l'intera sequenza di punti del gruppo:</p>
+    <div class="math-box" style="text-align: center;">
+        1G, &nbsp; 2G, &nbsp; 3G, &nbsp; 4G, &nbsp; ... &nbsp; nG = 𝒪
+    </div>
+    <p>Poiché lavoriamo in un campo finito $\mathbb{F}_p$, il numero di punti unici è limitato dall'<strong>ordine $n$</strong>. Una volta sommato il punto $G$ per $n$ volte, si ritorna ciclicamente all'elemento neutro $\mathcal{O}$. L'operazione successiva $(n+1)G$ riporterà esattamente a $G$, comportandosi esattamente come un orologio.</p>
+
+
+    <h2 class="section-title">📊 I Parametri Standard della Curva</h2>
+    <p style="font-size:0.9rem; color:#a0a0a5;">Per garantire la massima sicurezza crittografica, i parametri di Secp256k1 sono numeri primi giganteschi a 256 bit:</p>
+    
+    <div class="math-box">
+        • <strong>Modulo Primo (p):</strong> FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFCF<br>
+        <span style="font-size:0.8rem; color:#888;">(Equivale a 2²⁵⁶ - 2³² - 977, un numero di 78 cifre decimali)</span><br><br>
+        
+        • <strong>Punto Generatore (G):</strong> Il punto di partenza standard sulla curva da cui originano tutte le chiavi.<br>
+        &nbsp;&nbsp;- <strong>G_x:</strong> 79BE667E F9DCBBAC 55A06295 CE870B07 029BFCD1 2CA7260D 821E122C 5AE35968<br>
+        &nbsp;&nbsp;- <strong>G_y:</strong> 47F51141 34D69FD7 6E266710 4D638531 C9894474 BE64A8D9 F963E826 ACCF9392<br><br>
+        
+        • <strong>Ordine del Gruppo (n):</strong> Il numero totale di punti unici generabili (moltiplicando G per uno scalare).<br>
+        &nbsp;&nbsp;- <strong>n:</strong> FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
+    </div>
+
+    <h2 class="section-title">🔑 Generatore Interattivo di Chiave Pubblica Secp256k1</h2>
+    <p style="font-size:0.9rem; color:#a0a0a5;">La <strong>chiave privata</strong> è un semplice numero intero $k$. La <strong>chiave pubblica $Q$</strong> è il punto risultante dalla moltiplicazione scalare $Q = k \times G$. Calcola istantaneamente le coordinate cartesiane reali $Q(x,y)$ sulla curva:</p>
+
+    <div style="background: #151518; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <div class="form-group">
+            <label for="privateKey">Chiave Privata k (Decimale o Esadecimale prefissato da 0x):</label>
+            <textarea id="privateKey" rows="2" placeholder="Es. 1 o 0xf3901a... o un numero colossale casuale"></textarea>
+        </div>
+        <button class="action-btn" onclick="generaChiavePubblica()">Calcola Punto sulla Curva (Chiave Pubblica)</button>
+
+        <div id="resultContainer" class="result-box">
+            <div class="result-segment">
+                <div class="result-title">Punto sulla Curva Q_x (Esadecimale)</div>
+                <div id="pubX" class="result-value" style="color: #81c784;"></div>
+            </div>
+            <div class="result-segment">
+                <div class="result-title">Punto sulla Curva Q_y (Esadecimale)</div>
+                <div id="pubY" class="result-value" style="color: #81c784;"></div>
+            </div>
+            <div class="result-segment">
+                <div class="result-title">Chiave Pubblica Non Compressa (Formato Standard 04 + X + Y)</div>
+                <div id="pubFull" class="result-value" style="font-size:0.85rem; color:var(--accent-color);"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-links">
+        <a href="moduli.html" class="nav-link">&larr; Tabelle di ℤ/nℤ</a>
+        <a href="inverso-grande.html" class="nav-link">🔄 Calcolatore Inverso</a>
+        <a href="prodotto-grande.html" class="nav-link">✖️ Moltiplicatore Modulare</a>
+        <a href="basi-numeriche.html" class="nav-link">🔢 Convertitore di Base &rarr;</a>
+    </div>
+</div>
+
+<script>
+    // Configurazione dei parametri globali di secp256k1 con BigInt nativo
+    const P = BigInt("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFCF");
+    const A = BigInt(0); 
+    const B = BigInt(7); 
+    const N = BigInt("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141");
+    
+    // Punto Generatore G
+    const G = {
+        x: BigInt("0x79BE667EF9DCBBAC55A06295CE870B07029BFCD12CA7260D821E122C5AE35968"),
+        y: BigInt("0x47F5114134D69FD76E2667104D638531C9894474BE64A8D9F963E826ACCF9392")
+    };
+
+    // Inverso modulare con l'algoritmo di Euclide Esteso
+    function modInverse(a, m) {
+        let m0 = m, t, q;
+        let x0 = 0n, x1 = 1n;
+        if (m === 1n) return 0n;
+        let tempA = (a % m + m) % m;
+        while (tempA > 1n) {
+            q = tempA / m0;
+            t = m0;
+            m0 = tempA % m0;
+            tempA = t;
+            t = x0;
+            x0 = x1 - q * x0;
+            x1 = t;
+        }
+        if (x1 < 0n) x1 += m;
+        return x1;
+    }
+
+    // Somma di due punti su curva ellittica nel campo finito F_p
+    function jacobianAdd(p1, p2) {
+        if (p1 === null) return p2;
+        if (p2 === null) return p1;
+
+        if (p1.x === p2.x) {
+            if ((p1.y + p2.y) % P === 0n) {
+                return null; // Punto all'infinito
+            }
+            return jacobianDouble(p1);
+        }
+
+        const num = (p2.y - p1.y + P) % P;
+        const den = (p2.x - p1.x + P) % P;
+        const lambda = (num * modInverse(den, P)) % P;
+
+        const x3 = (lambda * lambda - p1.x - p2.x + 2n * P) % P;
+        const y3 = (lambda * (p1.x - x3) - p1.y + P) % P;
+
+        return { x: x3, y: y3 };
+    }
+
+    // Raddoppio di un punto (Point Doubling)
+    function jacobianDouble(p) {
+        if (p === null || p.y === 0n) return null;
+
+        const num = (3n * p.x * p.x) % P;
+        const den = (2n * p.y) % P;
+        const lambda = (num * modInverse(den, P)) % P;
+
+        const x3 = (lambda * lambda - 2n * p.x + 2n * P) % P;
+        const y3 = (lambda * (p.x - x3) - p.y + P) % P;
+
+        return { x: x3, y: y3 };
+    }
+
+    // Moltiplicazione Scalare (k * P) usando l'algoritmo Double-and-Add (binario)
+    function scalarMultiply(k, point) {
+        let sc = k % N;
+        if (sc === 0n) return null;
+
+        let result = null;
+        let addend = point;
+
+        while (sc > 0n) {
+            if ((sc & 1n) === 1n) {
+                result = jacobianAdd(result, addend);
+            }
+            addend = jacobianDouble(addend);
+            sc >>= 1n;
+        }
+        return result;
+    }
+
+    function generaChiavePubblica() {
+        let inputStr = document.getElementById('privateKey').value.trim();
+        const resBox = document.getElementById('resultContainer');
+        const pubXEl = document.getElementById('pubX');
+        const pubYEl = document.getElementById('pubY');
+        const pubFullEl = document.getElementById('pubFull');
+
+        if (!inputStr) {
+            alert("Per favore, inserisci una chiave privata.");
+            return;
+        }
+
+        try {
+            let k;
+            if (inputStr.toLowerCase().startsWith("0x")) {
+                k = BigInt(inputStr);
+            } else {
+                k = BigInt(inputStr);
+            }
+
+            if (k <= 0n || k >= N) {
+                alert("La chiave privata deve essere un intero positivo compreso tra 1 e l'ordine della curva (n - 1).");
+                return;
+            }
+
+            const Q = scalarMultiply(k, G);
+
+            if (Q === null) {
+                alert("Il punto risultante è il punto all'infinito (chiave non valida).");
+                return;
+            }
+
+            const hexX = Q.x.toString(16).toUpperCase().padStart(64, '0');
+            const hexY = Q.y.toString(16).toUpperCase().padStart(64, '0');
+            const fullPub = "04" + hexX + hexY;
+
+            pubXEl.innerText = "0x" + hexX;
+            pubYEl.innerText = "0x" + hexY;
+            pubFullEl.innerText = fullPub;
+            
+            resBox.style.display = "block";
+
+        } catch (e) {
+            alert("Chiave privata non valida. Assicurati di inserire solo numeri interi o stringhe esadecimali valide (es. 0x123F).");
+        }
+    }
+</script>
+
+</body>
+</html>
