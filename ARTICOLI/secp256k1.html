@@ -266,24 +266,51 @@
     
     <p>Nelle curve ellittiche non si sommano le singole coordinate come se fossero normali vettori (cioè $P + Q \neq (x_P+x_Q, y_P+y_Q)$). La <strong>somma tra punti</strong> è definita tramite una suggestiva costruzione geometrica, che viene poi formalizzata in equazioni discrete.</p>
 
-    <div class="diagram-container">
+   <div class="diagram-container">
         <div class="diagram-card">
             <h4 style="margin: 0 0 10px 0; color: #fff;">Somma di Punti Distinti (P ≠ Q)</h4>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cd/Elliptic_curve_point_addition.svg" 
-                 alt="Somma di Punti su Curva Ellittica" 
-                 style="width: 100%; max-width: 280px; height: auto; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-            <p>La retta secante passante per P e Q interseca la curva nel terzo punto R'. La sua riflessione rispetto all'asse x definisce il punto somma R = P + Q.</p>
+            <svg width="300" height="240" viewBox="0 0 300 240" style="background:#151518; border-radius:8px; border: 1px solid var(--border-color);">
+                <line x1="20" y1="120" x2="280" y2="120" stroke="#2e2e34" stroke-width="1" />
+                <line x1="100" y1="20" x2="100" y2="220" stroke="#2e2e34" stroke-width="1" />
+                
+                <path d="M 60,30 C 85,90 85,150 60,210 M 80,45 C 105,95 105,145 80,195 M 100,60 C 130,105 130,135 100,180 M 100,180 C 160,180 220,210 260,220 M 100,60 C 160,60 220,30 260,20" fill="none" stroke="#4ea8de" stroke-width="2.5"/>
+                
+                <line x1="80" y1="55" x2="240" y2="171" stroke="#f39c12" stroke-width="1.5"/>
+                
+                <line x1="198" y1="140" x2="198" y2="100" stroke="#a0a0a5" stroke-width="1.2" stroke-dasharray="3,3"/>
+                
+                <circle cx="115" cy="80" r="5" fill="#4bb543"/> <text x="105" y="72" fill="#fff" font-size="12" font-family="sans-serif">P</text>
+                
+                <circle cx="150" cy="105" r="5" fill="#4bb543"/> <text x="142" y="97" fill="#fff" font-size="12" font-family="sans-serif">Q</text>
+                
+                <circle cx="198" cy="140" r="4" fill="#ff3333"/> <text x="210" y="145" fill="#a0a0a5" font-size="11" font-family="sans-serif">R'</text>
+                
+                <circle cx="198" cy="100" r="6" fill="#4ea8de"/> <text x="210" y="104" fill="#fff" font-weight="bold" font-size="13" font-family="sans-serif">R (P+Q)</text>
+            </svg>
+            <p>La retta secante passante per P e Q incontra la curva in un terzo punto R'. La sua riflessione speculare rispetto all'asse orizzontale restituisce il punto R.</p>
         </div>
 
         <div class="diagram-card">
             <h4 style="margin: 0 0 10px 0; color: #fff;">Raddoppio di un Punto (P = Q)</h4>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Elliptic_curve_point_doubling.svg" 
-                 alt="Raddoppio di un Punto su Curva Ellittica" 
-                 style="width: 100%; max-width: 280px; height: auto; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
-            <p>Si traccia la retta tangente alla curva nel punto P. Questa incontra la curva nel punto R'. Riflettendo R' verticalmente si ottiene il punto doppio R = 2P.</p>
+            <svg width="300" height="240" viewBox="0 0 300 240" style="background:#151518; border-radius:8px; border: 1px solid var(--border-color);">
+                <line x1="20" y1="120" x2="280" y2="120" stroke="#2e2e34" stroke-width="1" />
+                <line x1="100" y1="20" x2="100" y2="220" stroke="#2e2e34" stroke-width="1" />
+                
+                <path d="M 60,30 C 85,90 85,150 60,210 M 80,45 C 105,95 105,145 80,195 M 100,60 C 130,105 130,135 100,180 M 100,180 C 160,180 220,210 260,220 M 100,60 C 160,60 220,30 260,20" fill="none" stroke="#4ea8de" stroke-width="2.5"/>
+                
+                <line x1="66" y1="45" x2="251" y2="177" stroke="#f39c12" stroke-width="1.5"/>
+                
+                <line x1="212" y1="150" x2="212" y2="90" stroke="#a0a0a5" stroke-width="1.2" stroke-dasharray="3,3"/>
+                
+                <circle cx="115" cy="80" r="6" fill="#4bb543"/> <text x="102" y="72" fill="#fff" font-size="12" font-family="sans-serif" font-weight="bold">P</text>
+                
+                <circle cx="212" cy="150" r="4" fill="#ff3333"/> <text x="224" y="155" fill="#a0a0a5" font-size="11" font-family="sans-serif">R'</text>
+                
+                <circle cx="212" cy="90" r="6" fill="#4ea8de"/> <text x="224" y="94" fill="#fff" font-weight="bold" font-size="13" font-family="sans-serif">2P</text>
+            </svg>
+            <p>Non avendo due punti distinti, si traccia la tangente geometrica alla curva nel punto P. La sua intersezione R' viene proiettata verticalmente per trovare il punto 2P.</p>
         </div>
     </div>
-
     
 
     <h3 class="subsection-title">1. Le Formule Algebriche in $\mathbb{F}_p$</h3>
