@@ -292,13 +292,10 @@
     
     <div class="math-box">
         <strong>Pendenza ($m$) della retta:</strong><br>
-        $$P \neq Q \implies m \equiv \frac{y_2 - y_1}{x_2 - x_1} \pmod p$$
-<br>
-        $$P = Q \implies m \equiv \frac{3x_1^2 + a}{2y_1} \pmod p \quad \text{[In Secp256k1, } a = 0\text{]}$$
-<br>
+        $$P \neq Q \implies m \equiv \frac{y_2 - y_1}{x_2 - x_1} \pmod p$$<br>
+        $$P = Q \implies m \equiv \frac{3x_1^2 + a}{2y_1} \pmod p \quad \text{[In Secp256k1, } a = 0\text{]}$$<br>
         <strong>Coordinate del Punto Risultante $R = P + Q = (x_3, y_3)$:</strong><br>
-        $$x_3 \equiv m^2 - x_1 - x_2 \pmod p$$
-<br>
+        $$x_3 \equiv m^2 - x_1 - x_2 \pmod p$$<br>
         $$y_3 \equiv m(x_1 - x_3) - y_1 \pmod p$$
     </div>
 
@@ -345,4 +342,244 @@
 
 
     <h2 class="section-title">🔍 Verificatore di Punti sulla Curva (Hex)</h2>
-    <p style="
+    <p style="font-size:0.9rem; color:#a0a0a5;">
+        Inserisci le coordinate cartesiane $x$ e $y$ in formato esadecimale (con o senza prefisso <code>0x</code>) per verificare se il punto appartiene matematicamente alla curva $secp256k1$ secondo l'equazione $y^2 \equiv x^3 + 7 \pmod p$.
+    </p>
+
+    <div style="background: #151518; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 35px;">
+        <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px;">
+            <div style="flex: 1; min-width: 250px;">
+                <label for="verifyX">Coordinata X (Esadecimale):</label>
+                <textarea id="verifyX" rows="2" placeholder="Es. 79BE667EF9DCBBAC55A06295CE870B07029BFCD12CA7260D821E122C5AE35968" style="font-size: 0.95rem;"></textarea>
+            </div>
+            <div style="flex: 1; min-width: 250px;">
+                <label for="verifyY">Coordinata Y (Esadecimale):</label>
+                <textarea id="verifyY" rows="2" placeholder="Es. 47F5114134D69FD76E2667104D638531C9894474BE64A8D9F963E826ACCF9392" style="font-size: 0.95rem;"></textarea>
+            </div>
+        </div>
+        
+        <button class="action-btn" onclick="verificaPunto()" style="background-color: var(--warning-color); color: #000; margin-bottom: 15px;">
+            Verifica Appartenenza alla Curva
+        </button>
+
+        <div id="verifyResult" style="display: none; padding: 15px; border-radius: 6px; border: 1px solid var(--border-color); line-height: 1.6;">
+            <div id="verifyStatus" style="font-weight: bold; font-size: 1.1rem; margin-bottom: 10px;"></div>
+            <div id="verifyMath" class="math-box" style="margin: 0; font-size: 0.85rem; background: #0c0c0e;"></div>
+        </div>
+    </div>
+
+
+    <h2 class="section-title">📊 I Parametri Standard della Curva</h2>
+    <p style="font-size:0.9rem; color:#a0a0a5;">Per garantire la massima sicurezza crittografica, i parametri di Secp256k1 sono numeri primi giganteschi a 256 bit:</p>
+    
+    <div class="math-box">
+        • <strong>Modulo Primo ($p$):</strong> FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFCF<br>
+        <span style="font-size:0.8rem; color:#888;">(Equivale a $2^{256} - 2^{32} - 977$, un numero di 78 cifre decimali)</span><br><br>
+        
+        • <strong>Punto Generatore ($G$):</strong> Il punto di partenza standard sulla curva da cui originano tutte le chiavi.<br>
+        &nbsp;&nbsp;- <strong>$G_x$:</strong> 79BE667E F9DCBBAC 55A06295 CE870B07 029BFCD1 2CA7260D 821E122C 5AE35968<br>
+        &nbsp;&nbsp;- <strong>$G_y$:</strong> 47F51141 34D69FD7 6E266710 4D638531 C9894474 BE64A8D9 F963E826 ACCF9392<br><br>
+        
+        • <strong>Ordine del Gruppo ($n$):</strong> Il numero totale di punti unici generabili (moltiplicando $G$ per uno scalare).<br>
+        &nbsp;&nbsp;- <strong>$n$:</strong> FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
+    </div>
+
+    <div class="nav-links">
+        <a href="moduli.html" class="nav-link">&larr; Tabelle di ℤ/nℤ</a>
+        <a href="inverso-grande.html" class="nav-link">🔄 Calcolatore Inverso</a>
+        <a href="prodotto-grande.html" class="nav-link">✖️ Moltiplicatore Modulare</a>
+        <a href="basi-numeriche.html" class="nav-link">🔢 Convertitore di Base &rarr;</a>
+    </div>
+</div>
+
+<script>
+    // Configurazione dei parametri globali di secp256k1 con BigInt nativo
+    const P = BigInt("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFCF");
+    const A = BigInt(0); 
+    const B = BigInt(7); 
+    const N = BigInt("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141");
+    
+    // Punto Generatore G
+    const G = {
+        x: BigInt("0x79BE667EF9DCBBAC55A06295CE870B07029BFCD12CA7260D821E122C5AE35968"),
+        y: BigInt("0x47F5114134D69FD76E2667104D638531C9894474BE64A8D9F963E826ACCF9392")
+    };
+
+    // Inverso modulare con l'algoritmo di Euclide Esteso
+    function modInverse(a, m) {
+        let m0 = m, t, q;
+        let x0 = 0n, x1 = 1n;
+        if (m === 1n) return 0n;
+        let tempA = (a % m + m) % m;
+        while (tempA > 1n) {
+            q = tempA / m0;
+            t = m0;
+            m0 = tempA % m0;
+            tempA = t;
+            t = x0;
+            x0 = x1 - q * x0;
+            x1 = t;
+        }
+        if (x1 < 0n) x1 += m;
+        return x1;
+    }
+
+    // Somma di due punti su curva ellittica nel campo finito F_p
+    function jacobianAdd(p1, p2) {
+        if (p1 === null) return p2;
+        if (p2 === null) return p1;
+
+        if (p1.x === p2.x) {
+            if ((p1.y + p2.y) % P === 0n) {
+                return null; // Punto all'infinito
+            }
+            return jacobianDouble(p1);
+        }
+
+        const num = (p2.y - p1.y + P) % P;
+        const den = (p2.x - p1.x + P) % P;
+        const lambda = (num * modInverse(den, P)) % P;
+
+        const x3 = (lambda * lambda - p1.x - p2.x + 2n * P) % P;
+        const y3 = (lambda * (p1.x - x3) - p1.y + P) % P;
+
+        return { x: x3, y: y3 };
+    }
+
+    // Raddoppio di un punto (Point Doubling)
+    function jacobianDouble(p) {
+        if (p === null || p.y === 0n) return null;
+
+        const num = (3n * p.x * p.x) % P;
+        const den = (2n * p.y) % P;
+        const lambda = (num * modInverse(den, P)) % P;
+
+        const x3 = (lambda * lambda - 2n * p.x + 2n * P) % P;
+        const y3 = (lambda * (p.x - x3) - p.y + P) % P;
+
+        return { x: x3, y: y3 };
+    }
+
+    // Moltiplicazione Scalare (k * P) usando l'algoritmo Double-and-Add (binario)
+    function scalarMultiply(k, point) {
+        let sc = k % N;
+        if (sc === 0n) return null;
+
+        let result = null;
+        let addend = point;
+
+        while (sc > 0n) {
+            if ((sc & 1n) === 1n) {
+                result = jacobianAdd(result, addend);
+            }
+            addend = jacobianDouble(addend);
+            sc >>= 1n;
+        }
+        return result;
+    }
+
+    function generaChiavePubblica() {
+        let inputStr = document.getElementById('privateKey').value.trim();
+        const resBox = document.getElementById('resultContainer');
+        const pubXEl = document.getElementById('pubX');
+        const pubYEl = document.getElementById('pubY');
+        const pubFullEl = document.getElementById('pubFull');
+
+        if (!inputStr) {
+            alert("Per favore, inserisci una chiave privata.");
+            return;
+        }
+
+        try {
+            let k;
+            if (inputStr.toLowerCase().startsWith("0x")) {
+                k = BigInt(inputStr);
+            } else {
+                k = BigInt(inputStr);
+            }
+
+            if (k <= 0n || k >= N) {
+                alert("La chiave privata deve essere un intero positivo compreso tra 1 e l'ordine della curva (n - 1).");
+                return;
+            }
+
+            const Q = scalarMultiply(k, G);
+
+            if (Q === null) {
+                alert("Il punto risultante è il punto all'infinito (chiave non valida).");
+                return;
+            }
+
+            const hexX = Q.x.toString(16).toUpperCase().padStart(64, '0');
+            const hexY = Q.y.toString(16).toUpperCase().padStart(64, '0');
+            const fullPub = "04" + hexX + hexY;
+
+            pubXEl.innerText = "0x" + hexX;
+            pubYEl.innerText = "0x" + hexY;
+            pubFullEl.innerText = fullPub;
+            
+            resBox.style.display = "block";
+
+        } catch (e) {
+            alert("Chiave privata non valida. Assicurati di inserire solo numeri interi o stringhe esadecimali valide (es. 0x123F).");
+        }
+    }
+
+    function verificaPunto() {
+        const inputX = document.getElementById('verifyX').value.trim();
+        const inputY = document.getElementById('verifyY').value.trim();
+        const resultDiv = document.getElementById('verifyResult');
+        const statusEl = document.getElementById('verifyStatus');
+        const mathEl = document.getElementById('verifyMath');
+
+        if (!inputX || !inputY) {
+            alert("Per favore, inserisci sia la coordinata X che la coordinata Y.");
+            return;
+        }
+
+        try {
+            // Normalizza l'input esadecimale aggiungendo 0x se manca
+            const hexX = inputX.toLowerCase().startsWith('0x') ? inputX : '0x' + inputX;
+            const hexY = inputY.toLowerCase().startsWith('0x') ? inputY : '0x' + inputY;
+
+            const xVal = BigInt(hexX);
+            const yVal = BigInt(hexY);
+
+            if (xVal >= P || yVal >= P) {
+                alert("Attenzione: le coordinate non possono essere maggiori o uguali al modulo primo P.");
+                return;
+            }
+
+            // Calcola il membro sinistro: y^2 mod P
+            const y2 = (yVal * yVal) % P;
+
+            // Calcola il membro destro: (x^3 + 7) mod P
+            const x3 = (xVal * xVal * xVal) % P;
+            const x3_plus_7 = (x3 + 7n) % P;
+
+            resultDiv.style.display = "block";
+
+            // Confronta i risultati
+            if (y2 === x3_plus_7) {
+                statusEl.style.color = "var(--success-color)";
+                statusEl.innerHTML = "✅ Il punto APPARTIENE alla curva Secp256k1!";
+            } else {
+                statusEl.style.color = "#ff3333";
+                statusEl.innerHTML = "❌ Il punto NON APPARTIENE alla curva.";
+            }
+
+            // Mostra i passaggi matematici in Hex
+            mathEl.innerHTML = 
+                `<strong>Verifica matematica svolta:</strong><br>` +
+                `• LHS (y² mod p) = <br>&nbsp;&nbsp;0x${y2.toString(16).toUpperCase()}<br><br>` +
+                `• RHS (x³ + 7 mod p) = <br>&nbsp;&nbsp;0x${x3_plus_7.toString(16).toUpperCase()}<br><br>` +
+                `LHS ≡ RHS ? <strong>${y2 === x3_plus_7 ? "SÌ (Valido)" : "NO (Non valido)"}</strong>`;
+
+        } catch (e) {
+            alert("Errore nella conversione esadecimale. Assicurati di inserire stringhe Hex valide (0-9, A-F).");
+        }
+    }
+</script>
+
+</body>
+</html>
