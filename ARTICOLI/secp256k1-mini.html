@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secp256k1 in Miniatura: Il Campo 𝔽₂₃</title>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --accent-color: #4ea8de;
+            --success-color: #4bb543;
+            --border-color: #2e2e34;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        h1, h2 { color: #fff; }
+        h1 { text-align: center; font-size: 1.6rem; }
+        
+        .grid-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .point-badge {
+            background: #0f0f11;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .point-badge.valid {
+            border-color: var(--success-color);
+            color: var(--success-color);
+            background: rgba(75, 181, 67, 0.05);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: center;
+        }
+
+        th { background: #0f0f11; color: var(--accent-color); }
+
+        .summary-box {
+            background: rgba(78, 168, 222, 0.1);
+            border: 1px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔍 Secp256k1 in Miniatura: Campo $\mathbb{F}_{23}$</h1>
+    <p>Analizziamo l'equazione $y^2 \equiv x^3 + 7 \pmod{23}$. Poiché il modulo $p=23$ è piccolo, possiamo calcolare esplicitamente ogni combinazione per capire visivamente perché l'ordine $n$ è indipendente da $p$.</p>
+
+    <div class="summary-box" id="summary">
+        </div>
+
+    <h2>📊 Tabella di Computazione Punto per Punto</h2>
+    <p>Scorriamo ogni possibile coordinata $x$ (da 0 a 22), calcoliamo il secondo membro dell'equazione ($RHS = x^3 + 7 \pmod{23}$) e verifichiamo se esistono valori di $y$ il cui quadrato ($LHS = y^2 \pmod{23}$) coincide con $RHS$.</p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>x</th>
+                    <th>x³ + 7 mod 23 (RHS)</th>
+                    <th>Ha radici quadrate?</th>
+                    <th>Valori di y validi</th>
+                    <th>Punti generati (x, y)</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                </tbody>
+        </table>
+    </div>
+
+    <h2>📍 Tutti i Punti Soluzione della Curva ($n$ punti)</h2>
+    <div class="grid-points" id="points-list">
+        </div>
+</div>
+
+<script>
+    const p = 23;
+    
+    // 1. Precalcola i quadrati perfetti (residui quadratici) in F_23
+    // Chiave: il quadrato mod 23, Valore: array delle radici y
+    const squares = {};
+    for (let y = 0; y < p; y++) {
+        const y2 = (y * y) % p;
+        if (!squares[y2]) squares[y2] = [];
+        squares[y2].push(y);
+    }
+
+    const tableBody = document.getElementById('table-body');
+    const pointsList = document.getElementById('points-list');
+    const summary = document.getElementById('summary');
+
+    let totalPoints = 1; // Partiamo da 1 per includere l'Elemento Neutro (Punto all'infinito 𝒪)
+    let validPointsArray = ["𝒪 (Infinito)"];
+
+    // 2. Scansiona ogni x da 0 a p-1
+    for (let x = 0; x < p; x++) {
+        const x3_plus_7 = (x * x * x + 7) % p;
+        
+        let hasRoots = false;
+        let yValues = "-";
+        let pointsGenerated = "Nessuno";
+        
+        if (squares[x3_plus_7]) {
+            hasRoots = true;
+            const roots = squares[x3_plus_7];
+            yValues = roots.join(" e ");
+            
+            const currentPoints = roots.map(y => {
+                totalPoints++;
+                validPointsArray.push(`(${x}, ${y})`);
+                return `(${x}, ${y})`;
+            });
+            pointsGenerated = currentPoints.join(", ");
+        }
+
+        // Popola la tabella geometrica
+        const row = `<tr>
+            <td>${x}</td>
+            <td>${x3_plus_7}</td>
+            <td style="color: ${hasRoots ? 'var(--success-color)' : '#ff3333'}">${hasRoots ? 'SÌ' : 'NO'}</td>
+            <td>${yValues}</td>
+            <td style="font-weight: bold; color: ${hasRoots ? 'var(--success-color)' : '#a0a0a5'}">${pointsGenerated}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+    }
+
+    // 3. Stampa la lista finale dei nodi del gruppo ciclico
+    validPointsArray.forEach(pt => {
+        pointsList.innerHTML += `<div class="point-badge ${pt !== '𝒪 (Infinito)' ? 'valid' : ''}">${pt}</div>`;
+    });
+
+    // 4. Aggiorna il riepilogo didattico
+    summary.innerHTML = `
+        <strong>📋 Analisi dei Parametri Finiti:</strong><br>
+        • Modulo del campo ($p$): <strong>${p}</strong> (Ci sono ${p} possibili coordinate sull'asse X).<br>
+        • Ordine del gruppo ($n$): <strong>${totalPoints}</strong> (Punti totali sulla curva inclusa l'origine all'infinito 𝒪).<br>
+        • Relazione: Noterai che <strong>$n \neq p$</strong> (${totalPoints} ≠ ${p}). Alcune coordinate $x$ non producono punti, altre ne producono due speculari rispetto all'asse delle ascisse ($y$ e $p-y$).
+    `;
+</script>
+</body>
+</html>
