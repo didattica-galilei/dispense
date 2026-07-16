@@ -266,7 +266,7 @@
     
     <p>Nelle curve ellittiche non si sommano le singole coordinate come se fossero normali vettori (cioè $P + Q \neq (x_P+x_Q, y_P+y_Q)$). La <strong>somma tra punti</strong> è definita tramite una suggestiva costruzione geometrica, che viene poi formalizzata in equazioni discrete.</p>
 
-   <div class="diagram-container">
+    <div class="diagram-container">
         <div class="diagram-card">
             <h4 style="margin: 0 0 10px 0; color: #fff;">Somma di Punti Distinti (P ≠ Q)</h4>
             <img src="somma_punti.png" 
@@ -292,10 +292,13 @@
     
     <div class="math-box">
         <strong>Pendenza ($m$) della retta:</strong><br>
-        $$P \neq Q \implies m \equiv \frac{y_2 - y_1}{x_2 - x_1} \pmod p$$<br>
-        $$P = Q \implies m \equiv \frac{3x_1^2 + a}{2y_1} \pmod p \quad \text{[In Secp256k1, } a = 0\text{]}$$<br>
+        $$P \neq Q \implies m \equiv \frac{y_2 - y_1}{x_2 - x_1} \pmod p$$
+<br>
+        $$P = Q \implies m \equiv \frac{3x_1^2 + a}{2y_1} \pmod p \quad \text{[In Secp256k1, } a = 0\text{]}$$
+<br>
         <strong>Coordinate del Punto Risultante $R = P + Q = (x_3, y_3)$:</strong><br>
-        $$x_3 \equiv m^2 - x_1 - x_2 \pmod p$$<br>
+        $$x_3 \equiv m^2 - x_1 - x_2 \pmod p$$
+<br>
         $$y_3 \equiv m(x_1 - x_3) - y_1 \pmod p$$
     </div>
 
@@ -314,25 +317,10 @@
     <p>Poiché lavoriamo in un campo finito $\mathbb{F}_p$, il numero di punti unici è limitato dall'<strong>ordine $n$</strong>. Una volta sommato il punto $G$ per $n$ volte, si ritorna ciclicamente all'elemento neutro $\mathcal{O}$. L'operazione successiva $(n+1)G$ riporterà esattamente a $G$, comportandosi esattamente come le lancette di un orologio.</p>
 
 
-    <h2 class="section-title">📊 I Parametri Standard della Curva</h2>
-    <p style="font-size:0.9rem; color:#a0a0a5;">Per garantire la massima sicurezza crittografica, i parametri di Secp256k1 sono numeri primi giganteschi a 256 bit:</p>
-    
-    <div class="math-box">
-        • <strong>Modulo Primo ($p$):</strong> FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFFCF<br>
-        <span style="font-size:0.8rem; color:#888;">(Equivale a $2^{256} - 2^{32} - 977$, un numero di 78 cifre decimali)</span><br><br>
-        
-        • <strong>Punto Generatore ($G$):</strong> Il punto di partenza standard sulla curva da cui originano tutte le chiavi.<br>
-        &nbsp;&nbsp;- <strong>$G_x$:</strong> 79BE667E F9DCBBAC 55A06295 CE870B07 029BFCD1 2CA7260D 821E122C 5AE35968<br>
-        &nbsp;&nbsp;- <strong>$G_y$:</strong> 47F51141 34D69FD7 6E266710 4D638531 C9894474 BE64A8D9 F963E826 ACCF9392<br><br>
-        
-        • <strong>Ordine del Gruppo ($n$):</strong> Il numero totale di punti unici generabili (moltiplicando $G$ per uno scalare).<br>
-        &nbsp;&nbsp;- <strong>$n$:</strong> FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
-    </div>
-
     <h2 class="section-title">🔑 Generatore Interattivo di Chiave Pubblica Secp256k1</h2>
-    <p style="font-size:0.9rem; color:#a0a0a5;">La <strong>chiave privata</strong> è un semplice numero intero $k$. La <strong>chiave pubblica $Q$</strong> è il punto risultante dalla moltiplicazione scalare $Q = k \times G$. Calcola istantaneamente le coordinate cartesiane reali $Q(x,y)$ sulla curva:</p>
+    <p style="font-size:0.9rem; color:#a0a0a5;">La <strong>chiave privata</strong> è un simple numero intero $k$. La <strong>chiave pubblica $Q$</strong> è il punto risultante dalla moltiplicazione scalare $Q = k \times G$. Calcola istantaneamente le coordinate cartesiane reali $Q(x,y)$ sulla curva:</p>
 
-    <div style="background: #151518; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color);">
+    <div style="background: #151518; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 35px;">
         <div class="form-group">
             <label for="privateKey">Chiave Privata k (Decimale o Esadecimale prefissato da 0x):</label>
             <textarea id="privateKey" rows="2" placeholder="Es. 1 o 0xf3901a... o un numero colossale casuale"></textarea>
@@ -355,147 +343,6 @@
         </div>
     </div>
 
-    <div class="nav-links">
-        <a href="moduli.html" class="nav-link">&larr; Tabelle di ℤ/nℤ</a>
-        <a href="inverso-grande.html" class="nav-link">🔄 Calcolatore Inverso</a>
-        <a href="prodotto-grande.html" class="nav-link">✖️ Moltiplicatore Modulare</a>
-        <a href="basi-numeriche.html" class="nav-link">🔢 Convertitore di Base &rarr;</a>
-    </div>
-</div>
 
-<script>
-    // Configurazione dei parametri globali di secp256k1 con BigInt nativo
-    const P = BigInt("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFCF");
-    const A = BigInt(0); 
-    const B = BigInt(7); 
-    const N = BigInt("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141");
-    
-    // Punto Generatore G
-    const G = {
-        x: BigInt("0x79BE667EF9DCBBAC55A06295CE870B07029BFCD12CA7260D821E122C5AE35968"),
-        y: BigInt("0x47F5114134D69FD76E2667104D638531C9894474BE64A8D9F963E826ACCF9392")
-    };
-
-    // Inverso modulare con l'algoritmo di Euclide Esteso
-    function modInverse(a, m) {
-        let m0 = m, t, q;
-        let x0 = 0n, x1 = 1n;
-        if (m === 1n) return 0n;
-        let tempA = (a % m + m) % m;
-        while (tempA > 1n) {
-            q = tempA / m0;
-            t = m0;
-            m0 = tempA % m0;
-            tempA = t;
-            t = x0;
-            x0 = x1 - q * x0;
-            x1 = t;
-        }
-        if (x1 < 0n) x1 += m;
-        return x1;
-    }
-
-    // Somma di due punti su curva ellittica nel campo finito F_p
-    function jacobianAdd(p1, p2) {
-        if (p1 === null) return p2;
-        if (p2 === null) return p1;
-
-        if (p1.x === p2.x) {
-            if ((p1.y + p2.y) % P === 0n) {
-                return null; // Punto all'infinito
-            }
-            return jacobianDouble(p1);
-        }
-
-        const num = (p2.y - p1.y + P) % P;
-        const den = (p2.x - p1.x + P) % P;
-        const lambda = (num * modInverse(den, P)) % P;
-
-        const x3 = (lambda * lambda - p1.x - p2.x + 2n * P) % P;
-        const y3 = (lambda * (p1.x - x3) - p1.y + P) % P;
-
-        return { x: x3, y: y3 };
-    }
-
-    // Raddoppio di un punto (Point Doubling)
-    function jacobianDouble(p) {
-        if (p === null || p.y === 0n) return null;
-
-        const num = (3n * p.x * p.x) % P;
-        const den = (2n * p.y) % P;
-        const lambda = (num * modInverse(den, P)) % P;
-
-        const x3 = (lambda * lambda - 2n * p.x + 2n * P) % P;
-        const y3 = (lambda * (p.x - x3) - p.y + P) % P;
-
-        return { x: x3, y: y3 };
-    }
-
-    // Moltiplicazione Scalare (k * P) usando l'algoritmo Double-and-Add (binario)
-    function scalarMultiply(k, point) {
-        let sc = k % N;
-        if (sc === 0n) return null;
-
-        let result = null;
-        let addend = point;
-
-        while (sc > 0n) {
-            if ((sc & 1n) === 1n) {
-                result = jacobianAdd(result, addend);
-            }
-            addend = jacobianDouble(addend);
-            sc >>= 1n;
-        }
-        return result;
-    }
-
-    function generaChiavePubblica() {
-        let inputStr = document.getElementById('privateKey').value.trim();
-        const resBox = document.getElementById('resultContainer');
-        const pubXEl = document.getElementById('pubX');
-        const pubYEl = document.getElementById('pubY');
-        const pubFullEl = document.getElementById('pubFull');
-
-        if (!inputStr) {
-            alert("Per favore, inserisci una chiave privata.");
-            return;
-        }
-
-        try {
-            let k;
-            if (inputStr.toLowerCase().startsWith("0x")) {
-                k = BigInt(inputStr);
-            } else {
-                k = BigInt(inputStr);
-            }
-
-            if (k <= 0n || k >= N) {
-                alert("La chiave privata deve essere un intero positivo compreso tra 1 e l'ordine della curva (n - 1).");
-                return;
-            }
-
-            const Q = scalarMultiply(k, G);
-
-            if (Q === null) {
-                alert("Il punto risultante è il punto all'infinito (chiave non valida).");
-                return;
-            }
-
-            const hexX = Q.x.toString(16).toUpperCase().padStart(64, '0');
-            const hexY = Q.y.toString(16).toUpperCase().padStart(64, '0');
-            const fullPub = "04" + hexX + hexY;
-
-            pubXEl.innerText = "0x" + hexX;
-            pubYEl.innerText = "0x" + hexY;
-            pubFullEl.innerText = fullPub;
-            
-            resBox.style.display = "block";
-
-        } catch (e) {
-            alert("Chiave privata non valida. Assicurati di inserire solo numeri interi o stringhe esadecimali valide (es. 0x123F).");
-        }
-    }
-</script>
-
-</body>
-</html>
+    <h2 class="section-title">🔍 Verificatore di Punti sulla Curva (Hex)</h2>
+    <p style="
