@@ -261,7 +261,11 @@
         </div>
         I punti $(x, y)$ che soddisfano questa equazione nel campo discreto, insieme a un "punto all'infinito" speciale ($\mathcal{O}$), formano un gruppo algebrico in cui è estremamente complesso calcolare il logaritmo discreto.
     </div>
-
+<!-- CALLOUT VERSIONE MINI -->
+    <div style="background: rgba(75, 181, 67, 0.08); border: 1px dashed var(--success-color); padding: 15px; border-radius: 8px; margin: 25px 0; line-height: 1.5;">
+        <span style="font-size: 1.2rem;">💡</span> <strong>Troppo astratto? Prova la versione semplificata!</strong><br>
+        Se i numeri a 256 bit sono difficili da visualizzare, abbiamo preparato una simulazione di <a href="secp256k1-mini.html" style="color: var(--success-color); font-weight: bold; text-decoration: underline;">Secp256k1 in miniatura su 𝔽₂₃</a>. Lì potrai calcolare ed elencare manualmente tutti i 24 punti della curva uno per uno!
+    </div>
     <h2 class="section-title">📐 Come si Opera nel Gruppo?</h2>
     
     <p>Nelle curve ellittiche non si sommano le singole coordinate come se fossero normali vettori (cioè $P + Q \neq (x_P+x_Q, y_P+y_Q)$). La <strong>somma tra punti</strong> è definita tramite una suggestiva costruzione geometrica, che viene poi formalizzata in equazioni discrete.</p>
@@ -384,8 +388,9 @@
         &nbsp;&nbsp;- <strong>$n$:</strong> FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
     </div>
 
-    <div class="nav-links">
+   <div class="nav-links">
         <a href="moduli.html" class="nav-link">&larr; Tabelle di ℤ/nℤ</a>
+        <a href="secp256k1-mini.html" class="nav-link" style="color: var(--success-color); font-weight: bold;">🔍 Versione Mini (𝔽₂₃)</a>
         <a href="inverso-grande.html" class="nav-link">🔄 Calcolatore Inverso</a>
         <a href="prodotto-grande.html" class="nav-link">✖️ Moltiplicatore Modulare</a>
         <a href="basi-numeriche.html" class="nav-link">🔢 Convertitore di Base &rarr;</a>
