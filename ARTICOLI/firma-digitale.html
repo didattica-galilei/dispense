@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hash & Firma Digitale ECDSA</title>
+    <!-- Caricamento MathJax per le formule matematiche -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --accent-color: #4ea8de;
+            --success-color: #4bb543;
+            --warning-color: #f72585;
+            --border-color: #2e2e34;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 850px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        h1, h2, h3 { color: #fff; margin-top: 25px; }
+        h1 { text-align: center; font-size: 1.8rem; margin-bottom: 20px; }
+        
+        .box {
+            background: #0f0f11;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .interactive-box {
+            background: rgba(78, 168, 222, 0.05);
+            border: 1px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            background: #121214;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            font-family: monospace;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .output-field {
+            font-family: monospace;
+            word-break: break-all;
+            background: #121214;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            color: var(--success-color);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .alert-warning {
+            background: rgba(247, 37, 133, 0.1);
+            border: 1px solid var(--warning-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔑 Hash Crittografico & Firma ECDSA</h1>
+    <p>La crittografia a curva ellittica permette di garantire due pilastri fondamentali della sicurezza informatica: l'<strong>Integrità</strong> del messaggio e l'<strong>Autenticità</strong> del mittente.</p>
+
+    <!-- SEZIONE 1: L'HASHING -->
+    <h2>1. L'Impronta Digitale: Funzione di Hash</h2>
+    <p>Una funzione di Hash (come <strong>SHA-256</strong>) prende un messaggio di qualsiasi dimensione e lo trasforma in una stringa di lunghezza fissa (256 bit / 64 caratteri esadecimali).</p>
+    
+    <div class="interactive-box">
+        <label for="hash-input">Prova in tempo reale (SHA-256):</label>
+        <textarea id="hash-input" rows="3" placeholder="Scrivi un messaggio qui...">Messaggio di prova per la firma ECDSA</textarea>
+        <div><strong>Hash SHA-256 risultante:</strong></div>
+        <div id="hash-output" class="output-field">Calcolo in corso...</div>
+    </div>
+
+    <ul>
+        <li><strong>Unidirezionale:</strong> È facilissimo calcolare l'hash dal messaggio, ma impossibile risalire al messaggio partendo dall'hash.</li>
+        <li><strong>Effetto Valanga:</strong> Cambiando anche una singola lettera o uno spazio nel messaggio, l'hash cambia completamente in modo imprevedibile.</li>
+    </ul>
+
+    <!-- SEZIONE 2: LA FIRMA DIGITALE ECDSA -->
+    <h2>2. Come Funziona la Firma ECDSA</h2>
+    <p>Per firmare un messaggio senza rivelare la propria chiave privata, l'algoritmo **ECDSA** (Elliptic Curve Digital Signature Algorithm) esegue un calcolo algebrico combinando il messaggio con il gruppo della curva.</p>
+
+    <div class="box">
+        <h3>✍️ Generazione della Firma $(r, s)$</h3>
+        <p>Sia $d$ la chiave privata, $Q = d \cdot G$ la chiave pubblica, ed $e = \text{Hash}(m)$ l'hash del messaggio convertito in intero modulo $n$:</p>
+        <ol>
+            <li>Si sceglie un numero casuale segreto $k \in [1, n-1]$ (chiamato <em>nonce</em>).</li>
+            <li>Si calcola il punto sulla curva $R = k \cdot G = (x_1, y_1)$.</li>
+            <li>Si prende la coordinata $x$ del punto: $r = x_1 \pmod n$. Se $r = 0$, si sceglie un altro $k$.</li>
+            <li>Si calcola la componente $s$:
+                $$s = k^{-1} \cdot (e + r \cdot d) \pmod n$$
+            </li>
+        </ol>
+        <p>La **firma digitale** è costituita dalla coppia di numeri interi **$(r, s)$**.</p>
+    </div>
+
+    <div class="box">
+        <h3>🔍 Verifica della Firma</h3>
+        <p>Chiunque possieda la chiave pubblica $Q$, il messaggio $m$ e la firma $(r, s)$ può verificare che la firma sia valida:</p>
+        <ol>
+            <li>Si calcola l'hash del messaggio $e = \text{Hash}(m)$.</li>
+            <li>Si calcola l'inverso di $s$: $w = s^{-1} \pmod n$.</li>
+            <li>Si calcolano i due fattori: $u_1 = e \cdot w \pmod n$ e $u_2 = r \cdot w \pmod n$.</li>
+            <li>Si calcola il punto $P = u_1 \cdot G + u_2 \cdot Q$.</li>
+            <li>La firma è **VALIDA** se $P \neq \mathcal{O}$ e $x_P \equiv r \pmod n$.</li>
+        </ol>
+    </div>
+
+    <div class="alert-warning">
+        <strong>⚠️ Il Pericolo del Nonce $k$ Riutilizzato:</strong><br>
+        Il valore casuale $k$ deve essere unico e segreto per ogni singola firma. Se un mittente firma due messaggi diversi usando lo stesso $k$, un attaccante può ricavare matematicamente la chiave privata $d$ in pochissimi passaggi!
+    </div>
+
+    <!-- NAVEGAZIONE -->
+    <div class="nav-links">
+        <a href="secp256k1.html" class="nav-link">&larr; Ritorna a Secp256k1</a>
+        <a href="secp256k1-mini.html" class="nav-link" style="color: var(--success-color);">🔍 Versione Mini (𝔽₂₃)</a>
+        <a href="inverso-grande.html" class="nav-link">🔄 Calcolatore Inverso &rarr;</a>
+    </div>
+</div>
+
+<script>
+    // Calcolo dinamico dell'Hash SHA-256 tramite le API WebCrypto del browser
+    async function updateHash() {
+        const text = document.getElementById('hash-input').value;
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        document.getElementById('hash-output').innerText = hashHex;
+    }
+
+    document.getElementById('hash-input').addEventListener('input', updateHash);
+    
+    // Calcola l'hash iniziale al caricamento
+    updateHash();
+</script>
+
+</body>
+</html>
