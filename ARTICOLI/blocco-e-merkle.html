@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomia del Blocco e Albero di Merkle</title>
+    <!-- MathJax per le formule -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --accent-color: #f7931a; /* Bitcoin Orange */
+            --blue-accent: #4ea8de;
+            --success-color: #4bb543;
+            --border-color: #2e2e34;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.6;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 900px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+
+        h1, h2, h3 { color: #fff; margin-top: 25px; }
+        h1 { text-align: center; font-size: 1.8rem; margin-bottom: 20px; }
+
+        .concept-box {
+            background: #0f0f11;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .interactive-box {
+            background: rgba(247, 147, 26, 0.05);
+            border: 1px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+            color: #a0a0a0;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            background: #121214;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 4px;
+            font-family: monospace;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .header-table th, .header-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .header-table th {
+            background-color: #121214;
+            color: var(--accent-color);
+        }
+
+        /* Stili Albero Grafico */
+        .tree-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .node {
+            background: #121214;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            word-break: break-all;
+            text-align: center;
+            flex: 1;
+        }
+
+        .node-root {
+            border-color: var(--success-color);
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .node-leaf {
+            border-color: var(--blue-accent);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: var(--blue-accent);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌳 L'Anatomia del Blocco e l'Albero di Merkle</h1>
+    <p>Come centinaia o migliaia di transazioni individuali vengono sintetizzate in una singola impronta digitale e inserite nell'intestazione del blocco.</p>
+
+    <!-- ANATOMIA BLOCK HEADER -->
+    <h2>1. L'Header del Blocco (80 Byte)</h2>
+    <p>Un blocco Bitcoin si compone di due parti: l'insieme delle transazioni estese e l'<strong>Header</strong>. L'Header è un blocco fisso di esattamente 80 byte che contiene i metadati essenziali della rete:</p>
+
+    <table class="header-table">
+        <thead>
+            <tr>
+                <th>Campo</th>
+                <th>Dimensione</th>
+                <th>Descrizione</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Version</strong></td>
+                <td>4 byte</td>
+                <td>Versione delle regole del software Bitcoin usate.</td>
+            </tr>
+            <tr>
+                <td><strong>Previous Block Hash</strong></td>
+                <td>32 byte</td>
+                <td>L'hash SHA-256d dell'Header del blocco precedente. Crea la catena!</td>
+            </tr>
+            <tr>
+                <td><strong>Merkle Root</strong></td>
+                <td>32 byte</td>
+                <td>L'hash sintetico di tutte le transazioni contenute nel blocco.</td>
+            </tr>
+            <tr>
+                <td><strong>Timestamp</strong></td>
+                <td>4 byte</td>
+                <td>Orario UNIX di creazione del blocco (secondi dal 1° gen 1970).</td>
+            </tr>
+            <tr>
+                <td><strong>Bits (Target)</strong></td>
+                <td>4 byte</td>
+                <td>Rappresentazione compressa della difficoltà corrente per la Proof of Work.</td>
+            </tr>
+            <tr>
+                <td><strong>Nonce</strong></td>
+                <td>4 byte</td>
+                <td>Il valore modificabile dai miner per tentare di risentire l'hash bersaglio.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- CONCETTO ALBERO DI MERKLE -->
+    <h2>2. Cos'è e come funziona l'Albero di Merkle</h2>
+    <div class="concept-box">
+        Un <strong>Merkle Tree</strong> è un albero binario di hash. Ogni transazione viene sottoposta a doppio SHA-256. Poi gli hash vengono accoppiati a due a due e ricanalizzati in SHA-256. Il processo si ripete salendo di livello fino a ottenere una singola radice: la <strong>Merkle Root</strong>.
+    </div>
+
+    $$\text{Hash}_{AB} = \text{SHA256}\left(\text{SHA256}\left(\text{Hash}_A \parallel \text{Hash}_B\right)\right)$$
+
+    <p>Se il numero di transazioni è dispari, l'ultimo hash viene duplicato per formare la coppia.</p>
+
+    <!-- SIMULATORE INTERATTIVO -->
+    <h2>3. Simulatore Interattivo dell'Albero di Merkle</h2>
+    <p>Modifica i dati delle 4 transazioni sottostanti. Osserva come l'effetto valanga altera visivamente gli hash intermedi e ricalcola la <strong>Merkle Root</strong> in tempo reale:</p>
+
+    <div class="interactive-box">
+        <h3>Transazioni di Input (Foglie)</h3>
+        <label>Transazione A:</label>
+        <input type="text" id="txA" value="Alice -> Bob: 1.5 BTC" oninput="buildTree()">
+
+        <label>Transazione B:</label>
+        <input type="text" id="txB" value="Charlie -> Dave: 0.8 BTC" oninput="buildTree()">
+
+        <label>Transazione C:</label>
+        <input type="text" id="txC" value="Eve -> Frank: 2.1 BTC" oninput="buildTree()">
+
+        <label>Transazione D:</label>
+        <input type="text" id="txD" value="Grace -> Heidi: 0.05 BTC" oninput="buildTree()">
+
+        <h3>Visualizzazione dell'Albero</h3>
+        <div class="tree-container">
+            <!-- LIVELLO RADICE -->
+            <div class="tree-level">
+                <div class="node node-root">
+                    <small><b>MERKLE ROOT</b></small><br>
+                    <span id="node-root">-</span>
+                </div>
+            </div>
+
+            <!-- LIVELLO INTERMEDIO -->
+            <div class="tree-level">
+                <div class="node">
+                    <small>Hash AB</small><br>
+                    <span id="node-ab">-</span>
+                </div>
+                <div class="node">
+                    <small>Hash CD</small><br>
+                    <span id="node-cd">-</span>
+                </div>
+            </div>
+
+            <!-- LIVELLO FOGLIE -->
+            <div class="tree-level">
+                <div class="node node-leaf">
+                    <small>Hash A</small><br>
+                    <span id="node-a">-</span>
+                </div>
+                <div class="node node-leaf">
+                    <small>Hash B</small><br>
+                    <span id="node-b">-</span>
+                </div>
+                <div class="node node-leaf">
+                    <small>Hash C</small><br>
+                    <span id="node-c">-</span>
+                </div>
+                <div class="node node-leaf">
+                    <small>Hash D</small><br>
+                    <span id="node-d">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGAZIONE -->
+    <div class="nav-links">
+        <a href="transazione-bitcoin.html" class="nav-link">&larr; Transazione Bitcoin</a>
+        <a href="bitcoin-address.html" class="nav-link">Indirizzo Bitcoin</a>
+        <a href="proof-of-work.html" class="nav-link" style="color: #f7931a; font-weight: bold;">Mining & Proof of Work &rarr;</a>
+    </div>
+</div>
+
+<!-- LIBRERIA CRYPTOJS PER SHA-256 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script>
+    // Doppio SHA-256 (standard Bitcoin)
+    function sha256d(str) {
+        let hash1 = CryptoJS.SHA256(str);
+        let hash2 = CryptoJS.SHA256(hash1);
+        return hash2.toString();
+    }
+
+    function buildTree() {
+        // 1. Dati in ingresso
+        let txA = document.getElementById('txA').value;
+        let txB = document.getElementById('txB').value;
+        let txC = document.getElementById('txC').value;
+        let txD = document.getElementById('txD').value;
+
+        // 2. Calcolo Hash Foglie (SHA-256d)
+        let hashA = sha256d(txA);
+        let hashB = sha256d(txB);
+        let hashC = sha256d(txC);
+        let hashD = sha256d(txD);
+
+        document.getElementById('node-a').innerText = hashA.substring(0, 16) + "...";
+        document.getElementById('node-b').innerText = hashB.substring(0, 16) + "...";
+        document.getElementById('node-c').innerText = hashC.substring(0, 16) + "...";
+        document.getElementById('node-d').innerText = hashD.substring(0, 16) + "...";
+
+        // 3. Calcolo Livello Intermedio
+        let hashAB = sha256d(hashA + hashB);
+        let hashCD = sha256d(hashC + hashD);
+
+        document.getElementById('node-ab').innerText = hashAB.substring(0, 16) + "...";
+        document.getElementById('node-cd').innerText = hashCD.substring(0, 16) + "...";
+
+        // 4. Calcolo Merkle Root
+        let merkleRoot = sha256d(hashAB + hashCD);
+
+        document.getElementById('node-root').innerText = merkleRoot;
+    }
+
+    buildTree();
+</script>
+
+</body>
+</html>
