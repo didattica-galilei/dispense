@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
+    <!-- Libreria per Hash SHA-256 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+<!-- Libreria per la matematica della curva secp256k1 ed ECDSA -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/elliptic/6.5.4/elliptic.min.js"></script>
+    meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hash & Firma Digitale ECDSA</title>
     <!-- Caricamento MathJax per le formule matematiche -->
@@ -189,7 +194,119 @@
             <li>La firma è **VALIDA** se $P \neq \mathcal{O}$ e $x_P \equiv r \pmod n$.</li>
         </ol>
     </div>
+<!-- SEZIONE SIMULATORE FIRMA DIGITAL ECDSA -->
+<h2>✍️ Simulatore Interattivo di Firma e Verifica ECDSA</h2>
+<p>
+    Inserisci un messaggio e una Chiave Privata in formato esadecimale. Il simulatore genererà il punto $R = k \cdot G$, calcolerà la firma $(r, s)$ e verificherà matematicamente la sua validità con la Chiave Pubblica $Q$.
+</p>
 
+<div class="interactive-box">
+    <!-- INPUT DATI -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div>
+            <label>Chiave Privata $d$ (Hex 32 byte):</label>
+            <input type="text" id="ecdsa-privkey" value="18e14a7b6a307f426a94f8114701e7c8e774e7f9a47e2c2035db29a206321725" oninput="signAndVerify()">
+            <button type="button" onclick="generateRandomPrivKey()" style="padding: 5px 10px; font-size: 0.8rem; background: var(--blue-accent); color: #fff; border: none; border-radius: 4px; cursor: pointer; margin-top: -5px; margin-bottom: 10px;">🎲 Genera Nuova PrivKey</button>
+        </div>
+        <div>
+            <label>Messaggio da Firmare $M$:</label>
+            <input type="text" id="ecdsa-message" value="Transazione Bitcoin: invia 0.5 BTC a Bob" oninput="signAndVerify()">
+        </div>
+    </div>
+
+    <!-- HASH E CHIAVE PUBBLICA -->
+    <div style="background: #121214; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); margin-bottom: 15px; font-family: monospace; font-size: 0.85rem;">
+        <div><strong>1. Hash del Messaggio $z$ (SHA-256):</strong></div>
+        <div id="out-hash" style="color: var(--blue-accent); word-break: break-all; margin-bottom: 8px;">-</div>
+
+        <div><strong>2. Chiave Pubblica Derivata $Q = d \cdot G$ (Compressa):</strong></div>
+        <div id="out-pubkey" style="color: var(--accent-color); word-break: break-all;">-</div>
+    </div>
+
+    <!-- LA FIRMA GENERATA (r, s) -->
+    <h3 style="margin-top: 15px; color: var(--accent-color);">🖊️ Firma ECDSA Risultante $(r, s)$</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+        <div style="background: #121214; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <label style="color: var(--accent-color); font-weight: bold;">Componente $r$ (Hex):</label>
+            <div id="out-r" style="font-family: monospace; font-size: 0.85rem; word-break: break-all; color: #fff;">-</div>
+        </div>
+        <div style="background: #121214; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+            <label style="color: var(--accent-color); font-weight: bold;">Componente $s$ (Hex):</label>
+            <div id="out-s" style="font-family: monospace; font-size: 0.85rem; word-break: break-all; color: #fff;">-</div>
+        </div>
+    </div>
+
+    <!-- ESITO VERIFICA -->
+    <div id="verification-badge" style="text-align: center; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 1rem; background: rgba(75, 181, 67, 0.15); border: 1px solid var(--success-color); color: var(--success-color);">
+        VERIFICA: Firma Valida ✓ (Calcolata con $u_1 \cdot G + u_2 \cdot Q$)
+    </div>
+</div>
+
+<!-- LIBRERIE NECESSARIE (Da includere prima dello script) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/elliptic/6.5.4/elliptic.min.js"></script>
+
+<script>
+    // Inizializza la curva secp256k1 tramite la libreria Elliptic
+    const ec = new elliptic.ec('secp256k1');
+
+    function generateRandomPrivKey() {
+        const key = ec.genKeyPair();
+        document.getElementById('ecdsa-privkey').value = key.getPrivate('hex');
+        signAndVerify();
+    }
+
+    function signAndVerify() {
+        const privHex = document.getElementById('ecdsa-privkey').value.trim();
+        const msg = document.getElementById('ecdsa-message').value;
+
+        const badge = document.getElementById('verification-badge');
+
+        try {
+            // 1. Calcola Hash SHA-256 del messaggio (z)
+            const hashHex = CryptoJS.SHA256(msg).toString();
+            document.getElementById('out-hash').innerText = hashHex;
+
+            // 2. Carica la Chiave Privata e deriva la Pubblica (Q)
+            const keyPair = ec.keyFromPrivate(privHex, 'hex');
+            const pubHex = keyPair.getPublic(true, 'hex'); // Compressa
+            document.getElementById('out-pubkey').innerText = pubHex;
+
+            // 3. Firma il messaggio (ECDSA deterministico RFC 6979 per garantire k sicuro)
+            const signature = keyPair.sign(hashHex);
+            const rHex = signature.r.toString('hex').padStart(64, '0');
+            const sHex = signature.s.toString('hex').padStart(64, '0');
+
+            document.getElementById('out-r').innerText = rHex;
+            document.getElementById('out-s').innerText = sHex;
+
+            // 4. Verifica della Firma usando la sola Chiave Pubblica (Q)
+            const isValid = keyPair.verify(hashHex, signature);
+
+            if (isValid) {
+                badge.style.borderColor = "var(--success-color)";
+                badge.style.color = "var(--success-color)";
+                badge.style.background = "rgba(75, 181, 67, 0.15)";
+                badge.innerText = "✓ VERIFICA RIUSCITA: La firma (r, s) appartiene a questa PrivKey ed è integra!";
+            } else {
+                throw new Error("Firma non valida");
+            }
+
+        } catch (err) {
+            document.getElementById('out-r').innerText = "ERRORE";
+            document.getElementById('out-s').innerText = "ERRORE";
+            badge.style.borderColor = "var(--danger-color)";
+            badge.style.color = "var(--danger-color)";
+            badge.style.background = "rgba(229, 115, 115, 0.15)";
+            badge.innerText = "❌ ERRORE: Chiave privata non valida (deve essere un hex di 64 caratteri / 32 byte).";
+        }
+    }
+
+    // Esegui la prima firma al caricamento della pagina
+    window.addEventListener('DOMContentLoaded', () => {
+        signAndVerify();
+    });
+</script>
     <div class="alert-warning">
         <strong>⚠️ Il Pericolo del Nonce $k$ Riutilizzato:</strong><br>
         Il valore casuale $k$ deve essere unico e segreto per ogni singola firma. Se un mittente firma due messaggi diversi usando lo stesso $k$, un attaccante può ricavare matematicamente la chiave privata $d$ in pochissimi passaggi!
