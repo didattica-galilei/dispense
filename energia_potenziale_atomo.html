@@ -68,9 +68,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;paddi
 
 <nav class="nav">
   <div class="nav-inner">
-    <a href="#teoria" class="active">Teoria</a>
-    <a href="#pozzo">Pozzo coulombiano</a>
-    <a href="#bohr">Modello di Bohr</a>
+    <a href="#richiami" class="active">Richiami</a>
     <a href="#livelli">Livelli energetici</a>
     <a href="#simulatore">Simulatore</a>
     <a href="#transizioni">Transizioni</a>
@@ -85,86 +83,23 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;paddi
 
 <div class="page">
 
-<div class="sec" id="teoria">
-  <h2>1. Il Sistema Nucleo–Elettrone</h2>
-  <p class="sec-sub">Forza di Coulomb ed energia potenziale</p>
-  <p>Un elettrone di carica −e orbitante attorno a un nucleo di carica +Ze è soggetto alla <strong>forza di Coulomb attrattiva</strong>. L'<strong>energia potenziale</strong> dell'elettrone a distanza r dal nucleo è:</p>
+<div class="sec" id="richiami">
+  <h2>1. Richiami: Pozzo Coulombiano e Modello di Bohr</h2>
+  <p class="sec-sub">Argomenti gi&agrave; trattati in un'altra dispensa: qui solo un breve richiamo delle formule che useremo</p>
+  <p>Un elettrone di carica &minus;e attorno a un nucleo di carica +Ze risente della forza di Coulomb attrattiva. L'energia potenziale e i livelli energetici quantizzati previsti dal modello di Bohr sono:</p>
   <div class="box-f">
     <div class="f">\(U(r)=-\dfrac{kZe^2}{r}\)
-    <div class="fd">k = 8,99×10⁹ N·m²/C² &nbsp;·&nbsp; e = 1,602×10⁻¹⁹ C &nbsp;·&nbsp; r = distanza nucleo-elettrone</div>
+    <div class="fd">energia potenziale coulombiana &middot; sempre negativa, pozzo a V, U&rarr;0 per r&rarr;&infin;, U&rarr;&minus;&infin; per r&rarr;0</div>
   </div>
-  <h3>Proprietà di U(r)</h3>
-  <ul>
-    <li><strong>U(r) sempre negativa:</strong> l'elettrone è in un pozzo di potenziale</li>
-    <li><strong>U → 0</strong> per r → ∞ (zero di riferimento convenzionale all'infinito)</li>
-    <li><strong>U → −∞</strong> per r → 0 (singolarità coulombiana non fisicamente raggiunta)</li>
-    <li>La curva forma un <strong>pozzo a V</strong> simmetrico rispetto al nucleo</li>
-  </ul>
-</div>
-
-<div class="sec" id="pozzo">
-  <h2>2. Il Pozzo di Potenziale Coulombiano</h2>
-  <p class="sec-sub">Forma della curva U(r) e significato fisico dell'energia totale</p>
-  <p>Rappresentando U(r) sia per r > 0 che per r < 0 (simmetria sferica) si ottiene un <strong>pozzo a forma di V</strong> con il nucleo al centro. L'elettrone è "intrappolato" in questo pozzo.</p>
   <div class="box-f">
-    <div class="f">\(E_{tot} = K + U = ½mv² − \dfrac{kZe²}{r}\)
-    <div class="fd">K ≥ 0 sempre &nbsp;·&nbsp; U < 0 sempre &nbsp;·&nbsp; E_tot < 0 → elettrone legato</div>
+    <div class="f">\(E_n = -\dfrac{13.6\,Z^2}{n^2}\ \text{eV}\)
+    <div class="fd">livelli energetici quantizzati (n=1,2,3,...), conseguenza della condizione di onda stazionaria di de Broglie L=mvr=n&middot;&#8463;</div>
   </div>
-  <h3>Tre regimi energetici</h3>
-  <ul>
-    <li><strong>E_tot &lt; 0:</strong> elettrone <em>legato</em> — non può allontanarsi all'infinito</li>
-    <li><strong>E_tot = 0:</strong> soglia di <em>ionizzazione</em> — l'elettrone è appena libero</li>
-    <li><strong>E_tot &gt; 0:</strong> elettrone <em>libero</em> — energia cinetica residua dopo ionizzazione</li>
-  </ul>
-  <div class="box-w">⚠ In meccanica classica qualsiasi \(E_tot\) &lt; 0 sarebbe possibile. La meccanica quantistica impone che solo certi valori discreti siano permessi: i <strong>livelli energetici quantizzati</strong>.</div>
-</div>
-
-<div class="sec" id="bohr">
-  <h2>3. Il Modello di Bohr</h2>
-  <p class="sec-sub">Quantizzazione del momento angolare e orbite stazionarie</p>
-  <p>Bohr (1913) propose due postulati fondamentali che spiegano la discretizzazione dei livelli:</p>
-  <h3>Postulato 1 — Orbite stazionarie</h3>
-  <div class="box-f">
-    <div class="f">L = mvr = n·ℏ &nbsp;&nbsp; n = 1, 2, 3, …</div>
-    <div class="fd">ℏ = h/2π = 1,055×10⁻³⁴ J·s &nbsp;·&nbsp; n = numero quantico principale</div>
-  </div>
-
-  <h3>Perché proprio queste orbite? Il legame con le onde stazionarie</h3>
-  <p>Il postulato di Bohr sembra arbitrario: perché solo certe orbite sono permesse? La risposta arriva dall'idea di <strong>de Broglie</strong> (1924): ogni particella in moto ha una <strong>lunghezza d'onda associata</strong>.</p>
-  <div class="box-f">
-    <div class="f">\(λ = \dfrac{h}{p} = \dfrac{h}{mv}\)
-    <div class="fd">λ = lunghezza d'onda di de Broglie &nbsp;·&nbsp; p = mv = quantità di moto dell'elettrone</div>
-  </div>
-  <p>Ricordate le <strong>onde stazionarie su una corda</strong> tesa tra due estremi fissi: la corda può vibrare solo con lunghezze d'onda tali da contenere un numero intero di semionde tra gli estremi. Analogia: se l'elettrone è un'onda che percorre la circonferenza dell'orbita, per non autodistruggersi per interferenza deve formare un'<strong>onda stazionaria chiusa</strong>. Cioè la lunghezza d'onda deve stare esattamente un numero intero di volte nella circonferenza:</p>
-  <div class="box-f">
-    <div class="f">2πr = n·λ &nbsp;&nbsp; cioè &nbsp;&nbsp; 2πr = n · h/(mv)</div>
-    <div class="fd">La circonferenza deve contenere esattamente n lunghezze d'onda intere &nbsp;·&nbsp; n = 1, 2, 3, …</div>
-  </div>
-  <p>Riarrangiando si ottiene <strong>esattamente il postulato di Bohr</strong>:</p>
-  <div class="box-f">
-    <div class="f">mvr = n · h/(2π) = n·ℏ</div>
-    <div class="fd">Il postulato di Bohr è la condizione di risonanza dell'onda dell'elettrone sull'orbita</div>
-  </div>
-  <div class="box-n">
-    💡 <strong>Analogia con le onde stazionarie:</strong><br>
-    • Corda vibrante fissa agli estremi: n = numero di ventri → frequenze permesse fₙ = n·f₁<br>
-    • Elettrone nell'atomo: n = numero di λ sull'orbita → raggi e energie permesse Eₙ<br><br>
-    In entrambi i casi è la <strong>condizione di intero</strong> che quantizza il sistema. Le orbite "proibite" corrispondono a onde che, dopo un giro completo, si distruggono per interferenza distruttiva. Solo le orbite in cui l'onda si chiude su se stessa costruttivamente sono stabili.
-  </div>
-  <h3>Postulato 2 — Emissione e assorbimento</h3>
-  <div class="box-f">
-    <div class="f">\(E_{fotone} = hν = |E_{n2} − E_{n1}|\)
-    <div class="fd">L'elettrone emette/assorbe un fotone solo saltando tra livelli</div>
-  </div>
-  <h3>Raggi delle orbite</h3>
-  <div class="box-f">
-    <div class="f">\(r_n = n²·\dfrac{a₀}{Z} &nbsp;&nbsp; con a₀ = 0,529 Å\)
-    <div class="fd">a₀ = raggio di Bohr (orbita fondamentale dell'idrogeno)</div>
-  </div>
+  <p>Per l'introduzione completa a questi argomenti (propriet&agrave; del pozzo di potenziale, i due postulati di Bohr, il legame con le onde di de Broglie, i raggi delle orbite) si rimanda alla dispensa dedicata gi&agrave; trattata in precedenza.</p>
 </div>
 
 <div class="sec" id="livelli">
-  <h2>4. Livelli Energetici Quantizzati</h2>
+  <h2>2. Livelli Energetici Quantizzati</h2>
   <p class="sec-sub">Formula di Bohr per l'energia dei livelli</p>
   <div class="box-f">
     <div class="f"> \( E_n = -13{,}6 \text{ eV} \cdot \dfrac{Z^2}{n^2} \)
@@ -190,7 +125,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;paddi
 
 <!-- SIMULATORE -->
 <div class="sec" id="simulatore">
-  <h2>5. Simulatore — U(r) e Livelli Energetici</h2>
+  <h2>3. Simulatore — U(r) e Livelli Energetici</h2>
   <p class="sec-sub">Pozzo coulombiano simmetrico con i livelli Eₙ sovrapposti — asse orizzontale = distanza dal nucleo</p>
   <div class="sim-wrap">
     <div class="sim-title">U(r) = −kZe²/|r| — grafico simmetrico rispetto al nucleo (r=0)</div>
@@ -228,7 +163,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;paddi
 </div>
 
 <div class="sec" id="transizioni">
-  <h2>6. Transizioni e Spettro</h2>
+  <h2>4. Transizioni e Spettro</h2>
   <p class="sec-sub">Emissione e assorbimento di fotoni tra livelli</p>
   <div class="box-f">
     <div class="f">ΔE = 13,6·Z² · (1/n₁² − 1/n₂²) eV</div>
@@ -245,7 +180,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;paddi
 
 <!-- SOLIDO -->
 <div class="sec" id="solido">
-  <h2>8. Dal Singolo Atomo al Solido Cristallino</h2>
+  <h2>5. Dal Singolo Atomo al Solido Cristallino</h2>
   <p class="sec-sub">Come i livelli discreti diventano bande di energia</p>
   <p>In un solido cristallino gli atomi sono disposti in un <strong>reticolo periodico</strong>. Ogni elettrone sente la <strong>somma periodica</strong> di tutti i pozzi coulombiani dei nuclei vicini.</p>
   <h3>Sovrapposizione dei pozzi</h3>
@@ -260,12 +195,13 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;paddi
     <li><strong>Banda di conduzione:</strong> banda superiore, normalmente vuota o parzialmente occupata</li>
     <li><strong>Gap energetico (E_gap):</strong> differenza tra cima della valenza e fondo della conduzione</li>
   </ul>
+  <div class="box-w">&#9888; Questa definizione &egrave; corretta per <strong>isolanti e semiconduttori</strong>. Nei <strong>conduttori</strong> (metalli), invece, la banda di valenza pu&ograve; risultare solo <strong>parzialmente occupata</strong> gi&agrave; a T=0K: se ne parla nel dettaglio pi&ugrave; avanti, nella sezione sui conduttori.</div>
   <div class="box-n">&#x1F4A1; Un elettrone pu&ograve; condurre corrente solo se ha stati liberi accessibili. Nella banda di conduzione ci sono stati liberi; nella banda di valenza piena no.</div>
 </div>
 
 <!-- SIM 2 -->
 <div class="sec" id="sim2">
-  <h2>9. Simulatore 2 &mdash; Serie di Pozzi Coulombiani</h2>
+  <h2>6. Simulatore 2 &mdash; Serie di Pozzi Coulombiani</h2>
   <p class="sec-sub">U(x) per N nuclei allineati &mdash; sovrapposizione dei pozzi e allargamento in bande</p>
   <div class="sim-wrap">
     <div class="sim-title">U(x) = &minus;&Sigma; kZe&sup2;/|x&minus;x&#x1D62;| &mdash; serie di N nuclei equidistanti</div>
@@ -305,10 +241,14 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;paddi
 
 <!-- CONDUTTORI ISOLANTI SEMICONDUTTORI -->
 <div class="sec" id="conduttori">
-  <h2>10. Conduttori, Semiconduttori e Isolanti</h2>
+  <h2>7. Conduttori, Semiconduttori e Isolanti</h2>
   <p class="sec-sub">La differenza sta nel gap energetico tra banda di valenza e banda di conduzione</p>
   <h3>Conduttori (metalli)</h3>
-  <p>La banda di conduzione &egrave; <strong>parzialmente occupata</strong>. Gli elettroni hanno stati liberi immediatamente accessibili senza energia aggiuntiva.</p>
+  <p>Nei conduttori l'ultima banda occupata <strong>non &egrave; completamente piena</strong>: gli elettroni hanno stati liberi immediatamente accessibili, senza bisogno di energia aggiuntiva per superare un gap. Questo pu&ograve; accadere per due motivi distinti:</p>
+  <ul>
+    <li><strong>Metalli monovalenti</strong> (Na, K, Li, ...): il numero di elettroni di valenza per atomo &egrave; dispari (es. 1 per atomo). Contando gli elettroni, la banda risulta riempita solo a <strong>met&agrave;</strong>: non esiste, in questo caso, una vera "banda di valenza piena" distinta dalla banda di conduzione &mdash; &egrave; la stessa banda, semi-occupata.</li>
+    <li><strong>Metalli bivalenti</strong> (Mg, Ca, Be, ...): il conteggio degli elettroni darebbe, in linea di principio, una banda completamente piena, come in un isolante. Ma qui la banda successiva si <strong>sovrappone in energia</strong> con la cima di quella riempita: gli elettroni "traboccano" nella banda superiore, lasciando stati liberi (lacune) in quella inferiore. Anche in questo caso, quindi, la banda di valenza risulta parzialmente occupata &mdash; non per il conteggio degli elettroni, ma per la sovrapposizione delle bande.</li>
+  </ul>
   <div class="box-f">
     <div class="f">E_gap = 0 eV</div>
     <div class="fd">Esempi: rame (Cu), alluminio (Al), oro (Au)</div>
@@ -335,7 +275,7 @@ footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;paddi
 </div>
 
 <div class="sec" id="esercizi">
-  <h2>11. Esercizi Proposti</h2>
+  <h2>8. Esercizi Proposti</h2>
   <p class="sec-sub">Livelli energetici e transizioni atomiche</p>
   <ol>
     <li><strong>Idrogeno:</strong> calcola l'energia del fotone emesso nella transizione 3→1. A quale lunghezza d'onda corrisponde?</li>
