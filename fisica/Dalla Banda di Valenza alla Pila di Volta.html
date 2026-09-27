@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dalla Banda di Valenza alla Pila di Volta — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{
+  --ink:#1a1a1e;--paper:#faf9f6;--accent:#1a4b8c;--muted:#6b6860;--border:#dddbd5;
+  --surface:#f0ede6;--surf2:#fff;--red:#b5351a;--green:#1a6b3a;
+  --copper:#b4623f;--zinc:#5b6b7a;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e8e6df;--paper:#14161c;--accent:#7aaddf;--muted:#9a9488;
+    --border:#33363f;--surface:#1c1e26;--surf2:#20222b;--red:#e07a5f;--green:#5fbf85;
+    --copper:#d68a63;--zinc:#8fa3b8;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e8e6df;--paper:#14161c;--accent:#7aaddf;--muted:#9a9488;
+  --border:#33363f;--surface:#1c1e26;--surf2:#20222b;--red:#e07a5f;--green:#5fbf85;
+  --copper:#d68a63;--zinc:#8fa3b8;
+}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:var(--paper);padding:64px 32px 48px;text-align:center;position:relative;overflow:hidden}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hero{background:#0b0c10;color:#f2f0e8}}
+:root[data-theme="dark"] .hero{background:#0b0c10;color:#f2f0e8}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(250,249,246,0.4);margin-bottom:14px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,44px);font-weight:700;line-height:1.15;margin-bottom:10px}
+.hero h1 em{color:#7aaddf;font-style:italic}
+.hero-sub{font-size:15px;color:rgba(250,249,246,0.5);font-weight:300;max-width:540px;margin:0 auto 28px}
+.rule{width:50px;height:2px;background:var(--accent);margin:0 auto}
+.nav{background:var(--surf2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 24px;top:env(safe-area-inset-top,0px)}
+.nav-inner{max-width:900px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:12px 13px;font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.15s,border-color 0.15s}
+.nav a:hover,.nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{max-width:900px;margin:0 auto;padding:48px 32px}
+@media(max-width:600px){.page{padding:28px 14px}.nav{padding:0 8px}.nav a{padding:10px 9px;font-size:10px}}
+.sec{margin-bottom:70px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);font-style:italic;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px}
+h3{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin:18px 0 7px}
+p{font-size:15px;margin-bottom:11px;max-width:70ch}
+ul,ol{margin:6px 0 11px 22px;font-size:15px}
+li{margin-bottom:5px}
+strong{font-weight:600}
+.box-f{background:var(--surf2);border:1px solid var(--border);border-left:3px solid var(--accent);text-align:center;padding:14px 18px;margin:13px 0;border-radius:0 3px 3px 0;overflow-x:auto}
+.box-f .f{font-family:'Playfair Display',serif;font-size:18px;color:var(--accent);margin-bottom:4px}
+.box-f .fd{font-size:11px;color:var(--muted);font-family:'Source Code Pro',monospace}
+.box-n{background:rgba(26,75,140,0.1);border-left:3px solid var(--accent);padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.box-w{background:rgba(181,53,26,0.08);border-left:3px solid var(--red);padding:11px 15px;margin:13px 0;font-size:14px;border-radius:0 3px 3px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.mini-card{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:14px 16px}
+.mini-card.cu{border-top:3px solid var(--copper)}
+.mini-card.zn{border-top:3px solid var(--zinc)}
+.tag{display:inline-block;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;font-weight:600;padding:2px 8px;border-radius:100px;margin-bottom:8px}
+.tag.cu{background:rgba(180,98,63,0.15);color:var(--copper)}
+.tag.zn{background:rgba(91,107,122,0.15);color:var(--zinc)}
+svg{max-width:100%;height:auto;display:block;margin:6px auto}
+.sim-wrap{background:var(--surf2);border:1px solid var(--border);border-radius:5px;padding:18px;margin:20px 0}
+.sim-title{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.sim-title::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.ctrl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:14px}
+.ctrl-item{background:var(--surface);border-radius:4px;padding:10px 12px}
+.ctrl-item label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px}
+.ctrl-item input[type=range]{width:100%;accent-color:var(--accent);margin-bottom:3px}
+.ctrl-item .val{font-family:'Source Code Pro',monospace;font-size:12px;font-weight:600;color:var(--ink)}
+canvas{display:block;border:1px solid var(--border);border-radius:4px;background:var(--surf2);width:100%}
+.info-bar{margin-top:8px;font-size:12px;color:var(--muted);font-family:'Source Code Pro',monospace;background:var(--surface);padding:8px 12px;border-radius:4px;min-height:32px}
+.info-bar span{color:var(--ink)}
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--muted);align-items:center}
+.ld{display:inline-block;width:22px;height:3px;border-radius:1px;margin-right:4px;vertical-align:middle}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px}
+th{background:var(--ink);color:var(--paper);padding:7px 10px;text-align:left;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;font-weight:400}
+td{padding:7px 10px;border-bottom:1px solid var(--border);font-family:'Source Code Pro',monospace;font-size:12px}
+tr:nth-child(even) td{background:var(--surface)}
+footer{text-align:center;font-size:11px;color:var(--muted);margin-top:52px;padding:22px 0;border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Chimica Fisica — Bande Elettroniche &amp; Elettrochimica</div>
+  <h1>Dalla Banda di Valenza<br>alla <em>Pila di Volta</em></h1>
+  <p class="hero-sub">Da rame e zinco come metalli, al livello di Fermi, al contatto tra metalli, fino alla prima pila della storia — con simulatore della tensione in serie</p>
+  <div class="rule"></div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#bande" class="active">Bande di valenza</a>
+    <a href="#cuzn">Rame e zinco</a>
+    <a href="#fermi">Fermi e funzione lavoro</a>
+    <a href="#contatto">Contatto metallico</a>
+    <a href="#redox">Potenziali redox</a>
+    <a href="#volta">Pila di Volta</a>
+    <a href="#limone">Pila al limone</a>
+    <a href="#simulatore">Simulatore</a>
+    <a href="#esercizi">Esercizi</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<div class="sec" id="bande">
+  <h2>1. La Banda di Valenza nei Solidi</h2>
+  <p class="sec-sub">Come i livelli atomici discreti diventano bande in un cristallo</p>
+  <p>Quando gli atomi si condensano in un solido, i loro livelli energetici discreti si allargano in <strong>bande</strong>, separate da eventuali intervalli proibiti (gap). La <strong>banda di valenza</strong> è la banda occupata a energia più alta; la banda successiva, vuota o parzialmente vuota, è la <strong>banda di conduzione</strong>.</p>
+  <div class="box-n">💡 La conducibilità dipende da come questa banda è riempita: se è piena e ben separata dalla banda successiva, il materiale è isolante o semiconduttore; se è parzialmente piena, oppure si sovrappone con una banda vuota, il materiale è un metallo.</div>
+</div>
+
+<div class="sec" id="cuzn">
+  <h2>2. Il Caso di Rame e Zinco</h2>
+  <p class="sec-sub">Due metalli di transizione vicini, due modi diversi di essere conduttori</p>
+  <p>Rame e zinco sono metalli di transizione adiacenti nella tavola periodica, ma il riempimento delle loro bande porta a una differenza sottile.</p>
+
+  <div class="grid2">
+    <div class="mini-card cu">
+      <span class="tag cu">Cu · [Ar] 3d¹⁰ 4s¹</span>
+      <h3 style="margin-top:0">Rame</h3>
+      <svg viewBox="0 0 200 140">
+        <rect x="40" y="95" width="120" height="10" fill="var(--copper)"/>
+        <text x="163" y="103" font-size="9" fill="var(--muted)">3d (piena)</text>
+        <rect x="40" y="60" width="60" height="28" fill="var(--copper)" opacity="0.55"/>
+        <rect x="100" y="60" width="60" height="28" fill="none" stroke="var(--border)" stroke-width="1"/>
+        <text x="163" y="77" font-size="9" fill="var(--muted)">4s (semipiena)</text>
+        <line x1="40" y1="60" x2="160" y2="60" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="3,2"/>
+        <text x="42" y="55" font-size="8" fill="var(--accent)">livello di Fermi</text>
+      </svg>
+      <p style="font-size:13px;margin-bottom:0">La 4s è occupata a metà: elettroni liberi in stati vuoti della stessa banda → buon conduttore.</p>
+    </div>
+    <div class="mini-card zn">
+      <span class="tag zn">Zn · [Ar] 3d¹⁰ 4s²</span>
+      <h3 style="margin-top:0">Zinco</h3>
+      <svg viewBox="0 0 200 140">
+        <rect x="40" y="105" width="120" height="10" fill="var(--zinc)"/>
+        <text x="163" y="113" font-size="9" fill="var(--muted)">3d (piena)</text>
+        <rect x="40" y="70" width="120" height="14" fill="var(--zinc)"/>
+        <text x="163" y="80" font-size="9" fill="var(--muted)">4s (piena)</text>
+        <rect x="40" y="35" width="120" height="20" fill="none" stroke="var(--border)" stroke-width="1"/>
+        <text x="163" y="47" font-size="9" fill="var(--muted)">4p (vuota)</text>
+        <line x1="40" y1="60" x2="160" y2="60" stroke="var(--accent)" stroke-width="1.4" stroke-dasharray="3,2"/>
+        <text x="42" y="66" font-size="8" fill="var(--accent)">sovrapposizione 4s/4p</text>
+      </svg>
+      <p style="font-size:13px;margin-bottom:0">La 4s è piena, ma si sovrappone con la 4p vuota → carattere ancora metallico.</p>
+    </div>
+  </div>
+  <div class="box-w">⚠️ Errore comune: una banda piena non implica isolante. Nello zinco lo è, ma resta metallico solo grazie alla sovrapposizione di bande — senza quella sovrapposizione sarebbe un isolante.</div>
+</div>
+
+<div class="sec" id="fermi">
+  <h2>3. Livello di Fermi e Funzione Lavoro</h2>
+  <p class="sec-sub">L'energia che regola il flusso di elettroni tra due metalli</p>
+  <p>Il <strong>livello di Fermi</strong> è l'energia del più alto stato occupato in un metallo. La <strong>funzione lavoro</strong> è l'energia necessaria per estrarre un elettrone dal livello di Fermi fino al vuoto: più è bassa, più gli elettroni sono debolmente legati.</p>
+  <table>
+    <tr><th>Metallo</th><th>Funzione lavoro</th><th>Tendenza elettronica</th></tr>
+    <tr><td>Zinco</td><td>≈ 4,3 eV</td><td>elettroni meno legati</td></tr>
+    <tr><td>Rame</td><td>≈ 4,6–4,7 eV</td><td>elettroni più legati</td></tr>
+  </table>
+</div>
+
+<div class="sec" id="contatto">
+  <h2>4. Il Contatto Diretto tra i Due Metalli</h2>
+  <p class="sec-sub">Perché gli elettroni migrano spontaneamente dallo zinco al rame</p>
+  <ol>
+    <li>Prima del contatto, i due livelli di Fermi non sono allineati: quello dello zinco è più alto.</li>
+    <li>Al contatto, gli elettroni fluiscono spontaneamente dal livello di Fermi più alto (Zn) a quello più basso (Cu), fino ad allinearli.</li>
+    <li>Il trasferimento di carica genera una piccola differenza di potenziale di equilibrio all'interfaccia: il <strong>potenziale di contatto (di Volta)</strong>.</li>
+  </ol>
+  <div class="box-n">💡 Questo stesso fenomeno, letto in chiave chimica, corrisponde alla maggiore tendenza dello zinco a cedere elettroni: è il ponte tra fisica dello stato solido ed elettrochimica.</div>
+</div>
+
+<div class="sec" id="redox">
+  <h2>5. Dal Contatto alla Reazione Redox</h2>
+  <p class="sec-sub">I potenziali standard quantificano la stessa tendenza</p>
+  <p>La tendenza a cedere elettroni si misura, in chimica, con i <strong>potenziali standard di riduzione</strong>: più il valore è negativo, più la specie tende a ossidarsi.</p>
+  <table>
+    <tr><th>Semireazione</th><th>E° (V)</th></tr>
+    <tr><td>Zn²⁺ + 2e⁻ → Zn(s)</td><td>−0,76</td></tr>
+    <tr><td>Cu²⁺ + 2e⁻ → Cu(s)</td><td>+0,34</td></tr>
+  </table>
+  <p>Lo zinco, avendo E° più negativo, si ossida più facilmente: è lo stesso fatto già osservato nella funzione lavoro, ora quantificato in un contesto elettrochimico.</p>
+</div>
+
+<div class="sec" id="volta">
+  <h2>6. La Pila di Volta</h2>
+  <p class="sec-sub">La prima pila della storia (1800): una colonna di elementi Zn/Cu</p>
+  <p>Alessandro Volta impilò dischi di <strong>zinco</strong> e <strong>rame</strong> alternati, separati da dischi di panno imbevuto di <strong>acqua salata o acido diluito</strong> (l'elettrolita). Ogni tripletta zinco–panno–rame è un elemento; impilando più elementi in serie, le tensioni si sommano.</p>
+  <svg viewBox="0 0 260 230" style="max-width:220px">
+    <text x="130" y="14" font-size="9" fill="var(--muted)" text-anchor="middle">colonna di elementi</text>
+    <g transform="translate(90,22)">
+      <rect x="0" y="0" width="80" height="12" fill="var(--copper)"/>
+      <rect x="0" y="12" width="80" height="9" fill="var(--border)"/>
+      <rect x="0" y="21" width="80" height="12" fill="var(--zinc)"/>
+      <rect x="0" y="33" width="80" height="12" fill="var(--copper)"/>
+      <rect x="0" y="45" width="80" height="9" fill="var(--border)"/>
+      <rect x="0" y="54" width="80" height="12" fill="var(--zinc)"/>
+      <rect x="0" y="66" width="80" height="12" fill="var(--copper)"/>
+      <rect x="0" y="78" width="80" height="9" fill="var(--border)"/>
+      <rect x="0" y="87" width="80" height="12" fill="var(--zinc)"/>
+      <rect x="0" y="99" width="80" height="12" fill="var(--copper)"/>
+      <rect x="0" y="111" width="80" height="9" fill="var(--border)"/>
+      <rect x="0" y="120" width="80" height="12" fill="var(--zinc)"/>
+      <text x="90" y="10" font-size="9" fill="var(--copper)">Cu</text>
+      <text x="90" y="60" font-size="9" fill="var(--zinc)">Zn</text>
+      <text x="90" y="82" font-size="8" fill="var(--muted)">panno + salamoia</text>
+      <line x1="-10" y1="-8" x2="-10" y2="132" stroke="var(--muted)" stroke-width="1"/>
+      <text x="-14" y="65" font-size="9" fill="var(--muted)" text-anchor="end" transform="rotate(-90 -14 65)">più elementi in serie</text>
+    </g>
+  </svg>
+  <div class="grid2" style="grid-template-columns:1fr 1.4fr">
+    <div class="mini-card zn" style="border-top-color:var(--copper)">
+      <svg viewBox="0 0 200 190">
+        <rect x="60" y="20" width="80" height="12" fill="var(--copper)"/>
+        <rect x="60" y="34" width="80" height="10" fill="var(--border)"/>
+        <rect x="60" y="46" width="80" height="12" fill="var(--zinc)"/>
+        <rect x="60" y="60" width="80" height="12" fill="var(--copper)"/>
+        <rect x="60" y="74" width="80" height="10" fill="var(--border)"/>
+        <rect x="60" y="86" width="80" height="12" fill="var(--zinc)"/>
+        <rect x="60" y="100" width="80" height="12" fill="var(--copper)"/>
+        <rect x="60" y="114" width="80" height="10" fill="var(--border)"/>
+        <rect x="60" y="126" width="80" height="12" fill="var(--zinc)"/>
+        <text x="150" y="30" font-size="9" fill="var(--copper)">Cu</text>
+        <text x="150" y="42" font-size="8" fill="var(--muted)">panno + salamoia</text>
+        <text x="150" y="55" font-size="9" fill="var(--zinc)">Zn</text>
+      </svg>
+    </div>
+    <div>
+      <h3>Struttura di un elemento</h3>
+      <ul>
+        <li><strong>Disco di zinco</strong> — si ossida, cede elettroni</li>
+        <li><strong>Panno imbevuto</strong> di acqua salata o acido diluito — l'elettrolita</li>
+        <li><strong>Disco di rame</strong> — non si ossida, raccoglie gli elettroni</li>
+      </ul>
+      <p style="font-size:14px">A differenza della pila Daniell, qui non c'è una soluzione di Cu²⁺: l'elettrolita è semplicemente salino o acido, quindi al rame non si deposita metallo.</p>
+    </div>
+  </div>
+  <h3>Semireazioni</h3>
+  <div class="box-f"><div class="f">Zn(s) → Zn²⁺ + 2e⁻</div><div class="fd">zinco — ossidazione</div></div>
+  <div class="box-f"><div class="f">2H⁺ + 2e⁻ → H₂(g)</div><div class="fd">rame — riduzione degli ioni H⁺ dell'elettrolita, non del rame stesso</div></div>
+  <div class="box-f"><div class="f">Zn(s) + 2H⁺(aq) → Zn²⁺(aq) + H₂(g)</div><div class="fd">reazione globale in ciascun elemento</div></div>
+  <p>Il rame agisce solo da elettrodo inerte su cui si liberano bollicine di idrogeno gassoso: è questa la differenza chimica fondamentale rispetto alla pila Daniell, dove invece il rame si deposita a partire da Cu²⁺ in soluzione.</p>
+  <div class="box-n">💡 <strong>Il rame non "compete" per gli elettroni.</strong> Qui non c'è Cu²⁺ in soluzione, quindi il rame non ha nulla da ridurre: si limita a condurre gli elettroni fino alla sua superficie, dove sono gli <strong>H⁺</strong> a farsi ridurre. Il confronto che decide la reazione è tra Zn²⁺ e H⁺ (E° = −0,76 V contro 0,00 V), non tra Zn e Cu. Il ruolo del rame è puramente strutturale: offre un elettrodo separato su cui la riduzione di H⁺ può avvenire lontano dallo zinco, così gli elettroni sono costretti a passare per il filo esterno invece di trasferirsi localmente da Zn a H⁺ sulla stessa superficie.</div>
+  <div class="box-w">⚠️ <strong>Polarizzazione:</strong> le bollicine di H₂ si accumulano sull'elettrodo di rame, isolandolo elettricamente e facendo calare la tensione nel tempo. È il difetto principale della pila di Volta, e fu proprio per risolverlo che decenni dopo Daniell propose la sua cella a due semicelle separate.</div>
+  <div class="box-f"><div class="f">E<sub>elemento</sub> ≈ 0,76 V</div><div class="fd">valore tipico misurato per un singolo elemento Zn/Cu con elettrolita salino (inferiore al valore teorico di 1,10 V, proprio a causa della polarizzazione)</div></div>
+</div>
+
+<div class="sec" id="limone">
+  <h2>7. La Pila al Limone</h2>
+  <p class="sec-sub">Lo stesso principio della pila di Volta, con l'elettrolita fornito dal frutto</p>
+  <p>Infilando una <strong>barretta di zinco</strong> e una <strong>barretta di rame</strong> nella polpa di un limone, si ottiene lo stesso tipo di cella galvanica della pila di Volta: cambia solo l'elettrolita, che qui non è più un panno imbevuto di salamoia ma il succo del limone stesso, ricco di <strong>acido citrico</strong> e quindi di ioni H⁺.</p>
+
+  <svg viewBox="0 0 360 270" style="max-width:360px">
+    <style>
+      #limone-svg .e-dot{animation:limoneWire 2.6s linear infinite}
+      #limone-svg .zn2{animation:limoneZn2 4s linear infinite}
+      #limone-svg .hplus{animation:limoneHplus 4s linear infinite}
+      #limone-svg .bubble{animation:limoneBubble 4s linear infinite;opacity:0}
+      #limone-svg .anion{animation:limoneAnion 4s linear infinite}
+      @keyframes limoneWire{
+        0%{transform:translate(0,0)}
+        50%{transform:translate(63px,-30px)}
+        100%{transform:translate(126px,0)}
+      }
+      @keyframes limoneZn2{
+        0%{transform:translate(0,0);opacity:1}
+        85%{transform:translate(46px,0);opacity:1}
+        100%{transform:translate(53px,0);opacity:0}
+      }
+      @keyframes limoneHplus{
+        0%{transform:translate(0,0);opacity:1}
+        70%{transform:translate(52px,0);opacity:1}
+        78%{transform:translate(56px,0);opacity:0}
+        100%{transform:translate(56px,0);opacity:0}
+      }
+      @keyframes limoneBubble{
+        0%{opacity:0;transform:translate(0,0) scale(0.6)}
+        70%{opacity:0}
+        76%{opacity:1;transform:translate(0,-4px) scale(0.8)}
+        100%{opacity:0;transform:translate(3px,-120px) scale(1.3)}
+      }
+      @keyframes limoneAnion{
+        0%{transform:translate(0,0);opacity:1}
+        88%{transform:translate(-49px,0);opacity:1}
+        100%{transform:translate(-53px,0);opacity:0}
+      }
+      @media (prefers-reduced-motion: reduce){
+        #limone-svg .e-dot,#limone-svg .zn2,#limone-svg .hplus,#limone-svg .bubble,#limone-svg .anion{animation:none !important;opacity:1}
+      }
+    </style>
+    <defs>
+      <marker id="ar-zn" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--zinc)"/></marker>
+      <marker id="ar-green" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--green)"/></marker>
+      <marker id="ar-red" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--red)"/></marker>
+    </defs>
+    <g id="limone-svg">
+    <ellipse cx="180" cy="150" rx="155" ry="92" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+    <text x="180" y="234" font-size="10" fill="var(--green)" text-anchor="middle">polpa di limone — elettrolita (H⁺ e citrato⁻)</text>
+
+    <rect x="108" y="60" width="14" height="170" fill="var(--zinc)" rx="2"/>
+    <rect x="238" y="60" width="14" height="170" fill="var(--copper)" rx="2"/>
+    <text x="115" y="50" font-size="12" fill="var(--zinc)" text-anchor="middle">Zn</text>
+    <text x="245" y="50" font-size="12" fill="var(--copper)" text-anchor="middle">Cu</text>
+    <text x="115" y="246" font-size="9" fill="var(--zinc)" text-anchor="middle">anodo</text>
+    <text x="245" y="246" font-size="9" fill="var(--copper)" text-anchor="middle">catodo</text>
+    <text x="115" y="258" font-size="8" fill="var(--muted)" text-anchor="middle">Zn → Zn²⁺+2e⁻</text>
+    <text x="245" y="258" font-size="8" fill="var(--muted)" text-anchor="middle">2H⁺+2e⁻→H₂↑</text>
+
+    <path d="M115 42 Q180 8 245 42" fill="none" stroke="var(--accent)" stroke-width="2"/>
+    <text x="180" y="14" font-size="10" fill="var(--accent)" text-anchor="middle">e⁻ nel filo esterno (Zn → Cu)</text>
+    <circle class="e-dot" cx="115" cy="42" r="4.5" fill="var(--accent)" style="animation-delay:0s"/>
+    <circle class="e-dot" cx="115" cy="42" r="4.5" fill="var(--accent)" style="animation-delay:-1.3s"/>
+
+    <!-- Zn2+ converges toward the shared junction point -->
+    <line x1="125" y1="143" x2="178" y2="143" stroke="var(--zinc)" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#ar-zn)"/>
+    <text x="125" y="133" font-size="10" fill="var(--zinc)" text-anchor="start">Zn²⁺</text>
+    <circle class="zn2" cx="125" cy="143" r="6" fill="var(--zinc)" style="animation-delay:0s"/>
+    <text class="zn2" x="125" y="146" font-size="7" fill="#fff" text-anchor="middle" style="animation-delay:0s">2+</text>
+    <circle class="zn2" cx="125" cy="143" r="6" fill="var(--zinc)" style="animation-delay:-2s"/>
+    <text class="zn2" x="125" y="146" font-size="7" fill="#fff" text-anchor="middle" style="animation-delay:-2s">2+</text>
+
+    <!-- citrate leaves the shared junction point, heading back toward the anode -->
+    <line x1="178" y1="157" x2="125" y2="157" stroke="var(--green)" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#ar-green)"/>
+    <text x="178" y="171" font-size="10" fill="var(--green)" text-anchor="middle">citrato⁻</text>
+    <circle class="anion" cx="178" cy="157" r="6" fill="var(--green)" style="animation-delay:-1s"/>
+    <text class="anion" x="178" y="160" font-size="8" fill="#fff" text-anchor="middle" style="animation-delay:-1s">−</text>
+    <circle class="anion" cx="178" cy="157" r="6" fill="var(--green)" style="animation-delay:-3s"/>
+    <text class="anion" x="178" y="160" font-size="8" fill="#fff" text-anchor="middle" style="animation-delay:-3s">−</text>
+
+    <!-- H+ leaves the very same junction point, heading the opposite way toward the cathode -->
+    <line x1="178" y1="150" x2="234" y2="150" stroke="var(--red)" stroke-width="1.4" stroke-dasharray="4,3" marker-end="url(#ar-red)"/>
+    <text x="178" y="140" font-size="10" fill="var(--red)" text-anchor="start">H⁺</text>
+    <circle class="hplus" cx="178" cy="150" r="6" fill="var(--red)" style="animation-delay:0s"/>
+    <text class="hplus" x="178" y="153" font-size="7" fill="#fff" text-anchor="middle" style="animation-delay:0s">+</text>
+    <circle class="hplus" cx="178" cy="150" r="6" fill="var(--red)" style="animation-delay:-2s"/>
+    <text class="hplus" x="178" y="153" font-size="7" fill="#fff" text-anchor="middle" style="animation-delay:-2s">+</text>
+
+    <!-- H2 bubbles rising from the cathode -->
+    <g class="bubble" style="animation-delay:0s">
+      <circle cx="236" cy="150" r="5" fill="rgba(255,255,255,0.3)" stroke="var(--ink)" stroke-width="1"/>
+      <text x="236" y="153" font-size="6" fill="var(--ink)" text-anchor="middle">H₂</text>
+    </g>
+    <g class="bubble" style="animation-delay:-2s">
+      <circle cx="236" cy="150" r="5" fill="rgba(255,255,255,0.3)" stroke="var(--ink)" stroke-width="1"/>
+      <text x="236" y="153" font-size="6" fill="var(--ink)" text-anchor="middle">H₂</text>
+    </g>
+    </g>
+  </svg>
+  <div class="leg">
+    <span><span class="ld" style="background:var(--accent)"></span>elettroni — nel filo, da Zn a Cu</span>
+    <span><span class="ld" style="background:var(--zinc)"></span>Zn²⁺ — lasciano l'elettrodo ed entrano in soluzione</span>
+    <span><span class="ld" style="background:var(--green)"></span>citrato⁻ verso lo zinco (anodo)</span>
+    <span><span class="ld" style="background:var(--red)"></span>H⁺ → bollicine di H₂ al catodo</span>
+  </div>
+
+  <h3>Stesse semireazioni della pila di Volta</h3>
+  <div class="box-f"><div class="f">Zn(s) → Zn²⁺ + 2e⁻</div><div class="fd">barretta di zinco — ossidazione</div></div>
+  <div class="box-f"><div class="f">2H⁺ + 2e⁻ → H₂(g)</div><div class="fd">barretta di rame — riduzione degli ioni H⁺ del succo</div></div>
+
+  <p>La barretta di zinco cede elettroni al circuito esterno, proprio come il disco di zinco nella pila di Volta; la barretta di rame resta un elettrodo inerte su cui si liberano piccole bolle di idrogeno. Il succo del limone, debolmente acido, fa da elettrolita conducendo gli ioni tra le due barrette, con lo stesso ruolo del panno salino nella pila di Volta.</p>
+  <p>Il disegno separa il moto in tre corsie ben distinte, dall'alto verso il basso: gli ioni <strong>Zn²⁺</strong> lasciano la barretta di zinco e si allontanano diffondendo nella soluzione (mentre i due elettroni corrispondenti partono verso il filo esterno); gli ioni <strong>citrato⁻</strong> attraversano la polpa migrando verso lo zinco, per compensare la carica positiva che si accumula localmente; gli ioni <strong>H⁺</strong> migrano verso il rame, dove vengono ridotti e formano bollicine di <strong>H₂</strong> che risalgono e sfuggono in aria. Questo triplice flusso, insieme agli elettroni nel filo, chiude il circuito e mantiene la neutralità di carica in ogni punto della cella.</p>
+
+  <div class="box-n">💡 <strong>"Citrato⁻" è una semplificazione.</strong> L'acido citrico (C₆H₈O₇) è triprotico e nel succo di limone (pH ≈ 2–2,5) è solo parzialmente dissociato: coesistono C₆H₇O₇⁻ (−1), C₆H₆O₇²⁻ (−2) e, in quota minore a questo pH, C₆H₅O₇³⁻ (−3). L'etichetta "citrato⁻" nel disegno indica genericamente l'anione dell'acido citrico, qualunque sia il suo grado di dissociazione: ciò che conta per il funzionamento della cella è che sia un anione e migri verso l'anodo per bilanciare la carica.</div>
+
+  <div class="box-n">💡 Una tensione tipica è di circa 0,9 V per limone, simile a un elemento della pila di Volta — ma la corrente erogabile è molto piccola, perché la resistenza interna del succo è alta e il contatto barretta–polpa è limitato. Per accendere un LED o alimentare un piccolo orologio servono più limoni collegati in serie.</div>
+
+  <div class="box-w">⚠️ Un errore comune è pensare che l'energia venga "dal limone" in sé: il limone fornisce solo l'elettrolita (gli ioni H⁺ e la conducibilità). L'energia elettrica proviene dalla reazione redox tra zinco e ioni H⁺, esattamente come nella pila di Volta.</div>
+</div>
+
+
+<div class="sec" id="simulatore">
+  <h2>8. Simulatore — Tensione della Pila di Volta in Serie</h2>
+  <p class="sec-sub">Ogni elemento aggiunge la sua tensione: impilarne di più significa sommarle</p>
+  <div class="sim-wrap">
+    <div class="sim-title">V<sub>totale</sub> = N · E<sub>elemento</sub></div>
+    <div class="ctrl-grid">
+      <div class="ctrl-item">
+        <label>Numero di elementi N</label>
+        <input type="range" id="slN" min="1" max="20" step="1" value="4">
+        <div class="val" id="vlN">N = 4</div>
+      </div>
+      <div class="ctrl-item">
+        <label>Tensione per elemento (V)</label>
+        <input type="range" id="slE" min="0.4" max="1.1" step="0.01" value="0.76">
+        <div class="val" id="vlE">0,76 V</div>
+      </div>
+    </div>
+    <canvas id="cv"></canvas>
+    <div class="info-bar" id="infoBar"><span>Muovi gli slider per vedere come cresce la tensione totale</span></div>
+    <div class="leg">
+      <span><span class="ld" style="background:var(--copper)"></span>disco di rame</span>
+      <span><span class="ld" style="background:var(--zinc)"></span>disco di zinco</span>
+      <span><span class="ld" style="background:var(--accent)"></span>tensione totale</span>
+    </div>
+  </div>
+</div>
+
+<div class="sec" id="esercizi">
+  <h2>9. Esercizi Proposti</h2>
+  <p class="sec-sub">Bande, potenziali e pila Daniell</p>
+  <ol>
+    <li>Spiega perché lo zinco è metallico pur avendo la banda 4s completamente piena.</li>
+    <li>Con il simulatore, calcola quanti elementi servono per superare i 10 V, usando 0,76 V per elemento.</li>
+    <li>Perché al catodo di rame si libera idrogeno gassoso invece di depositarsi rame metallico, a differenza della pila Daniell?</li>
+    <li>Nella pila al limone, quale specie chimica del succo gioca lo stesso ruolo della salamoia nella pila di Volta?</li>
+    <li>Spiega il fenomeno della polarizzazione e perché limita nel tempo la tensione reale della pila di Volta.</li>
+    <li>Confronta il potenziale di contatto tra due metalli isolati con la tensione di un elemento della pila di Volta: cosa cambia strutturalmente tra i due casi?</li>
+  </ol>
+</div>
+
+<footer>Dispensa — Bande di Valenza e Pila di Volta</footer>
+</div>
+
+<script>
+const cv = document.getElementById('cv');
+
+function setSize(){
+  const w = Math.max(cv.parentElement.clientWidth-36, 300);
+  cv.style.width = w+'px';
+  cv.style.height = Math.round(w*0.62)+'px';
+}
+
+function getN(){ return +document.getElementById('slN').value; }
+function getE(){ return +document.getElementById('slE').value; }
+
+function draw(){
+  setSize();
+  const W = parseInt(cv.style.width)||600, H = parseInt(cv.style.height)||300;
+  cv.width=W; cv.height=H;
+  const ctx=cv.getContext('2d');
+  const bg = getComputedStyle(document.documentElement).getPropertyValue('--surf2').trim();
+  const mutedC = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim();
+  const znC = getComputedStyle(document.documentElement).getPropertyValue('--zinc').trim();
+  const cuC = getComputedStyle(document.documentElement).getPropertyValue('--copper').trim();
+  const accC = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+  ctx.clearRect(0,0,W,H); ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  const N=getN(), E=getE(), Vtot=N*E;
+
+  const pl=76, pr=90, pt=20, pb=30;
+  const colW=Math.min(70,(W-pl-pr));
+  const colX=pl;
+  const maxDiscH=(H-pt-pb)/20;
+  const discH=Math.min(maxDiscH,(H-pt-pb)/Math.max(N,1));
+
+  // stack of discs, bottom to top
+  for(let i=0;i<N;i++){
+    const y=H-pb-(i+1)*discH;
+    ctx.fillStyle = i%2===0 ? cuC : znC;
+    ctx.fillRect(colX,y,colW,discH*0.86);
+  }
+  ctx.fillStyle=mutedC; ctx.font='10px monospace'; ctx.textAlign='left';
+  ctx.fillText('N = '+N+' elementi', colX, pt+2);
+
+  // total voltage bar on the right
+  const barX=colX+colW+50;
+  const barTop=pt+8, barBottom=H-pb;
+  const Vmax=20;
+  const barH=(barBottom-barTop)*Math.min(Vtot,Vmax)/Vmax;
+  ctx.fillStyle=accC+'55';
+  ctx.fillRect(barX,barBottom-barH,36,barH);
+  ctx.strokeStyle=accC; ctx.lineWidth=2;
+  ctx.strokeRect(barX,barBottom-barH,36,barH);
+  ctx.fillStyle=accC; ctx.font='bold 12px monospace'; ctx.textAlign='center';
+  ctx.fillText(Vtot.toFixed(2)+' V', barX+18, barBottom-barH-8);
+  ctx.fillStyle=mutedC; ctx.font='9px monospace';
+  ctx.fillText('tensione', barX+18, barBottom+16);
+  ctx.fillText('totale', barX+18, barBottom+27);
+
+  ctx.strokeStyle='rgba(120,120,120,0.3)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(colX-6,pt); ctx.lineTo(colX-6,H-pb); ctx.stroke();
+
+  document.getElementById('infoBar').innerHTML =
+    `<span>N = ${N} elementi &times; ${E.toFixed(2)} V &nbsp;→&nbsp; <strong>tensione totale = ${Vtot.toFixed(2)} V</strong></span>`;
+}
+
+document.getElementById('slN').oninput = ()=>{
+  document.getElementById('vlN').textContent = 'N = '+getN();
+  draw();
+};
+document.getElementById('slE').oninput = ()=>{
+  document.getElementById('vlE').textContent = getE().toFixed(2)+' V';
+  draw();
+};
+window.addEventListener('resize', draw);
+draw();
+
+const secs=document.querySelectorAll('.sec'), navLinks=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur=s.id;});
+  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+},{passive:true});
+</script>
+</body>
+</html>
