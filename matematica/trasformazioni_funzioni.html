@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grafici e Trasformazioni di Funzioni — Dispensa Interattiva</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Sans+3:wght@300;400;600&family=Source+Code+Pro&display=swap');
+:root{--ink:#1a1a1e;--paper:#faf9f6;--a:#0e6b6b;--a2:#1a4b8c;--mu:#6b6860;--bo:#dddbd5;--su:#f0ede6;--s2:#fff;--re:#b5351a;--gr:#1a6b3a;}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--paper);color:var(--ink);line-height:1.75;font-weight:300}
+.hero{background:var(--ink);color:#fff;padding:60px 32px 44px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px)}
+.ey{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:12px;font-weight:600}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4.5vw,46px);font-weight:700;line-height:1.1;margin-bottom:8px}
+.hero h1 em{color:#5dcaa5}
+.hero p{font-size:14px;color:rgba(255,255,255,0.38);font-weight:300;max-width:540px;margin:0 auto;color:rgba(255,255,255,0.45)}
+.nav{background:var(--s2);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;padding:0 18px}
+.nav-inner{max-width:960px;margin:0 auto;display:flex;overflow-x:auto}
+.nav a{display:block;padding:11px 11px;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;text-decoration:none;color:var(--mu);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav a:hover,.nav a.active{color:var(--a);border-bottom-color:var(--a)}
+.page{max-width:960px;margin:0 auto;padding:44px 28px}
+@media(max-width:600px){.page{padding:22px 10px}}
+.sec{margin-bottom:60px;scroll-margin-top:50px}
+h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.ssub{font-size:13px;color:var(--mu);font-style:italic;border-bottom:1px solid var(--bo);padding-bottom:9px;margin-bottom:14px}
+h3{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--a2);margin:16px 0 6px}
+p{font-size:15px;margin-bottom:10px;color:#2a2a2e}
+ul,ol{margin:5px 0 10px 20px;font-size:15px}
+li{margin-bottom:4px;color:#2a2a2e}
+strong{font-weight:600}
+.formula{background:var(--s2);border:1px solid var(--bo);border-left:3px solid var(--a2);text-align:center;padding:12px 16px;margin:11px 0;border-radius:0 3px 3px 0}
+.formula .f{font-family:'Playfair Display',serif;font-size:18px;color:var(--a2);margin-bottom:3px;line-height:1.8}
+.formula .fd{font-size:11px;color:var(--mu);font-family:'Source Code Pro',monospace}
+.bn{background:#e1f5ee;border-left:3px solid var(--a);color:#0a3a2a;padding:10px 14px;margin:11px 0;font-size:14px;border-radius:0 3px 3px 0}
+.bw{background:#fdf3ee;border-left:3px solid var(--re);color:#5a1a0a;padding:10px 14px;margin:11px 0;font-size:14px;border-radius:0 3px 3px 0}
+.bn b{font-weight:600}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0 16px;background:var(--s2);border:1px solid var(--bo)}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--bo);vertical-align:top;line-height:1.55}
+th{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mu);font-weight:600;background:var(--su)}
+td{color:#2a2a2e}
+td.fx{font-family:'Playfair Display',serif;font-style:italic;color:var(--a2);white-space:nowrap}
+.sim{background:var(--s2);border:1px solid var(--bo);border-top:3px solid var(--c,var(--a));border-radius:5px;padding:16px;margin:18px 0}
+.sim-t{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--mu);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.sim-t::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--c,var(--a));flex-shrink:0}
+.hint{font-size:12px;color:var(--mu);font-style:italic;margin-bottom:10px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0;align-items:center;font-size:12px;color:var(--mu)}
+.sl{display:flex;align-items:center;gap:6px;font-weight:600}
+.sl b{font-family:'Source Code Pro',monospace;font-size:12px;color:var(--ink);min-width:34px}
+.sl input[type=range]{width:130px;accent-color:var(--c,var(--a2))}
+.btn{padding:5px 13px;border-radius:3px;border:1px solid var(--bo);background:var(--s2);color:var(--mu);font-size:11px;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--su)}
+.btn:disabled{opacity:.4;cursor:default}
+canvas{display:block;border:1px solid var(--bo);border-radius:3px;background:#fff;width:100%;max-width:640px;aspect-ratio:4/3;margin:0 auto}
+.legend{text-align:center;font-size:11px;color:var(--mu);margin-top:7px}
+.fo{font-family:'Playfair Display',serif;font-style:italic;font-size:19px;text-align:center;margin:12px 0 4px;color:var(--c,var(--a));background:var(--su);border-radius:3px;padding:6px 10px;min-height:38px;overflow-wrap:anywhere}
+.warn{text-align:center;font-size:12px;color:var(--re);min-height:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;justify-content:center}
+.chip{cursor:pointer;position:relative}
+.chip input{position:absolute;opacity:0}
+.chip span{display:inline-block;padding:6px 13px;border:1px solid var(--bo);border-radius:3px;font-size:13px;color:var(--mu);background:#fff;transition:all .15s}
+.chip input:checked+span{background:var(--c,var(--a));border-color:var(--c,var(--a));color:#fff;font-weight:600}
+.chip input:focus-visible+span,.btn:focus-visible,input[type=range]:focus-visible,select:focus-visible{outline:2px solid var(--a2);outline-offset:2px}
+.stp{border:1px solid var(--bo);border-radius:4px;padding:10px 12px;margin-bottom:8px;display:grid;grid-template-columns:1.3fr 1fr auto;gap:8px 14px;align-items:center;background:var(--paper)}
+.stp select{background:#fff;color:var(--ink);border:1px solid var(--bo);border-radius:3px;padding:6px;font-family:inherit;font-size:13px;width:100%}
+.stp .eq{grid-column:1/-1;font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--a2);overflow-wrap:anywhere}
+.stp .x{background:none;border:none;color:var(--mu);cursor:pointer;font-size:20px;line-height:1}
+.stp .x:hover{color:var(--re)}
+@media(max-width:600px){.stp{grid-template-columns:1fr auto}.stp .sl{grid-column:1/-1}}
+footer{text-align:center;font-size:11px;color:var(--mu);margin-top:48px;padding:20px 0;border-top:1px solid var(--bo);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="ey">Matematica &middot; Analisi &middot; Grafici di funzioni</div>
+  <h1>Grafici e <em>Trasformazioni</em></h1>
+  <p>Traslazioni, simmetrie e valori assoluti applicati a retta, radici, esponenziale e logaritmo, con simulatori interattivi</p>
+</div>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#teoria" class="active">Funzioni</a>
+    <a href="#trasf">Trasformazioni</a>
+    <a href="#sim-base">Sim 1 &mdash; Base</a>
+    <a href="#sim-avanzato">Sim 2 &mdash; Avanzato</a>
+    <a href="#esercizi">Esercizi</a>
+    <a href="analitica_piano.html">&#8592; Indice</a>
+    <a href="../index.html">&#8592; Home</a>
+  </div>
+</nav>
+<div class="page">
+
+<div class="sec" id="teoria">
+  <h2>1. Le funzioni fondamentali</h2>
+  <p class="ssub">Cinque grafici di partenza da cui si deducono tutti gli altri</p>
+  <p>Conoscere a memoria il grafico di poche funzioni elementari permette di disegnare, senza calcolare punto per punto, intere famiglie di funzioni.</p>
+  <div class="tw"><table>
+    <tr><th>Funzione</th><th>Dominio</th><th>Immagine</th><th>Caratteristiche</th></tr>
+    <tr><td class="fx">y = x</td><td>ℝ</td><td>ℝ</td><td>Bisettrice del I e III quadrante; crescente, dispari.</td></tr>
+    <tr><td class="fx">y = &radic;x</td><td>[0, +∞)</td><td>[0, +∞)</td><td>Parte dall&rsquo;origine con tangente verticale; crescente.</td></tr>
+    <tr><td class="fx">y = &#8731;x</td><td>ℝ</td><td>ℝ</td><td>Crescente e dispari; tangente verticale nell&rsquo;origine.</td></tr>
+    <tr><td class="fx">y = a<sup>x</sup></td><td>ℝ</td><td>(0, +∞)</td><td>Passa per (0, 1); asintoto y = 0. Crescente se a &gt; 1, decrescente se 0 &lt; a &lt; 1.</td></tr>
+    <tr><td class="fx">y = log<sub>a</sub> x</td><td>(0, +∞)</td><td>ℝ</td><td>Passa per (1, 0); asintoto x = 0. Inversa di a<sup>x</sup>: i grafici sono simmetrici rispetto a y = x.</td></tr>
+  </table></div>
+</div>
+
+<div class="sec" id="trasf">
+  <h2>2. Le trasformazioni</h2>
+  <p class="ssub">Come un&rsquo;operazione sull&rsquo;equazione diventa un movimento del grafico</p>
+  <div class="tw"><table>
+    <tr><th>Operazione</th><th>Equazione</th><th>Effetto sul grafico</th></tr>
+    <tr><td>Traslazione orizzontale</td><td class="fx">y = f(x − h)</td><td>Il grafico scorre di h verso destra (a sinistra se h &lt; 0).</td></tr>
+    <tr><td>Traslazione verticale</td><td class="fx">y = f(x) + k</td><td>Il grafico sale di k (scende se k &lt; 0).</td></tr>
+    <tr><td>Simmetria rispetto all&rsquo;asse y</td><td class="fx">y = f(−x)</td><td>Ogni punto (x, y) diventa (−x, y).</td></tr>
+    <tr><td>Simmetria rispetto all&rsquo;asse x</td><td class="fx">y = −f(x)</td><td>Ogni punto (x, y) diventa (x, −y).</td></tr>
+    <tr><td>Valore assoluto esterno</td><td class="fx">y = |f(x)|</td><td>La parte sotto l&rsquo;asse x viene ribaltata sopra; il resto resta invariato.</td></tr>
+    <tr><td>Valore assoluto interno</td><td class="fx">y = f(|x|)</td><td>Si cancella la parte con x &lt; 0 e la si sostituisce con la simmetrica, rispetto all&rsquo;asse y, della parte con x ≥ 0. Il grafico diventa pari.</td></tr>
+  </table></div>
+  <div class="bw"><strong>Attenzione al segno e all&rsquo;ordine.</strong> In f(x − h) lo spostamento è <em>opposto</em> al segno che si legge. Inoltre f(|x − 2|) e f(|x| − 2) sono funzioni diverse: ogni trasformazione agisce sul grafico ottenuto dalle precedenti.</div>
+  <div class="bn"><strong>Funzioni dispari.</strong> Per y = x e y = &#8731;x vale f(−x) = −f(x): la simmetria rispetto all&rsquo;asse y e quella rispetto all&rsquo;asse x producono lo stesso grafico.</div>
+</div>
+
+<div class="sec" id="sim-base">
+  <h2>3. Simulatori di base</h2>
+  <p class="ssub">Una funzione, tutte le trasformazioni</p>
+  <p>La curva tratteggiata è la funzione fondamentale, quella colorata il risultato. Le operazioni vengono applicate <strong>nell&rsquo;ordine in cui le attivi</strong>: ogni nuova trasformazione agisce sul grafico già ottenuto. Prova, ad esempio, h = 2 e poi f(|x|), oppure f(|x|) e poi h = 2: l&rsquo;equazione sotto il grafico mostra la differenza.</p>
+  <div id="sims"></div>
+</div>
+
+<div class="sec" id="sim-avanzato">
+  <h2>4. Simulatore avanzato</h2>
+  <p class="ssub">Costruisci la funzione finale con al massimo quattro trasformazioni</p>
+  <p>Scegli la funzione di partenza e concatena fino a <strong>4 trasformazioni</strong> nell&rsquo;ordine che preferisci. Sotto ogni passo vedi l&rsquo;equazione ottenuta. Nella modalità <strong>Sfida</strong> devi riprodurre un grafico dato: va bene qualsiasi percorso equivalente.</p>
+  <div class="sim" id="adv"></div>
+</div>
+
+<div class="sec" id="esercizi">
+  <h2>5. Esercizi proposti</h2>
+  <p class="ssub">Da svolgere a mano e da verificare con i simulatori</p>
+  <ol>
+    <li><strong>Radice traslata:</strong> da y = &radic;x ricava y = &radic;(x − 2) − 1. Quali trasformazioni servono? Qual è il dominio?</li>
+    <li><strong>Esponenziale riflesso:</strong> descrivi come ottenere y = 2<sup>−x</sup> + 1 da y = 2<sup>x</sup>. Qual è l&rsquo;asintoto?</li>
+    <li><strong>Logaritmo e valore assoluto:</strong> confronta y = |log₂ x| e y = log₂|x|. Dominio, simmetrie, punti angolosi.</li>
+    <li><strong>La V:</strong> da y = x ricava y = |x − 2| − 3 in tre passi. Dov&rsquo;è il vertice?</li>
+    <li><strong>Funzioni dispari:</strong> verifica col simulatore che per y = &#8731;x la simmetria sull&rsquo;asse y e quella sull&rsquo;asse x danno lo stesso grafico. Succede anche per y = &radic;x?</li>
+    <li><strong>Ordine:</strong> con y = &radic;x, applica una traslazione h = 2 e f(|x|) in ordine diverso. Scrivi le due equazioni e spiega la differenza.</li>
+    <li><strong>Sfida:</strong> risolvi almeno cinque sfide del Sim 2, trovando ogni volta il percorso più corto.</li>
+  </ol>
+</div>
+
+<footer>Didattica Pierri &middot; Matematica &middot; Analisi &middot; Grafici e trasformazioni &nbsp;|&nbsp; <a href="analitica_piano.html" style="color:var(--a)">&#8592; Indice</a></footer>
+</div>
+<script>
+const fmt=n=>String(+n.toFixed(2)).replace('.',',');
+const w=s=>/^(x|\|x\|)$/.test(s)?s:'('+s+')';
+const FUN=[
+ {t:'y = x',c:'#0e6b6b',f:(x)=>x,tpl:s=>s,dom:'Dominio ℝ · Immagine ℝ',
+  obs:'<b>f(|x|)</b> trasforma la bisettrice in una &ldquo;V&rdquo; con vertice nell&rsquo;origine: è y = |x|. Prova poi h e k: il vertice si sposta in (h, k). Con <b>|f(x)|</b> e k = −2 vedi come la parte negativa viene ribaltata.'},
+ {t:'y = √x',c:'#1a4b8c',f:x=>x<0?NaN:Math.sqrt(x),tpl:s=>'√'+w(s),dom:'Dominio [0, +∞) · Immagine [0, +∞)',
+  obs:'Con <b>f(−x)</b> la radice si apre a sinistra (dominio x ≤ 0). Con <b>f(|x|)</b> il dominio diventa tutto ℝ e il grafico è simmetrico: è una &ldquo;parabola coricata&rdquo; a due rami. Traslando di h il dominio diventa [h, +∞).'},
+ {t:'y = ∛x',c:'#6b3fa0',f:Math.cbrt,tpl:s=>'∛'+w(s),dom:'Dominio ℝ · Immagine ℝ',
+  obs:'La radice cubica è dispari: <b>f(−x)</b> equivale a <b>−f(x)</b>, quindi le due simmetrie producono lo stesso grafico. Con <b>|f(x)|</b> o <b>f(|x|)</b> compare una cuspide nell&rsquo;origine; traslata, il punto angoloso si sposta in (h, k).'},
+ {t:'y = aˣ',c:'#b5351a',f:(x,a)=>Math.pow(a,x),tpl:(s,a)=>a+'^'+w(s),param:1,dom:'Dominio ℝ · Immagine (0, +∞) · asintoto orizzontale y = 0',
+  obs:'Con <b>f(−x)</b> la base diventa 1/a: la curva da crescente passa a decrescente. La simmetria sull&rsquo;asse x porta l&rsquo;immagine in (−∞, 0). Con <b>k</b> l&rsquo;asintoto si sposta in y = k; con <b>|f(x)|</b> e k &lt; 0 osserva il ribaltamento della parte sotto l&rsquo;asse x.'},
+ {t:'y = logₐ x',c:'#a8700a',f:(x,a)=>(x<=0||Math.abs(a-1)<0.01)?NaN:Math.log(x)/Math.log(a),tpl:(s,a)=>'log_'+a+' '+w(s),param:1,dom:'Dominio (0, +∞) · Immagine ℝ · asintoto verticale x = 0',
+  obs:'Con <b>h</b> l&rsquo;asintoto verticale si sposta in x = h e il dominio diventa (h, +∞). Con <b>f(|x|)</b> il grafico è definito per x ≠ 0 ed è simmetrico. Con <b>|f(x)|</b> la parte per x &lt; 1 viene ribaltata sopra l&rsquo;asse x, creando un punto angoloso in (1, 0).'}
+];
+
+const OPS={
+ H:{l:'Traslazione orizzontale f(x − h)',p:1,ap:(g,v)=>x=>g(x-v),ex:(e,v)=>e.replace(/§/g,'(§'+(v>0?' − ':' + ')+fmt(Math.abs(v))+')')},
+ K:{l:'Traslazione verticale f(x) + k',p:1,ap:(g,v)=>x=>g(x)+v,ex:(e,v)=>e+(v>0?' + ':' − ')+fmt(Math.abs(v))},
+ SY:{l:'Simmetria asse y: f(−x)',ap:g=>x=>g(-x),ex:e=>e.replace(/§/g,'(−§)')},
+ SX:{l:'Simmetria asse x: −f(x)',ap:g=>x=>-g(x),ex:e=>'−('+e+')'},
+ AO:{l:'Valore assoluto esterno |f(x)|',ap:g=>x=>Math.abs(g(x)),ex:e=>'|'+e+'|'},
+ AI:{l:'Valore assoluto interno f(|x|)',ap:g=>x=>g(Math.abs(x)),ex:e=>e.replace(/§/g,'|§|')}
+};
+function graphs(f,a,steps){
+  const c=FUN[f];let g=[x=>c.f(x,a)],e=[c.tpl('x',fmt(a)).replace(/x/g,'§')];
+  steps.forEach(s=>{const o=OPS[s.t];g.push(o.ap(g[g.length-1],s.v));e.push(o.ex(e[e.length-1],s.v))});
+  return {g,e};
+}
+function strip(t){if(t[0]!=='('||t[t.length-1]!==')')return t;let d=0;for(let i=0;i<t.length-1;i++){if(t[i]==='(')d++;if(t[i]===')')d--;if(!d)return t}return t.slice(1,-1)}
+const eqs=e=>'y = '+strip(e.replace(/§/g,'x').replace(/\|\(([^()|]*)\)\|/g,'|$1|'));
+
+function build(c,i){
+  const s={ai:false,my:false,mx:false,ao:false,h:0,k:0,a:2},ord=[];
+  const TM={ai:'AI',my:'SY',ao:'AO',mx:'SX',h:'H',k:'K'};
+  const sync=(k,on)=>{const j=ord.indexOf(k);if(on&&j<0)ord.push(k);if(!on&&j>=0)ord.splice(j,1)};
+  const G=()=>graphs(i,s.a,ord.map(k=>({t:TM[k],v:s[k]})));
+  const box=document.createElement('div');
+  box.className='sim';box.style.setProperty('--c',c.c);
+  const chip=(k,l)=>`<label class="chip"><input type="checkbox" data-k="${k}"><span>${l}</span></label>`;
+  const sl=(k,l,min,max,st,v)=>`<label class="sl">${l}<b data-v="${k}">${fmt(v)}</b><input type="range" data-s="${k}" min="${min}" max="${max}" step="${st}" value="${v}"></label>`;
+  box.innerHTML=`<div class="sim-t">${c.t}</div><div class="hint">${c.dom}</div>
+  <canvas></canvas><div class="legend">tratteggio: funzione fondamentale &middot; colore: funzione trasformata</div>
+  <div class="fo"></div><div class="warn"></div>
+  <div class="chips">${chip('ai','f(|x|)')}${chip('my','simmetria asse y')}${chip('ao','|f(x)|')}${chip('mx','simmetria asse x')}</div>
+  <div class="ctrl">${sl('h','Traslazione h (orizzontale)',-6,6,0.5,0)}${sl('k','Traslazione k (verticale)',-5,5,0.5,0)}${c.param?sl('a','Base a',0.2,5,0.1,2):''}</div>
+  <button class="btn">Azzera</button><p class="bn"><b>Cosa osservare.</b> ${c.obs}</p>`;
+  document.getElementById('sims').appendChild(box);
+  const cv=box.querySelector('canvas'),ctx=cv.getContext('2d'),F=box.querySelector('.fo'),Wn=box.querySelector('.warn');
+  const xmin=-8,xmax=8,ymin=-6,ymax=6;
+  const chain=()=>{const r=G().g;return r[r.length-1]};
+  const formula=()=>{const r=G().e;return eqs(r[r.length-1])};
+  function draw(){
+    const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;
+    cv.width=r.width*d;cv.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);
+    const W=r.width,H=r.height,X=x=>(x-xmin)/(xmax-xmin)*W,Y=y=>H-(y-ymin)/(ymax-ymin)*H;
+    ctx.clearRect(0,0,W,H);
+    ctx.lineWidth=1;ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.beginPath();
+    for(let x=xmin;x<=xmax;x++){ctx.moveTo(X(x),0);ctx.lineTo(X(x),H)}
+    for(let y=ymin;y<=ymax;y++){ctx.moveTo(0,Y(y));ctx.lineTo(W,Y(y))}
+    ctx.stroke();
+    ctx.strokeStyle='rgba(26,26,30,0.65)';ctx.beginPath();
+    ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+    ctx.fillStyle='rgba(26,26,30,0.45)';ctx.font='10px "Source Sans 3",sans-serif';
+    ctx.textAlign='center';for(let x=-7;x<=7;x+=1)if(x)ctx.fillText(x,X(x),Y(0)+12);
+    ctx.textAlign='right';for(let y=-5;y<=5;y++)if(y)ctx.fillText(y,X(0)-4,Y(y)+3);
+    ctx.fillText('O',X(0)-4,Y(0)+12);
+    const plot=(fn,col,lw,dash)=>{
+      ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.beginPath();
+      let pen=false;
+      for(let px=0;px<=W;px+=0.5){
+        const v=fn(xmin+px/W*(xmax-xmin));
+        if(!isFinite(v)||Math.abs(v)>300){pen=false;continue}
+        pen?ctx.lineTo(px,Y(v)):ctx.moveTo(px,Y(v));pen=true;
+      }
+      ctx.stroke();ctx.setLineDash([]);
+    };
+    plot(x=>c.f(x,s.a),'rgba(26,26,30,0.45)',1.5,[6,5]);
+    plot(chain(),c.c,2.5,[]);
+    F.textContent=formula();
+    Wn.textContent=(c.t.includes('log')&&Math.abs(s.a-1)<0.01)?'Per la base a = 1 il logaritmo non è definito: scegli a ≠ 1.':'';
+  }
+  box.querySelectorAll('input[data-k]').forEach(e=>e.addEventListener('change',()=>{s[e.dataset.k]=e.checked;sync(e.dataset.k,e.checked);draw()}));
+  box.querySelectorAll('input[data-s]').forEach(e=>e.addEventListener('input',()=>{
+    s[e.dataset.s]=parseFloat(e.value);if(e.dataset.s=='h'||e.dataset.s=='k')sync(e.dataset.s,s[e.dataset.s]!==0);box.querySelector(`[data-v="${e.dataset.s}"]`).textContent=fmt(s[e.dataset.s]);draw()}));
+  box.querySelector('.btn').addEventListener('click',()=>{
+    Object.assign(s,{ai:false,my:false,mx:false,ao:false,h:0,k:0,a:2});ord.length=0;
+    box.querySelectorAll('input[data-k]').forEach(e=>e.checked=false);
+    box.querySelectorAll('input[data-s]').forEach(e=>{const k=e.dataset.s;e.value=s[k];box.querySelector(`[data-v="${k}"]`).textContent=fmt(s[k])});
+    draw();
+  });
+  window.addEventListener('resize',draw);
+  draw();
+}
+FUN.forEach(build);
+
+(function(){
+const S={f:0,a:2,steps:[{t:'H',v:1}],chal:false,tg:null};
+const root=document.getElementById('adv');
+root.innerHTML=`<div class="sim-t">Compositore di trasformazioni</div><div class="hint">Massimo 4 passaggi, applicati nell&rsquo;ordine in cui compaiono.</div>
+<canvas></canvas><div class="legend"></div><div class="fo"></div><div class="warn"></div>
+<div class="chips" id="fs">${FUN.map((c,i)=>`<label class="chip" style="--c:${c.c}"><input type="radio" name="af" value="${i}" ${i?'':'checked'}><span>${c.t}</span></label>`).join('')}</div>
+<div class="ctrl" style="grid-template-columns:1fr"><label class="sl" id="asl">Base a<b>2</b><input type="range" min="0.2" max="5" step="0.1" value="2"></label></div>
+<div id="stl" style="max-width:640px;margin:14px auto 0"></div>
+<div class="chips" style="margin-top:6px"><button class="btn" id="add" style="margin:0">+ Aggiungi trasformazione</button><button class="btn" id="clr" style="margin:0">Azzera passaggi</button></div>
+<div class="chips" id="md"><label class="chip"><input type="radio" name="am" value="0" checked><span>Modalità libera</span></label><label class="chip"><input type="radio" name="am" value="1"><span>Sfida</span></label></div>
+<div class="chips" id="chb" style="display:none"><button class="btn" id="nw" style="margin:0">Nuova sfida</button><button class="btn" id="sol" style="margin:0">Mostra soluzione</button></div>
+<p class="bn" id="msg"></p>`;
+const q=x=>root.querySelector(x),cv=q('canvas'),ctx=cv.getContext('2d');
+const xmin=-8,xmax=8,ymin=-6,ymax=6;
+function renderSteps(){
+  const L=q('#stl');L.innerHTML='';
+  S.steps.forEach((s,i)=>{
+    const d=document.createElement('div');d.className='stp';
+    d.innerHTML=`<select aria-label="Trasformazione ${i+1}">${Object.keys(OPS).map(k=>`<option value="${k}" ${k==s.t?'selected':''}>${OPS[k].l}</option>`).join('')}</select>${OPS[s.t].p?`<label class="sl">${s.t=='H'?'h':'k'}<b>${fmt(s.v)}</b><input type="range" min="-6" max="6" step="0.5" value="${s.v}"></label>`:'<span></span>'}<button class="x" title="Rimuovi">&times;</button><div class="eq"></div>`;
+    d.querySelector('select').onchange=e=>{s.t=e.target.value;if(OPS[s.t].p&&s.v===undefined)s.v=1;if(!OPS[s.t].p)delete s.v;renderSteps();upd()};
+    const r=d.querySelector('input');if(r)r.oninput=()=>{s.v=parseFloat(r.value);d.querySelector('b').textContent=fmt(s.v);upd()};
+    d.querySelector('.x').onclick=()=>{S.steps.splice(i,1);renderSteps();upd()};
+    L.appendChild(d);
+  });
+  q('#add').disabled=S.steps.length>=4;
+}
+function plot(fn,col,lw,dash,W,H,X,Y){
+  ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.beginPath();let pen=false;
+  for(let px=0;px<=W;px+=0.5){const v=fn(xmin+px/W*(xmax-xmin));
+    if(!isFinite(v)||Math.abs(v)>300){pen=false;continue}
+    pen?ctx.lineTo(px,Y(v)):ctx.moveTo(px,Y(v));pen=true}
+  ctx.stroke();ctx.setLineDash([]);
+}
+function same(g1,g2){
+  for(let x=-7.95;x<8;x+=0.1){const a=g1(x),b=g2(x),fa=isFinite(a),fb=isFinite(b);
+    if(fa!==fb)return false;if(fa&&Math.abs(a-b)>1e-6*Math.max(1,Math.abs(a)))return false}
+  return true;
+}
+function upd(){
+  const c=FUN[S.f];root.style.setProperty('--c',c.c);
+  q('#asl').style.display=c.param?'':'none';
+  const {g,e}=graphs(S.f,S.a,S.steps),fin=g[g.length-1];
+  const r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;
+  cv.width=r.width*d;cv.height=r.height*d;ctx.setTransform(d,0,0,d,0,0);
+  const W=r.width,H=r.height,X=x=>(x-xmin)/(xmax-xmin)*W,Y=y=>H-(y-ymin)/(ymax-ymin)*H;
+  ctx.clearRect(0,0,W,H);
+  ctx.lineWidth=1;ctx.strokeStyle='rgba(0,0,0,0.07)';ctx.beginPath();
+  for(let x=xmin;x<=xmax;x++){ctx.moveTo(X(x),0);ctx.lineTo(X(x),H)}
+  for(let y=ymin;y<=ymax;y++){ctx.moveTo(0,Y(y));ctx.lineTo(W,Y(y))}
+  ctx.stroke();ctx.strokeStyle='rgba(26,26,30,0.65)';ctx.beginPath();
+  ctx.moveTo(0,Y(0));ctx.lineTo(W,Y(0));ctx.moveTo(X(0),0);ctx.lineTo(X(0),H);ctx.stroke();
+  ctx.fillStyle='rgba(26,26,30,0.45)';ctx.font='10px "Source Sans 3",sans-serif';
+  ctx.textAlign='center';for(let x=-7;x<=7;x++)if(x)ctx.fillText(x,X(x),Y(0)+12);
+  ctx.textAlign='right';for(let y=-5;y<=5;y++)if(y)ctx.fillText(y,X(0)-4,Y(y)+3);
+  if(S.chal&&S.tg)plot(S.tg.g,'rgba(26,26,30,0.22)',6,[],W,H,X,Y);
+  plot(g[0],'rgba(26,26,30,0.45)',1.5,[6,5],W,H,X,Y);
+  ctx.globalAlpha=0.4;for(let i=1;i<g.length-1;i++)plot(g[i],c.c,1.3,[],W,H,X,Y);ctx.globalAlpha=1;
+  plot(fin,c.c,2.5,[],W,H,X,Y);
+  q('.fo').textContent=eqs(e[e.length-1]);
+  q('.warn').textContent=(c.t.includes('log')&&Math.abs(S.a-1)<0.01)?'Per la base a = 1 il logaritmo non è definito: scegli a ≠ 1.':'';
+  q('.legend').textContent='tratteggio: funzione fondamentale · linee tenui: passaggi intermedi · colore: risultato'+(S.chal?' · bianco spesso: grafico da riprodurre':'');
+  root.querySelectorAll('.stp .eq').forEach((el,i)=>el.textContent='Passo '+(i+1)+' → '+eqs(e[i+1]));
+  const m=q('#msg');
+  if(S.chal&&S.tg){m.innerHTML=same(fin,S.tg.g)?'<b>✔ Corretto!</b> Il tuo grafico coincide con quello da riprodurre, usando '+S.steps.length+(S.steps.length==1?' trasformazione.':' trasformazioni.'):'<b>Sfida.</b> Riproduci il grafico bianco partendo da una delle cinque funzioni (per aˣ e logₐx la base è a = 2). Si ottiene con '+S.tg.n+' trasformazioni, ma potrebbero bastarne meno.'}
+  else m.innerHTML='<b>Esperimento.</b> Metti una traslazione h = 2 prima e dopo |f(x)|, oppure f(|x|) prima e dopo una traslazione: il risultato cambia. Verifica anche quali coppie di trasformazioni si possono scambiare senza cambiare il grafico.';
+}
+function gen(){
+  const keys=Object.keys(OPS);
+  for(let t=0;t<200;t++){
+    const f=Math.floor(Math.random()*5),n=2+Math.floor(Math.random()*3),st=[];
+    for(let i=0;i<n;i++){let k;do k=keys[Math.floor(Math.random()*6)];while(st.length&&st[st.length-1].t==k&&!OPS[k].p);
+      const o={t:k};if(OPS[k].p){do o.v=Math.floor(Math.random()*9)-4;while(!o.v)}st.push(o)}
+    const {g,e}=graphs(f,2,st),fin=g[g.length-1];let ok=0;
+    for(let x=-7.9;x<8;x+=0.1){const y=fin(x);if(isFinite(y)&&Math.abs(y)<6)ok++}
+    if(ok>=40&&!same(fin,g[0])){S.tg={g:fin,n,f,st,e:e[e.length-1]};return}
+  }
+}
+q('#fs').onchange=e=>{S.f=+e.target.value;upd()};
+q('#asl input').oninput=e=>{S.a=parseFloat(e.target.value);q('#asl b').textContent=fmt(S.a);upd()};
+q('#add').onclick=()=>{if(S.steps.length<4){S.steps.push({t:'H',v:1});renderSteps();upd()}};
+q('#clr').onclick=()=>{S.steps=[];renderSteps();upd()};
+q('#md').onchange=e=>{S.chal=e.target.value=='1';q('#chb').style.display=S.chal?'flex':'none';
+  if(S.chal){if(!S.tg)gen();S.a=2;q('#asl input').value=2;q('#asl b').textContent='2'}upd()};
+q('#nw').onclick=()=>{gen();S.a=2;q('#asl input').value=2;q('#asl b').textContent='2';upd()};
+q('#sol').onclick=()=>{if(!S.tg)return;q('#msg').innerHTML='<b>Soluzione.</b> Partenza: '+FUN[S.tg.f].t+'. '+S.tg.st.map((s,i)=>(i+1)+') '+OPS[s.t].l.replace(/ f\(.*$|: .*$| \|f.*$/,'')+(s.v!==undefined?' di '+fmt(s.v):'')).join('; ')+'. Equazione: '+eqs(S.tg.e)}
+renderSteps();upd();
+window.addEventListener('resize',upd);
+})();
+
+var secs2=document.querySelectorAll('.sec'),navLinks2=document.querySelectorAll('.nav a');
+window.addEventListener('scroll',function(){
+  var cur='';secs2.forEach(function(s){if(window.scrollY>=s.offsetTop-60)cur=s.id;});
+  navLinks2.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+cur);});
+},{passive:true});
+</script>
+</body>
+</html>
