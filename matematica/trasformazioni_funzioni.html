@@ -130,8 +130,8 @@ footer{text-align:center;font-size:11px;color:var(--mu);margin-top:48px;padding:
 
 <div class="sec" id="sim-avanzato">
   <h2>4. Simulatore avanzato</h2>
-  <p class="ssub">Costruisci la funzione finale con al massimo quattro trasformazioni</p>
-  <p>Scegli la funzione di partenza e concatena fino a <strong>4 trasformazioni</strong> nell&rsquo;ordine che preferisci. Sotto ogni passo vedi l&rsquo;equazione ottenuta. Nella modalità <strong>Sfida</strong> devi riprodurre un grafico dato: va bene qualsiasi percorso equivalente.</p>
+  <p class="ssub">Costruisci la funzione finale con al massimo cinque trasformazioni</p>
+  <p>Scegli la funzione di partenza e concatena fino a <strong>5 trasformazioni</strong> nell&rsquo;ordine che preferisci. Sotto ogni passo vedi l&rsquo;equazione ottenuta. Nella modalità <strong>Sfida</strong> devi riprodurre un grafico dato: va bene qualsiasi percorso equivalente.</p>
   <div class="sim" id="adv"></div>
 </div>
 
@@ -149,7 +149,7 @@ footer{text-align:center;font-size:11px;color:var(--mu);margin-top:48px;padding:
   </ol>
 </div>
 
-<footer>Didattica Galilei &middot; Matematica &middot; Analisi &middot; Grafici e trasformazioni &nbsp;|&nbsp; <a href="analitica_piano.html" style="color:var(--a)">&#8592; Indice</a></footer>
+<footer>Didattica Pierri &middot; Matematica &middot; Analisi &middot; Grafici e trasformazioni &nbsp;|&nbsp; <a href="analitica_piano.html" style="color:var(--a)">&#8592; Indice</a></footer>
 </div>
 <script>
 const fmt=n=>String(+n.toFixed(2)).replace('.',',');
@@ -168,8 +168,9 @@ const FUN=[
 ];
 
 const OPS={
- H:{l:'Traslazione orizzontale f(x − h)',p:1,ap:(g,v)=>x=>g(x-v),ex:(e,v)=>e.replace(/§/g,'(§'+(v>0?' − ':' + ')+fmt(Math.abs(v))+')')},
- K:{l:'Traslazione verticale f(x) + k',p:1,ap:(g,v)=>x=>g(x)+v,ex:(e,v)=>e+(v>0?' + ':' − ')+fmt(Math.abs(v))},
+ H:{l:'Traslazione orizzontale f(x − h)',p:1,ap:(g,v)=>x=>g(x-v),ex:(e,v)=>v?e.replace(/§/g,'(§'+(v>0?' − ':' + ')+fmt(Math.abs(v))+')'):e},
+ K:{l:'Traslazione verticale f(x) + k',p:1,ap:(g,v)=>x=>g(x)+v,ex:(e,v)=>v?e+(v>0?' + ':' − ')+fmt(Math.abs(v)):e},
+ V:{l:'Traslazione obliqua f(x − p) + q',p:2,ap:(g,v)=>x=>g(x-v[0])+v[1],ex:(e,v)=>OPS.K.ex(OPS.H.ex(e,v[0]),v[1])},
  SY:{l:'Simmetria asse y: f(−x)',ap:g=>x=>g(-x),ex:e=>e.replace(/§/g,'(−§)')},
  SX:{l:'Simmetria asse x: −f(x)',ap:g=>x=>-g(x),ex:e=>'−('+e+')'},
  AO:{l:'Valore assoluto esterno |f(x)|',ap:g=>x=>Math.abs(g(x)),ex:e=>'|'+e+'|'},
@@ -181,13 +182,14 @@ function graphs(f,a,steps){
   return {g,e};
 }
 function strip(t){if(t[0]!=='('||t[t.length-1]!==')')return t;let d=0;for(let i=0;i<t.length-1;i++){if(t[i]==='(')d++;if(t[i]===')')d--;if(!d)return t}return t.slice(1,-1)}
-const eqs=e=>'y = '+strip(e.replace(/§/g,'x').replace(/\|\(([^()|]*)\)\|/g,'|$1|'));
+function strip2(t){t=strip(t);return t.replace(/^\(([^()]*)\)( [+−] [\d,]+)$/,'$1$2')}
+const eqs=e=>'y = '+strip2(e.replace(/§/g,'x').replace(/\|\(([^()|]*)\)\|/g,'|$1|'));
 
 function build(c,i){
-  const s={ai:false,my:false,mx:false,ao:false,h:0,k:0,a:2},ord=[];
-  const TM={ai:'AI',my:'SY',ao:'AO',mx:'SX',h:'H',k:'K'};
+  const s={ai:false,my:false,mx:false,ao:false,h:0,k:0,p:0,q:0,a:2},ord=[];
+  const TM={ai:'AI',my:'SY',ao:'AO',mx:'SX',h:'H',k:'K',v:'V'};
   const sync=(k,on)=>{const j=ord.indexOf(k);if(on&&j<0)ord.push(k);if(!on&&j>=0)ord.splice(j,1)};
-  const G=()=>graphs(i,s.a,ord.map(k=>({t:TM[k],v:s[k]})));
+  const G=()=>graphs(i,s.a,ord.map(k=>({t:TM[k],v:k=='v'?[s.p,s.q]:s[k]})));
   const box=document.createElement('div');
   box.className='sim';box.style.setProperty('--c',c.c);
   const chip=(k,l)=>`<label class="chip"><input type="checkbox" data-k="${k}"><span>${l}</span></label>`;
@@ -196,7 +198,7 @@ function build(c,i){
   <canvas></canvas><div class="legend">tratteggio: funzione fondamentale &middot; colore: funzione trasformata</div>
   <div class="fo"></div><div class="warn"></div>
   <div class="chips">${chip('ai','f(|x|)')}${chip('my','simmetria asse y')}${chip('ao','|f(x)|')}${chip('mx','simmetria asse x')}</div>
-  <div class="ctrl">${sl('h','Traslazione h (orizzontale)',-6,6,0.5,0)}${sl('k','Traslazione k (verticale)',-5,5,0.5,0)}${c.param?sl('a','Base a',0.2,5,0.1,2):''}</div>
+  <div class="ctrl">${sl('h','Traslazione h (orizzontale)',-6,6,0.5,0)}${sl('k','Traslazione k (verticale)',-5,5,0.5,0)}${sl('p','Obliqua: componente p (x)',-6,6,0.5,0)}${sl('q','componente q (y)',-6,6,0.5,0)}${c.param?sl('a','Base a',0.2,5,0.1,2):''}</div>
   <button class="btn">Azzera</button><p class="bn"><b>Cosa osservare.</b> ${c.obs}</p>`;
   document.getElementById('sims').appendChild(box);
   const cv=box.querySelector('canvas'),ctx=cv.getContext('2d'),F=box.querySelector('.fo'),Wn=box.querySelector('.warn');
@@ -235,9 +237,9 @@ function build(c,i){
   }
   box.querySelectorAll('input[data-k]').forEach(e=>e.addEventListener('change',()=>{s[e.dataset.k]=e.checked;sync(e.dataset.k,e.checked);draw()}));
   box.querySelectorAll('input[data-s]').forEach(e=>e.addEventListener('input',()=>{
-    s[e.dataset.s]=parseFloat(e.value);if(e.dataset.s=='h'||e.dataset.s=='k')sync(e.dataset.s,s[e.dataset.s]!==0);box.querySelector(`[data-v="${e.dataset.s}"]`).textContent=fmt(s[e.dataset.s]);draw()}));
+    s[e.dataset.s]=parseFloat(e.value);if(e.dataset.s=='h'||e.dataset.s=='k')sync(e.dataset.s,s[e.dataset.s]!==0);if(e.dataset.s=='p'||e.dataset.s=='q')sync('v',s.p!==0||s.q!==0);box.querySelector(`[data-v="${e.dataset.s}"]`).textContent=fmt(s[e.dataset.s]);draw()}));
   box.querySelector('.btn').addEventListener('click',()=>{
-    Object.assign(s,{ai:false,my:false,mx:false,ao:false,h:0,k:0,a:2});ord.length=0;
+    Object.assign(s,{ai:false,my:false,mx:false,ao:false,h:0,k:0,p:0,q:0,a:2});ord.length=0;
     box.querySelectorAll('input[data-k]').forEach(e=>e.checked=false);
     box.querySelectorAll('input[data-s]').forEach(e=>{const k=e.dataset.s;e.value=s[k];box.querySelector(`[data-v="${k}"]`).textContent=fmt(s[k])});
     draw();
@@ -250,7 +252,7 @@ FUN.forEach(build);
 (function(){
 const S={f:0,a:2,steps:[{t:'H',v:1}],chal:false,tg:null};
 const root=document.getElementById('adv');
-root.innerHTML=`<div class="sim-t">Compositore di trasformazioni</div><div class="hint">Massimo 4 passaggi, applicati nell&rsquo;ordine in cui compaiono.</div>
+root.innerHTML=`<div class="sim-t">Compositore di trasformazioni</div><div class="hint">Massimo 5 passaggi, applicati nell&rsquo;ordine in cui compaiono.</div>
 <canvas></canvas><div class="legend"></div><div class="fo"></div><div class="warn"></div>
 <div class="chips" id="fs">${FUN.map((c,i)=>`<label class="chip" style="--c:${c.c}"><input type="radio" name="af" value="${i}" ${i?'':'checked'}><span>${c.t}</span></label>`).join('')}</div>
 <div class="ctrl" style="grid-template-columns:1fr"><label class="sl" id="asl">Base a<b>2</b><input type="range" min="0.2" max="5" step="0.1" value="2"></label></div>
@@ -265,13 +267,15 @@ function renderSteps(){
   const L=q('#stl');L.innerHTML='';
   S.steps.forEach((s,i)=>{
     const d=document.createElement('div');d.className='stp';
-    d.innerHTML=`<select aria-label="Trasformazione ${i+1}">${Object.keys(OPS).map(k=>`<option value="${k}" ${k==s.t?'selected':''}>${OPS[k].l}</option>`).join('')}</select>${OPS[s.t].p?`<label class="sl">${s.t=='H'?'h':'k'}<b>${fmt(s.v)}</b><input type="range" min="-6" max="6" step="0.5" value="${s.v}"></label>`:'<span></span>'}<button class="x" title="Rimuovi">&times;</button><div class="eq"></div>`;
-    d.querySelector('select').onchange=e=>{s.t=e.target.value;if(OPS[s.t].p&&s.v===undefined)s.v=1;if(!OPS[s.t].p)delete s.v;renderSteps();upd()};
-    const r=d.querySelector('input');if(r)r.oninput=()=>{s.v=parseFloat(r.value);d.querySelector('b').textContent=fmt(s.v);upd()};
+    const sv=(l,j,v)=>`<label class="sl">${l}<b>${fmt(v)}</b><input data-j="${j}" type="range" min="-6" max="6" step="0.5" value="${v}"></label>`;
+    const pr=s.t=='V'?`<div>${sv('p',0,s.v[0])}${sv('q',1,s.v[1])}</div>`:OPS[s.t].p?sv(s.t=='H'?'h':'k','',s.v):'<span></span>';
+    d.innerHTML=`<select aria-label="Trasformazione ${i+1}">${Object.keys(OPS).map(k=>`<option value="${k}" ${k==s.t?'selected':''}>${OPS[k].l}</option>`).join('')}</select>${pr}<button class="x" title="Rimuovi">&times;</button><div class="eq"></div>`;
+    d.querySelector('select').onchange=e=>{s.t=e.target.value;if(s.t=='V')s.v=[1,1];else if(OPS[s.t].p)s.v=1;else delete s.v;renderSteps();upd()};
+    d.querySelectorAll('input').forEach(r=>r.oninput=()=>{const x=parseFloat(r.value);if(r.dataset.j==='')s.v=x;else s.v[+r.dataset.j]=x;r.previousElementSibling.textContent=fmt(x);upd()});
     d.querySelector('.x').onclick=()=>{S.steps.splice(i,1);renderSteps();upd()};
     L.appendChild(d);
   });
-  q('#add').disabled=S.steps.length>=4;
+  q('#add').disabled=S.steps.length>=5;
 }
 function plot(fn,col,lw,dash,W,H,X,Y){
   ctx.strokeStyle=col;ctx.lineWidth=lw;ctx.setLineDash(dash);ctx.beginPath();let pen=false;
@@ -316,9 +320,9 @@ function upd(){
 function gen(){
   const keys=Object.keys(OPS);
   for(let t=0;t<200;t++){
-    const f=Math.floor(Math.random()*5),n=2+Math.floor(Math.random()*3),st=[];
-    for(let i=0;i<n;i++){let k;do k=keys[Math.floor(Math.random()*6)];while(st.length&&st[st.length-1].t==k&&!OPS[k].p);
-      const o={t:k};if(OPS[k].p){do o.v=Math.floor(Math.random()*9)-4;while(!o.v)}st.push(o)}
+    const f=Math.floor(Math.random()*5),n=2+Math.floor(Math.random()*4),st=[];
+    for(let i=0;i<n;i++){let k;do k=keys[Math.floor(Math.random()*keys.length)];while(st.length&&st[st.length-1].t==k&&!OPS[k].p);
+      const r4=()=>{let z;do z=Math.floor(Math.random()*9)-4;while(!z);return z};const o={t:k};if(k=='V')o.v=[r4(),r4()];else if(OPS[k].p)o.v=r4();st.push(o)}
     const {g,e}=graphs(f,2,st),fin=g[g.length-1];let ok=0;
     for(let x=-7.9;x<8;x+=0.1){const y=fin(x);if(isFinite(y)&&Math.abs(y)<6)ok++}
     if(ok>=40&&!same(fin,g[0])){S.tg={g:fin,n,f,st,e:e[e.length-1]};return}
@@ -326,12 +330,12 @@ function gen(){
 }
 q('#fs').onchange=e=>{S.f=+e.target.value;upd()};
 q('#asl input').oninput=e=>{S.a=parseFloat(e.target.value);q('#asl b').textContent=fmt(S.a);upd()};
-q('#add').onclick=()=>{if(S.steps.length<4){S.steps.push({t:'H',v:1});renderSteps();upd()}};
+q('#add').onclick=()=>{if(S.steps.length<5){S.steps.push({t:'H',v:1});renderSteps();upd()}};
 q('#clr').onclick=()=>{S.steps=[];renderSteps();upd()};
 q('#md').onchange=e=>{S.chal=e.target.value=='1';q('#chb').style.display=S.chal?'flex':'none';
   if(S.chal){if(!S.tg)gen();S.a=2;q('#asl input').value=2;q('#asl b').textContent='2'}upd()};
 q('#nw').onclick=()=>{gen();S.a=2;q('#asl input').value=2;q('#asl b').textContent='2';upd()};
-q('#sol').onclick=()=>{if(!S.tg)return;q('#msg').innerHTML='<b>Soluzione.</b> Partenza: '+FUN[S.tg.f].t+'. '+S.tg.st.map((s,i)=>(i+1)+') '+OPS[s.t].l.replace(/ f\(.*$|: .*$| \|f.*$/,'')+(s.v!==undefined?' di '+fmt(s.v):'')).join('; ')+'. Equazione: '+eqs(S.tg.e)}
+q('#sol').onclick=()=>{if(!S.tg)return;q('#msg').innerHTML='<b>Soluzione.</b> Partenza: '+FUN[S.tg.f].t+'. '+S.tg.st.map((s,i)=>(i+1)+') '+OPS[s.t].l.replace(/ f\(.*$|: .*$| \|f.*$/,'')+(s.v===undefined?'':' di '+(Array.isArray(s.v)?'('+fmt(s.v[0])+', '+fmt(s.v[1])+')':fmt(s.v)))).join('; ')+'. Equazione: '+eqs(S.tg.e)}
 renderSteps();upd();
 window.addEventListener('resize',upd);
 })();
